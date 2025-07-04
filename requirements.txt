@@ -1,0 +1,101 @@
+- Technical requirements
+  - Use latest angular for the frontend 
+  - Angular code should be in a 'frontend' folder in the repository root
+  - Use the latest new features from both Angular and .NET whenever Possible
+  - .NET code should be in a 'backend' folder in the repository root
+  - The frontend is web, but most areas will be used mainly from a mobile device, so the design should be responsive and mobile-friendly. I think the only complex area that will be used mainly from a desktop is the color picker, so it should be designed to work well on desktop only
+  - Backedn project requirements
+    - Use .NET ASP.NET API for the backend and Entity Framework for database access
+    - Database should be SQLite
+    - Photos should be stored in Azure Blob Storage, but ignore that for now, just use a local folder to store the photos and then we will change it to Azure Blob Storage later, but please use interfaces and abstractions so it will be easy to change later
+    - The archtecture for the backend should be clean, with a clear separation of concerns 
+    - Use minimal APIs
+    - Endpoints should have the only reponsibility of receiving the request and passing it to MediatR to handle them
+    - Use a vertical slice architecture, where each feature has its own folder with the following structure:
+      - Commands
+      - Queries
+      - Models
+      - Controllers (if needed)
+      - Services (if needed)
+      - DataTransfer (if needed)
+    - Don't use repository pattern, instead use DbContext directly in the commands and queries
+    - Use FluentValidation for validating commands and queries
+    - Use Serilog for logging in the backend
+    - Use Swagger for API documentation
+    - Create MediatR behaviors for logging, validation and exception handling
+    - MediatR commands should have the request, validator and handler in the same file, so it is easier to find them. The class should be named after the use case, for example: `CreateProjectCommand` and contains 3 nested classes: `Request`, `Validator` and `Handler`. The same applies for queries. Optionally, there could be a 4th class for the response when it is a very specific response only used for that command or query.
+    - Keep all the logic in the handler itself, only when it is really complex, it should be extracted to a service class that is injected into the handler.  
+    - Use OpenTelemetry for distributed tracing, but don't use it for now, just add the necessary code to enable it later
+    - Each endpoint should be tested with .NET integratin tests, using the `Microsoft.AspNetCore.Mvc.Testing` package to create a test server and send requests to the API. Use xUnit for testing.
+    - Use shouldly for assertions in the tests
+    - Create a exception class called `InternalException` that inherits from `Exception` and contains a status code and a message. This exception should be used to return errors from the API, and it should be handled in a MediatR behavior that catches it and returns a proper response with the status code and message.
+    - Application should have a database seed to populate the database with some initial data, like some paint brands and lines, some materials, etc. This should run automatically when the database is new.
+    - Use private sets for all domain entities, so they can only be modified through methods or constructors. This will help to keep the domain entities immutable and prevent accidental modifications.
+    - For collections in the domain entities, use `IENumerable<T>` without set. Create a private field to hold the collection as a `HashSet<T>` and expose it as a read-only property. This will prevent accidental modifications to the collection from outside the entity. Configure Entity Framework to use the private field for mapping, so it will work correctly with the database.
+    - References to other entities should be done by using both IDs and the entity themselves. For example, if a project has a reference to a paint color, it should have both the `PaintColorId` and the `PaintColor` property. This will allow for easier querying and navigation in the domain model, while still keeping the database normalized.
+
+- Problem Background
+  - I paint 3d printed action figure and I would like to have a tools to manage each project, helping me track time, materials, and references for each figure I paint. 
+  - Another important aspect is paint management, where I can store all my paint colors with their brands, codes, etc.
+  - I need to manage multiple projects, each with its own set of references, photos, color palettes, materials, and steps.
+  - I need to plan each project before starting, to do that I need to use a set of reference photos and a color picker on those photos to select the colors I will use for each area. Then I need to look for the 5 closest colors in my paint collection to use for each area.
+  - It would be a nice to have if the aplication could suggest mixes of colors in case I don't have a close enough match
+  - I have a huge collection of models to print and I would like to manage them as well. I need basic management for this, just a set of photos, tags, name, artist, among other properties that I'll detail later. 
+  - I have to manage materials that could be used in the projects, like paint, magnets, primer, varnish, etc. I need to be able to add, edit and remove materials, and then use them in the projects. 
+
+- Authentication requirements
+  - Authentication should be done by simple JWT tokens, with a login screen that allows the user to log in with email and password. 
+  - The user should be able to register with email and password, and the password should be hashed before storing it in the database.
+  - The user should be able to reset their password by providing their email, and then receiving an email with a link to reset their password. The link should contain a token that is valid for 24 hours.
+  - The user should be able to change their password by providing their current password and the new password.    
+
+- Project management requirements
+  - Should have a name and a cover photo during creation
+  - A list of projects should be displyerd in a table format with only the most importat properties visible (name, cover photo, total time spent and date concluded)
+  - Each project should have a detailed view with multiple buttons leading to sub-areas:
+    - References: in this area I can add, edit and remove reference photos for the project, each reference photo will be uploaded to Azure Blob Storage and stored in the database with a link to the photo
+    - Photos: in this area I can add, edit and remove photos of the painted figure, each photo will also be uploaded to Azure Blob Storage and stored in the database with a link to the photo
+    - Color Palette: in this area I can add sections for each part of the figure, i.e., hair, skin, pants, etc and then select colors from the reference photos using a color picker, and then search for the closest colors in my paint collection, allowing me to manage the colors I will use for each area of the figure. I should be able. There should also be a feature to suggest mixes of colors if I don't have a close enough match. This feature is not automatic, I need to manually trigger it when I want to use it. When I create a new section, I should be able to choose how many colors I want to pick for that section with a maximum of 3 (highlights, midtones, shadows) with checkboxes. 
+    - Materials: in this area I can add, edit and remove materials used for the project, ematerials will come from the global materials collection, which will be managed in a separate area.
+    - Execution: in this area I can track time spent on each execution phase. The phases are fixed and are: Planning, Supporting, Preparation and Painting. 
+    - The color picker should allow me to select a color from a reference photo and then list the 5 closest colors from my paint collection, allowing me to choose the best match for the area I am working on. I can select 1 to 5 colors for each area, or have a button to suggest a mix of colors from my inventory. When I hover the mouse over the photo, it should have zoomed circle of where I am hovering, so I can see the color better. For picking the color there should be 2 types: precise and average. The precise one should pick the exact color of the pixel I am hovering over, while the average one should pick the average color of a circle around the pixel I am hovering over, with a radius that I can set in an input in this same area. Default radius should be 5. 
+    - I would like to see how much the project is costing based on the amount of materials used and their prices. I would like to also see the total time spent on the project, and the total time spent on each phase of the project.
+    - I would like to be able to see the selling cost of the project. Price is calculated by:   
+      - the sum of cost of all materials used
+      - a profit margin over the materials cost that I can set in the project settings 
+      - painting time cost, which is calculated by multiplying the total time spent on painting by a rate that I can set in the project settings
+
+- Paint inventory requirements
+  - I need a crud of brands and lines of paint, where I can add, edit and remove brands and lines. They just need a name and lines are specific to a brand, i.e. Vallejo Model Color is a line of Vallejo brand.
+  - I need a crud of paint colors, where I can add, edit and remove colors, each color should have a name, brand, line, type, hex color code, bottle size, price and manufacturer code. When I type the hex color I want to be able to see the color in a small square next to the input, so I can see if I am typing the correct color.
+  - Types of a paint color are: opaque, metalic, wahs, ink, contrast and transparent.
+  - I need to be able to search for colors by name, brand, line, or code, and filter them by brand or line.
+  - The list of paints should be a card list with a colored square showing the color, brand, line, name and type.
+
+- Materials management requirements
+  - I need a crud of materials, where I can add, edit and remove materials.
+  - Each material need a name, unit and price per unit. Possible units are drops and unit. So for liquid materials I can use drops, and for solid materials I can use the amount of units used.
+
+- Models management requirements
+  - I need a crud of model categories, where I can add, edit and remove categories. Each category should have just a name.
+  - I need a crud of models, where I can add, edit and prioritize them.
+  - Each model should have the following properties: 
+    - Name
+    - Artist
+    - Tags
+    - Category (from the model categories crud)
+    - Photo (uploaded to Azure Blob Storage and stored in the database with a link to the photo, and should also be resized to a maximum of 2048x2048 pixels during upload)
+    - Alternative photos (some models have alternative heads or acessories so I need to be able to add multiple photos for the same model but store them as alternative photos)
+    - Score (1-5, where 1 is the highest score)
+    - Base complexity (low, medium, high)
+    - Figure complexity (low, medium, high)
+    - Number of figures
+    - Priority, to track which models I want to print first (should not be edited directly by the user but based on a reorder done in the priority screen)
+  - I want to see all models in a card list with the following properties visible (and able to filter by them):
+    - Name  
+    - Score
+    - Category
+    - Tags
+  - Rating screen: should show load all models with no score and show the first one. Allow me to rate them from 1 to 5 (show 5 empty hearts in an overlay on the photo and allow me to click on them to set the score, when I click on a heart it should fill all hearts before it, so if I click on the third heart it should fill the first three hearts and leave the last two empty). After rating a model, it should be removed from the list and not shown again. Also, the next model from the list should be shown automatically. If I want to skip a model, I can click on a button to skip it and go to the next one without rating it.
+    - When I finish rating all models it should show a message saying "You have rated all models" and give me the option to go to the priority screen or models list screen.
+  - Priority screen: should show all models with a score of 5 and allow me to reorder them by dragging and dropping. The order should be saved in the database and used to show the models in the models list screen. It could be a single column list or a grid, but it should be easy to reorder them. Only the cover photo and the display name should be visible. Display name is a concatenation of the name and the artist, so it should look like this: "Name [Artist]". Models are create with a priority of 999999 so they will be ordered last in the list and to make it easier to see models that are not prioritized yet make them a different color in the priority screen.

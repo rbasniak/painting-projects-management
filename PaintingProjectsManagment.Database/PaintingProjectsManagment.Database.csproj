@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PaintingProjectsManagement.Features.Materials\PaintingProjectsManagement.Features.Materials.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.Features.Models\PaintingProjectsManagement.Features.Models.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.Features.Paints\PaintingProjectsManagement.Features.Paints.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.Features.Projects\PaintingProjectsManagement.Features.Projects.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.Infrastructure\PaintingProjectsManagement.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
