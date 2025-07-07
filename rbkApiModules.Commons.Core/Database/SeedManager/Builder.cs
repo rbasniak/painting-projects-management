@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using PaintingProjectsManagement.Infrastructure.Helpers;
+using rbkApiModules.Commons.Core.Helpers;
 using System.Diagnostics;
 
 namespace rbkApiModules.Commons.Relational;

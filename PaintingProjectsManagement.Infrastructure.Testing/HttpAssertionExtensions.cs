@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net;
 
-namespace PaintingProjectsManagement.Infrastructure.Testing;
+namespace rbkApiModules.Commons.Core.Testing;
 
 public static class HttpAssertionExtensions
 {

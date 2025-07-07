@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace PaintingProjectsManagement.Infrastructure.Testing;
+namespace rbkApiModules.Commons.Core.Testing;
 
 public class HttpResponse
 {

@@ -4,4 +4,4 @@ global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Routing;
 global using Microsoft.EntityFrameworkCore; 
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
-global using PaintingProjectsManagement.Infrastructure;
+global using rbkApiModules.Commons.Core;

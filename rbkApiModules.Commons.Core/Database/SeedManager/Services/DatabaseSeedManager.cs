@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using PaintingProjectsManagement.Infrastructure.Helpers;
+using rbkApiModules.Commons.Core.Helpers;
 
 namespace rbkApiModules.Commons.Relational;
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
-using PaintingProjectsManagement.Infrastructure.Database;
+using rbkApiModules.Commons.Core.Database;
 
 namespace rbkApiModules.Commons.Relational;
 public static class ModelBuilderExtensions

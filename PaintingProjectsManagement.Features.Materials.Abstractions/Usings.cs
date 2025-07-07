@@ -1,1 +1,1 @@
-﻿global using PaintingProjectsManagement.Infrastructure;
+﻿global using rbkApiModules.Commons.Core;

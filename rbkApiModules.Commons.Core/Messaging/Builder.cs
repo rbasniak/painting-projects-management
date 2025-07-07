@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace PaintingProjectsManagement.Infrastructure;
+namespace rbkApiModules.Commons.Core;
 
 public static class Builder
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using System.Reflection;
 
-namespace PaintingProjectsManagement.Infrastructure;
+namespace rbkApiModules.Commons.Core;
 
 public static class EndpointAutoMapper
 {

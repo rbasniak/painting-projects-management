@@ -4,7 +4,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using System.Text.RegularExpressions;
 
-namespace PaintingProjectsManagement.Infrastructure;
+namespace rbkApiModules.Commons.Core;
 
 public class LocalFileStorage : IFileStorage
 {

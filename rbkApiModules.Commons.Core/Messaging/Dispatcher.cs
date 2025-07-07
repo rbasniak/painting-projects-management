@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace PaintingProjectsManagement.Infrastructure;
+namespace rbkApiModules.Commons.Core;
 public class Dispatcher
 {
     private readonly IServiceProvider _serviceProvider;
@@ -46,7 +46,7 @@ public class Dispatcher
                         }
                     }
 
-                    logger.LogWarning("Command validation failed for {CommandType}: {Errors}", commandType.Name, errors);
+                    logger.LogWarning("Command validation failed for {CommandType}: {Errors}", commandType.Name, errorSummary);
                     throw new InternalValidationException(errorSummary);
                 }
             }

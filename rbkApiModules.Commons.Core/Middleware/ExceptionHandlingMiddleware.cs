@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace PaintingProjectsManagement.Infrastructure;
+namespace rbkApiModules.Commons.Core;
 
 public class ExceptionHandlingMiddleware
 {

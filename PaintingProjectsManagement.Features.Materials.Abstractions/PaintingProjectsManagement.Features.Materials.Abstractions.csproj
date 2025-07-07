@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PaintingProjectsManagement.Infrastructure\PaintingProjectsManagement.Infrastructure.csproj" />
+    <ProjectReference Include="..\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

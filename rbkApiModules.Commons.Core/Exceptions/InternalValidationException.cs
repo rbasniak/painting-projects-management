@@ -1,4 +1,4 @@
-﻿namespace PaintingProjectsManagement.Infrastructure;
+﻿namespace rbkApiModules.Commons.Core;
 
 public class InternalValidationException : Exception
 {

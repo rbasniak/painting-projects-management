@@ -1,4 +1,4 @@
-﻿namespace PaintingProjectsManagement.Infrastructure.Helpers;
+﻿namespace rbkApiModules.Commons.Core.Helpers;
 
 public static class TestingEnvironmentChecker
 {
