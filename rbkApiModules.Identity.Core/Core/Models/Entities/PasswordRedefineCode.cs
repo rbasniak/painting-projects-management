@@ -15,7 +15,7 @@ public sealed class PasswordRedefineCode
         Hash = GenerateHash();
     }
 
-    public DateTime CreationDate { get; private set; }
+    public DateTime? CreationDate { get; private set; }
 
     [MaxLength(1024)]
     public string Hash { get; private set; } = string.Empty;

@@ -273,7 +273,7 @@ public class RbkDefaultAdminOptions
 
 public class SeedClaimDescriptions
 {
-    public string OverrideUserClaims { get; set; }
+    public string OverrideUserClaims { get; set; } 
     public string ManageUserRoles { get; set; }
     public string ManageTenantSpecificRoles { get; set; }
     public string ManageApplicationWideRoles { get; set; }
