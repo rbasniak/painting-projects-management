@@ -64,7 +64,7 @@ public class Dispatcher
         {
             stopwatch.Stop();
             logger.LogError(ex, "Error executing command {CommandType} after {ElapsedMilliseconds}ms", commandType.Name, stopwatch.ElapsedMilliseconds);
-            throw new InternalException("Error during validation of the request", ex);
+            throw new UnexpectedInternalException("Error during validation of the request", ex);
         }
     }
 
@@ -77,7 +77,7 @@ public class Dispatcher
             var result = await validator.ValidateAsync(context, ct);
             if (!result.IsValid)
             {
-                throw new InternalException(string.Join("; ", result.Errors.Select(e => e.ErrorMessage), 400));
+                throw new UnexpectedInternalException(string.Join("; ", result.Errors.Select(e => e.ErrorMessage), 400));
             }
         }
 
@@ -118,21 +118,21 @@ public interface ICommand { }
 public interface ICommandHandler<TCommand>
     where TCommand : ICommand
 {
-    Task HandleAsync(TCommand command, CancellationToken cancellationToken = default);
+    Task HandleAsync(TCommand request, CancellationToken cancellationToken = default);
 }
 
 public interface ICommand<TResponse> { }
 public interface ICommandHandler<TCommand, TResponse>
     where TCommand : ICommand<TResponse>
 {
-    Task<TResponse> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
+    Task<TResponse> HandleAsync(TCommand request, CancellationToken cancellationToken = default);
 }
 
 public interface IQuery<TResponse> { }
 public interface IQueryHandler<TQuery, TResponse>
     where TQuery : IQuery<TResponse>
 {
-    Task<TResponse> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
+    Task<TResponse> HandleAsync(TQuery request, CancellationToken cancellationToken = default);
 }
 
 public interface INotification { }

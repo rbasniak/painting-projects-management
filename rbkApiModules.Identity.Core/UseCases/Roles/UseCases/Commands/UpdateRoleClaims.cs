@@ -1,0 +1,73 @@
+﻿using rbkApiModules.Identity.Core.DataTransfer;
+
+namespace rbkApiModules.Identity.Core;
+
+public class UpdateRoleClaims : IEndpoint
+{
+    public static void MapEndpoint(IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapPut("/authorization/roles/updateclaims", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        {
+            var result = await dispatcher.SendAsync(request, cancellationToken);
+
+            return Results.Ok(result);
+        })
+        .RequireAuthorization(AuthenticationClaims.MANAGE_USER_ROLES)
+        .WithName("Update Role Claims")
+        .WithTags("Roles");
+    }
+
+    public class Request : AuthenticatedRequest, ICommand<RoleDetails>
+    {
+        public Guid Id { get; set; }
+        public Guid[] ClaimsIds { get; set; } = [];
+    }
+
+    public class Validator : AbstractValidator<Request>
+    {
+        private readonly IClaimsService _claimsService;
+
+        public Validator(IClaimsService claimsService, IRolesService rolesService, ITenantsService tenantsService, ILocalizationService localization)
+        {
+            _claimsService = claimsService;
+
+            RuleFor(x => x.Id)
+                .RoleExistOnDatabaseForTheCurrentTenant(rolesService, localization)
+                .WithMessage(localization.LocalizeString(AuthenticationMessages.Validations.RoleNotFound));
+
+            RuleFor(x => x.ClaimsIds)
+                .NotNull().WithMessage(localization.LocalizeString(AuthenticationMessages.Validations.ClaimListMustNotBeEmpty));
+
+            RuleForEach(x => x.ClaimsIds)
+                .MustAsync(ClaimExistInDatabase).WithMessage(localization.LocalizeString(AuthenticationMessages.Validations.UnknownClaimInTheList));
+
+            RuleFor(x => x.Identity)
+                .TenantExistOnDatabase(tenantsService, localization)
+                .HasCorrectRoleManagementAccessRights(localization);
+        }  
+
+        private async Task<bool> ClaimExistInDatabase(Request request, Guid id, CancellationToken cancellationToken)
+        {
+            return await _claimsService.FindAsync(id, cancellationToken) != null;
+        }
+    }
+
+    public class Handler : ICommandHandler<Request, RoleDetails>
+    {
+        private readonly IRolesService _rolesService;
+
+        public Handler(IRolesService rolesService)
+        {
+            _rolesService = rolesService;
+        }
+
+        public async Task<RoleDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        {
+            await _rolesService.UpdateRoleClaims(request.Id, request.ClaimsIds, cancellationToken);
+
+            var role = await _rolesService.GetDetailsAsync(request.Id, cancellationToken);
+
+            return RoleDetails.FromModel(role);
+        }
+    }
+}

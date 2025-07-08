@@ -24,6 +24,19 @@ public class ExceptionHandlingMiddleware
         }
         catch (InternalException ex)
         {
+            if (ex.StatusCode == 400)
+            {
+                _logger.LogWarning(ex, "An expected issue occurred during request normal execution");   
+            }
+            else if (ex.StatusCode == 500)
+            {
+                _logger.LogError(ex, "An expected error occurred during request normal execution");   
+            }
+            else
+            {
+                _logger.LogError(ex, "An expected exception occurred but it has an unsuported status code: {statusCode}", ex.StatusCode);   
+            }
+
             var problem = new ProblemDetails
             {
                 Status = ex.StatusCode,
@@ -38,6 +51,8 @@ public class ExceptionHandlingMiddleware
         }
         catch (InternalValidationException ex)
         {
+            _logger.LogError(ex, "An unexpected error occurred during request validation");   
+
             var problem = new ValidationProblemDetails(ex.Summary)
             {
                 Status = 400,
@@ -52,6 +67,8 @@ public class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
+            _logger.LogCritical(ex, "An unexpected error occurred outside the request flow");   
+
             var problem = new ProblemDetails
             {
                 Status = StatusCodes.Status500InternalServerError,

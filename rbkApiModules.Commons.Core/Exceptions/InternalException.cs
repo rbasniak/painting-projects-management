@@ -2,14 +2,38 @@
 
 public class InternalException : Exception
 {
-    public InternalException(string message, int statusCode = 500) : base(message)
+    protected InternalException(string message, int statusCode) : base(message)
     {
         StatusCode = statusCode;
     }
-    public InternalException(string message, Exception innerException, int statusCode = 500) 
+    protected InternalException(string message, Exception innerException, int statusCode) 
         : base(message, innerException)
     {
         StatusCode = statusCode;
     }
     public int StatusCode { get; }
+}
+
+
+public class ExpectedInternalException : InternalException
+{
+    public ExpectedInternalException(string message) : base(message, 400)
+    {
+    }
+    public ExpectedInternalException(string message, Exception innerException) 
+        : base(message, innerException, 400)
+    {
+    }
+}
+
+public class UnexpectedInternalException : InternalException
+{
+    public UnexpectedInternalException(string message) : base(message, 500)
+    {
+    }
+
+    public UnexpectedInternalException(string message, Exception innerException) 
+        : base(message, innerException, 500)
+    {
+    }
 }

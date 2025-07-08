@@ -1,6 +1,6 @@
 ﻿namespace PaintingProjectsManagement.Features.Materials;
 
-public class ListMaterials
+public class ListMaterials : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
