@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using rbkApiModules.Commons.Core.Helpers;
 using System.Text.Json;
 
 namespace rbkApiModules.Commons.Core;
@@ -75,7 +76,13 @@ public class ExceptionHandlingMiddleware
                 Title = "An unexpected error occurred",
                 Detail = "Unexpected server error",
                 Instance = context.Request.Path,
+                
             };
+
+            if (TestingEnvironmentChecker.IsTestingEnvironment)
+            {
+                problem.Extensions.Add("exception", ex.ToBetterString());
+            }
 
             context.Response.StatusCode = 500;
             context.Response.ContentType = "application/problem+json";

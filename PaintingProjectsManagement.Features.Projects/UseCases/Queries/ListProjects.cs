@@ -6,7 +6,7 @@ internal class ListProjects : IEndpoint
     {
         endpoints.MapGet("/projects", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.QueryAsync(new Request(), cancellationToken);
+            var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
             return Results.Ok(result);
         })

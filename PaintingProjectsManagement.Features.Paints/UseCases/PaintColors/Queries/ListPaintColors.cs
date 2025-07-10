@@ -6,7 +6,7 @@ internal class ListPaintColors : IEndpoint
     {
         endpoints.MapGet("/paints/colors", async (Guid? lineId, Guid? brandId, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.QueryAsync(new Request { LineId = lineId, BrandId = brandId }, cancellationToken);
+            var result = await dispatcher.SendAsync(new Request { LineId = lineId, BrandId = brandId }, cancellationToken);
 
             return TypedResults.Ok(result);
         })

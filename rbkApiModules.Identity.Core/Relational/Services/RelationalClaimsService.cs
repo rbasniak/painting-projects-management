@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using rbkApiModules.Identity.Core;
+﻿using rbkApiModules.Identity.Core;
 using rbkApiModules.Commons.Relational;
 
 namespace rbkApiModules.Identity.Relational;
@@ -143,8 +142,8 @@ public class RelationalClaimsService : IClaimsService
         await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<Claim> FindByDescriptionAsync(string description)
+    public async Task<Claim> FindByDescriptionAsync(string description, CancellationToken cancellationToken)
     {
-        return await _context.Set<Claim>().FirstOrDefaultAsync(x => x.Description.ToLower() == description.ToLower());
+        return await _context.Set<Claim>().FirstOrDefaultAsync(x => x.Description.ToLower() == description.ToLower(), cancellationToken);
     }
 }

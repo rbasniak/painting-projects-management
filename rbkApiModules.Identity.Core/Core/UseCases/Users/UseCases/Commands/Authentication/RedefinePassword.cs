@@ -6,7 +6,7 @@ public class RedefinePassword : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/redefine-password", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/redefine-password", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(request, cancellationToken);
 
@@ -14,7 +14,7 @@ public class RedefinePassword : IEndpoint
         })
         .AllowAnonymous()
         .WithName("Redefine Password")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public class Request : ICommand

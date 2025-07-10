@@ -6,7 +6,7 @@ public class Register : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/register", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/register", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(request, cancellationToken);
 
@@ -14,7 +14,7 @@ public class Register : IEndpoint
         })
         .AllowAnonymous()
         .WithName("Register")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public class Request : ICommand<UserDetails>, IUserMetadata

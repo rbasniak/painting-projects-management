@@ -6,7 +6,7 @@ internal class ListPaintLines : IEndpoint
     {
         endpoints.MapGet("/paints/lines", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.QueryAsync(new Request(), cancellationToken);
+            var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
             return TypedResults.Ok(result);
         })

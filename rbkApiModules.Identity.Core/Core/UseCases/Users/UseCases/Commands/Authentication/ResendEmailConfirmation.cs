@@ -4,7 +4,7 @@ public class ResendEmailConfirmation : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/resend-confirmation", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/resend-confirmation", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(request, cancellationToken);
 
@@ -12,7 +12,7 @@ public class ResendEmailConfirmation : IEndpoint
         })
         .AllowAnonymous()
         .WithName("Resend Email Confirmation")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public class Request : AuthenticatedRequest, ICommand

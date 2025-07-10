@@ -7,15 +7,15 @@ public class GetAllUsers : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/authorization/users", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/authorization/users", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.QueryAsync(new Request(), cancellationToken);
+            var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
             return Results.Ok(result);
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_USERS)
         .WithName("Get All Users")
-        .WithTags("Users");
+        .WithTags("Authorization");
     }
 
     public class Request : AuthenticatedRequest, IQuery<IReadOnlyCollection<UserDetails>>

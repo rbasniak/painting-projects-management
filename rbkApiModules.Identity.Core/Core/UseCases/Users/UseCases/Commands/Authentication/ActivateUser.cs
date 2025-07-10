@@ -6,7 +6,7 @@ public class ActivateUser : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/users/activate", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/users/activate", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -14,7 +14,7 @@ public class ActivateUser : IEndpoint
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_USERS)
         .WithName("Activate User")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public class Request : AuthenticatedRequest, ICommand<UserDetails>

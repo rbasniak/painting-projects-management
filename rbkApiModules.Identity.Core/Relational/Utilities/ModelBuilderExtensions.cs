@@ -33,7 +33,7 @@ public static class ModelBuilderExtensions
                     .Entity(entityType.ClrType, x =>
                     {
                         x.Property<string>(nameof(TenantEntity.TenantId));
-                        x.HasOne(typeof(Tenant)).WithMany().HasForeignKey(nameof(TenantEntity.TenantId));
+                        x.HasOne(typeof(Tenant)).WithMany().HasForeignKey(nameof(TenantEntity.TenantId)).OnDelete(DeleteBehavior.Restrict);
 
                     });
             }

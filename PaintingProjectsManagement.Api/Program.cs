@@ -48,7 +48,7 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseMiddleware<ExceptionHandlingMiddleware>();
+        
 
         app.MapDefaultEndpoints();
 

@@ -7,7 +7,7 @@ public class CreateUser : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/users/create", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/users/create", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -15,7 +15,7 @@ public class CreateUser : IEndpoint
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_USERS)
         .WithName("Create User")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public class Request : AuthenticatedRequest, ICommand<UserDetails>, IUserMetadata

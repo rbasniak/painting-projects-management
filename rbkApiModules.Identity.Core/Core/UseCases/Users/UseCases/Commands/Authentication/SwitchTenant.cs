@@ -7,7 +7,7 @@ public class SwitchTenant : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/switch-tenant", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/switch-tenant", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -15,7 +15,7 @@ public class SwitchTenant : IEndpoint
         })
         .RequireAuthorization()
         .WithName("Switch Tenant")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public class Request : AuthenticatedRequest, ICommand<JwtResponse>

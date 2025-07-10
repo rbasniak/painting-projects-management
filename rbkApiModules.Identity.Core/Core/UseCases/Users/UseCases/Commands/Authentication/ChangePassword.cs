@@ -4,7 +4,7 @@ public class ChangePassword : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/change-password", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/change-password", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(request, cancellationToken);
 
@@ -12,7 +12,7 @@ public class ChangePassword : IEndpoint
         })
         .RequireAuthorization()
         .WithName("Change Password")
-        .WithTags("Users");
+        .WithTags("Authentication");
         }
 
     public class Request : AuthenticatedRequest, ICommand

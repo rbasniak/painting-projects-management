@@ -7,7 +7,7 @@ public class ConfirmUserEmail : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/users/confirm-email", async (string email, string code, string tenant, 
+        endpoints.MapPost("/api/authentication/users/confirm-email", async (string email, string code, string tenant, 
             AuthEmailOptions authEmailOptions, Dispatcher dispatcher, ILogger<ConfirmUserEmail> logger, 
             CancellationToken cancellationToken) =>
         {
@@ -25,7 +25,7 @@ public class ConfirmUserEmail : IEndpoint
         })
         .AllowAnonymous()
         .WithName("Confirm User Email")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public class Request : ICommand

@@ -4,7 +4,7 @@ public class RequestPasswordReset : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/reset-password", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/reset-password", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(request, cancellationToken);
 
@@ -12,7 +12,7 @@ public class RequestPasswordReset : IEndpoint
         })
         .AllowAnonymous()
         .WithName("Request Password Reset")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public class Request : ICommand

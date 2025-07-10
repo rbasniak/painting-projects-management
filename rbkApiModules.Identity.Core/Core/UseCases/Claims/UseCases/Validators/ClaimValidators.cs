@@ -7,7 +7,9 @@ internal static class ClaimsValidators
         return rule
             .MustAsync(async (claimId, cancellationToken) =>
             {
-                return await claims.FindAsync(claimId, cancellationToken) != null;
+                var result =  await claims.FindAsync(claimId, cancellationToken) != null;
+
+                return result;
             })
             .WithMessage(command => localization.LocalizeString(AuthenticationMessages.Validations.ClaimNotFound));
     }

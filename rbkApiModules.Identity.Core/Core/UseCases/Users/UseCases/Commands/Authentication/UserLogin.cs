@@ -6,7 +6,7 @@ public class UserLogin
 {
     public static void MapNtlmLoginEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/login", async (Request request, Dispatcher dispatcher, 
+        endpoints.MapPost("/api/authentication/login", async (Request request, Dispatcher dispatcher, 
             HttpContext httpContext, RbkDefaultAdminOptions adminOptions, CancellationToken cancellationToken) =>
         {
             var requestHasUsername = String.IsNullOrEmpty(request.Username);
@@ -25,12 +25,12 @@ public class UserLogin
         })
         .RequireAuthorization()
         .WithName("NTLM Login")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public static void MapCredentialsLoginEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/login", async (Request request, Dispatcher dispatcher, 
+        endpoints.MapPost("/api/authentication/login", async (Request request, Dispatcher dispatcher, 
             HttpContext httpContext, RbkDefaultAdminOptions adminOptions, CancellationToken cancellationToken) =>
         {
             request.AuthenticationMode = AuthenticationMode.Credentials;
@@ -40,21 +40,21 @@ public class UserLogin
         })
         .AllowAnonymous()
         .WithName("Login with Credentials")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public class Request : ICommand<JwtResponse>, ILoginData
     {
-        private string _tenant = string.Empty;
+        private string _tenant = null;
 
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-        public string Tenant
+        public string? Tenant
         {
             get => _tenant;
             set
             {
-                _tenant = value?.ToUpper() ?? string.Empty;
+                _tenant = value?.ToUpper();
             }
         }
 

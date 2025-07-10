@@ -4,7 +4,7 @@ public class DeleteUser : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/users/delete", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/users/delete", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(request, cancellationToken);
 
@@ -12,7 +12,7 @@ public class DeleteUser : IEndpoint
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_USERS)
         .WithName("Delete User")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public class Request : AuthenticatedRequest, ICommand 

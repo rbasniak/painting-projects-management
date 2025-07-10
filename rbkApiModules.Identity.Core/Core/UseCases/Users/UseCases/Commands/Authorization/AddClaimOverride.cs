@@ -7,7 +7,7 @@ public class AddClaimOverride : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authorization/users/add-claims", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authorization/users/add-claims", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -15,7 +15,7 @@ public class AddClaimOverride : IEndpoint
         })
         .RequireAuthorization(AuthenticationClaims.OVERRIDE_USER_CLAIMS)
         .WithName("Add Claim Override")
-        .WithTags("Users");
+        .WithTags("Authorization");
     }
 
     public class Request : AuthenticatedRequest, ICommand<UserDetails>

@@ -18,12 +18,9 @@ public sealed class User : TenantEntity
     public User(string tenant, string username, string email, string password, string avatarPath, 
         string displayName, AuthenticationMode authenticationMode, Dictionary<string, string>? metadata = null)
     {
-        if (string.IsNullOrEmpty(tenant)) throw new ArgumentNullException(nameof(tenant));
         if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
-        if (string.IsNullOrEmpty(email)) throw new ArgumentNullException(nameof(email));
         if (string.IsNullOrEmpty(avatarPath)) throw new ArgumentNullException(nameof(avatarPath));
         if (string.IsNullOrEmpty(displayName)) throw new ArgumentNullException(nameof(displayName));
-        if (string.IsNullOrEmpty(password)) throw new ArgumentNullException(nameof(password));
 
         AuthenticationMode = authenticationMode;
         TenantId = tenant;
@@ -58,13 +55,13 @@ public sealed class User : TenantEntity
     public string Username { get; private set; } = string.Empty;
 
     [Required, MinLength(5), MaxLength(255)]
-    public string Email { get; private set; } = string.Empty;
+    public string? Email { get; private set; } = string.Empty;
 
     [MinLength(1), MaxLength(4096)]
-    public string Password { get; private set; } = string.Empty;
+    public string? Password { get; private set; } = string.Empty;
 
     [MaxLength(128)]
-    public string RefreshToken { get; private set; } = string.Empty;
+    public string? RefreshToken { get; private set; } = string.Empty;
 
     public AuthenticationMode AuthenticationMode { get; private set; }
 

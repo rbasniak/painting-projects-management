@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace rbkApiModules.Commons.Testing;
 
@@ -6,11 +8,13 @@ public class HttpResponse
 {
     public HttpResponse()
     {
-        Messages = new string[0];
+        Messages = [];
     }
 
     public HttpStatusCode Code { get; set; }
     public string[] Messages { get; set; }
+    public string Body { get; set; }
+    public ProblemDetails? Problem { get; set; }
     public bool IsSuccess => Code == HttpStatusCode.OK || Code == HttpStatusCode.NoContent;
 
     public override string ToString()
@@ -33,7 +37,7 @@ public class HttpResponse<T> : HttpResponse where T : class
         Data = null;
     }
 
-    public T Data { get; set; }
+    public T? Data { get; set; }
 
     public override string ToString()
     {

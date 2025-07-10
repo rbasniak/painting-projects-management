@@ -63,9 +63,10 @@ public static class Builder
             try
             {
                 var validators = assembly.GetTypes()
-                    .Where(t => t.IsClass && !t.IsAbstract)
-                    .Where(t => t.BaseType != null && t.BaseType.IsGenericType)
-                    .Where(t => t.BaseType.GetGenericTypeDefinition() == typeof(AbstractValidator<>));
+                    .Where(x => x.IsClass && !x.IsAbstract)
+                    .Where(x => x.BaseType != null && x.BaseType.IsGenericType)
+                    .Where(x => x.BaseType.GetGenericTypeDefinition() == typeof(AbstractValidator<>))
+                    .Where(x => !x.Name.Contains("InlineValidator"));
 
                 foreach (var validator in validators)
                 {

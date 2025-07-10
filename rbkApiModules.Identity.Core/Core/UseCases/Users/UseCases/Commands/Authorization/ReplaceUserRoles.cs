@@ -6,7 +6,7 @@ public class ReplaceUserRoles : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authorization/users/set-roles", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authorization/users/set-roles", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -14,7 +14,7 @@ public class ReplaceUserRoles : IEndpoint
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_USER_ROLES)
         .WithName("Replace User Roles")
-        .WithTags("Users");
+        .WithTags("Authorization");
     }
 
     public class Request : AuthenticatedRequest, ICommand<UserDetails>

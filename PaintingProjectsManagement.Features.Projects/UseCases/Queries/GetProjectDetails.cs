@@ -8,7 +8,7 @@ internal class GetProjectDetails : IEndpoint
     {
         endpoints.MapGet("/projects/{id}", async (Guid id, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.QueryAsync(new Request { Id = id }, cancellationToken);
+            var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
             
             return Results.Ok(result);
         })

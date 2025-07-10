@@ -4,9 +4,9 @@ public class GetAllClaims : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/authorization/claims", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/authorization/claims", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.QueryAsync(new Request(), cancellationToken);
+            var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
             return Results.Ok(result);
         })

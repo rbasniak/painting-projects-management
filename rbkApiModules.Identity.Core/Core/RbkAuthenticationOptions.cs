@@ -221,10 +221,10 @@ public class RbkDefaultAdminOptions
     // TODO: Expor internal para core only
     public bool _manageTenants = false;
     public string _password = null;
-    public string _username = null;
+    public string _username = "admin";
     public string _email = null;
-    public string _displayName = null;
-    public string _avatar = null;
+    public string _displayName = "Administrator";
+    public string _avatar = AvatarGenerator.GenerateBase64Avatar("Administrator");
 
     public RbkDefaultAdminOptions()
     {

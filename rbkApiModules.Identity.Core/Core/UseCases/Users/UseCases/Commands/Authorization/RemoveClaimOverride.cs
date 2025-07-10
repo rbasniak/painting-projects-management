@@ -6,7 +6,7 @@ public class RemoveClaimOverride : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authorization/users/remove-claims", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authorization/users/remove-claims", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -14,7 +14,7 @@ public class RemoveClaimOverride : IEndpoint
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_USERS)
         .WithName("Remove Claim Override")
-        .WithTags("Users");
+        .WithTags("Authorization");
     }
 
     public class Request : AuthenticatedRequest, ICommand<UserDetails>

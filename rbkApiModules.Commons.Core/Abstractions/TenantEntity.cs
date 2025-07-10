@@ -10,9 +10,9 @@ public abstract class TenantEntity : BaseEntity
     }
 
     [MaxLength(32)]
-    public virtual string TenantId { get; protected set; }
+    public string? TenantId { get; protected set; }
 
-    public virtual bool HasTenant => !String.IsNullOrEmpty(TenantId);
+    public bool HasTenant => !String.IsNullOrEmpty(TenantId);
 
-    public virtual bool HasNoTenant => String.IsNullOrEmpty(TenantId);
+    public bool HasNoTenant => String.IsNullOrEmpty(TenantId);
 }

@@ -4,9 +4,9 @@ public class GetAllTenants : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/authorization/tenants", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/authorization/tenants", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.QueryAsync(new Request(), cancellationToken);
+            var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
             return Results.Ok(result);
         })

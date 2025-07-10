@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Threading;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace rbkApiModules.Commons.Core;
 public class Dispatcher
@@ -10,90 +12,136 @@ public class Dispatcher
 
     public Dispatcher(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
 
-    public async Task<TResponse> SendAsync<TResponse>(ICommand<TResponse> command, CancellationToken ct = default)
+    public async Task<TResponse> SendAsync<TResponse>(ICommand<TResponse> request, CancellationToken cancellationToken)
     {
-        var commandType = command.GetType();
+        var commandType = request.GetType();
         var logger = _serviceProvider.GetService(typeof(ILogger<>).MakeGenericType(commandType)) as ILogger;
-        
-        logger.LogDebug("Executing command {CommandType}", commandType.Name);
+
+        var commandTypeName = commandType.FullName.Split(".").Last().Replace("+", ".");
+
+        logger.LogDebug("Executing command {CommandType}", commandTypeName);
 
         var stopwatch = Stopwatch.StartNew();
 
         try
         {
-            var validatorBaseType = typeof(AbstractValidator<>).MakeGenericType(commandType);
-
-            var validator = _serviceProvider.GetService(validatorBaseType);
-
-            if (validator is IValidator concreteValidator)
-            {
-                logger.LogDebug("Validating command {CommandType}", commandType.Name);
-
-                var context = new ValidationContext<object>(command);
-                var result = await concreteValidator.ValidateAsync(context, ct);
-                if (!result.IsValid)
-                {
-                    var errorSummary = new Dictionary<string, string[]>();
-                    foreach (var error in result.Errors)
-                    {
-                        if (!errorSummary.ContainsKey(error.PropertyName))
-                        {
-                            errorSummary[error.PropertyName] = [error.ErrorMessage];
-                        }
-                        else
-                        {
-                            errorSummary[error.PropertyName] = errorSummary[error.PropertyName].Append(error.ErrorMessage).ToArray();
-                        }
-                    }
-
-                    logger.LogWarning("Command validation failed for {CommandType}: {Errors}", commandType.Name, errorSummary);
-                    throw new InternalValidationException(errorSummary);
-                }
-            }
+            await ValidateAsync(logger, commandType, request, cancellationToken);
 
             var handlerType = typeof(ICommandHandler<,>).MakeGenericType(commandType, typeof(TResponse));
             dynamic handler = _serviceProvider.GetRequiredService(handlerType);
-            var response = await handler.HandleAsync((dynamic)command, ct);
+            var response = await handler.HandleAsync((dynamic)request, cancellationToken);
             
             stopwatch.Stop();
-            logger.LogInformation("Command {CommandType} executed successfully in {ElapsedMilliseconds}ms", commandType.Name, stopwatch.ElapsedMilliseconds);
+            logger.LogInformation("Command {CommandType} executed successfully in {ElapsedMilliseconds}ms", commandTypeName, stopwatch.ElapsedMilliseconds);
             
             return response;
         }
-        catch (Exception ex) when (ex is not InternalException)
+        catch (Exception ex) when (ex is not InternalValidationException)
         {
             stopwatch.Stop();
-            logger.LogError(ex, "Error executing command {CommandType} after {ElapsedMilliseconds}ms", commandType.Name, stopwatch.ElapsedMilliseconds);
+            logger.LogError(ex, "Error executing command {CommandType} after {ElapsedMilliseconds}ms", commandTypeName, stopwatch.ElapsedMilliseconds);
             throw new UnexpectedInternalException("Error during validation of the request", ex);
         }
     }
 
-    public async Task SendAsync(ICommand request, CancellationToken ct = default)
+    public async Task SendAsync(ICommand request, CancellationToken cancellationToken)
     {
-        var validatorType = typeof(IValidator<>).MakeGenericType(request.GetType());
-        if (_serviceProvider.GetService(validatorType) is IValidator validator)
+        var commandType = request.GetType();
+        var logger = _serviceProvider.GetService(typeof(ILogger<>).MakeGenericType(commandType)) as ILogger;
+
+        var commandTypeName = commandType.FullName.Split(".").Last().Replace("+", ".");
+
+        logger.LogDebug("Executing command {CommandType}", commandTypeName);
+
+        var stopwatch = Stopwatch.StartNew();
+
+        try
         {
+            await ValidateAsync(logger, commandType, request, cancellationToken);
+
+            var handlerType = typeof(ICommandHandler<>).MakeGenericType(commandType);
+            dynamic handler = _serviceProvider.GetRequiredService(handlerType);
+            await handler.HandleAsync((dynamic)request, cancellationToken);
+
+            stopwatch.Stop();
+            logger.LogInformation("Command {CommandType} executed successfully in {ElapsedMilliseconds}ms", commandTypeName, stopwatch.ElapsedMilliseconds);
+        }
+        catch (Exception ex) when (ex is not InternalValidationException)
+        {
+            stopwatch.Stop();
+            logger.LogError(ex, "Error executing command {CommandType} after {ElapsedMilliseconds}ms", commandTypeName, stopwatch.ElapsedMilliseconds);
+            throw new UnexpectedInternalException("Error during validation of the request", ex);
+        }
+    }
+
+    private async Task ValidateAsync(ILogger logger, Type commandType, object request, CancellationToken cancellationToken)
+    {
+        var commandTypeName = commandType.FullName.Split(".").Last().Replace("+", ".");
+
+        var validatorBaseType = typeof(AbstractValidator<>).MakeGenericType(commandType);
+
+        var validator = _serviceProvider.GetService(validatorBaseType);
+
+        if (validator is IValidator concreteValidator)
+        {
+            logger.LogDebug("Validating command {CommandType}", commandTypeName);
+
             var context = new ValidationContext<object>(request);
-            var result = await validator.ValidateAsync(context, ct);
+            var result = await concreteValidator.ValidateAsync(context, cancellationToken);
             if (!result.IsValid)
             {
-                throw new UnexpectedInternalException(string.Join("; ", result.Errors.Select(e => e.ErrorMessage), 400));
+                var errorSummary = new Dictionary<string, string[]>();
+                foreach (var error in result.Errors)
+                {
+                    if (!errorSummary.ContainsKey(error.PropertyName))
+                    {
+                        errorSummary[error.PropertyName] = [error.ErrorMessage];
+                    }
+                    else
+                    {
+                        errorSummary[error.PropertyName] = errorSummary[error.PropertyName].Append(error.ErrorMessage).ToArray();
+                    }
+                }
+
+                logger.LogWarning("Command validation failed for {CommandType}: {Errors}", commandTypeName, errorSummary);
+                throw new InternalValidationException(errorSummary);
             }
         }
-
-        var handlerType = typeof(ICommandHandler<,>);
-        dynamic handler = _serviceProvider.GetRequiredService(handlerType);
-        await handler.HandleAsync((dynamic)request, ct);
     }
 
-    public Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken ct = default)
+    public async Task<TResponse> SendAsync<TResponse>(IQuery<TResponse> request, CancellationToken cancellationToken)
     {
-        var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse));
-        dynamic handler = _serviceProvider.GetRequiredService(handlerType);
-        return handler.HandleAsync((dynamic)query, ct);
+        var commandType = request.GetType();
+        var logger = _serviceProvider.GetService(typeof(ILogger<>).MakeGenericType(commandType)) as ILogger;
+
+        var commandTypeName = commandType.FullName.Split(".").Last().Replace("+", ".");
+
+        logger.LogDebug("Executing command {CommandType}", commandTypeName);
+
+        var stopwatch = Stopwatch.StartNew();
+
+        try
+        {
+            await ValidateAsync(logger, commandType, request, cancellationToken);
+
+            var handlerType = typeof(IQueryHandler<,>).MakeGenericType(commandType, typeof(TResponse));
+            dynamic handler = _serviceProvider.GetRequiredService(handlerType);
+            var response = await handler.HandleAsync((dynamic)request, cancellationToken);
+
+            stopwatch.Stop();
+            logger.LogInformation("Command {CommandType} executed successfully in {ElapsedMilliseconds}ms", commandTypeName, stopwatch.ElapsedMilliseconds);
+
+            return response;
+        }
+        catch (Exception ex) when (ex is not InternalValidationException)
+        {
+            stopwatch.Stop();
+            logger.LogError(ex, "Error executing command {CommandType} after {ElapsedMilliseconds}ms", commandTypeName, stopwatch.ElapsedMilliseconds);
+            throw new UnexpectedInternalException("Error during validation of the request", ex);
+        }
     }
 
-    public async Task PublishAsync<TNotification>(TNotification notification, CancellationToken ct = default)
+    public async Task PublishAsync<TNotification>(TNotification notification, CancellationToken cancellationToken)
         where TNotification : INotification
     {
         var handlers = _serviceProvider.GetServices<INotificationHandler<TNotification>>();
@@ -102,7 +150,7 @@ public class Dispatcher
         {
             try
             {
-                await handler.HandleAsync(notification, ct);
+                await handler.HandleAsync(notification, cancellationToken);
             }
             catch (Exception ex)
             {

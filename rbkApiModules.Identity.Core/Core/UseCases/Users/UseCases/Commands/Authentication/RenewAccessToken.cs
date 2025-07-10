@@ -6,7 +6,7 @@ public class RenewAccessToken : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/authentication/refresh-token", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/refresh-token", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -14,7 +14,7 @@ public class RenewAccessToken : IEndpoint
         })
         .AllowAnonymous()
         .WithName("Renew Access Token")
-        .WithTags("Users");
+        .WithTags("Authentication");
     }
 
     public class Request : ICommand<JwtResponse>

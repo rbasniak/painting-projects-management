@@ -4,7 +4,7 @@ public class DeleteTenant : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/tenants/{tenantId}", async (string id, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/api/authorization/tenants/{tenantId}", async (string id, Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(new Request { Alias = id }, cancellationToken);
 
