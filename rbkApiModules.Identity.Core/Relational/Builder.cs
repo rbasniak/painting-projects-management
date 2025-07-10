@@ -52,18 +52,20 @@ public static class Builder
         //ResendEmailConfirmation.MapEndpoint(app);
         //SwitchTenant.MapEndpoint(app);
         //GetAllUsers.MapEndpoint(app);
-        
-        //GetAllTenants.MapEndpoint(app);
-        //CreateTenant.MapEndpoint(app);
-        //DeleteTenant.MapEndpoint(app);
-        //UpdateTenant.MapEndpoint(app);
-        
-        //GetAllRoles.MapEndpoint(app);
-        //CreateRole.MapEndpoint(app);
-        //DeleteRole.MapEndpoint(app);
-        //RenameRole.MapEndpoint(app);
-        //UpdateRoleClaims.MapEndpoint(app);
-        
+        ReplaceUserRoles.MapEndpoint(app);
+        AddClaimOverride.MapEndpoint(app);
+
+        GetAllTenants.MapEndpoint(app);
+        CreateTenant.MapEndpoint(app);
+        DeleteTenant.MapEndpoint(app);
+        UpdateTenant.MapEndpoint(app);
+
+        GetAllRoles.MapEndpoint(app);
+        CreateRole.MapEndpoint(app);
+        DeleteRole.MapEndpoint(app);
+        RenameRole.MapEndpoint(app);
+        UpdateRoleClaims.MapEndpoint(app);
+
         GetAllClaims.MapEndpoint(app);
         CreateClaim.MapEndpoint(app);
         DeleteClaim.MapEndpoint(app);

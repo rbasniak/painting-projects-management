@@ -12,7 +12,7 @@ public class CreateRole : IEndpoint
 
             return Results.Ok(result);
         })
-        .RequireAuthorization(AuthenticationClaims.MANAGE_USER_ROLES)
+        .RequireAuthorization()
         .WithName("Create Role")
         .WithTags("Roles");
     }

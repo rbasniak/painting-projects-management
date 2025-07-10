@@ -3,7 +3,7 @@ using Demo1.Tests;
 using rbkApiModules.Identity.Core;
 using rbkApiModules.Testting.Core;
 
-namespace rbkApiModules.Demo1.Tests.Integration.Identity;
+namespace rbkApiModules.Identity.Tests;
 
 public class Global_Claim_Management_Tests
 {

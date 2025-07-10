@@ -21,7 +21,7 @@ public static class HttpAssertionExtensions
 
     public static void ShouldHaveErrors<T>(this HttpResponse<T> response, HttpStatusCode expectedCode, params string[] messages) where T : class
     {
-        response.Code.ShouldBe(expectedCode);
+        response.Code.ShouldBe(expectedCode, $"Unexpected http response code. Should be {expectedCode} but was {response.Code}");
 
         response.Data.ShouldBeNull($"Expected response of type {typeof(T).Name}, but the response was not empty");
         response.Messages.Length.ShouldBe(messages.Length, $"Unexpected number of error messages. Should be {messages.Length} but was {response.Messages.Length}");

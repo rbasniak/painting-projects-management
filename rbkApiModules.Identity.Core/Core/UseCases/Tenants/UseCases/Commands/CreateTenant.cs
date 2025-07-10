@@ -27,7 +27,7 @@ public class CreateTenant : IEndpoint
             }
             set
             {
-                _alias = value.ToUpper();
+                _alias = value?.ToUpper();
             }
         }
         public string Name { get; set; } = string.Empty;

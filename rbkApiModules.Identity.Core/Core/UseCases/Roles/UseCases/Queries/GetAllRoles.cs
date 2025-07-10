@@ -12,7 +12,7 @@ public class GetAllRoles : IEndpoint
 
             return Results.Ok(result);
         })
-        .RequireAuthorization(AuthenticationClaims.MANAGE_USER_ROLES)
+        .RequireAuthorization()
         .WithName("Get All Roles")
         .WithTags("Roles");
     }

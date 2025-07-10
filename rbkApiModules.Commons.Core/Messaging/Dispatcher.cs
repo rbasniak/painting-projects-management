@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -9,8 +10,13 @@ namespace rbkApiModules.Commons.Core;
 public class Dispatcher
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public Dispatcher(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
+    public Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor httpContextAccessor)
+    {
+        _serviceProvider = serviceProvider;
+        _httpContextAccessor = httpContextAccessor;
+    }
 
     public async Task<TResponse> SendAsync<TResponse>(ICommand<TResponse> request, CancellationToken cancellationToken)
     {
@@ -25,6 +31,8 @@ public class Dispatcher
 
         try
         {
+            DetectAuthenticatedUser(request);
+
             await ValidateAsync(logger, commandType, request, cancellationToken);
 
             var handlerType = typeof(ICommandHandler<,>).MakeGenericType(commandType, typeof(TResponse));
@@ -44,6 +52,24 @@ public class Dispatcher
         }
     }
 
+    private void  DetectAuthenticatedUser(object request)
+    {
+        if (request is IAuthenticatedRequest authenticatedRequest)
+        {
+            var user = _httpContextAccessor.HttpContext.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                var claims = user.Claims
+                    .Where(x => x.Type == JwtClaimIdentifiers.Roles)
+                    .Select(x => x.Value)
+                    .ToArray();
+
+                authenticatedRequest.SetIdentity(_httpContextAccessor.GetTenant(), _httpContextAccessor.GetUsername(), claims);
+            }
+        }
+    }
+
     public async Task SendAsync(ICommand request, CancellationToken cancellationToken)
     {
         var commandType = request.GetType();
@@ -57,6 +83,8 @@ public class Dispatcher
 
         try
         {
+            DetectAuthenticatedUser(request);
+
             await ValidateAsync(logger, commandType, request, cancellationToken);
 
             var handlerType = typeof(ICommandHandler<>).MakeGenericType(commandType);
@@ -93,6 +121,11 @@ public class Dispatcher
                 var errorSummary = new Dictionary<string, string[]>();
                 foreach (var error in result.Errors)
                 {
+                    if (error.ErrorMessage == "ignore me!")
+                    {
+                        continue;
+                    }
+
                     if (!errorSummary.ContainsKey(error.PropertyName))
                     {
                         errorSummary[error.PropertyName] = [error.ErrorMessage];
@@ -122,6 +155,8 @@ public class Dispatcher
 
         try
         {
+            DetectAuthenticatedUser(request);
+
             await ValidateAsync(logger, commandType, request, cancellationToken);
 
             var handlerType = typeof(IQueryHandler<,>).MakeGenericType(commandType, typeof(TResponse));

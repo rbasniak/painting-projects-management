@@ -12,7 +12,7 @@ public class RenameRole : IEndpoint
 
             return Results.Ok(result);
         })
-        .RequireAuthorization(AuthenticationClaims.MANAGE_USER_ROLES)
+        .RequireAuthorization()
         .WithName("Rename Role")
         .WithTags("Roles");
     }

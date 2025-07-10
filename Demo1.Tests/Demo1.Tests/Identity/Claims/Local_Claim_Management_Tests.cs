@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using rbkApiModules.Identity.Core;
 using rbkApiModules.Testting.Core;
 
-namespace rbkApiModules.Demo1.Tests.Integration.Identity;
+namespace rbkApiModules.Identity.Tests;
 
 public class Local_Claim_Management_Tests
 {

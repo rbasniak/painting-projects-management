@@ -1,8 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace rbkApiModules.Identity.Core;
+﻿namespace rbkApiModules.Identity.Core;
 
 public interface ICustomPasswordPolicyValidator
 {
-    Task<ValidationProblemDetails> Validate(string password);
+    Task<PasswordValidationResult> Validate(string password);
+}
+
+public class PasswordValidationResult
+{
+    public bool IsValid { get; set; }
+    public List<string> Errors { get; set; } = [];
+
+    public static PasswordValidationResult Success() => new PasswordValidationResult { IsValid = true };
+    public static PasswordValidationResult Failure(params string[] errors) => new PasswordValidationResult { IsValid = false, Errors = errors.ToList() };
 }

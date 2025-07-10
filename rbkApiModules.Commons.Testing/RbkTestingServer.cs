@@ -456,7 +456,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
     /// <summary>
     /// Login using normal credentials
     /// </summary>
-    public async Task<HttpResponse> LoginAsync(string username, string password, string? tenant)
+    public async Task<HttpResponse<JwtResponse>> LoginAsync(string username, string password, string? tenant)
     {
         using (var httpClient = CreateHttpClient())
         {

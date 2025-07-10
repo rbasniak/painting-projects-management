@@ -12,7 +12,7 @@ public class UpdateRoleClaims : IEndpoint
 
             return Results.Ok(result);
         })
-        .RequireAuthorization(AuthenticationClaims.MANAGE_USER_ROLES)
+        .RequireAuthorization()
         .WithName("Update Role Claims")
         .WithTags("Roles");
     }

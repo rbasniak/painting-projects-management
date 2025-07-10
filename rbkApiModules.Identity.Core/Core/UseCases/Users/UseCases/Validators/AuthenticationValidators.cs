@@ -32,18 +32,15 @@ internal static class AuthenticationValidators
 
                     hasError = hasError || result.Errors.Any();
 
-                    foreach (var kvp in result.Errors)
+                    foreach (var message in result.Errors)
                     {
-                        foreach (var message in kvp.Value)
-                        {
-                            validationContext.AddFailure(kvp.Key, message);
-                        }
+                        validationContext.AddFailure("Password", message);
                     }
                 }
 
                 return !hasError;
             })
-            .WithMessage("none"); // DO NOT CHANGE THIS MESSAGE! It's used in the pipeline to idenfity these errors
+            .WithMessage("ignore me!"); // DO NOT CHANGE THIS MESSAGE! It's used in the pipeline to idenfity these errors
     }
 
     public static IRuleBuilderOptions<T, ILoginData> LoginPoliciesAreValid<T>(this IRuleBuilder<T, ILoginData> rule, IEnumerable<ICustomLoginPolicyValidator> validators, ILocalizationService localization) where T : ILoginData
@@ -70,7 +67,7 @@ internal static class AuthenticationValidators
 
                 return !hasError;
             })
-            .WithMessage("none"); // DO NOT CHANGE THIS MESSAGE! It's used in the pipeline to idenfity these errors
+            .WithMessage("ignore me!"); // DO NOT CHANGE THIS MESSAGE! It's used in the pipeline to idenfity these errors
     }
 
     public static IRuleBuilderOptions<T, IUserMetadata> UserMetadataIsValid<T>(this IRuleBuilder<T, IUserMetadata> rule, IEnumerable<ICustomUserMetadataValidator> validators, ILocalizationService localization) where T : IUserMetadata
@@ -97,6 +94,6 @@ internal static class AuthenticationValidators
 
                 return !hasError;
             })
-            .WithMessage("none"); // DO NOT CHANGE THIS MESSAGE! It's used in the pipeline to idenfity these errors
+            .WithMessage("ignore me!"); // DO NOT CHANGE THIS MESSAGE! It's used in the pipeline to idenfity these errors
     }
 }

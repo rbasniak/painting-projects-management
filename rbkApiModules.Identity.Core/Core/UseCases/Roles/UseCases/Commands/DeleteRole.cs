@@ -12,7 +12,7 @@ public class DeleteRole : IEndpoint
 
             return Results.Ok();
         })
-        .RequireAuthorization(AuthenticationClaims.MANAGE_USER_ROLES)
+        .RequireAuthorization()
         .WithName("Delete Role")
         .WithTags("Roles");
     }
