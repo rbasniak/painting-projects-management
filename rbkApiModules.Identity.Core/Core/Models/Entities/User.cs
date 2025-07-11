@@ -15,11 +15,10 @@ public sealed class User : TenantEntity
         _roles = default!;
     }
 
-    public User(string tenant, string username, string email, string password, string avatarPath, 
+    public User(string tenant, string username, string email, string password, string avatar, 
         string displayName, AuthenticationMode authenticationMode, Dictionary<string, string>? metadata = null)
     {
         if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
-        if (string.IsNullOrEmpty(avatarPath)) throw new ArgumentNullException(nameof(avatarPath));
         if (string.IsNullOrEmpty(displayName)) throw new ArgumentNullException(nameof(displayName));
 
         AuthenticationMode = authenticationMode;
@@ -36,9 +35,9 @@ public sealed class User : TenantEntity
             ChangePassword(password);
         }
 
-        if (!String.IsNullOrEmpty(avatarPath))
+        if (!String.IsNullOrEmpty(avatar))
         {
-            Avatar = avatarPath;
+            Avatar = avatar;
         }
         else
         {

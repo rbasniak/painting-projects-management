@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using rbkApiModules.Commons.Core.Authentication;
 
 namespace rbkApiModules.Identity.Core;
@@ -7,10 +9,17 @@ public class ConfirmUserEmail : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/users/confirm-email", async (string email, string code, string tenant, 
-            AuthEmailOptions authEmailOptions, Dispatcher dispatcher, ILogger<ConfirmUserEmail> logger, 
+        endpoints.MapGet("/api/authentication/confirm-email", async (
+            [FromQuery] string? email,
+            [FromQuery] string? code,
+            [FromQuery] string? tenant, 
+            Dispatcher dispatcher, 
+            ILogger<ConfirmUserEmail> logger, 
+            IOptions<AuthEmailOptions> authEmailOptionsConfig, 
             CancellationToken cancellationToken) =>
         {
+            var authEmailOptions = authEmailOptionsConfig.Value;
+
             try
             {
                 await dispatcher.SendAsync(new Request { Email = email, ActivationCode = code, Tenant = tenant }, cancellationToken);
@@ -20,7 +29,7 @@ public class ConfirmUserEmail : IEndpoint
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error confirming user {Email} for tenant {Tenant}", email, tenant);
-                return Results.Redirect(authEmailOptions.EmailData.ConfirmationSuccessUrl);
+                return Results.Redirect(authEmailOptions.EmailData.ConfirmationFailedUrl);
             } 
         })
         .AllowAnonymous()
@@ -75,10 +84,12 @@ public class ConfirmUserEmail : IEndpoint
     public class Handler : ICommandHandler<Request>
     {
         private readonly IAuthService _usersService;
+        private readonly IAuthenticationMailService _mailingService;
 
-        public Handler(IAuthService usersService)
+        public Handler(IAuthService usersService, IAuthenticationMailService mailingService)
         {
             _usersService = usersService;
+            _mailingService = mailingService;
         }
 
         public async Task HandleAsync(Request request, CancellationToken cancellationToken)
@@ -86,6 +97,8 @@ public class ConfirmUserEmail : IEndpoint
             var user = await _usersService.FindUserAsync(request.Email, request.Tenant, cancellationToken);
 
             await _usersService.ConfirmUserAsync(request.Email, request.Tenant, cancellationToken);
+
+            _mailingService.SendConfirmationSuccessMail(user.DisplayName, user.Email!);
         }
     }
 }

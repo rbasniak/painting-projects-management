@@ -260,11 +260,16 @@ public class RelationalAuthService: IAuthService
     }
 
     public async Task<User> CreateUserAsync(string tenant, string username, string password, string email, 
-        string displayName, string avatarPath, bool isConfirmed, AuthenticationMode authenticationMode, Dictionary<string, string> metadata, CancellationToken cancellationToken)
+        string displayName, string avatar, bool isConfirmed, AuthenticationMode authenticationMode, Dictionary<string, string> metadata, CancellationToken cancellationToken)
     {
         tenant = tenant != null ? tenant.ToUpper() : null;
 
-        var user = new User(tenant, username, email, password, avatarPath, displayName, authenticationMode, metadata);
+        if (string.IsNullOrEmpty(avatar))
+        {
+            avatar = AvatarGenerator.GenerateBase64Avatar(displayName);
+        }
+
+        var user = new User(tenant, username, email, password, avatar, displayName, authenticationMode, metadata);
 
         if (isConfirmed)
         {

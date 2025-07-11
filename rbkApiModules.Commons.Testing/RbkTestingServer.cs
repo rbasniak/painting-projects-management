@@ -225,7 +225,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         var result = await ProcessResponse(response);
 
         return result;
-    }    
+    }
 
     private async Task<HttpResponse<TResponse>> PostAsync<TResponse>(HttpClient httpClient, string url, object body) where TResponse : class
     {
@@ -323,7 +323,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         var result = await ProcessResponse(response);
 
         return result;
-    }    
+    }
     private async Task<HttpResponse<TResponse>> PutAsync<TResponse>(HttpClient httpClient, string url, object body) where TResponse : class
     {
         var response = await httpClient.PutAsync(url, new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"));
@@ -420,8 +420,8 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         var result = await ProcessResponse(response);
 
         return result;
-    }    
-    
+    }
+
     private async Task<HttpResponse<TResponse>> DeleteAsync<TResponse>(HttpClient httpClient, string url) where TResponse : class
     {
         var response = await httpClient.DeleteAsync(url);
@@ -435,7 +435,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
     #region Get
 
-   public async Task<HttpResponse> GetAsync<TResponse>(string url, ApiKey credentials) where TResponse : class
+    public async Task<HttpResponse> GetAsync<TResponse>(string url, ApiKey credentials) where TResponse : class
     {
         using (var httpClient = CreateHttpClient())
         {
@@ -463,7 +463,53 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
             return await GetAsync<TResponse>(httpClient, url);
         }
-    }   
+    }
+
+    public async Task<HttpResponse<TResponse>> GetAsync<TResponse>(string url) where TResponse : class
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            return await GetAsync<TResponse>(httpClient, url);
+        }
+    }
+
+    public async Task<HttpResponse> GetAsync(string url, ApiKey credentials)
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            httpClient.DefaultRequestHeaders.Add(RbkAuthenticationSchemes.API_KEY, credentials.Value);
+
+            return await GetAsync(httpClient, url);
+        }
+    }
+
+    public async Task<HttpResponse> GetAsync(string url, Credentials credentials)
+    {
+        return await GetAsync(url, GetCredentialsFromCache(credentials));
+    }
+
+    public async Task<HttpResponse> GetAsync(string url, string username)
+    {
+        return await GetAsync(url, GetCredentialsFromCache(username));
+    }
+
+    public async Task<HttpResponse> GetAsync(string url, JwtToken credentials)
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", credentials.Value);
+
+            return await GetAsync(httpClient, url);
+        }
+    }
+
+    public async Task<HttpResponse> GetAsync(string url)
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            return await GetAsync(httpClient, url);
+        }
+    }
 
     private async Task<HttpResponse<TResponse>> GetAsync<TResponse>(HttpClient httpClient, string url) where TResponse : class
     {
@@ -473,6 +519,16 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
         return result;
     }
+
+    private async Task<HttpResponse> GetAsync(HttpClient httpClient, string url)
+    {
+        var response = await httpClient.GetAsync(url);
+
+        var result = await ProcessResponse(response);
+
+        return result;
+    }
+
 
     #endregion
 
@@ -488,7 +544,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(MockedWindowsAuthenticationSchemeName);
             httpClient.DefaultRequestHeaders.Add(MockedWindowsAuthenticationHeaderName, username);
 
-            var result = await PostAsync<JwtResponse>(httpClient, "api/authentication/login", new UserLogin.Request 
+            var result = await PostAsync<JwtResponse>(httpClient, "api/authentication/login", new UserLogin.Request
             {
                 Username = username,
                 Tenant = tenant
@@ -507,7 +563,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
     {
         using (var httpClient = CreateHttpClient())
         {
-            var result = await PostAsync<JwtResponse>(httpClient, "api/authentication/login", new UserLogin.Request 
+            var result = await PostAsync<JwtResponse>(httpClient, "api/authentication/login", new UserLogin.Request
             {
                 Username = username,
                 Password = password,
@@ -544,6 +600,11 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
     {
         var credentials = CachedCredentials.Where(x => x.Key.Username == username).ToArray();
 
+        if (credentials.Length == 0)
+        {
+            throw new InvalidOperationException($"No credentials found for user {username}, you need to login first");
+        }
+
         if (credentials.Length > 1)
         {
             throw new InvalidOperationException($"Multiple credentials found for user {username}, you need to use the overload with full credentials");
@@ -552,14 +613,18 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         return new JwtToken(credentials[0].Value);
     }
 
-    private async Task<HttpResponse> ProcessResponse(HttpResponseMessage response) 
+    private async Task<HttpResponse> ProcessResponse(HttpResponseMessage response)
     {
         var result = new HttpResponse();
 
         result.Code = response.StatusCode;
         result.Body = await response.Content.ReadAsStringAsync();
 
-        if (response.IsSuccessStatusCode)
+        if (response.StatusCode == HttpStatusCode.Redirect)
+        {
+            result.Messages = [response.Headers.Location.ToString()];
+        }
+        else if (response.IsSuccessStatusCode)
         {
             // Request without body, don't do anything;
         }
@@ -574,7 +639,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
     private async Task<HttpResponse<TResponse>> ProcessResponse<TResponse>(HttpResponseMessage response) where TResponse : class
     {
         var result = new HttpResponse<TResponse>();
-        
+
         result.Code = response.StatusCode;
         result.Body = await response.Content.ReadAsStringAsync();
 
@@ -649,6 +714,8 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
         return data;
     }
+
+
 }
 
 public record Credentials

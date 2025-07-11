@@ -38,20 +38,20 @@ public static class Builder
     public static IApplicationBuilder UseRbkRelationalAuthentication(this WebApplication app)
     {
         UserLogin.MapCredentialsLoginEndpoint(app);
-        // UserLogin.MapNtlmLoginEndpoint(app);
-        //ActivateUser.MapEndpoint(app);
-        //ChangePassword.MapEndpoint(app);
-        //ConfirmUserEmail.MapEndpoint(app);
-        //CreateUser.MapEndpoint(app);
-        //DeativateUser.MapEndpoint(app);
-        //DeleteUser.MapEndpoint(app);
-        //RedefinePassword.MapEndpoint(app);
-        //Register.MapEndpoint(app);
-        //RenewAccessToken.MapEndpoint(app);
-        //RequestPasswordReset.MapEndpoint(app);
-        //ResendEmailConfirmation.MapEndpoint(app);
-        //SwitchTenant.MapEndpoint(app);
-        //GetAllUsers.MapEndpoint(app);
+        //UserLogin.MapNtlmLoginEndpoint(app);
+        ActivateUser.MapEndpoint(app);
+        ChangePassword.MapEndpoint(app);
+        ConfirmUserEmail.MapEndpoint(app);
+        CreateUser.MapEndpoint(app);
+        DeativateUser.MapEndpoint(app);
+        DeleteUser.MapEndpoint(app);
+        RedefinePassword.MapEndpoint(app);
+        Register.MapEndpoint(app);
+        RenewAccessToken.MapEndpoint(app);
+        RequestPasswordReset.MapEndpoint(app);
+        ResendEmailConfirmation.MapEndpoint(app);
+        SwitchTenant.MapEndpoint(app);
+        GetAllUsers.MapEndpoint(app);
         ReplaceUserRoles.MapEndpoint(app);
         AddClaimOverride.MapEndpoint(app);
 

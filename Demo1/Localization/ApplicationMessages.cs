@@ -14,3 +14,14 @@ public class ApplicationMessages
         }
     }
 }
+
+public class MetadataValidationMessages : ILocalizedResource
+{
+    public enum General
+    {
+        [Description("Sector is required")] SectorIsRequired,
+        [Description("Age must be greater than 18")] AgeMustBeGreaterThan18,
+        [Description("Age is required")] AgeIsRequired,
+        [Description("Age is not valid")] AgeIsNotValid,
+    }
+}

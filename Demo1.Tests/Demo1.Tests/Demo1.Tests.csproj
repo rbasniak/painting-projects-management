@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Identity\Endpoint\" />
     <Folder Include="Identity\Tenants\" />
   </ItemGroup>
 

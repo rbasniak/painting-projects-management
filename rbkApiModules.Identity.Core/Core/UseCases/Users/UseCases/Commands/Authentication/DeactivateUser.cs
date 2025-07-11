@@ -34,7 +34,8 @@ public class DeativateUser : IEndpoint
                 .NotEmpty()
                 .MustAsync(UserExistsOnDatabase)
                     .WithMessage(localization.LocalizeString(AuthenticationMessages.Validations.UserNotFound))
-                .Must(UserCannotDeactivateItself);
+                .Must(UserCannotDeactivateItself)
+                    .WithMessage(localization.LocalizeString(AuthenticationMessages.Validations.UserCannotDeactivateItselft));
         }
 
         private bool UserCannotDeactivateItself(Request request, string username)
