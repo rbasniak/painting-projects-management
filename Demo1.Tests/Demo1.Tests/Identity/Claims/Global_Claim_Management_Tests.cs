@@ -3,7 +3,7 @@ using Demo1.Tests;
 using rbkApiModules.Identity.Core;
 using rbkApiModules.Testting.Core;
 
-namespace rbkApiModules.Identity.Tests;
+namespace rbkApiModules.Identity.Tests.Claims;
 
 public class Global_Claim_Management_Tests
 {
@@ -276,5 +276,5 @@ public class Global_Claim_Management_Tests
     public async Task CleanUp()
     {
         await TestingServer.Context.Database.EnsureDeletedAsync();
-    }
+    } 
 }

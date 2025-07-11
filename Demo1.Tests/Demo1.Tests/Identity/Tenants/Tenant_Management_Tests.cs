@@ -6,7 +6,7 @@ using rbkApiModules.Identity.Core.DataTransfer;
 using rbkApiModules.Identity.Core.DataTransfer.Users;
 using rbkApiModules.Testting.Core;
 
-namespace rbkApiModules.Identity.Tests;
+namespace rbkApiModules.Identity.Tests.Tenants;
 
 public class Tenant_Management_Tests
 {
@@ -89,6 +89,8 @@ public class Tenant_Management_Tests
         tenant.Alias.ShouldBe("ACME");
         tenant.Name.ShouldBe("Acme Inc.");
 
+        tenant.Metadata.ShouldNotBeNull();
+
         var metadata = JsonSerializer.Deserialize<JsonElement>(tenant.Metadata.ToString());
         metadata.GetProperty("city").GetString().ShouldBe("Aalborg");
 
@@ -107,12 +109,12 @@ public class Tenant_Management_Tests
     [Arguments(null)]
     [Arguments("")]
     [Test, NotInParallel(Order = 4)]
-    public async Task Global_Admin_Cannot_Create_Tenant_Without_Alias(string alias)
+    public async Task Global_Admin_Cannot_Create_Tenant_Without_Alias(string? alias)
     {
         // Prepare 
         var request = new CreateTenant.Request
         {
-            Alias = alias,
+            Alias = alias!,
             Name = "Acme Inc.",
             Metadata = "{ \"city\": \"Aalborg\" }",
             AdminInfo = new CreateTenant.AdminUser
@@ -137,13 +139,13 @@ public class Tenant_Management_Tests
     [Arguments(null)]
     [Arguments("")]
     [Test, NotInParallel(Order = 5)]
-    public async Task Global_Admin_Cannot_Create_Tenant_Without_Name(string name)
+    public async Task Global_Admin_Cannot_Create_Tenant_Without_Name(string? name)
     {
         // Prepare 
         var request = new CreateTenant.Request
         {
             Alias = "ALIAS",
-            Name = name,
+            Name = name!,
             AdminInfo = new CreateTenant.AdminUser
             {
                 DisplayName = "Acme Administrator",
@@ -231,6 +233,8 @@ public class Tenant_Management_Tests
         tenant.ShouldNotBeNull();
         tenant.Alias.ShouldBe("ACME");
         tenant.Name.ShouldBe("Acme Industries");
+
+        tenant.Metadata.ShouldNotBeNull();
 
         var metadata = JsonSerializer.Deserialize<JsonElement>(tenant.Metadata.ToString());
         metadata.GetProperty("city").GetString().ShouldBe("Auhrus");
@@ -328,13 +332,13 @@ public class Tenant_Management_Tests
     [Arguments(null)]
     [Arguments("")]
     [Test, NotInParallel(Order = 12)]
-    public async Task Global_Admin_Cannot_Update_Tenant_With_Empty_Or_Null_Name(string name)
+    public async Task Global_Admin_Cannot_Update_Tenant_With_Empty_Or_Null_Name(string? name)
     {
         // Prepare
         var request = new UpdateTenant.Request
         {
             Alias = "acme",
-            Name = name,
+            Name = name!,
             Metadata = "{ \"city\": \"Odese\" }"
         };
 
@@ -351,12 +355,12 @@ public class Tenant_Management_Tests
     [Arguments(null)]
     [Arguments("")]
     [Test, NotInParallel(Order = 13)]
-    public async Task Global_Admin_Cannot_Update_Tenant_With_Empty_Or_Null_Alias(string alias)
+    public async Task Global_Admin_Cannot_Update_Tenant_With_Empty_Or_Null_Alias(string? alias)
     {
         // Prepare
         var request = new UpdateTenant.Request
         {
-            Alias = alias,
+            Alias = alias!,
             Name = "Acme Inc.",
             Metadata = "{ \"city\": \"Odese\" }"
         };
@@ -413,8 +417,11 @@ public class Tenant_Management_Tests
         
         // Find the entity created within these tests and asset it
         var tenant = response.Data.SingleOrDefault(x => x.Alias == "ACME");
-
+        
+        tenant.ShouldNotBeNull();
         tenant.Name.ShouldBe("Acme Industries");
+
+        tenant.Metadata.ShouldNotBeNull();
 
         var metadata = JsonSerializer.Deserialize<JsonElement>(tenant.Metadata.ToString());
         metadata.GetProperty("city").GetString().ShouldBe("Auhrus");

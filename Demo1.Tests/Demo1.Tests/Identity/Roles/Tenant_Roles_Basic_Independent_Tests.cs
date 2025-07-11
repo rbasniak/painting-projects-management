@@ -4,7 +4,7 @@ using rbkApiModules.Identity.Core;
 using rbkApiModules.Identity.Core.DataTransfer;
 using rbkApiModules.Testting.Core;
 
-namespace rbkApiModules.Identity.Tests;
+namespace rbkApiModules.Identity.Tests.Roles;
 
 public class Tenant_Roles_Basic_Independent_Tests
 {

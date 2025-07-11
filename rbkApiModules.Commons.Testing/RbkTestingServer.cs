@@ -172,6 +172,14 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         }
     }
 
+    public async Task<HttpResponse> PostAsync(string url, object body)
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            return await PostAsync(httpClient, url, body);
+        }
+    }
+
     public async Task<HttpResponse<TResponse>> PostAsync<TResponse>(string url, object body, ApiKey credentials) where TResponse : class
     {
         using (var httpClient = CreateHttpClient())
@@ -198,6 +206,14 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         {
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", credentials.Value);
 
+            return await PostAsync<TResponse>(httpClient, url, body);
+        }
+    }
+
+    public async Task<HttpResponse<TResponse>> PostAsync<TResponse>(string url, object body) where TResponse : class
+    {
+        using (var httpClient = CreateHttpClient())
+        {
             return await PostAsync<TResponse>(httpClient, url, body);
         }
     }
@@ -254,6 +270,14 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         }
     }
 
+    public async Task<HttpResponse> PutAsync(string url, object body)
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            return await PutAsync(httpClient, url, body);
+        }
+    }
+
     public async Task<HttpResponse<TResponse>> PutAsync<TResponse>(string url, object body, ApiKey credentials) where TResponse : class
     {
         using (var httpClient = CreateHttpClient())
@@ -284,6 +308,14 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         }
     }
 
+    public async Task<HttpResponse<TResponse>> PutAsync<TResponse>(string url, object body) where TResponse : class
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            return await PutAsync<TResponse>(httpClient, url, body);
+        }
+    }
+
     private async Task<HttpResponse> PutAsync(HttpClient httpClient, string url, object body)
     {
         var response = await httpClient.PutAsync(url, new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"));
@@ -292,7 +324,6 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
         return result;
     }    
-
     private async Task<HttpResponse<TResponse>> PutAsync<TResponse>(HttpClient httpClient, string url, object body) where TResponse : class
     {
         var response = await httpClient.PutAsync(url, new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"));
@@ -336,6 +367,14 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         }
     }
 
+    public async Task<HttpResponse> DeleteAsync(string url)
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            return await DeleteAsync(httpClient, url);
+        }
+    }
+
     public async Task<HttpResponse<TResponse>> DeleteAsync<TResponse>(string url, ApiKey credentials) where TResponse : class
     {
         using (var httpClient = CreateHttpClient())
@@ -366,6 +405,14 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         }
     }
 
+    public async Task<HttpResponse<TResponse>> DeleteAsync<TResponse>(string url) where TResponse : class
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            return await DeleteAsync<TResponse>(httpClient, url);
+        }
+    }
+
     private async Task<HttpResponse> DeleteAsync(HttpClient httpClient, string url)
     {
         var response = await httpClient.DeleteAsync(url);
@@ -374,7 +421,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
         return result;
     }    
-
+    
     private async Task<HttpResponse<TResponse>> DeleteAsync<TResponse>(HttpClient httpClient, string url) where TResponse : class
     {
         var response = await httpClient.DeleteAsync(url);

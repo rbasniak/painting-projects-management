@@ -56,12 +56,9 @@ internal static class AuthenticationValidators
 
                     hasError = hasError || result.Errors.Any();
 
-                    foreach (var kvp in result.Errors)
+                    foreach(var message in result.Errors)
                     {
-                        foreach (var message in kvp.Value)
-                        {
-                            validationContext.AddFailure(kvp.Key, message);
-                        }
+                        validationContext.AddFailure("Password", message);
                     }
                 }
 

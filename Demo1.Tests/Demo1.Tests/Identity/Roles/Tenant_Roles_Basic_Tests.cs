@@ -4,7 +4,7 @@ using rbkApiModules.Identity.Core;
 using rbkApiModules.Identity.Core.DataTransfer;
 using rbkApiModules.Testting.Core;
 
-namespace rbkApiModules.Identity.Tests;
+namespace rbkApiModules.Identity.Tests.Roles;
 
 /// <summary>
 /// In general, the local admin can only manage roles that are tenant wide,
@@ -21,9 +21,9 @@ public class Tenant_Roles_Basic_DependentTests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        _tokens.Add("admin1-bz", new JwtToken((await TestingServer.LoginAsync("admin1", "123", "buzios")).Data.AccessToken));
-        _tokens.Add("admin1-bs", new JwtToken((await TestingServer.LoginAsync("admin1", "123", "un-bs")).Data.AccessToken));
-        _tokens.Add("superuser", new JwtToken((await TestingServer.LoginAsync("superuser", "admin", null)).Data.AccessToken));
+        _tokens.Add("admin1-bz", new JwtToken((await TestingServer.LoginAsync("admin1", "123", "buzios")).Data!.AccessToken));
+        _tokens.Add("admin1-bs", new JwtToken((await TestingServer.LoginAsync("admin1", "123", "un-bs")).Data!.AccessToken));
+        _tokens.Add("superuser", new JwtToken((await TestingServer.LoginAsync("superuser", "admin", null)).Data!.AccessToken));
     }
 
     #region tables
@@ -185,7 +185,7 @@ public class Tenant_Roles_Basic_DependentTests
     [Arguments(null)]
     [Arguments("")]
     [Test, NotInParallel(Order = 5)]
-    public async Task Local_Admin_Cannot_Rename_Role_With_Empty_Or_Null_Name(string name)
+    public async Task Local_Admin_Cannot_Rename_Role_With_Empty_Or_Null_Name(string? name)
     {
         // Prepare
         var role = TestingServer.Context.Set<Role>().First(x => x.Name == "Renamed Tenant Role");
@@ -193,7 +193,7 @@ public class Tenant_Roles_Basic_DependentTests
         var request = new RenameRole.Request
         {
             Id = role.Id,
-            Name = name,
+            Name = name!,
         };
 
         // Act
@@ -259,6 +259,7 @@ public class Tenant_Roles_Basic_DependentTests
             Name = "Application Wide Role To Be Overwritten"
         };
         var preResponse1 = await TestingServer.PostAsync<RoleDetails>("api/authorization/roles", body1, _tokens["superuser"]);
+        preResponse1.ShouldNotBeNull();
         preResponse1.ShouldBeSuccess();
 
         var body2 = new CreateRole.Request
@@ -266,6 +267,7 @@ public class Tenant_Roles_Basic_DependentTests
             Name = "Application Wide Role To Be Overwritten"
         };
         var preResponse2 = await TestingServer.PostAsync<RoleDetails>("api/authorization/roles", body2, _tokens["admin1-bz"]);
+        preResponse2.ShouldNotBeNull();
         preResponse2.ShouldBeSuccess();
 
         var body3 = new CreateRole.Request
@@ -273,6 +275,7 @@ public class Tenant_Roles_Basic_DependentTests
             Name = "Trully Application Wide Role"
         };
         var preResponse3 = await TestingServer.PostAsync<RoleDetails>("api/authorization/roles", body3, _tokens["superuser"]);
+        preResponse3.ShouldNotBeNull();
         preResponse3.ShouldBeSuccess();
 
         // Act
@@ -286,20 +289,21 @@ public class Tenant_Roles_Basic_DependentTests
         
         // Find the entity created within these tests and assert it
         var role1 = result.SingleOrDefault(x => x.Name == "Renamed Tenant Role");
+        role1.ShouldNotBeNull();
         role1.Source.ShouldBe(RoleSource.Local);
         role1.ShouldNotBeNull();
 
         // Find the entity created in this tests and assert it, ensuring it's not the application wide one
         var role2 = result.SingleOrDefault(x => x.Name == "Application Wide Role To Be Overwritten");
-        role2.Source.ShouldBe(RoleSource.Local);
         role2.ShouldNotBeNull();
-        role2.Id.ShouldNotBe(preResponse1.Data.Id);
+        role2.Source.ShouldBe(RoleSource.Local);
+        role2.Id.ShouldNotBe(preResponse1.Data!.Id);
 
         // Find the application wide entity created in this tests and assert it
         var role3 = result.SingleOrDefault(x => x.Name == "Trully Application Wide Role");
-        role3.Source.ShouldBe(RoleSource.Global);
         role3.ShouldNotBeNull();
-        role3.Id.ShouldBe(preResponse3.Data.Id);
+        role3.Source.ShouldBe(RoleSource.Global);
+        role3.Id.ShouldBe(preResponse3.Data!.Id);
     }
 
     #region tables
@@ -577,6 +581,10 @@ public class Tenant_Roles_Basic_DependentTests
             var otherTenantRole = TestingServer.Context.Set<Role>().SingleOrDefault(x => x.Name == "Tenant Role" && x.TenantId == "UN-BS");
             var currentTenantRole = TestingServer.Context.Set<Role>().SingleOrDefault(x => x.Name == "Tenant Role" && x.TenantId == "BUZIOS");
             var roleToBeRenamed = TestingServer.Context.Set<Role>().SingleOrDefault(x => x.Name == "Role to be Renamed" && x.TenantId == "BUZIOS");
+
+            otherTenantRole.ShouldNotBeNull();
+            currentTenantRole.ShouldNotBeNull();
+            roleToBeRenamed.ShouldNotBeNull();
 
             return (otherTenantRole, currentTenantRole, roleToBeRenamed);
         }
