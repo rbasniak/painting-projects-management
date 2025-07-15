@@ -5,7 +5,7 @@ public class DeleteClaim : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/api/authorization/claims/{id}", async (Guid id, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/api/authorization/claims/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
@@ -55,18 +55,14 @@ public class DeleteClaim : IEndpoint
             return !claim.IsProtected;
         }
     }
-    public class Handler : ICommandHandler<Request>
+    public class Handler(IClaimsService _claimsService) : ICommandHandler<Request>
     {
-        private readonly IClaimsService _claimsService;
 
-        public Handler(IClaimsService claimsService)
-        {
-            _claimsService = claimsService;
-        }
-
-        public async Task HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _claimsService.DeleteAsync(request.Id, cancellationToken);
+
+            return CommandResponse.Success();
         }
     }
 }

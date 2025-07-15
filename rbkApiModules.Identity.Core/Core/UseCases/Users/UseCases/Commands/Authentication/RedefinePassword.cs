@@ -6,7 +6,7 @@ public class RedefinePassword : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/redefine-password", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/redefine-password", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(request, cancellationToken);
 
@@ -59,12 +59,13 @@ public class RedefinePassword : IEndpoint
             _usersService = usersService;
         }
 
-        public async Task HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var user = await _usersService.RedefinePasswordAsync(request.Code, request.Password, cancellationToken);
 
             _mailingService.SendPasswordResetSuccessMail(user.DisplayName, user.Email);
 
+            return CommandResponse.Success();
         }
     }
 }

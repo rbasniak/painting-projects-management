@@ -4,7 +4,7 @@ public class UpdateTenant : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/api/authorization/tenants", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/api/authorization/tenants", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -76,11 +76,11 @@ public class UpdateTenant : IEndpoint
             _tenantsService = tenantsService;
         }
 
-        public async Task<TenantDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<TenantDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var tenant = await _tenantsService.UpdateAsync(request.Alias, request.Name, request.Metadata, cancellationToken);
 
-            return TenantDetails.FromModel(tenant);
+            return CommandResponse.Success(TenantDetails.FromModel(tenant));
         }
     }
 }

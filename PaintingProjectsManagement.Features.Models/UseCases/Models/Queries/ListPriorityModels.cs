@@ -4,7 +4,7 @@ internal class ListPriorityModels : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/models/prioritized", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/models/prioritized", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
@@ -22,16 +22,10 @@ internal class ListPriorityModels : IEndpoint
     {
     }
 
-    public class Handler : IQueryHandler<Request, IReadOnlyCollection<ModelDetails>>
+    public class Handler(DbContext _context) : IQueryHandler<Request, IReadOnlyCollection<ModelDetails>>
     {
-        private readonly DbContext _context;
 
-        public Handler(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IReadOnlyCollection<ModelDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<ModelDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var models = await _context.Set<Model>()
                 .Include(x => x.Category)
@@ -41,7 +35,7 @@ internal class ListPriorityModels : IEndpoint
                 .ThenBy(x => x.Name) 
                 .ToListAsync(cancellationToken);
 
-            return models.Select(ModelDetails.FromModel).AsReadOnly();
+            return QueryResponse.Success(models.Select(ModelDetails.FromModel).AsReadOnly());
         }
     }
 }       

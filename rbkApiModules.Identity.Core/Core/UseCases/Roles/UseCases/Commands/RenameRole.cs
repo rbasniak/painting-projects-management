@@ -6,7 +6,7 @@ public class RenameRole : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/api/authorization/roles", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/api/authorization/roles", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -80,13 +80,13 @@ public class RenameRole : IEndpoint
             _rolesService = rolesService;
         }
 
-        public async Task<RoleDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<RoleDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _rolesService.RenameAsync(request.Id, request.Name, cancellationToken);
 
             var role = await _rolesService.GetDetailsAsync(request.Id, cancellationToken);
 
-            return RoleDetails.FromModel(role);
+            return CommandResponse.Success(RoleDetails.FromModel(role));
         }
     }
 }

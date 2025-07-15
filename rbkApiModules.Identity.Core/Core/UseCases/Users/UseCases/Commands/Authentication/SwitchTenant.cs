@@ -7,7 +7,7 @@ public class SwitchTenant : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/switch-tenant", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/switch-tenant", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -59,27 +59,12 @@ public class SwitchTenant : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, JwtResponse>
+    public class Handler(IJwtFactory _jwtFactory, IAuthService _usersService, IEnumerable<ICustomClaimHandler> _claimHandlers, 
+        IOptions<JwtIssuerOptions> jwtOptions, IAutomaticUserCreator _automaticUserCreator, ILogger<Handler> _logger) : ICommandHandler<Request, JwtResponse>
     {
-        private readonly IJwtFactory _jwtFactory;
-        private readonly IAuthService _usersService;
-        private readonly JwtIssuerOptions _jwtOptions;
-        private readonly IAutomaticUserCreator _automaticUserCreator;
-        private readonly IEnumerable<ICustomClaimHandler> _claimHandlers;
-        private readonly ILogger<Handler> _logger;
+        private readonly JwtIssuerOptions _jwtOptions = jwtOptions.Value;
 
-        public Handler(IJwtFactory jwtFactory, IAuthService usersService, IEnumerable<ICustomClaimHandler> claimHandlers, 
-            IOptions<JwtIssuerOptions> jwtOptions, IAutomaticUserCreator automaticUserCreator, ILogger<Handler> logger)
-        {
-            _jwtFactory = jwtFactory;
-            _usersService = usersService;
-            _jwtOptions = jwtOptions.Value;
-            _claimHandlers = claimHandlers;
-            _automaticUserCreator = automaticUserCreator;
-            _logger = logger;
-        }
-
-        public async Task<JwtResponse> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<JwtResponse>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var user = await _usersService.FindUserAsync(request.Identity.Username, request.Tenant, cancellationToken);
 
@@ -113,7 +98,7 @@ public class SwitchTenant : IEndpoint
 
             await _usersService.RefreshLastLogin(user.Username, user.TenantId, cancellationToken);
 
-            return jwt;
+            return CommandResponse.Success(jwt);
         }
     }
 }

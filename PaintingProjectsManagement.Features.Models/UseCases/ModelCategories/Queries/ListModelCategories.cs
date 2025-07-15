@@ -4,7 +4,7 @@ internal class ListModelCategories : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/models/categories", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/models/categories", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
@@ -22,20 +22,14 @@ internal class ListModelCategories : IEndpoint
     {
     }
 
-    public class Handler : IQueryHandler<Request, IReadOnlyCollection<ModelCategoryDetails>>
+    public class Handler(DbContext _context) : IQueryHandler<Request, IReadOnlyCollection<ModelCategoryDetails>>
     {
-        private readonly DbContext _context;
 
-        public Handler(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IReadOnlyCollection<ModelCategoryDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<ModelCategoryDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var categories = await _context.Set<ModelCategory>().ToListAsync(cancellationToken);
 
-            return categories.Select(ModelCategoryDetails.FromModel).ToList().AsReadOnly();
+            return QueryResponse.Success(categories.Select(ModelCategoryDetails.FromModel).AsReadOnly());
         }
     }
 }

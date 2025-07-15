@@ -6,7 +6,7 @@ public class Register : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/register", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/register", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(request, cancellationToken);
 
@@ -108,14 +108,14 @@ public class Register : IEndpoint
             _mailingService = mailingService;
         }
 
-        public async Task<UserDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<UserDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var user = await _usersService.CreateUserAsync(request.Tenant, request.Username, request.Password, request.Email, request.DisplayName,
                 AvatarGenerator.GenerateBase64Avatar(request.DisplayName), false, AuthenticationMode.Credentials, request.Metadata, cancellationToken);
 
             _mailingService.SendConfirmationMail(user.DisplayName, user.Email, user.ActivationCode);
 
-            return UserDetails.FromModel(user);
+            return CommandResponse.Success(UserDetails.FromModel(user));
         }
     }
 }

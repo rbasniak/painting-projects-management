@@ -4,7 +4,7 @@ public class ChangePassword : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/change-password", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/change-password", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(request, cancellationToken);
 
@@ -54,18 +54,14 @@ public class ChangePassword : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request>
+    public class Handler(IAuthService _usersService) : ICommandHandler<Request>
     {
-        private readonly IAuthService _usersService;
 
-        public Handler(IAuthService usersService)
-        {
-            _usersService = usersService;
-        }
-
-        public async Task HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _usersService.ChangePasswordAsync(request.Identity.Tenant, request.Identity.Username, request.NewPassword, cancellationToken);
+
+            return CommandResponse.Success();
         }
     }
 }

@@ -4,7 +4,7 @@ public class CreateTenant : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authorization/tenants", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authorization/tenants", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -109,7 +109,7 @@ public class CreateTenant : IEndpoint
             _usersService = usersService;
         }
 
-        public async Task<TenantDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<TenantDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var tenant = new Tenant(request.Alias, request.Name, request.Metadata);
 
@@ -140,7 +140,7 @@ public class CreateTenant : IEndpoint
 
             await _claimsService.AddClaimOverridesAsync(desiredClaims.ToArray(), request.AdminInfo.Username, tenant.Alias, ClaimAccessType.Allow, cancellationToken);
 
-            return TenantDetails.FromModel(tenant);
+            return CommandResponse.Success(TenantDetails.FromModel(tenant));
         }
     }
 }

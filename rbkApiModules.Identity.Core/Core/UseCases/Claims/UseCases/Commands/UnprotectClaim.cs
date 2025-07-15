@@ -4,7 +4,7 @@ public class UnprotectClaim : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authorization/claims/unprotect", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authorization/claims/unprotect", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -38,13 +38,13 @@ public class UnprotectClaim : IEndpoint
             _claimsService = claimsService;
         }
 
-        public async Task<ClaimDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<ClaimDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _claimsService.UnprotectAsync(request.Id, cancellationToken);
 
             var claim = await _claimsService.FindAsync(request.Id, cancellationToken);
 
-            return ClaimDetails.FromModel(claim);
+            return CommandResponse.Success(ClaimDetails.FromModel(claim));
         }
     }
 }

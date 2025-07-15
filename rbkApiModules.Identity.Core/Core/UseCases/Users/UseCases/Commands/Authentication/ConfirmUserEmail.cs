@@ -13,7 +13,7 @@ public class ConfirmUserEmail : IEndpoint
             [FromQuery] string? email,
             [FromQuery] string? code,
             [FromQuery] string? tenant, 
-            Dispatcher dispatcher, 
+            IDispatcher dispatcher, 
             ILogger<ConfirmUserEmail> logger, 
             IOptions<AuthEmailOptions> authEmailOptionsConfig, 
             CancellationToken cancellationToken) =>
@@ -92,13 +92,15 @@ public class ConfirmUserEmail : IEndpoint
             _mailingService = mailingService;
         }
 
-        public async Task HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var user = await _usersService.FindUserAsync(request.Email, request.Tenant, cancellationToken);
 
             await _usersService.ConfirmUserAsync(request.Email, request.Tenant, cancellationToken);
 
             _mailingService.SendConfirmationSuccessMail(user.DisplayName, user.Email!);
+
+            return CommandResponse.Success();
         }
     }
 }

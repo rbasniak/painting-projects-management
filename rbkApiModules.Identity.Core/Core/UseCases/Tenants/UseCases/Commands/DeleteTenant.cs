@@ -4,7 +4,7 @@ public class DeleteTenant : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/api/authorization/tenants/{tenantId}", async (string tenantId, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/api/authorization/tenants/{tenantId}", async (string tenantId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(new Request { Alias = tenantId }, cancellationToken);
 
@@ -67,7 +67,7 @@ public class DeleteTenant : IEndpoint
             _localization = localization;
         }
 
-        public async Task HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             // MIGRATION: create transaction
             try
@@ -77,6 +77,8 @@ public class DeleteTenant : IEndpoint
                 await _rolesService.DeleteRolesFromTenant(request.Alias, cancellationToken);
 
                 await _tenantsService.DeleteAsync(request.Alias, cancellationToken);
+
+                return CommandResponse.Success();
             }
             catch 
             {

@@ -6,7 +6,7 @@ public class RenewAccessToken : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/refresh-token", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/refresh-token", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -76,22 +76,10 @@ public class RenewAccessToken : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, JwtResponse>
+    public class Handler(IJwtFactory _jwtFactory, IAuthService _usersService, IEnumerable<ICustomClaimHandler> _claimHandlers, ILogger<Handler> _logger) : ICommandHandler<Request, JwtResponse>
     {
-        private readonly IJwtFactory _jwtFactory;
-        private readonly IAuthService _usersService;
-        private readonly IEnumerable<ICustomClaimHandler> _claimHandlers;
-        private readonly ILogger<Handler> _logger;
 
-        public Handler(IJwtFactory jwtFactory, IAuthService usersService, IEnumerable<ICustomClaimHandler> claimHandlers, ILogger<Handler> logger)
-        {
-            _jwtFactory = jwtFactory;
-            _usersService = usersService;
-            _claimHandlers = claimHandlers;
-            _logger = logger;
-        }
-
-        public async Task<JwtResponse> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<JwtResponse>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var user = await _usersService.GetUserFromRefreshtokenAsync(request.RefreshToken, cancellationToken);
             
@@ -116,7 +104,7 @@ public class RenewAccessToken : IEndpoint
 
             _logger.LogInformation($"New token is {jwt.AccessToken}");
 
-            return jwt;
+            return CommandResponse.Success(jwt);
         }
     }
 }

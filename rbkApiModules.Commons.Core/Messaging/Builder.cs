@@ -8,18 +8,17 @@ public static class Builder
 {
     public static IServiceCollection AddMessaging(this IServiceCollection services)
     {
-        services.AddScoped<Dispatcher>();
+        services.AddScoped<IDispatcher, Dispatcher>();
 
         var assemblies = AppDomain.CurrentDomain.GetAssemblies()
             .Where(x => !x.GetName().FullName.StartsWith("Microsoft"))
             .Where(x => !x.GetName().FullName.StartsWith("System"))
             .ToArray();
 
-        RegisterQueryHandlers(services, typeof(IQueryHandler<,>), assemblies);
-        RegisterQueryHandlers(services, typeof(ICommandHandler<,>), assemblies);
-        RegisterQueryHandlers(services, typeof(INotificationHandler<>), assemblies);
-
         RegisterQueryHandlers(services, typeof(ICommandHandler<>), assemblies);
+        RegisterQueryHandlers(services, typeof(ICommandHandler<,>), assemblies);
+        RegisterQueryHandlers(services, typeof(IQueryHandler<,>), assemblies);
+        RegisterQueryHandlers(services, typeof(INotificationHandler<>), assemblies);
 
         RegisterValidators(services, assemblies);
 

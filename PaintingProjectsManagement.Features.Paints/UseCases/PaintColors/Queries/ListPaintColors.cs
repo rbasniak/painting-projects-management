@@ -4,7 +4,7 @@ internal class ListPaintColors : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/paints/colors", async (Guid? lineId, Guid? brandId, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/paints/colors", async (Guid? lineId, Guid? brandId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request { LineId = lineId, BrandId = brandId }, cancellationToken);
 
@@ -40,16 +40,10 @@ internal class ListPaintColors : IEndpoint
         }
     }
 
-    public class Handler : IQueryHandler<Request, IReadOnlyCollection<PaintColorDetails>>
+    public class Handler(DbContext _context) : IQueryHandler<Request, IReadOnlyCollection<PaintColorDetails>>
     {
-        private readonly DbContext _context;
 
-        public Handler(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IReadOnlyCollection<PaintColorDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<PaintColorDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             IQueryable<PaintColor> query = _context.Set<PaintColor>()
                 .Include(x => x.Line)
@@ -71,7 +65,7 @@ internal class ListPaintColors : IEndpoint
                 .ThenBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
-            return paintColors.Select(PaintColorDetails.FromModel).ToList().AsReadOnly();
+            return QueryResponse.Success(paintColors.Select(PaintColorDetails.FromModel).AsReadOnly());
         }
     }
 }

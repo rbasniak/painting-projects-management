@@ -6,7 +6,7 @@ public class DeleteRole : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/api/authorization/roles/{id}", async (Guid id, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/api/authorization/roles/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
@@ -96,7 +96,7 @@ public class DeleteRole : IEndpoint
             _usersService = usersService;
         }
 
-        public async Task HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var tenantRole = await _rolesService.FindAsync(request.Id, cancellationToken);
 
@@ -123,6 +123,8 @@ public class DeleteRole : IEndpoint
             }
 
             await _rolesService.DeleteAsync(request.Id, cancellationToken);
+            
+            return CommandResponse.Success();
         }
     }
 }

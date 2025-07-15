@@ -4,7 +4,7 @@ public class RequestPasswordReset : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/reset-password", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/reset-password", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(request, cancellationToken);
 
@@ -77,7 +77,7 @@ public class RequestPasswordReset : IEndpoint
             _authService = authService;
         }
 
-        public async Task HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _authService.RequestPasswordResetAsync(request.Email, request.Tenant, cancellationToken);
 
@@ -85,6 +85,7 @@ public class RequestPasswordReset : IEndpoint
 
             _mailingService.SendPasswordResetMail(user.DisplayName, user.Email, user.PasswordRedefineCode.Hash);
 
+            return CommandResponse.Success();
         }
     }
 }

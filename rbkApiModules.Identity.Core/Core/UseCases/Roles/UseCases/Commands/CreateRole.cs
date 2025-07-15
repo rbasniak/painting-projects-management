@@ -6,7 +6,7 @@ public class CreateRole : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authorization/roles", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authorization/roles", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -63,7 +63,7 @@ public class CreateRole : IEndpoint
             _usersService = usersService;
         }
 
-        public async Task<RoleDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<RoleDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var tenantRole = new Role(request.Identity.Tenant, request.Name);
 
@@ -90,7 +90,7 @@ public class CreateRole : IEndpoint
                 }
             }
 
-            return RoleDetails.FromModel(tenantRole);
+            return CommandResponse.Success(RoleDetails.FromModel(tenantRole));
         }
     } 
 }

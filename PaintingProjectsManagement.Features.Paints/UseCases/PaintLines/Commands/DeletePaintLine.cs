@@ -4,7 +4,7 @@ internal class DeletePaintLine : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/paints/lines/{id}", async (Guid id, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/paints/lines/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
@@ -35,22 +35,18 @@ internal class DeletePaintLine : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request>
+    public class Handler(DbContext _context) : ICommandHandler<Request>
     {
-        private readonly DbContext _context;
 
-        public Handler(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var paintLine = await _context.Set<PaintLine>().FirstAsync(x => x.Id == request.Id, cancellationToken);
             
             _context.Remove(paintLine);
             
             await _context.SaveChangesAsync(cancellationToken);
+
+            return CommandResponse.Success();
         }
     }
 }

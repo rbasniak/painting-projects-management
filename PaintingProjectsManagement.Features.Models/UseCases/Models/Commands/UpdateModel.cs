@@ -4,7 +4,7 @@ internal class UpdateModel : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/models", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/models", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -56,16 +56,10 @@ internal class UpdateModel : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, ModelDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request, ModelDetails>
     {
-        private readonly DbContext _context;
 
-        public Handler(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<ModelDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<ModelDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var model = await _context.Set<Model>()
                 .Include(m => m.Category)
@@ -86,7 +80,7 @@ internal class UpdateModel : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return ModelDetails.FromModel(model);
+            return CommandResponse.Success(ModelDetails.FromModel(model));
         }
     }
 }

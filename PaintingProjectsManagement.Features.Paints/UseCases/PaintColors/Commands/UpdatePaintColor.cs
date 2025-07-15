@@ -4,7 +4,7 @@ internal class UpdatePaintColor : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/paints/colors", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/paints/colors", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -56,16 +56,10 @@ internal class UpdatePaintColor : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, PaintColorDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request, PaintColorDetails>
     {
-        private readonly DbContext _context;
 
-        public Handler(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<PaintColorDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<PaintColorDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var paintColor = await _context.Set<PaintColor>()
                 .Include(x => x.Line)
@@ -88,7 +82,7 @@ internal class UpdatePaintColor : IEndpoint
             
             await _context.SaveChangesAsync(cancellationToken);
             
-            return PaintColorDetails.FromModel(paintColor);
+            return CommandResponse.Success(PaintColorDetails.FromModel(paintColor));
         }
     }
 }

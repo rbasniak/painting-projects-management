@@ -4,7 +4,7 @@ public class ResendEmailConfirmation : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/resend-confirmation", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/resend-confirmation", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(request, cancellationToken);
 
@@ -61,12 +61,13 @@ public class ResendEmailConfirmation : IEndpoint
             _authService = authService;
         }
 
-        public async Task HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var user = await _authService.FindUserAsync(request.Email, request.Identity.Tenant, cancellationToken);
 
             _mailingService.SendConfirmationMail(user.DisplayName, user.Email, user.ActivationCode);
 
+            return CommandResponse.Success();
         }
     }
 }

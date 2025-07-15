@@ -4,7 +4,7 @@ internal class DeleteProject : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/projects/{id}", async (Guid id, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/projects/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
@@ -31,18 +31,10 @@ internal class DeleteProject : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request>
+    public class Handler(DbContext _context, IFileStorage _fileStorage) : ICommandHandler<Request>
     {
-        private readonly DbContext _context;
-        private readonly IFileStorage _fileStorage;
 
-        public Handler(DbContext context, IFileStorage fileStorage)
-        {
-            _context = context;
-            _fileStorage = fileStorage;
-        }
-
-        public async Task HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var project = await _context.Set<Project>()
                 .Include(p => p.Pictures)
@@ -73,6 +65,8 @@ internal class DeleteProject : IEndpoint
             _context.Remove(project);
             
             await _context.SaveChangesAsync(cancellationToken);
+
+            return CommandResponse.Success();
         }
     }
 }

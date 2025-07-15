@@ -4,7 +4,7 @@ internal class ListPaintLines : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/paints/lines", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/paints/lines", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
@@ -22,16 +22,10 @@ internal class ListPaintLines : IEndpoint
     {
     }
 
-    public class Handler : IQueryHandler<Request, IReadOnlyCollection<PaintLineDetails>>
+    public class Handler(DbContext _context) : IQueryHandler<Request, IReadOnlyCollection<PaintLineDetails>>
     {
-        private readonly DbContext _context;
 
-        public Handler(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IReadOnlyCollection<PaintLineDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<PaintLineDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var paintLines = await _context.Set<PaintLine>()
                 .Include(x => x.Brand)  
@@ -39,7 +33,7 @@ internal class ListPaintLines : IEndpoint
                 .ThenBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
-            return paintLines.Select(PaintLineDetails.FromModel).AsReadOnly();
+            return QueryResponse.Success(paintLines.Select(PaintLineDetails.FromModel).AsReadOnly());
         }
     }
 }

@@ -7,7 +7,7 @@ public class GetAllUsers : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/authorization/users", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/authorization/users", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
@@ -22,20 +22,14 @@ public class GetAllUsers : IEndpoint
     {
     }
 
-    public class Handler : IQueryHandler<Request, IReadOnlyCollection<UserDetails>>
+    public class Handler(IAuthService _usersService) : IQueryHandler<Request, IReadOnlyCollection<UserDetails>>
     {
-        private readonly IAuthService _usersService;
 
-        public Handler(IAuthService usersService)
-        {
-            _usersService = usersService;
-        }
-
-        public async Task<IReadOnlyCollection<UserDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<UserDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var users = await _usersService.GetAllAsync(request.Identity.Tenant, cancellationToken);
 
-            return users.Select(UserDetails.FromModel).AsReadOnly();
+            return QueryResponse.Success(users.Select(UserDetails.FromModel).AsReadOnly());
         }
     }
 }

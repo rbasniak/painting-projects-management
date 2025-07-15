@@ -4,7 +4,7 @@ internal class UploadModelPicture : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/models/picture", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/models/picture", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -64,18 +64,10 @@ internal class UploadModelPicture : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, ModelDetails>
+    public class Handler(DbContext _context, IFileStorage _fileStorage) : ICommandHandler<Request, ModelDetails>
     {
-        private readonly DbContext _context;
-        private readonly IFileStorage _fileStorage;
 
-        public Handler(DbContext context, IFileStorage fileStorage)
-        {
-            _context = context;
-            _fileStorage = fileStorage;
-        }
-
-        public async Task<ModelDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<ModelDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var model = await _context.Set<Model>()
                 .Include(m => m.Category)
@@ -98,7 +90,7 @@ internal class UploadModelPicture : IEndpoint
             
             await _context.SaveChangesAsync(cancellationToken);
             
-            return ModelDetails.FromModel(model);
+            return CommandResponse.Success(ModelDetails.FromModel(model));
         }
     }
 }

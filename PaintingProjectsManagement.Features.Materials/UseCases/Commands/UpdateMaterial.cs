@@ -4,7 +4,7 @@ public class UpdateMaterial : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/materials", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/materials", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -45,16 +45,10 @@ public class UpdateMaterial : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, MaterialDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request, MaterialDetails>
     {
-        private readonly DbContext _context;
 
-        public Handler(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<MaterialDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<MaterialDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var material = await _context.Set<Material>().FirstAsync(x => x.Id == request.Id, cancellationToken);
 
@@ -62,7 +56,7 @@ public class UpdateMaterial : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return MaterialDetails.FromModel(material);
+            return CommandResponse.Success(MaterialDetails.FromModel(material));
         } 
     }
 

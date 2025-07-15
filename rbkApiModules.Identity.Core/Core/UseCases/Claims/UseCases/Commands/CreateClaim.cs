@@ -4,7 +4,7 @@ public class CreateClaim : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authorization/claims", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authorization/claims", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -51,22 +51,16 @@ public class CreateClaim : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, ClaimDetails>
+    public class Handler(IClaimsService _claimsService) : ICommandHandler<Request, ClaimDetails>
     {
-        private readonly IClaimsService _claimsService;
 
-        public Handler(IClaimsService claimsService)
-        {
-            _claimsService = claimsService;
-        }
-
-        public async Task<ClaimDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<ClaimDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var claim = new Claim(request.Identification, request.Description);
 
             claim = await _claimsService.CreateAsync(claim, cancellationToken);
 
-            return ClaimDetails.FromModel(claim);
+            return CommandResponse.Success(ClaimDetails.FromModel(claim));
         }
     }
 }

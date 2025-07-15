@@ -6,7 +6,7 @@ public class GetAllRoles : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/authorization/roles", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/authorization/roles", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
@@ -21,16 +21,10 @@ public class GetAllRoles : IEndpoint
     {
     }
 
-    public class Handler : IQueryHandler<Request, IReadOnlyCollection<RoleDetails>>
+    public class Handler(IRolesService _rolesService) : IQueryHandler<Request, IReadOnlyCollection<RoleDetails>>
     {
-        private readonly IRolesService _rolesService;
 
-        public Handler(IRolesService context)
-        {
-            _rolesService = context;
-        }
-
-        public async Task<IReadOnlyCollection<RoleDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<RoleDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var roles = await _rolesService.GetAllAsync(cancellationToken);
 
@@ -67,7 +61,7 @@ public class GetAllRoles : IEndpoint
                 }
             }
 
-            return results.Select(RoleDetails.FromModel).AsReadOnly();
+            return QueryResponse.Success(results.Select(RoleDetails.FromModel).AsReadOnly());
         }
     }
 }

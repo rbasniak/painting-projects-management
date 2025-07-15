@@ -6,7 +6,7 @@ public class ActivateUser : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/users/activate", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/users/activate", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -53,13 +53,13 @@ public class ActivateUser : IEndpoint
             _usersService = usersService;
         }
 
-        public async Task<UserDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<UserDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _usersService.ActivateUserAsync(request.Identity.Tenant, request.Username, cancellationToken);
 
             var user = await _usersService.GetUserWithDependenciesAsync(request.Username, request.Identity.Tenant, cancellationToken);
 
-            return UserDetails.FromModel(user);
+            return CommandResponse.Success(UserDetails.FromModel(user));
         }
     }
 }

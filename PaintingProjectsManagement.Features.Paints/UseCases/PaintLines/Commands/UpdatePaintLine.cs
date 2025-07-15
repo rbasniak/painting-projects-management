@@ -4,7 +4,7 @@ internal class UpdatePaintLine : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/paints/lines", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/paints/lines", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -39,16 +39,10 @@ internal class UpdatePaintLine : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, PaintLineDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request, PaintLineDetails>
     {
-        private readonly DbContext _context;
 
-        public Handler(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<PaintLineDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<PaintLineDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var paintLine = await _context.Set<PaintLine>().FirstAsync(x => x.Id == request.Id, cancellationToken);
 
@@ -58,7 +52,7 @@ internal class UpdatePaintLine : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
             
-            return PaintLineDetails.FromModel(paintLine);
+            return CommandResponse.Success(PaintLineDetails.FromModel(paintLine));
         }
     }
 }

@@ -4,7 +4,7 @@ public class GetAllClaims : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/authorization/claims", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/authorization/claims", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
@@ -19,20 +19,14 @@ public class GetAllClaims : IEndpoint
     {
     }
 
-    public class Handler : IQueryHandler<Request, IReadOnlyCollection<ClaimDetails>>
+    public class Handler(IClaimsService _claimsService) : IQueryHandler<Request, IReadOnlyCollection<ClaimDetails>>
     {
-        private readonly IClaimsService _claimsService;
 
-        public Handler(IClaimsService context)
-        {
-            _claimsService = context;
-        }
-
-        public async Task<IReadOnlyCollection<ClaimDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<ClaimDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var claim = await _claimsService.GetAllAsync(cancellationToken);
 
-            return claim.Select(ClaimDetails.FromModel).AsReadOnly();
+            return QueryResponse.Success(claim.Select(ClaimDetails.FromModel).AsReadOnly());
         }
     }
 }

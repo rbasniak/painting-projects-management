@@ -6,7 +6,7 @@ public class ReplaceUserRoles : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authorization/users/set-roles", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authorization/users/set-roles", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -73,11 +73,11 @@ public class ReplaceUserRoles : IEndpoint
             _usersService = usersService;
         }
 
-        public async Task<UserDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<UserDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var user = await _usersService.ReplaceRoles(request.Username, request.Identity.Tenant, request.RoleIds, cancellationToken);
 
-            return UserDetails.FromModel(user);
+            return CommandResponse.Success(UserDetails.FromModel(user));
         }
     }
 }

@@ -4,7 +4,7 @@ public class CreateMaterial : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/materials", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/materials", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -38,26 +38,20 @@ public class CreateMaterial : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, MaterialDetails>
-    {
-        private readonly DbContext _context;
+    public class Handler(DbContext _context) : ICommandHandler<Request, MaterialDetails>
+    { 
 
-        public Handler(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<MaterialDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<MaterialDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var material = new Material(request.Name, request.Unit, request.PricePerUnit);
             
             await _context.AddAsync(material, cancellationToken);
 
-            var rtemp = _context.Database.GetConnectionString();
-
             await _context.SaveChangesAsync(cancellationToken);
 
-            return MaterialDetails.FromModel(material);
+            var result = MaterialDetails.FromModel(material);
+
+            return CommandResponse.Success(result);
         } 
     }
 

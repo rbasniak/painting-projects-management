@@ -7,7 +7,7 @@ public class AddClaimOverride : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authorization/users/add-claims", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authorization/users/add-claims", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -72,13 +72,13 @@ public class AddClaimOverride : IEndpoint
             _claimsService = claimsService;
         }
 
-        public async Task<UserDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<UserDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _claimsService.AddClaimOverridesAsync(request.ClaimIds, request.Username, request.Identity.Tenant, request.AccessType, cancellationToken);
 
             var user = await _authService.GetUserWithDependenciesAsync(request.Username, request.Identity.Tenant, cancellationToken);
 
-            return UserDetails.FromModel(user);
+            return CommandResponse.Success(UserDetails.FromModel(user));
         }
     }
 }

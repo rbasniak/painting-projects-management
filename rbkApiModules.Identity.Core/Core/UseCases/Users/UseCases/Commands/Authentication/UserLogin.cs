@@ -6,7 +6,7 @@ public class UserLogin
 {
     public static void MapNtlmLoginEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/login", async (Request request, Dispatcher dispatcher, 
+        endpoints.MapPost("/api/authentication/login", async (Request request, IDispatcher dispatcher, 
             HttpContext httpContext, RbkDefaultAdminOptions adminOptions, CancellationToken cancellationToken) =>
         {
             var requestHasUsername = String.IsNullOrEmpty(request.Username);
@@ -30,7 +30,7 @@ public class UserLogin
 
     public static void MapCredentialsLoginEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/login", async (Request request, Dispatcher dispatcher, 
+        endpoints.MapPost("/api/authentication/login", async (Request request, IDispatcher dispatcher, 
             HttpContext httpContext, RbkDefaultAdminOptions adminOptions, CancellationToken cancellationToken) =>
         {
             request.AuthenticationMode = AuthenticationMode.Credentials;
@@ -173,20 +173,14 @@ public class UserLogin
         }
     }
 
-    public class Handler : ICommandHandler<Request, JwtResponse>
+    public class Handler(IUserAuthenticator _tokenCreator) : ICommandHandler<Request, JwtResponse>
     {
-        private readonly IUserAuthenticator _tokenCreator;
 
-        public Handler(IUserAuthenticator tokenCreator)
-        {
-            _tokenCreator = tokenCreator;
-        }
-
-        public async Task<JwtResponse> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<JwtResponse>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var jwt = await _tokenCreator.Authenticate(request.Username, request.Tenant, cancellationToken);
 
-            return jwt;
+            return CommandResponse.Success(jwt);
         }
     }
 }

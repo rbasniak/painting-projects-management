@@ -4,7 +4,7 @@ public class UpdateClaim : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/api/authorization/claims", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/api/authorization/claims", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -53,13 +53,13 @@ public class UpdateClaim : IEndpoint
             _claimsService = claimsService;
         }
 
-        public async Task<ClaimDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<ClaimDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _claimsService.RenameAsync(request.Id, request.Description, cancellationToken);
 
             var claim = await _claimsService.FindAsync(request.Id, cancellationToken);
 
-            return ClaimDetails.FromModel(claim);
+            return CommandResponse.Success(ClaimDetails.FromModel(claim));
         }
     }
 }

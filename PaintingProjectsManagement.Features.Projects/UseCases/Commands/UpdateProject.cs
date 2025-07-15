@@ -4,7 +4,7 @@ internal class UpdateProject : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/projects", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/projects", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -75,18 +75,10 @@ internal class UpdateProject : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, ProjectDetails>
+    public class Handler(DbContext _context, IFileStorage _fileStorage) : ICommandHandler<Request, ProjectDetails>
     {
-        private readonly DbContext _context;
-        private readonly IFileStorage _fileStorage;
 
-        public Handler(DbContext context, IFileStorage fileStorage)
-        {
-            _context = context;
-            _fileStorage = fileStorage;
-        }
-
-        public async Task<ProjectDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<ProjectDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var project = await _context.Set<Project>()
                 .Include(p => p.Steps)
@@ -120,7 +112,7 @@ internal class UpdateProject : IEndpoint
                 
             await _context.SaveChangesAsync(cancellationToken);
             
-            return ProjectDetails.FromModel(project);
+            return CommandResponse.Success(ProjectDetails.FromModel(project));
         }
     }
 }

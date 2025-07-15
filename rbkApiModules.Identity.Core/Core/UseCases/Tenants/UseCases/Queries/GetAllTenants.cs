@@ -4,7 +4,7 @@ public class GetAllTenants
 {
     public static void MapEndpointAnonymous(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/authorization/tenants", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/authorization/tenants", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
@@ -17,7 +17,7 @@ public class GetAllTenants
 
     public static void MapEndpointAuthenticated(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/authorization/tenants", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/authorization/tenants", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
@@ -32,20 +32,14 @@ public class GetAllTenants
     {
     }
 
-    public class Handler : IQueryHandler<Request, IReadOnlyCollection<TenantDetails>>
+    public class Handler(ITenantsService _tenantsService) : IQueryHandler<Request, IReadOnlyCollection<TenantDetails>>
     {
-        private readonly ITenantsService _tenantsService;
 
-        public Handler(ITenantsService tenantsService)
-        {
-            _tenantsService = tenantsService;
-        }
-
-        public async Task<IReadOnlyCollection<TenantDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<TenantDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var results = await _tenantsService.GetAllAsync(cancellationToken);
 
-            return results.Select(TenantDetails.FromModel).AsReadOnly();
+            return QueryResponse.Success(results.Select(TenantDetails.FromModel).AsReadOnly());
         }
     }
 }

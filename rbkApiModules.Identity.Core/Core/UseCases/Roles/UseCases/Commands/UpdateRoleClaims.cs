@@ -6,7 +6,7 @@ public class UpdateRoleClaims : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authorization/roles/update-claims", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authorization/roles/update-claims", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -61,13 +61,13 @@ public class UpdateRoleClaims : IEndpoint
             _rolesService = rolesService;
         }
 
-        public async Task<RoleDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<RoleDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _rolesService.UpdateRoleClaims(request.Id, request.ClaimsIds, cancellationToken);
 
             var role = await _rolesService.GetDetailsAsync(request.Id, cancellationToken);
 
-            return RoleDetails.FromModel(role);
+            return CommandResponse.Success(RoleDetails.FromModel(role));
         }
     }
 }

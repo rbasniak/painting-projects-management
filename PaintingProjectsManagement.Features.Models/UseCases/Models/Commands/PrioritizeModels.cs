@@ -4,7 +4,7 @@ internal class PrioritizeModels : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/models/prioritize", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/models/prioritize", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -36,16 +36,10 @@ internal class PrioritizeModels : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, IReadOnlyCollection<ModelDetails>>
+    public class Handler(DbContext _context) : ICommandHandler<Request, IReadOnlyCollection<ModelDetails>>
     {
-        private readonly DbContext _context;
 
-        public Handler(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IReadOnlyCollection<ModelDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<IReadOnlyCollection<ModelDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             // Reset all model priorities to the default value (-1)
             var allModels = await _context.Set<Model>().ToListAsync(cancellationToken);
@@ -74,10 +68,10 @@ internal class PrioritizeModels : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return prioritizedModels
+            return CommandResponse.Success(prioritizedModels
                 .OrderByDescending(x => x.Priority)
                 .Select(ModelDetails.FromModel)
-                .AsReadOnly();
+                .AsReadOnly());
         }
     }
 }

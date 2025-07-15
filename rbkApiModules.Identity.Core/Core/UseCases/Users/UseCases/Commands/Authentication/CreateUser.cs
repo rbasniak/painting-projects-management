@@ -7,7 +7,7 @@ public class CreateUser : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/authentication/users/create", async (Request request, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/authentication/users/create", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -207,25 +207,11 @@ public class CreateUser : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, UserDetails>
+    public class Handler(IAuthService _usersService, IEnumerable<IUserMetadataService> _userMetadataService,
+        IAvatarStorage _avatarStorage, IHttpContextAccessor _httpContextAccessor, RbkAuthenticationOptions _options) : ICommandHandler<Request, UserDetails>
     {
-        private readonly IAuthService _usersService;
-        private readonly IAvatarStorage _avatarStorage;
-        private readonly RbkAuthenticationOptions _options;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IEnumerable<IUserMetadataService> _userMetadataService;
 
-        public Handler(IAuthService usersService, IEnumerable<IUserMetadataService> userMetadataServices,
-            IAvatarStorage avatarStorage, IHttpContextAccessor httpContextAccessor, RbkAuthenticationOptions options)
-        {
-            _options = options;
-            _usersService = usersService;
-            _avatarStorage = avatarStorage;
-            _httpContextAccessor = httpContextAccessor;
-            _userMetadataService = userMetadataServices;
-        }
-
-        public async Task<UserDetails> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse<UserDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             string avatarUrl = request.Picture;
             string avatarBase64 = string.Empty;
@@ -285,7 +271,7 @@ public class CreateUser : IEndpoint
 
             user = await _usersService.ReplaceRoles(request.Username, request.Identity.Tenant, request.RoleIds, cancellationToken);
 
-            return UserDetails.FromModel(user);
+            return CommandResponse.Success(UserDetails.FromModel(user));
         }
     }
 }

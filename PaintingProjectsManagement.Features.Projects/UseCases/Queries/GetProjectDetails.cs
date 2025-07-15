@@ -6,7 +6,7 @@ internal class GetProjectDetails : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/projects/{id}", async (Guid id, Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/projects/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
             
@@ -30,18 +30,10 @@ internal class GetProjectDetails : IEndpoint
         }
     }
 
-    public class Handler : IQueryHandler<Request, ProjectDetails?>
+    public class Handler(DbContext _context, IDispatcher _dispatcher) : IQueryHandler<Request, ProjectDetails?>
     {
-        private readonly DbContext _context;
-        private readonly Dispatcher _dispatcher;
 
-        public Handler(DbContext context, Dispatcher dispatcher)
-        {
-            _context = context;
-            _dispatcher = dispatcher;
-        }
-
-        public async Task<ProjectDetails?> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<ProjectDetails?>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var project = await _context.Set<Project>()
                 .Include(x => x.Steps)
@@ -61,16 +53,16 @@ internal class GetProjectDetails : IEndpoint
                     MaterialIds = materialIds
                 };
 
-                var materials = await _dispatcher.SendAsync(materialsRequest, cancellationToken);
+                var materialsResponse = await _dispatcher.SendAsync(materialsRequest, cancellationToken);
                 
-                var materialDetails = materials
+                var materialDetails = materialsResponse.Result
                     .Select(MaterialDetails.FromReadOnlyMaterial)
                     .ToArray();
 
-                return ProjectDetails.FromModel(project, materialDetails);
+                return QueryResponse.Success(ProjectDetails.FromModel(project, materialDetails));
             }
 
-            return ProjectDetails.FromModel(project);
+            return QueryResponse.Success(ProjectDetails.FromModel(project));
         }
     }
 }
