@@ -286,12 +286,7 @@ public static class CoreAuthenticationBuilder
         }
 
         return result.ToArray();
-    }
-
-    public static IApplicationBuilder UseRbkAuthentication(this IApplicationBuilder builder)
-    {
-        return builder.UseMiddleware<WindowsAuthenticationMiddleware>();
-    }
+    } 
 }
 
 public enum LoginMode

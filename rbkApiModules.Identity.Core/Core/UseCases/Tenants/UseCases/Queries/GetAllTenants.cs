@@ -1,8 +1,21 @@
 ﻿namespace rbkApiModules.Identity.Core;
 
-public class GetAllTenants : IEndpoint
+public class GetAllTenants
 {
-    public static void MapEndpoint(IEndpointRouteBuilder endpoints)
+    public static void MapEndpointAnonymous(IEndpointRouteBuilder endpoints)
+    {
+        endpoints.MapGet("/api/authorization/tenants", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
+        {
+            var result = await dispatcher.SendAsync(new Request(), cancellationToken);
+
+            return Results.Ok(result);
+        })
+        .AllowAnonymous()
+        .WithName("Get All Tenants")
+        .WithTags("Tenants");
+    }
+
+    public static void MapEndpointAuthenticated(IEndpointRouteBuilder endpoints)
     {
         endpoints.MapGet("/api/authorization/tenants", async (Dispatcher dispatcher, CancellationToken cancellationToken) =>
         {

@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using rbkApiModules.Identity.Core;
+﻿using Microsoft.Extensions.DependencyInjection;
 using rbkApiModules.Commons.Relational;
+using rbkApiModules.Identity.Core;
 using System.Diagnostics;
 
 namespace rbkApiModules.Identity.Relational;
@@ -37,41 +35,110 @@ public static class Builder
 
     public static IApplicationBuilder UseRbkRelationalAuthentication(this WebApplication app)
     {
-        UserLogin.MapCredentialsLoginEndpoint(app);
-        //UserLogin.MapNtlmLoginEndpoint(app);
-        ActivateUser.MapEndpoint(app);
-        ChangePassword.MapEndpoint(app);
-        ConfirmUserEmail.MapEndpoint(app);
-        CreateUser.MapEndpoint(app);
-        DeativateUser.MapEndpoint(app);
-        DeleteUser.MapEndpoint(app);
-        RedefinePassword.MapEndpoint(app);
-        Register.MapEndpoint(app);
-        RenewAccessToken.MapEndpoint(app);
-        RequestPasswordReset.MapEndpoint(app);
-        ResendEmailConfirmation.MapEndpoint(app);
-        SwitchTenant.MapEndpoint(app);
-        GetAllUsers.MapEndpoint(app);
-        ReplaceUserRoles.MapEndpoint(app);
-        AddClaimOverride.MapEndpoint(app);
+        var authenticationOptions = app.Services.GetRequiredService<RbkAuthenticationOptions>();
 
-        GetAllTenants.MapEndpoint(app);
-        CreateTenant.MapEndpoint(app);
-        DeleteTenant.MapEndpoint(app);
-        UpdateTenant.MapEndpoint(app);
+        var endpoints = new List<(string Key, Action<IEndpointRouteBuilder> Map)>
+        {
+            ("RedefinePassword", RedefinePassword.MapEndpoint),
+            ("RequestPasswordReset", RequestPasswordReset.MapEndpoint),
+            ("ConfirmUserEmail", ConfirmUserEmail.MapEndpoint),
+            ("ResendEmailConfirmation", ResendEmailConfirmation.MapEndpoint),
+            ("RenewAccessToken", RenewAccessToken.MapEndpoint),
+            ("GetAllTenants.Authenticated", GetAllTenants.MapEndpointAuthenticated),
+            ("GetAllTenants.Anonymous", GetAllTenants.MapEndpointAnonymous),
+            ("UserLogin.Credentials", UserLogin.MapCredentialsLoginEndpoint),
+            ("UserLogin.Ntlm", UserLogin.MapNtlmLoginEndpoint),
+            ("ChangePassword", ChangePassword.MapEndpoint),
+            ("SwitchTenant", SwitchTenant.MapEndpoint),
+            ("CreateUser", CreateUser.MapEndpoint),
+            ("Register", Register.MapEndpoint),
+            ("ActivateUser", ActivateUser.MapEndpoint),
+            ("DeactivateUser", DeativateUser.MapEndpoint),
+            ("DeleteUser", DeleteUser.MapEndpoint),
+            ("GetAllUsers", GetAllUsers.MapEndpoint),
+            ("ReplaceUserRoles", ReplaceUserRoles.MapEndpoint),
+            ("AddClaimOverride", AddClaimOverride.MapEndpoint),
+            ("CreateTenant", CreateTenant.MapEndpoint),
+            ("DeleteTenant", DeleteTenant.MapEndpoint),
+            ("UpdateTenant", UpdateTenant.MapEndpoint),
+            ("GetAllRoles", GetAllRoles.MapEndpoint),
+            ("CreateRole", CreateRole.MapEndpoint),
+            ("DeleteRole", DeleteRole.MapEndpoint),
+            ("RenameRole", RenameRole.MapEndpoint),
+            ("UpdateRoleClaims", UpdateRoleClaims.MapEndpoint),
+            ("GetAllClaims", GetAllClaims.MapEndpoint),
+            ("CreateClaim", CreateClaim.MapEndpoint),
+            ("DeleteClaim", DeleteClaim.MapEndpoint),
+            ("ProtectClaim", ProtectClaim.MapEndpoint),
+            ("UnprotectClaim", UnprotectClaim.MapEndpoint),
+            ("UpdateClaim", UpdateClaim.MapEndpoint),
+        };
 
-        GetAllRoles.MapEndpoint(app);
-        CreateRole.MapEndpoint(app);
-        DeleteRole.MapEndpoint(app);
-        RenameRole.MapEndpoint(app);
-        UpdateRoleClaims.MapEndpoint(app);
+        if (authenticationOptions._disablePasswordReset)
+        {
+            endpoints.RemoveAll(e => e.Key is "RedefinePassword" or "RequestPasswordReset");
+        }
 
-        GetAllClaims.MapEndpoint(app);
-        CreateClaim.MapEndpoint(app);
-        DeleteClaim.MapEndpoint(app);
-        ProtectClaim.MapEndpoint(app);
-        UnprotectClaim.MapEndpoint(app);
-        UpdateClaim.MapEndpoint(app);
+        if (authenticationOptions._disableEmailConfirmation)
+        {
+            endpoints.RemoveAll(e => e.Key is "ConfirmUserEmail" or "ResendEmailConfirmation");
+        }
+
+        if (authenticationOptions._disableRefreshToken)
+        {
+            endpoints.RemoveAll(e => e.Key == "RenewAccessToken");
+        }
+
+        if (authenticationOptions._allowAnonymousTenantAccess)
+        {
+            endpoints.RemoveAll(e => e.Key == "GetAllTenants.Authenticated");  
+        }
+        else
+        {
+            endpoints.RemoveAll(e => e.Key == "GetAllTenants.Anonymous");  
+        }
+
+        if (authenticationOptions._loginMode == LoginMode.WindowsAuthentication || authenticationOptions._loginMode == LoginMode.Custom)
+        {
+            endpoints.RemoveAll(e =>
+                e.Key is "UserLogin.Credentials"
+                or "ChangePassword"
+                or "ConfirmUserEmail"
+                or "ResendEmailConfirmation"
+                or "RedefinePassword"
+                or "RequestPasswordReset");
+
+            app.UseMiddleware<WindowsAuthenticationMiddleware>();
+        }
+
+        if (authenticationOptions._loginMode == LoginMode.Credentials || authenticationOptions._loginMode == LoginMode.Custom)
+        {
+            endpoints.RemoveAll(e => e.Key == "UserLogin.Ntlm");
+        }
+
+        if (!authenticationOptions._allowTenantSwitching)
+        {
+            endpoints.RemoveAll(e => e.Key == "SwitchTenant");
+        }
+
+        if (!authenticationOptions._allowUserSelfRegistration)
+        {
+            endpoints.RemoveAll(e => e.Key == "Register");
+        }
+        else if (authenticationOptions._loginMode is LoginMode.WindowsAuthentication or LoginMode.Custom)
+        {
+            throw new NotSupportedException("User self registration is not allowed with Windows authentication");
+        }
+
+        if (!authenticationOptions._allowUserCreationByAdmin)
+        {
+            endpoints.RemoveAll(e => e.Key == "CreateUser");
+        }
+
+        foreach (var (_, map) in endpoints)
+        {
+            map(app);
+        }
 
         return app;
     }
