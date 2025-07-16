@@ -8,7 +8,7 @@ internal class UpdateModelCategory : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Update Model Category")
         .WithTags("Model Categories");

@@ -8,7 +8,7 @@ public class UpdateTenant : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_TENANTS)
         .WithName("Update Tenant")

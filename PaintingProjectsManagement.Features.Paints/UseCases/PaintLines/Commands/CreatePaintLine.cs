@@ -8,7 +8,7 @@ internal class CreatePaintLine : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return TypedResults.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Create Brand Line")
         .WithTags("Paint Lines");

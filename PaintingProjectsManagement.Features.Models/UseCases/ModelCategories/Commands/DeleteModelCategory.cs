@@ -6,9 +6,9 @@ internal class DeleteModelCategory : IEndpoint
     {
         endpoints.MapDelete("/models/categories/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
+            var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
-            return Results.Ok();
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Delete Model Category")
         .WithTags("Model Categories");

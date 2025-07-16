@@ -8,7 +8,7 @@ internal class ListPaintColors : IEndpoint
         {
             var result = await dispatcher.SendAsync(new Request { LineId = lineId, BrandId = brandId }, cancellationToken);
 
-            return TypedResults.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("List Paint Colors")
         .WithTags("Paint Colors");  

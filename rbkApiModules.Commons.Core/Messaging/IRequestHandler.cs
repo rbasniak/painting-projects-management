@@ -1,6 +1,4 @@
-﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-
-namespace rbkApiModules.Commons.Core;
+﻿namespace rbkApiModules.Commons.Core;
 
 public interface IRequestHandler<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
@@ -18,11 +16,10 @@ public interface ICommandHandler<TCommand> : IRequestHandler<TCommand, CommandRe
     where TCommand : ICommand
 { }
 
-public interface ICommandHandler<TCommand, TResult> : IRequestHandler<TCommand, CommandResponse<TResult>>
+public interface ICommandHandler<TCommand, TResult> : IRequestHandler<TCommand, CommandResponse<TResult>> where TResult : class
     where TCommand : ICommand<TResult>
 { }
 
-// Query handlers
-public interface IQueryHandler<TQuery, TResult> : IRequestHandler<TQuery, QueryResponse<TResult>>
+public interface IQueryHandler<TQuery, TResult> : IRequestHandler<TQuery, QueryResponse<TResult>> where TResult : class
     where TQuery : IQuery<TResult>
 { } 

@@ -8,7 +8,7 @@ public class GetAllClaims : IEndpoint
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .AllowAnonymous()
         .WithName("Get All Claims")

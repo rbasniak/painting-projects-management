@@ -8,7 +8,7 @@ public class UnprotectClaim : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization(AuthenticationClaims.CHANGE_CLAIM_PROTECTION)
         .WithName("Unprotect Claim")

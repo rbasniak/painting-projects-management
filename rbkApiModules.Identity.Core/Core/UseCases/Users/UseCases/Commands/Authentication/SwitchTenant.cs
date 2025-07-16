@@ -11,7 +11,7 @@ public class SwitchTenant : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization()
         .WithName("Switch Tenant")

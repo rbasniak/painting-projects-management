@@ -10,7 +10,7 @@ public class RenewAccessToken : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .AllowAnonymous()
         .WithName("Renew Access Token")

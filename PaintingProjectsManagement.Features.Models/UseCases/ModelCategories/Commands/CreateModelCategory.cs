@@ -8,7 +8,7 @@ internal class CreateModelCategory : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Create Model Category")
         .WithTags("Model Categories");

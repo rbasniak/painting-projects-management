@@ -8,9 +8,9 @@ public class DeleteRole : IEndpoint
     {
         endpoints.MapDelete("/api/authorization/roles/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
+            var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
-            return Results.Ok();
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization()
         .WithName("Delete Role")

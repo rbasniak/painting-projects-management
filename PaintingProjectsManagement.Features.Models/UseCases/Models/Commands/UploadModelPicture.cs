@@ -8,7 +8,7 @@ internal class UploadModelPicture : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Upload Model Picture")
         .WithTags("Models");

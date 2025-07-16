@@ -10,7 +10,7 @@ internal class GetProjectDetails : IEndpoint
         {
             var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
             
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Get Project Details")
         .WithTags("Projects");
@@ -55,7 +55,7 @@ internal class GetProjectDetails : IEndpoint
 
                 var materialsResponse = await _dispatcher.SendAsync(materialsRequest, cancellationToken);
                 
-                var materialDetails = materialsResponse.Result
+                var materialDetails = materialsResponse.Data
                     .Select(MaterialDetails.FromReadOnlyMaterial)
                     .ToArray();
 

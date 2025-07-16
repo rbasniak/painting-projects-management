@@ -21,7 +21,7 @@ public class UserLogin
 
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization()
         .WithName("NTLM Login")
@@ -36,7 +36,7 @@ public class UserLogin
             request.AuthenticationMode = AuthenticationMode.Credentials;
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .AllowAnonymous()
         .WithName("Login with Credentials")

@@ -8,7 +8,7 @@ internal class ListPaintLines : IEndpoint
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
-            return TypedResults.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("List Paint Lines")
         .WithTags("Paint Lines");  

@@ -6,9 +6,9 @@ public class ResendEmailConfirmation : IEndpoint
     {
         endpoints.MapPost("/api/authentication/resend-confirmation", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            await dispatcher.SendAsync(request, cancellationToken);
+            var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok();
+            return ResultsMapper.FromResponse(result);
         })
         .AllowAnonymous()
         .WithName("Resend Email Confirmation")

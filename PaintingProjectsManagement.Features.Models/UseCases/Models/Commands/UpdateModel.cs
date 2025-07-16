@@ -8,7 +8,7 @@ internal class UpdateModel : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Update Model")
         .WithTags("Models");

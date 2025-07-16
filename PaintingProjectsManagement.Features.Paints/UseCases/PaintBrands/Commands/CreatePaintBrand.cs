@@ -8,7 +8,7 @@ internal class CreatePaintBrand : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return TypedResults.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Create Paint Brand")
         .WithTags("Paint Brands");

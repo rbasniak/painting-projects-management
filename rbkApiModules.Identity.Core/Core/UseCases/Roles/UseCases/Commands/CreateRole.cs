@@ -10,7 +10,7 @@ public class CreateRole : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization()
         .WithName("Create Role")

@@ -8,7 +8,7 @@ internal class UpdatePaintLine : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return TypedResults.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Update Brand Line")
         .WithTags("Paint Lines");

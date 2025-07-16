@@ -8,7 +8,7 @@ internal class CreatePaintColor : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return TypedResults.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Create Paint Color")
         .WithTags("Paint Colors");

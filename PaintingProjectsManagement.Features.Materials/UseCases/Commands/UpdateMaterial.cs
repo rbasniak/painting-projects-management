@@ -8,7 +8,7 @@ public class UpdateMaterial : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Update Material")
         .WithTags("Materials");

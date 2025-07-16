@@ -11,7 +11,7 @@ public class CreateUser : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_USERS)
         .WithName("Create User")

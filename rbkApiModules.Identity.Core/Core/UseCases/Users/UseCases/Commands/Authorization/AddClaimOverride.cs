@@ -11,7 +11,7 @@ public class AddClaimOverride : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization(AuthenticationClaims.OVERRIDE_USER_CLAIMS)
         .WithName("Add Claim Override")

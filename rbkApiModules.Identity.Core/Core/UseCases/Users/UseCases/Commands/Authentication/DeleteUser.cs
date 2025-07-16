@@ -6,9 +6,9 @@ public class DeleteUser : IEndpoint
     {
         endpoints.MapPost("/api/authentication/users/delete", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            await dispatcher.SendAsync(request, cancellationToken);
+            var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok();
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_USERS)
         .WithName("Delete User")

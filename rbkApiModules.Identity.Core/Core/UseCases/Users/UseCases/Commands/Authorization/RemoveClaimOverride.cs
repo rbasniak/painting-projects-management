@@ -10,7 +10,7 @@ public class RemoveClaimOverride : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_USERS)
         .WithName("Remove Claim Override")

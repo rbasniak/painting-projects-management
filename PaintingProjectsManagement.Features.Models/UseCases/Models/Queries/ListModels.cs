@@ -8,7 +8,7 @@ internal class ListModels : IEndpoint
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("List Models")
         .WithTags("Models");  

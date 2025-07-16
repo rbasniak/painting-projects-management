@@ -8,7 +8,7 @@ internal class ListPriorityModels : IEndpoint
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("List Priority Models")
         .WithTags("Models");  

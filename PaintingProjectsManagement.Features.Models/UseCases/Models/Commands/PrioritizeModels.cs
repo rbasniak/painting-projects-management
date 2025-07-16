@@ -8,7 +8,7 @@ internal class PrioritizeModels : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Prioritize Models")
         .WithTags("Models");

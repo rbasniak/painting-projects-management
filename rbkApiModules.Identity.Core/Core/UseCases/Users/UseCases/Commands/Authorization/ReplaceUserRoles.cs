@@ -10,7 +10,7 @@ public class ReplaceUserRoles : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_USER_ROLES)
         .WithName("Replace User Roles")

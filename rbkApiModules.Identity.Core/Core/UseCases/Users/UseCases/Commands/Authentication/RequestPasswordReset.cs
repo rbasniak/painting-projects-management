@@ -6,9 +6,9 @@ public class RequestPasswordReset : IEndpoint
     {
         endpoints.MapPost("/api/authentication/reset-password", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            await dispatcher.SendAsync(request, cancellationToken);
+            var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok();
+            return ResultsMapper.FromResponse(result);
         })
         .AllowAnonymous()
         .WithName("Request Password Reset")

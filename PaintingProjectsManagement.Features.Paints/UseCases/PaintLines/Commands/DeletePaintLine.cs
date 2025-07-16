@@ -6,9 +6,9 @@ internal class DeletePaintLine : IEndpoint
     {
         endpoints.MapDelete("/paints/lines/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
+            var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
-            return TypedResults.Ok();
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Delete Brand Line")
         .WithTags("Paint Lines");

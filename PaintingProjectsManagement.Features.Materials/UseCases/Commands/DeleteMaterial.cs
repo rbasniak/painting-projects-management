@@ -6,9 +6,9 @@ public class DeleteMaterial : IEndpoint
     {
         endpoints.MapDelete("/materials/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
+            var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
-            return Results.Ok();
+            return ResultsMapper.FromResponse(result);
         })
         .WithName("Delete Material")
         .WithTags("Materials");

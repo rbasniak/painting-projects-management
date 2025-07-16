@@ -8,7 +8,7 @@ public class GetAllTenants
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .AllowAnonymous()
         .WithName("Get All Tenants")
@@ -21,7 +21,7 @@ public class GetAllTenants
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_TENANTS)
         .WithName("Get All Tenants")

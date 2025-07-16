@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace rbkApiModules.Commons.Core;
@@ -15,39 +16,38 @@ public static class Builder
             .Where(x => !x.GetName().FullName.StartsWith("System"))
             .ToArray();
 
-        RegisterQueryHandlers(services, typeof(ICommandHandler<>), assemblies);
-        RegisterQueryHandlers(services, typeof(ICommandHandler<,>), assemblies);
-        RegisterQueryHandlers(services, typeof(IQueryHandler<,>), assemblies);
-        RegisterQueryHandlers(services, typeof(INotificationHandler<>), assemblies);
+        RegisterHandlers(services, typeof(IRequestHandler<,>), assemblies);
+        RegisterHandlers(services, typeof(INotificationHandler<>), assemblies);
 
         RegisterValidators(services, assemblies);
 
         return services;
     }
 
-    private static void RegisterQueryHandlers(IServiceCollection services, Type type, Assembly[] assemblies)
+    private static void RegisterHandlers(IServiceCollection services, Type handlerOpenGenericType, Assembly[] assemblies)
     {
         foreach (var assembly in assemblies)
         {
             try
             {
-                var queryHandlers = assembly.GetTypes()
-                    .Where(t => t.IsClass && !t.IsAbstract && t.GetInterfaces()
-                        .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == type));
+                var types = assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract).ToArray();
 
-                foreach (var handlerType in queryHandlers)
-                {
-                    var implementedInterfaces = handlerType.GetInterfaces()
-                        .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == type);
+                foreach (var type in types)
+                { 
+                    var interfaces = type.GetInterfaces()
+                        .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == handlerOpenGenericType)
+                        .ToArray();
 
-                    foreach (var handlerInterface in implementedInterfaces)
+                    foreach (var @interface in interfaces)
                     {
-                        services.AddScoped(handlerInterface, handlerType);
+                        Debug.WriteLine($"***** Registering handler for {type.FullName.Split('.').Last().Split('+').First()}");
+                        services.AddScoped(@interface, type);
                     }
                 }
             }
             catch (ReflectionTypeLoadException)
             {
+                // Optionally log
                 continue;
             }
         }

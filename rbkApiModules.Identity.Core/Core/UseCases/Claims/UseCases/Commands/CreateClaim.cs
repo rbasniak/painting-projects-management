@@ -1,4 +1,7 @@
-﻿namespace rbkApiModules.Identity.Core;
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace rbkApiModules.Identity.Core;
+
 
 public class CreateClaim : IEndpoint
 {
@@ -8,7 +11,7 @@ public class CreateClaim : IEndpoint
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
-            return Results.Ok(result);
+            return ResultsMapper.FromResponse(result);
         })
         .RequireAuthorization(AuthenticationClaims.MANAGE_CLAIMS)
         .WithName("Create Claim")
