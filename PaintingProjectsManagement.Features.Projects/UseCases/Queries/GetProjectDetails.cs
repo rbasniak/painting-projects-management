@@ -16,7 +16,7 @@ internal class GetProjectDetails : IEndpoint
         .WithTags("Projects");
     }
 
-    public class Request : IQuery<ProjectDetails?>
+    public class Request : IQuery
     {
         public Guid Id { get; set; }
     }
@@ -30,10 +30,10 @@ internal class GetProjectDetails : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context, IDispatcher _dispatcher) : IQueryHandler<Request, ProjectDetails?>
+    public class Handler(DbContext _context, IDispatcher _dispatcher) : IQueryHandler<Request>
     {
 
-        public async Task<QueryResponse<ProjectDetails?>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var project = await _context.Set<Project>()
                 .Include(x => x.Steps)
@@ -54,8 +54,9 @@ internal class GetProjectDetails : IEndpoint
                 };
 
                 var materialsResponse = await _dispatcher.SendAsync(materialsRequest, cancellationToken);
-                
-                var materialDetails = materialsResponse.Data
+
+                // TODO: Mediator nao é mais generico, module to module communication is compromised
+                var materialDetails = ((IReadOnlyCollection<ReadOnlyMaterial>)materialsResponse.Data)
                     .Select(MaterialDetails.FromReadOnlyMaterial)
                     .ToArray();
 

@@ -18,14 +18,14 @@ public class GetAllUsers : IEndpoint
         .WithTags("Authorization");
     }
 
-    public class Request : AuthenticatedRequest, IQuery<IReadOnlyCollection<UserDetails>>
+    public class Request : AuthenticatedRequest, IQuery
     {
     }
 
-    public class Handler(IAuthService _usersService) : IQueryHandler<Request, IReadOnlyCollection<UserDetails>>
+    public class Handler(IAuthService _usersService) : IQueryHandler<Request>
     {
 
-        public async Task<QueryResponse<IReadOnlyCollection<UserDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var users = await _usersService.GetAllAsync(request.Identity.Tenant, cancellationToken);
 

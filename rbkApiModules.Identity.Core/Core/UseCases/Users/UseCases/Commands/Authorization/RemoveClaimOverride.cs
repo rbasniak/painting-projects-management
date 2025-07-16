@@ -17,7 +17,7 @@ public class RemoveClaimOverride : IEndpoint
         .WithTags("Authorization");
     }
 
-    public class Request : AuthenticatedRequest, ICommand<UserDetails>
+    public class Request : AuthenticatedRequest, ICommand
     {
         public string Username { get; set; } = string.Empty;
         public Guid[] ClaimIds { get; set; } = [];
@@ -68,7 +68,7 @@ public class RemoveClaimOverride : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, UserDetails>
+    public class Handler : ICommandHandler<Request>
     {
         private readonly IAuthService _authService;
         private readonly IClaimsService _claimsService;
@@ -79,7 +79,7 @@ public class RemoveClaimOverride : IEndpoint
             _claimsService = claimsService;
         }
 
-        public async Task<CommandResponse<UserDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _claimsService.RemoveClaimOverridesAsync(request.ClaimIds, request.Username, request.Identity.Tenant, cancellationToken);
 

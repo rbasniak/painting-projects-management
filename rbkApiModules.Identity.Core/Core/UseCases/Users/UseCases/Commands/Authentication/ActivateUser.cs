@@ -17,7 +17,7 @@ public class ActivateUser : IEndpoint
         .WithTags("Authentication");
     }
 
-    public class Request : AuthenticatedRequest, ICommand<UserDetails>
+    public class Request : AuthenticatedRequest, ICommand
     {
         public string Username { get; set; } = string.Empty;    
     }
@@ -44,7 +44,7 @@ public class ActivateUser : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, UserDetails>
+    public class Handler : ICommandHandler<Request>
     {
         private readonly IAuthService _usersService;
 
@@ -53,7 +53,7 @@ public class ActivateUser : IEndpoint
             _usersService = usersService;
         }
 
-        public async Task<CommandResponse<UserDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _usersService.ActivateUserAsync(request.Identity.Tenant, request.Username, cancellationToken);
 

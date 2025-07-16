@@ -14,7 +14,7 @@ internal class ListPaintLines : IEndpoint
         .WithTags("Paint Lines");  
     }
 
-    public class Request : IQuery<IReadOnlyCollection<PaintLineDetails>>
+    public class Request : IQuery
     {
     }
 
@@ -22,10 +22,10 @@ internal class ListPaintLines : IEndpoint
     {
     }
 
-    public class Handler(DbContext _context) : IQueryHandler<Request, IReadOnlyCollection<PaintLineDetails>>
+    public class Handler(DbContext _context) : IQueryHandler<Request>
     {
 
-        public async Task<QueryResponse<IReadOnlyCollection<PaintLineDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var paintLines = await _context.Set<PaintLine>()
                 .Include(x => x.Brand)  

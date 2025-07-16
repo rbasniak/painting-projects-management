@@ -43,7 +43,7 @@ public class UserLogin
         .WithTags("Authentication");
     }
 
-    public class Request : ICommand<JwtResponse>, ILoginData
+    public class Request : ICommand, ILoginData
     {
         private string _tenant = null;
 
@@ -173,10 +173,10 @@ public class UserLogin
         }
     }
 
-    public class Handler(IUserAuthenticator _tokenCreator) : ICommandHandler<Request, JwtResponse>
+    public class Handler(IUserAuthenticator _tokenCreator) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<JwtResponse>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var jwt = await _tokenCreator.Authenticate(request.Username, request.Tenant, cancellationToken);
 

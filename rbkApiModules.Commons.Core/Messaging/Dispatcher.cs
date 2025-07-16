@@ -211,25 +211,17 @@ public class CommandResponseFactory
 {
     public static BaseResponse CreateFailed<T>(T request, ProblemDetails problemDetails) where T : class
     {
-        Type requestType = request.GetType();
-        
-        if (typeof(ICommand).IsAssignableFrom(requestType))
-        {
-            return CommandResponse.Failure(problemDetails);
-        }
-        else if (requestType.GetInterfaces()
-            .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommand<>)))
-        {
-            return CommandResponse.Failure(problemDetails);
-        }
-        else if (requestType.GetInterfaces()
-            .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IQuery<>)))
+        if (request is IQuery)
         {
             return QueryResponse.Failure(problemDetails);
         }
+        else if (request is ICommand)
+        {
+            return CommandResponse.Failure(problemDetails);
+        }
         else
         {
-            throw new NotSupportedException($"Request type {requestType.FullName} is not supported for command response creation.");
+            throw new NotSupportedException($"Request type {request.GetType().FullName} is not supported for command response creation.");
         }
     }
 }

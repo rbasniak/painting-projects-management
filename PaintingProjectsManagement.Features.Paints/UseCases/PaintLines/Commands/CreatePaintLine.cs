@@ -14,7 +14,7 @@ internal class CreatePaintLine : IEndpoint
         .WithTags("Paint Lines");
     }
 
-    public class Request : ICommand<PaintLineDetails>
+    public class Request : ICommand
     {
         public Guid BrandId { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -24,29 +24,23 @@ internal class CreatePaintLine : IEndpoint
     {
         public Validator(DbContext context)
         {
-            RuleFor(x => x.BrandId).NotEmpty();
             RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
-            RuleFor(x => x.BrandId).MustAsync(async (brandId, cancellationToken) =>
-                await context.Set<PaintBrand>().AnyAsync(b => b.Id == brandId, cancellationToken))
-            .WithMessage("Brand does not exist.");
         }
     }
 
-    public class Handler(DbContext _context) : ICommandHandler<Request, PaintLineDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<PaintLineDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var brand = await _context.Set<PaintBrand>()
-                .FirstAsync(b => b.Id == request.BrandId, cancellationToken);
-
-            var paintLine = new PaintLine(brand, Guid.NewGuid(), request.Name);
+            var brand = await _context.Set<PaintBrand>().FirstAsync(b => b.Id == request.BrandId, cancellationToken);
+            var line = new PaintLine(brand, Guid.NewGuid(), request.Name);
             
-            await _context.AddAsync(paintLine, cancellationToken);
+            await _context.AddAsync(line, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success(PaintLineDetails.FromModel(paintLine));
+            return CommandResponse.Success();
         }
     }
 }

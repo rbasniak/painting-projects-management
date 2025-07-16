@@ -14,7 +14,7 @@ internal class UpdatePaintLine : IEndpoint
         .WithTags("Paint Lines");
     }
 
-    public class Request : ICommand<PaintLineDetails>
+    public class Request : ICommand
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -39,20 +39,16 @@ internal class UpdatePaintLine : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context) : ICommandHandler<Request, PaintLineDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<PaintLineDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var paintLine = await _context.Set<PaintLine>().FirstAsync(x => x.Id == request.Id, cancellationToken);
-
+            var line = await _context.Set<PaintLine>().FirstAsync(x => x.Id == request.Id, cancellationToken);
             var brand = await _context.Set<PaintBrand>().FirstAsync(x => x.Id == request.BrandId, cancellationToken);
-            
-            paintLine.UpdateDetails(request.Name, brand);
-
+            line.UpdateDetails(request.Name, brand);
             await _context.SaveChangesAsync(cancellationToken);
-            
-            return CommandResponse.Success(PaintLineDetails.FromModel(paintLine));
+            return CommandResponse.Success();
         }
     }
 }

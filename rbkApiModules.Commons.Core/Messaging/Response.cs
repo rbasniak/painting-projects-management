@@ -2,127 +2,81 @@
 
 namespace rbkApiModules.Commons.Core;
 
-public interface ITypedResponse<T> where T : class
+public abstract class BaseResponse 
 {
-    bool IsValid { get; }
-    ProblemDetails? Error { get; }
-    T Data { get; }
-}
+    public bool IsValid { get; protected set; }
 
-public interface IUntypedResponse
-{
-    bool IsValid { get; }
-    ProblemDetails? Error { get; }
-}
+    public ProblemDetails? Error { get; protected set; }
 
-public abstract class BaseResponse : IUntypedResponse
-{
-    public bool IsValid { get; }
-    public ProblemDetails? Error { get; }
-
-    protected BaseResponse()
-    {
-        IsValid = true;
-        Error = null;
-    }
-
-    protected BaseResponse(ProblemDetails error)
-    {
-        IsValid = false;
-        Error = error;
-    }
-}
-
-public abstract class BaseResponse<T> : BaseResponse, ITypedResponse<T> where T : class
-{
-    public T? Data { get; }
-
-    protected BaseResponse(T data): base()
-    {
-        Data = data;
-    }
-
-    protected BaseResponse(ProblemDetails error): base(error)
-    {
-    }
-}
+    public object? Data { get; protected set; }
+} 
 
 public sealed class CommandResponse : BaseResponse
 {
-
-    internal CommandResponse(ProblemDetails error) : base(error)
-    {
-    }
-
-    internal CommandResponse(): base()
+    internal CommandResponse() 
     {
     }
 
     public static CommandResponse Success()
     {
-        return new CommandResponse();
+        return new CommandResponse()
+        {
+            IsValid = true
+        };
     }
 
-    public static CommandResponse<T> Success<T>(T result) where T : class 
+    public static CommandResponse Success(object result)
     {
-        return new CommandResponse<T>(result);
+        return new CommandResponse()
+        {
+            Error = null,
+            IsValid = true,
+            Data = result
+        };
     }
 
     public static CommandResponse Failure(ProblemDetails problem)
     {
-        return new CommandResponse(problem);
-    }
-
-    public static CommandResponse<T> Failure<T>(ProblemDetails problem) where T : class 
-    {
-        return new CommandResponse<T>(problem);
-    }
-}
-
-public sealed class CommandResponse<T> : BaseResponse<T> where T : class 
-{
-    internal CommandResponse(ProblemDetails error) : base(error)
-    {
-    }
-
-    internal CommandResponse(T data) : base(data)
-    {
-    }
+        return new CommandResponse()
+        {
+            Error = problem,
+            IsValid = false,
+            Data = null
+        };
+    } 
 }
 
 public sealed class QueryResponse : BaseResponse
 {
-    internal QueryResponse(ProblemDetails error) : base(error)
+    internal QueryResponse()
     {
     }
 
-    internal QueryResponse() : base()
+    public static QueryResponse Success()
     {
+        return new QueryResponse
+        {
+            IsValid = true
+        };
     }
 
-    public static QueryResponse<T> Success<T>(T result) where T : class 
+    public static QueryResponse Success(object result)
     {
-        return new QueryResponse<T>(result);
+        return new QueryResponse()
+        {
+            Error = null,
+            IsValid = true,
+            Data = result
+        };
     }
 
-    public static QueryResponse<T> Failure<T>(ProblemDetails problem) where T : class 
+    public static QueryResponse Failure(ProblemDetails problem)
     {
-        return new QueryResponse<T>(problem);
-    }
-
-    public static QueryResponse Failure(ProblemDetails problem)  
-    {
-        return new QueryResponse(problem);
-    }
-}
-
-public sealed class QueryResponse<T> : BaseResponse<T> where T : class 
-{
-    internal QueryResponse(ProblemDetails error) : base(error)
-    {
-    }
-
-    internal QueryResponse(T data) : base(data)
-    {
+        return new QueryResponse()
+        {
+            Error = problem,
+            IsValid = false,
+            Data = null
+        };
     }
 }

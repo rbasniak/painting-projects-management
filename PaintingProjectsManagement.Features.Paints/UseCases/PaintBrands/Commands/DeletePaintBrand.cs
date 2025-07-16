@@ -39,15 +39,11 @@ internal class DeletePaintBrand : IEndpoint
 
     public class Handler(DbContext _context) : ICommandHandler<Request>
     {
-
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var paintBrand = await _context.Set<PaintBrand>().FirstAsync(x => x.Id == request.Id, cancellationToken);
-            
-            _context.Remove(paintBrand);
-            
+            var brand = await _context.Set<PaintBrand>().FirstAsync(x => x.Id == request.Id, cancellationToken);
+            _context.Remove(brand);
             await _context.SaveChangesAsync(cancellationToken);
-
             return CommandResponse.Success();
         }
     }

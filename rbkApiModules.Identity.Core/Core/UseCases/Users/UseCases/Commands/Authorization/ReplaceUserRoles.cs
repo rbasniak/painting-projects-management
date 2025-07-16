@@ -17,7 +17,7 @@ public class ReplaceUserRoles : IEndpoint
         .WithTags("Authorization");
     }
 
-    public class Request : AuthenticatedRequest, ICommand<UserDetails>
+    public class Request : AuthenticatedRequest, ICommand
     {
         public string Username { get; set; } = string.Empty;
         public Guid[] RoleIds { get; set; } = [];
@@ -64,7 +64,7 @@ public class ReplaceUserRoles : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, UserDetails>
+    public class Handler : ICommandHandler<Request>
     {
         private readonly IAuthService _usersService;
 
@@ -73,7 +73,7 @@ public class ReplaceUserRoles : IEndpoint
             _usersService = usersService;
         }
 
-        public async Task<CommandResponse<UserDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var user = await _usersService.ReplaceRoles(request.Username, request.Identity.Tenant, request.RoleIds, cancellationToken);
 

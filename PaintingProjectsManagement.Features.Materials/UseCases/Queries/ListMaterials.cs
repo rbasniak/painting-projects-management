@@ -14,7 +14,7 @@ public class ListMaterials : IEndpoint
         .WithTags("Materials");  
     }
 
-    public class Request : IQuery<IReadOnlyCollection<MaterialDetails>>
+    public class Request : IQuery
     {
     }
 
@@ -23,10 +23,10 @@ public class ListMaterials : IEndpoint
 
     }
 
-    public class Handler(DbContext _context) : IQueryHandler<Request, IReadOnlyCollection<MaterialDetails>>
+    public class Handler(DbContext _context) : IQueryHandler<Request>
     {
 
-        public async Task<QueryResponse<IReadOnlyCollection<MaterialDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var materials = await _context.Set<Material>().ToListAsync(cancellationToken);
 

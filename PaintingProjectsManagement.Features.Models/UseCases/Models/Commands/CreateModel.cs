@@ -14,7 +14,7 @@ internal class CreateModel : IEndpoint
         .WithTags("Models");
     }
 
-    public class Request : ICommand<ModelDetails>
+    public class Request : ICommand
     {
         public string Name { get; set; } = string.Empty;
         public Guid CategoryId { get; set; }
@@ -52,10 +52,10 @@ internal class CreateModel : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context) : ICommandHandler<Request, ModelDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<ModelDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var category = await _context.Set<ModelCategory>()
                 .FirstAsync(x => x.Id == request.CategoryId, cancellationToken);
@@ -74,7 +74,7 @@ internal class CreateModel : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success(ModelDetails.FromModel(model));
+            return CommandResponse.Success();
         }
     }
 }

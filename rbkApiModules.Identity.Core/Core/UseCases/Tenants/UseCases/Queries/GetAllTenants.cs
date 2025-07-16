@@ -28,14 +28,14 @@ public class GetAllTenants
         .WithTags("Tenants");
     }
 
-    public class Request : IQuery<IReadOnlyCollection<TenantDetails>>
+    public class Request : IQuery
     {
     }
 
-    public class Handler(ITenantsService _tenantsService) : IQueryHandler<Request, IReadOnlyCollection<TenantDetails>>
+    public class Handler(ITenantsService _tenantsService) : IQueryHandler<Request>
     {
 
-        public async Task<QueryResponse<IReadOnlyCollection<TenantDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var results = await _tenantsService.GetAllAsync(cancellationToken);
 

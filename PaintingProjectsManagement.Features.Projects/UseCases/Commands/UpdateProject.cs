@@ -14,7 +14,7 @@ internal class UpdateProject : IEndpoint
         .WithTags("Projects");
     }
 
-    public class Request : ICommand<ProjectDetails>
+    public class Request : ICommand
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -75,10 +75,10 @@ internal class UpdateProject : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context, IFileStorage _fileStorage) : ICommandHandler<Request, ProjectDetails>
+    public class Handler(DbContext _context, IFileStorage _fileStorage) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<ProjectDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var project = await _context.Set<Project>()
                 .Include(p => p.Steps)
@@ -112,7 +112,7 @@ internal class UpdateProject : IEndpoint
                 
             await _context.SaveChangesAsync(cancellationToken);
             
-            return CommandResponse.Success(ProjectDetails.FromModel(project));
+            return CommandResponse.Success();
         }
     }
 }

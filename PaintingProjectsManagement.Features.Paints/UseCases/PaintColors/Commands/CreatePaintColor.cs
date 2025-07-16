@@ -14,7 +14,7 @@ internal class CreatePaintColor : IEndpoint
         .WithTags("Paint Colors");
     }
 
-    public class Request : ICommand<PaintColorDetails>
+    public class Request : ICommand
     {
         public string Name { get; set; } = string.Empty;
         public string HexColor { get; set; } = string.Empty;
@@ -47,10 +47,10 @@ internal class CreatePaintColor : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context) : ICommandHandler<Request, PaintColorDetails>
+    public class Handler(DbContext _context) :  ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<PaintColorDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var paintLine = await _context.Set<PaintLine>()
                 .Include(x => x.Brand)

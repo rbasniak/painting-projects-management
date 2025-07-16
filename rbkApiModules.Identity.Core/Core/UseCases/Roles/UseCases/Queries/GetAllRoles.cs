@@ -17,14 +17,14 @@ public class GetAllRoles : IEndpoint
         .WithTags("Roles");
     }
 
-    public class Request : AuthenticatedRequest, IQuery<IReadOnlyCollection<RoleDetails>>
+    public class Request : AuthenticatedRequest, IQuery
     {
     }
 
-    public class Handler(IRolesService _rolesService) : IQueryHandler<Request, IReadOnlyCollection<RoleDetails>>
+    public class Handler(IRolesService _rolesService) : IQueryHandler<Request>
     {
 
-        public async Task<QueryResponse<IReadOnlyCollection<RoleDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var roles = await _rolesService.GetAllAsync(cancellationToken);
 

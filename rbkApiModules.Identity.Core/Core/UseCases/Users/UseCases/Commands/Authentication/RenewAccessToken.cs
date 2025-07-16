@@ -17,7 +17,7 @@ public class RenewAccessToken : IEndpoint
         .WithTags("Authentication");
     }
 
-    public class Request : ICommand<JwtResponse>
+    public class Request : ICommand
     {
         public string RefreshToken { get; set; } = string.Empty;
     }
@@ -76,10 +76,14 @@ public class RenewAccessToken : IEndpoint
         }
     }
 
-    public class Handler(IJwtFactory _jwtFactory, IAuthService _usersService, IEnumerable<ICustomClaimHandler> _claimHandlers, ILogger<Handler> _logger) : ICommandHandler<Request, JwtResponse>
+    public class Handler(
+        IJwtFactory _jwtFactory, 
+        IAuthService _usersService, 
+        IEnumerable<ICustomClaimHandler> _claimHandlers, 
+        ILogger<Handler> _logger) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<JwtResponse>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var user = await _usersService.GetUserFromRefreshtokenAsync(request.RefreshToken, cancellationToken);
             

@@ -17,7 +17,7 @@ public class UpdateRoleClaims : IEndpoint
         .WithTags("Roles");
     }
 
-    public class Request : AuthenticatedRequest, ICommand<RoleDetails>
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; }
         public Guid[] ClaimsIds { get; set; } = [];
@@ -52,7 +52,7 @@ public class UpdateRoleClaims : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, RoleDetails>
+    public class Handler : ICommandHandler<Request>
     {
         private readonly IRolesService _rolesService;
 
@@ -61,7 +61,7 @@ public class UpdateRoleClaims : IEndpoint
             _rolesService = rolesService;
         }
 
-        public async Task<CommandResponse<RoleDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _rolesService.UpdateRoleClaims(request.Id, request.ClaimsIds, cancellationToken);
 

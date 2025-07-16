@@ -14,7 +14,7 @@ internal class UpdatePaintColor : IEndpoint
         .WithTags("Paint Colors");
     }
 
-    public class Request : ICommand<PaintColorDetails>
+    public class Request : ICommand
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -56,10 +56,10 @@ internal class UpdatePaintColor : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context) : ICommandHandler<Request, PaintColorDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<PaintColorDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var paintColor = await _context.Set<PaintColor>()
                 .Include(x => x.Line)

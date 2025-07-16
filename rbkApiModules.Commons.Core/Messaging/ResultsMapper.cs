@@ -5,18 +5,13 @@ namespace rbkApiModules.Commons.Core;
 
 public static class ResultsMapper
 {
-    public static IResult FromResponse(IUntypedResponse response)
+    public static IResult FromResponse(BaseResponse response)
     {
         if (response.IsValid)
         {
-            if (response is ITypedResponse<object> typedResponse)
+            if (response.Data != null)
             {
-                if (typedResponse.Data == null)
-                {
-                    return Results.Problem("An unexpected error occurred: response was success but was missing the required data");
-                }
-
-                return Results.Ok(typedResponse.Data);
+                return Results.Ok(response.Data);
             }
 
             return Results.Ok();

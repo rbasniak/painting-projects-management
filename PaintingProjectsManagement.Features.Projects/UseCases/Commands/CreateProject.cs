@@ -14,7 +14,7 @@ internal class CreateProject : IEndpoint
         .WithTags("Projects");
     }
 
-    public class Request : ICommand<ProjectDetails>
+    public class Request : ICommand
     {
         public string Name { get; set; } = string.Empty;
         public string Base64Image { get; set; } = string.Empty;
@@ -65,10 +65,10 @@ internal class CreateProject : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context, IFileStorage _fileStorage) : ICommandHandler<Request, ProjectDetails>
+    public class Handler(DbContext _context, IFileStorage _fileStorage) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<ProjectDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             // Generate a new ID for the project
             var projectId = Guid.NewGuid();
@@ -91,7 +91,7 @@ internal class CreateProject : IEndpoint
             await _context.AddAsync(project, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success(ProjectDetails.FromModel(project));
+            return CommandResponse.Success();
         }
     }
 }

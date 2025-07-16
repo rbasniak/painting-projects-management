@@ -14,7 +14,7 @@ internal class ListProjects : IEndpoint
         .WithTags("Projects");  
     }
 
-    public class Request : IQuery<IReadOnlyCollection<ProjectHeader>>
+    public class Request : IQuery
     {
     }
 
@@ -22,10 +22,10 @@ internal class ListProjects : IEndpoint
     {
     }
 
-    public class Handler(DbContext _context) : IQueryHandler<Request, IReadOnlyCollection<ProjectHeader>>
+    public class Handler(DbContext _context) : IQueryHandler<Request>
     {
 
-        public async Task<QueryResponse<IReadOnlyCollection<ProjectHeader>>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var projects = await _context.Set<Project>()
                 .OrderByDescending(x => x.EndDate == null) // Unfinished projects first

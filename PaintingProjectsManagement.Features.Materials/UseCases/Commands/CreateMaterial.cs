@@ -14,7 +14,7 @@ public class CreateMaterial : IEndpoint
         .WithTags("Materials");
     }
 
-    public class Request : ICommand<MaterialDetails>
+    public class Request : ICommand
     {
         public string Name { get; set; } = string.Empty;
         public MaterialUnit Unit { get; set; }
@@ -38,10 +38,10 @@ public class CreateMaterial : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context) : ICommandHandler<Request, MaterialDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request>
     { 
 
-        public async Task<CommandResponse<MaterialDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var material = new Material(request.Name, request.Unit, request.PricePerUnit);
             
@@ -51,7 +51,7 @@ public class CreateMaterial : IEndpoint
 
             var result = MaterialDetails.FromModel(material);
 
-            return CommandResponse.Success(result);
+            return CommandResponse.Success();
         } 
     }
 

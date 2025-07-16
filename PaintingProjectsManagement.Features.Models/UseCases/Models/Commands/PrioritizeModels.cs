@@ -14,7 +14,7 @@ internal class PrioritizeModels : IEndpoint
         .WithTags("Models");
     }
 
-    public class Request : ICommand<IReadOnlyCollection<ModelDetails>>
+    public class Request : ICommand
     {
         public Guid[] ModelIds { get; set; } = Array.Empty<Guid>();
     }
@@ -36,10 +36,10 @@ internal class PrioritizeModels : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context) : ICommandHandler<Request, IReadOnlyCollection<ModelDetails>>
+    public class Handler(DbContext _context) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<IReadOnlyCollection<ModelDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             // Reset all model priorities to the default value (-1)
             var allModels = await _context.Set<Model>().ToListAsync(cancellationToken);
@@ -68,10 +68,7 @@ internal class PrioritizeModels : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success(prioritizedModels
-                .OrderByDescending(x => x.Priority)
-                .Select(ModelDetails.FromModel)
-                .AsReadOnly());
+            return CommandResponse.Success();
         }
     }
 }

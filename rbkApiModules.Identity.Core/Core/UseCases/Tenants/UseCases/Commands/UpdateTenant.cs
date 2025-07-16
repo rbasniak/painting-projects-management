@@ -15,7 +15,7 @@ public class UpdateTenant : IEndpoint
         .WithTags("Tenants");
     }
 
-    public class Request : ICommand<TenantDetails>
+    public class Request : ICommand
     {
         private string _alias = string.Empty;
 
@@ -67,7 +67,7 @@ public class UpdateTenant : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, TenantDetails>
+    public class Handler : ICommandHandler<Request>
     {
         private readonly ITenantsService _tenantsService;
 
@@ -76,7 +76,7 @@ public class UpdateTenant : IEndpoint
             _tenantsService = tenantsService;
         }
 
-        public async Task<CommandResponse<TenantDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var tenant = await _tenantsService.UpdateAsync(request.Alias, request.Name, request.Metadata, cancellationToken);
 

@@ -14,7 +14,7 @@ internal class CreateModelCategory : IEndpoint
         .WithTags("Model Categories");
     }
 
-    public class Request : ICommand<ModelCategoryDetails>
+    public class Request : ICommand
     {
         public string Name { get; set; } = string.Empty;
     }
@@ -32,10 +32,10 @@ internal class CreateModelCategory : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context) : ICommandHandler<Request, ModelCategoryDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<ModelCategoryDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var category = new ModelCategory(Guid.NewGuid(), request.Name);
             
@@ -43,7 +43,7 @@ internal class CreateModelCategory : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success(ModelCategoryDetails.FromModel(category));
+            return CommandResponse.Success();
         }
     }
 }

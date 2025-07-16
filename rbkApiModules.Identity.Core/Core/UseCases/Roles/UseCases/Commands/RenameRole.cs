@@ -17,7 +17,7 @@ public class RenameRole : IEndpoint
         .WithTags("Roles");
     }
 
-    public class Request : AuthenticatedRequest, ICommand<RoleDetails>
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -71,7 +71,7 @@ public class RenameRole : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, RoleDetails>
+    public class Handler : ICommandHandler<Request>
     {
         private readonly IRolesService _rolesService;
 
@@ -80,7 +80,7 @@ public class RenameRole : IEndpoint
             _rolesService = rolesService;
         }
 
-        public async Task<CommandResponse<RoleDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _rolesService.RenameAsync(request.Id, request.Name, cancellationToken);
 

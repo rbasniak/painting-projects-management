@@ -16,10 +16,6 @@ public interface ICommandHandler<TCommand> : IRequestHandler<TCommand, CommandRe
     where TCommand : ICommand
 { }
 
-public interface ICommandHandler<TCommand, TResult> : IRequestHandler<TCommand, CommandResponse<TResult>> where TResult : class
-    where TCommand : ICommand<TResult>
-{ }
-
-public interface IQueryHandler<TQuery, TResult> : IRequestHandler<TQuery, QueryResponse<TResult>> where TResult : class
-    where TQuery : IQuery<TResult>
+public interface IQueryHandler<TQuery> : IRequestHandler<TQuery, QueryResponse> 
+    where TQuery : IQuery
 { } 

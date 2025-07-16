@@ -14,7 +14,7 @@ public class UpdateMaterial : IEndpoint
         .WithTags("Materials");
     }
 
-    public class Request : ICommand<MaterialDetails>
+    public class Request : ICommand
     {
         public Guid Id { get; set; } 
         public string Name { get; set; } = string.Empty;
@@ -45,10 +45,10 @@ public class UpdateMaterial : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context) : ICommandHandler<Request, MaterialDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<MaterialDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var material = await _context.Set<Material>().FirstAsync(x => x.Id == request.Id, cancellationToken);
 
@@ -56,7 +56,7 @@ public class UpdateMaterial : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success(MaterialDetails.FromModel(material));
+            return CommandResponse.Success();
         } 
     }
 

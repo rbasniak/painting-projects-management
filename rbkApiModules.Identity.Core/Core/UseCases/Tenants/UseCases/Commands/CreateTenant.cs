@@ -15,7 +15,7 @@ public class CreateTenant : IEndpoint
         .WithTags("Tenants");
     }
 
-    public class Request : ICommand<TenantDetails>
+    public class Request : ICommand
     {
         private string _alias = string.Empty;
 
@@ -96,7 +96,7 @@ public class CreateTenant : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, TenantDetails>
+    public class Handler : ICommandHandler<Request>
     {
         private readonly ITenantsService _tenantsService;
         private readonly IClaimsService _claimsService;
@@ -109,7 +109,7 @@ public class CreateTenant : IEndpoint
             _usersService = usersService;
         }
 
-        public async Task<CommandResponse<TenantDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var tenant = new Tenant(request.Alias, request.Name, request.Metadata);
 

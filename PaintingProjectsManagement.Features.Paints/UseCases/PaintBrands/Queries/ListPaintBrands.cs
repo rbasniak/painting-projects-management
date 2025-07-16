@@ -14,7 +14,7 @@ internal class ListPaintBrands : IEndpoint
         .WithTags("Paint Brands");  
     }
 
-    public class Request : IQuery<IReadOnlyCollection<PaintBrandDetails>>
+    public class Request : IQuery
     {
     }
 
@@ -22,10 +22,10 @@ internal class ListPaintBrands : IEndpoint
     {
     }
 
-    public class Handler(DbContext _context) : IQueryHandler<Request, IReadOnlyCollection<PaintBrandDetails>>
+    public class Handler(DbContext _context) : IQueryHandler<Request>
     {
 
-        public async Task<QueryResponse<IReadOnlyCollection<PaintBrandDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var brands = await _context.Set<PaintBrand>()
                 .OrderBy(x => x.Name)

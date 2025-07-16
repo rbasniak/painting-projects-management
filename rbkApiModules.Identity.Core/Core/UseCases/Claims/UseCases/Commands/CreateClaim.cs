@@ -18,7 +18,7 @@ public class CreateClaim : IEndpoint
         .WithTags("Claims");
     }
 
-    public class Request : ICommand<ClaimDetails>
+    public class Request : ICommand
     {
         public required string Identification { get; set; }
         public required string Description { get; set; }
@@ -54,10 +54,10 @@ public class CreateClaim : IEndpoint
         }
     }
 
-    public class Handler(IClaimsService _claimsService) : ICommandHandler<Request, ClaimDetails>
+    public class Handler(IClaimsService _claimsService) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<ClaimDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var claim = new Claim(request.Identification, request.Description);
 

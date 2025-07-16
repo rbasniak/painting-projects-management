@@ -18,7 +18,7 @@ public class SwitchTenant : IEndpoint
         .WithTags("Authentication");
     }
 
-    public class Request : AuthenticatedRequest, ICommand<JwtResponse>
+    public class Request : AuthenticatedRequest, ICommand
     {
         public string Tenant { get; set; } = string.Empty;
     }
@@ -60,11 +60,11 @@ public class SwitchTenant : IEndpoint
     }
 
     public class Handler(IJwtFactory _jwtFactory, IAuthService _usersService, IEnumerable<ICustomClaimHandler> _claimHandlers, 
-        IOptions<JwtIssuerOptions> jwtOptions, IAutomaticUserCreator _automaticUserCreator, ILogger<Handler> _logger) : ICommandHandler<Request, JwtResponse>
+        IOptions<JwtIssuerOptions> jwtOptions, IAutomaticUserCreator _automaticUserCreator, ILogger<Handler> _logger) : ICommandHandler<Request>
     {
         private readonly JwtIssuerOptions _jwtOptions = jwtOptions.Value;
 
-        public async Task<CommandResponse<JwtResponse>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var user = await _usersService.FindUserAsync(request.Identity.Username, request.Tenant, cancellationToken);
 

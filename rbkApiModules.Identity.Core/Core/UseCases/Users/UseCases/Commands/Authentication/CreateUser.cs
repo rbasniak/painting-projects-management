@@ -18,7 +18,7 @@ public class CreateUser : IEndpoint
         .WithTags("Authentication");
     }
 
-    public class Request : AuthenticatedRequest, ICommand<UserDetails>, IUserMetadata
+    public class Request : AuthenticatedRequest, ICommand, IUserMetadata
     {
         public string DisplayName { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
@@ -208,10 +208,10 @@ public class CreateUser : IEndpoint
     }
 
     public class Handler(IAuthService _usersService, IEnumerable<IUserMetadataService> _userMetadataService,
-        IAvatarStorage _avatarStorage, IHttpContextAccessor _httpContextAccessor, RbkAuthenticationOptions _options) : ICommandHandler<Request, UserDetails>
+        IAvatarStorage _avatarStorage, IHttpContextAccessor _httpContextAccessor, RbkAuthenticationOptions _options) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<UserDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             string avatarUrl = request.Picture;
             string avatarBase64 = string.Empty;

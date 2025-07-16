@@ -17,7 +17,7 @@ public class Register : IEndpoint
         .WithTags("Authentication");
     }
 
-    public class Request : ICommand<UserDetails>, IUserMetadata
+    public class Request : ICommand, IUserMetadata
     {
         public string Tenant { get; set; } = string.Empty;
         public string DisplayName { get; set; } = string.Empty;
@@ -97,7 +97,7 @@ public class Register : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, UserDetails>
+    public class Handler : ICommandHandler<Request>
     {
         private readonly IAuthService _usersService;
         private readonly IAuthenticationMailService _mailingService;
@@ -108,7 +108,7 @@ public class Register : IEndpoint
             _mailingService = mailingService;
         }
 
-        public async Task<CommandResponse<UserDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var user = await _usersService.CreateUserAsync(request.Tenant, request.Username, request.Password, request.Email, request.DisplayName,
                 AvatarGenerator.GenerateBase64Avatar(request.DisplayName), false, AuthenticationMode.Credentials, request.Metadata, cancellationToken);

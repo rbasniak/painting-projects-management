@@ -15,7 +15,7 @@ public class UpdateClaim : IEndpoint
         .WithTags("Claims");
     }
 
-    public class Request : ICommand<ClaimDetails>
+    public class Request : ICommand
     {
         public Guid Id { get; set; }
         public string Description { get; set; } = string.Empty;
@@ -44,7 +44,7 @@ public class UpdateClaim : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, ClaimDetails>
+    public class Handler : ICommandHandler<Request>
     {
         private readonly IClaimsService _claimsService;
 
@@ -53,7 +53,7 @@ public class UpdateClaim : IEndpoint
             _claimsService = claimsService;
         }
 
-        public async Task<CommandResponse<ClaimDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             await _claimsService.RenameAsync(request.Id, request.Description, cancellationToken);
 

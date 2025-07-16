@@ -14,7 +14,7 @@ internal class ListModels : IEndpoint
         .WithTags("Models");  
     }
 
-    public class Request : IQuery<IReadOnlyCollection<ModelDetails>>
+    public class Request : IQuery
     {
     }
 
@@ -22,10 +22,10 @@ internal class ListModels : IEndpoint
     {
     }
 
-    public class Handler(DbContext _context) : IQueryHandler<Request, IReadOnlyCollection<ModelDetails>>
+    public class Handler(DbContext _context) : IQueryHandler<Request>
     {
 
-        public async Task<QueryResponse<IReadOnlyCollection<ModelDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var models = await _context.Set<Model>()
                 .Include(x => x.Category)

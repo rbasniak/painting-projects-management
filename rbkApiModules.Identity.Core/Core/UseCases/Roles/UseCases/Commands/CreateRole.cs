@@ -17,7 +17,7 @@ public class CreateRole : IEndpoint
         .WithTags("Roles");
     }
 
-    public class Request : AuthenticatedRequest, ICommand<RoleDetails>
+    public class Request : AuthenticatedRequest, ICommand
     {
         public string Name { get; set; } = string.Empty;
     }
@@ -52,7 +52,7 @@ public class CreateRole : IEndpoint
         }
     }
 
-    public class Handler : ICommandHandler<Request, RoleDetails>
+    public class Handler : ICommandHandler<Request>
     {
         private readonly IRolesService _rolesService;
         private readonly IAuthService _usersService;
@@ -63,7 +63,7 @@ public class CreateRole : IEndpoint
             _usersService = usersService;
         }
 
-        public async Task<CommandResponse<RoleDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var tenantRole = new Role(request.Identity.Tenant, request.Name);
 

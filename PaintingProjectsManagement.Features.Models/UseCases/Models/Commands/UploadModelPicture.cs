@@ -14,7 +14,7 @@ internal class UploadModelPicture : IEndpoint
         .WithTags("Models");
     }
 
-    public class Request : ICommand<ModelDetails>
+    public class Request : ICommand
     {
         public Guid ModelId { get; set; }
         public string Base64Image { get; set; } = string.Empty;
@@ -64,10 +64,10 @@ internal class UploadModelPicture : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context, IFileStorage _fileStorage) : ICommandHandler<Request, ModelDetails>
+    public class Handler(DbContext _context, IFileStorage _fileStorage) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<ModelDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var model = await _context.Set<Model>()
                 .Include(m => m.Category)
@@ -90,7 +90,7 @@ internal class UploadModelPicture : IEndpoint
             
             await _context.SaveChangesAsync(cancellationToken);
             
-            return CommandResponse.Success(ModelDetails.FromModel(model));
+            return CommandResponse.Success();
         }
     }
 }

@@ -14,7 +14,7 @@ internal class CreatePaintBrand : IEndpoint
         .WithTags("Paint Brands");
     }
 
-    public class Request : ICommand<PaintBrandDetails>
+    public class Request : ICommand
     {
         public string Name { get; set; } = string.Empty;
     }
@@ -32,18 +32,18 @@ internal class CreatePaintBrand : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context) : ICommandHandler<Request, PaintBrandDetails>
+    public class Handler(DbContext _context) : ICommandHandler<Request>
     {
 
-        public async Task<CommandResponse<PaintBrandDetails>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var paintBrand = new PaintBrand(Guid.NewGuid(), request.Name);
+            var brand = new PaintBrand(Guid.NewGuid(), request.Name);
             
-            await _context.AddAsync(paintBrand, cancellationToken);
+            await _context.AddAsync(brand, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success(PaintBrandDetails.FromModel(paintBrand));
+            return CommandResponse.Success();
         }
     }
 }

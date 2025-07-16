@@ -20,17 +20,16 @@ public class ConfirmUserEmail : IEndpoint
         {
             var authEmailOptions = authEmailOptionsConfig.Value;
 
-            try
+            var result = await dispatcher.SendAsync(new Request { Email = email, ActivationCode = code, Tenant = tenant }, cancellationToken);
+
+            if (result.IsValid)
             {
-                await dispatcher.SendAsync(new Request { Email = email, ActivationCode = code, Tenant = tenant }, cancellationToken);
-                
                 return Results.Redirect(authEmailOptions.EmailData.ConfirmationSuccessUrl);
             }
-            catch (Exception ex)
+            else
             {
-                logger.LogError(ex, "Error confirming user {Email} for tenant {Tenant}", email, tenant);
                 return Results.Redirect(authEmailOptions.EmailData.ConfirmationFailedUrl);
-            } 
+            }
         })
         .AllowAnonymous()
         .WithName("Confirm User Email")

@@ -14,7 +14,7 @@ internal class ListPaintColors : IEndpoint
         .WithTags("Paint Colors");  
     }
 
-    public class Request : IQuery<IReadOnlyCollection<PaintColorDetails>>
+    public class Request : IQuery
     {
         public Guid? LineId { get; set; }
         public Guid? BrandId { get; set; }
@@ -40,10 +40,10 @@ internal class ListPaintColors : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context) : IQueryHandler<Request, IReadOnlyCollection<PaintColorDetails>>
+    public class Handler(DbContext _context) : IQueryHandler<Request>
     {
 
-        public async Task<QueryResponse<IReadOnlyCollection<PaintColorDetails>>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             IQueryable<PaintColor> query = _context.Set<PaintColor>()
                 .Include(x => x.Line)
