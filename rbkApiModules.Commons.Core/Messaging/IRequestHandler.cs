@@ -18,4 +18,9 @@ public interface ICommandHandler<TCommand> : IRequestHandler<TCommand, CommandRe
 
 public interface IQueryHandler<TQuery> : IRequestHandler<TQuery, QueryResponse> 
     where TQuery : IQuery
+{ }
+
+// New typed query handler interface for module-to-module communication
+public interface ITypedQueryHandler<TQuery, TResponse> : IRequestHandler<TQuery, QueryResponse<TResponse>>
+    where TQuery : IQuery<TResponse>
 { } 

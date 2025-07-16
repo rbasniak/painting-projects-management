@@ -8,6 +8,7 @@ using System;
 using System.Data;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Linq;
 
 namespace rbkApiModules.Commons.Core;
 
@@ -221,6 +222,18 @@ public class CommandResponseFactory
         }
         else
         {
+            // Check if it's a typed query
+            var requestType = request.GetType();
+            var queryInterface = requestType.GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IQuery<>));
+            
+            if (queryInterface != null)
+            {
+                var responseType = queryInterface.GetGenericArguments()[0];
+                var failureMethod = typeof(QueryResponse<>).MakeGenericType(responseType).GetMethod("Failure");
+                return (BaseResponse)failureMethod.Invoke(null, new object[] { problemDetails });
+            }
+            
             throw new NotSupportedException($"Request type {request.GetType().FullName} is not supported for command response creation.");
         }
     }

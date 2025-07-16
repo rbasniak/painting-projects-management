@@ -54,9 +54,13 @@ internal class GetProjectDetails : IEndpoint
                 };
 
                 var materialsResponse = await _dispatcher.SendAsync(materialsRequest, cancellationToken);
+                
+                if (!materialsResponse.IsValid)
+                {
+                    return QueryResponse.Failure(materialsResponse.Error);
+                }
 
-                // TODO: Mediator nao é mais generico, module to module communication is compromised
-                var materialDetails = ((IReadOnlyCollection<ReadOnlyMaterial>)materialsResponse.Data)
+                var materialDetails = materialsResponse.Data
                     .Select(MaterialDetails.FromReadOnlyMaterial)
                     .ToArray();
 

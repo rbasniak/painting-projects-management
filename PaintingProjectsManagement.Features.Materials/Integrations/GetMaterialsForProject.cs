@@ -8,17 +8,17 @@ public static partial class GetMaterialsForProject
         // Module to module communication, is validation really necessary here?
     }
 
-    public sealed class Handler(DbContext _context) : IQueryHandler<Abstractions.GetMaterialsForProject.Request>
+    public sealed class Handler(DbContext _context) : ITypedQueryHandler<Abstractions.GetMaterialsForProject.Request, IReadOnlyCollection<ReadOnlyMaterial>>
     {
 
-        public async Task<QueryResponse> HandleAsync(Abstractions.GetMaterialsForProject.Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<ReadOnlyMaterial>>> HandleAsync(Abstractions.GetMaterialsForProject.Request request, CancellationToken cancellationToken)
         {
             var materials = await _context.Set<Material>()
                 .Where(x => request.MaterialIds.Contains(x.Id))
                 .ToListAsync(cancellationToken);
 
             var results = materials.Select(x => x.MapFromModel()).AsReadOnly();
-            return QueryResponse.Success(results);
+            return QueryResponse<IReadOnlyCollection<ReadOnlyMaterial>>.Success(results);
         }
     }
 }

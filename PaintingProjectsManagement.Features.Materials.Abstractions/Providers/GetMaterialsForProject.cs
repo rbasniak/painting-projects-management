@@ -2,7 +2,7 @@
 
 public static partial class GetMaterialsForProject
 {
-    public sealed class Request : IQuery
+    public sealed class Request : IQuery<IReadOnlyCollection<ReadOnlyMaterial>>
     {
         public Guid[] MaterialIds { get; set; } = Array.Empty<Guid>();
     }

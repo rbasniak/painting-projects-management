@@ -2,18 +2,51 @@
 
 namespace rbkApiModules.Commons.Core;
 
-public abstract class BaseResponse 
+public abstract class BaseResponse
 {
+    private ProblemDetails _error = default!;
+    private object _data = default!;
+
     public bool IsValid { get; protected set; }
 
-    public ProblemDetails? Error { get; protected set; }
+    public ProblemDetails Error
+    {
+        get
+        {
+            if (!IsValid)
+            {
+                throw new InvalidOperationException("Cannot access Error when response is valid.");
+            }
 
-    public object? Data { get; protected set; }
-} 
+            return _error;
+        }
+        protected set
+        {
+            _error = value;
+        }
+    }
+
+    public object Data
+    {
+        get
+        {
+            if (!IsValid)
+            {
+                throw new InvalidOperationException("Cannot access Data when response is not valid.");
+            }
+
+            return _data;
+        }
+        protected set
+        {
+            _data = value;
+        }
+    }
+}
 
 public sealed class CommandResponse : BaseResponse
 {
-    internal CommandResponse() 
+    internal CommandResponse()
     {
     }
 
@@ -43,7 +76,7 @@ public sealed class CommandResponse : BaseResponse
             IsValid = false,
             Data = null
         };
-    } 
+    }
 }
 
 public sealed class QueryResponse : BaseResponse
@@ -78,5 +111,52 @@ public sealed class QueryResponse : BaseResponse
             IsValid = false,
             Data = null
         };
+    }
+}
+
+// New typed query response for module-to-module communication
+public sealed class QueryResponse<T> : BaseResponse
+{
+    private T _data = default!;
+
+    internal QueryResponse()
+    {
+    }
+
+    public static QueryResponse<T> Success(T result)
+    {
+        return new QueryResponse<T>()
+        {
+            Error = null,
+            IsValid = true,
+            Data = result
+        };
+    }
+
+    public static QueryResponse<T> Failure(ProblemDetails problem)
+    {
+        return new QueryResponse<T>()
+        {
+            Error = problem,
+            IsValid = false,
+            Data = default!
+        };
+    }
+
+    public new T Data
+    {
+        get
+        {
+            if (!IsValid)
+            {
+                throw new InvalidOperationException("Cannot access Data when response is not valid.");
+            }
+
+            return _data;
+        }
+        private set
+        {
+            _data = value;
+        }
     }
 }
