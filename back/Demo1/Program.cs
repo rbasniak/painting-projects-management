@@ -5,6 +5,7 @@ using rbkApiModules.Identity.Relational;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using rbkApiModules.Commons.Core.Helpers;
+using Demo1.UseCases.Commands;
 
 namespace Demo1
 {
@@ -84,6 +85,10 @@ namespace Demo1
             );
 
             app.SeedDatabase<DatabaseSeed>();
+
+            // Register endpoints
+            CreatePost.MapEndpoint(app);
+            UpdatePost.MapEndpoint(app);
 
             app.MapOpenApi();
             app.UseSwaggerUI(options =>

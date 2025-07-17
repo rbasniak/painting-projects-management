@@ -19,7 +19,7 @@ namespace rbkApiModules.Commons.Testing;
 
 public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgram>, IAsyncInitializer where TProgram : class
 {
-    protected string ContentFolder = string.Empty;
+    public string ContentFolder { get; private set; } = string.Empty;
 
     private readonly Dictionary<Type, Mock<HttpMessageHandler>> _mockedHttpClientMessageHandlers = new();
 
