@@ -645,7 +645,14 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
         if (response.IsSuccessStatusCode)
         {
-            result.Data = JsonSerializer.Deserialize<TResponse>(result.Body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            try
+            {
+                result.Data = JsonSerializer.Deserialize<TResponse>(result.Body, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            catch (Exception ex)
+            {
+                result.Data.ShouldNotBeNull($"Error deserializing the response body to {typeof(TResponse).Name}: {ex.Message}");
+            }
 
             result.Data.ShouldNotBeNull($"Error deserializing the response body to {typeof(TResponse).Name}");
         }

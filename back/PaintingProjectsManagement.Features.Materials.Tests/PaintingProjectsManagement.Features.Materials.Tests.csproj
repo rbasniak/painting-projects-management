@@ -36,6 +36,7 @@
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Materials\PaintingProjectsManagement.Features.Materials.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagment.Database\PaintingProjectsManagment.Database.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj" />
+    <ProjectReference Include="..\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj" />
   </ItemGroup>
 
 </Project>

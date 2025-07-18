@@ -37,6 +37,8 @@ public class Program
             connectionString = "Data Source=C:\\git\\Development\\Personal\\app.db";
         }
 
+        builder.Services.AddHttpContextAccessor();
+
         builder.Services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlite(connectionString));
         

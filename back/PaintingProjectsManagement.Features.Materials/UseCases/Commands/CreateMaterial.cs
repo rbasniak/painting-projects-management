@@ -4,7 +4,7 @@ public class CreateMaterial : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/materials", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/materials", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -23,14 +23,14 @@ public class CreateMaterial : IEndpoint
 
     public class Validator : AbstractValidator<Request>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization)
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .MaximumLength(100)
                 .MustAsync(async (name, cancellationToken) =>
                     !await context.Set<Material>().AnyAsync(m => m.Name == name, cancellationToken))
-                .WithMessage("A material with this name already exists.");
+                .WithMessage(localization.LocalizeString(MaterialWithNameAlreadyExists.Create.MaterialWithNameAlreadyExists));
 
             RuleFor(x => x.PricePerUnit)
                 .GreaterThan(0)
@@ -51,7 +51,7 @@ public class CreateMaterial : IEndpoint
 
             var result = MaterialDetails.FromModel(material);
 
-            return CommandResponse.Success();
+            return CommandResponse.Success(result);
         } 
     }
 

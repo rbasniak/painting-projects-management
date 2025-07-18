@@ -34,7 +34,7 @@ public class ClaimOverride
         {
             Claim = new EntityReference(model.Claim.Id, model.Claim.Description),
             Identification = model.Claim.Identification,
-            Access = new EnumReference((int)model.Access, model.Access.ToString()),
+            Access = new EnumReference(model.Access),
             IsProtected = model.Claim.IsProtected
         };
     }

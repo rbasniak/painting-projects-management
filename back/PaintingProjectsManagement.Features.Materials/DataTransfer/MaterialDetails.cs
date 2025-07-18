@@ -1,9 +1,11 @@
-﻿namespace PaintingProjectsManagement.Features.Materials;
+﻿using rbkApiModules.Commons.Core.Abstractions;
+
+namespace PaintingProjectsManagement.Features.Materials;
 public class MaterialDetails
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
-    public MaterialUnit Unit { get; set; }
+    public EnumReference Unit { get; set; }
     public double PricePerUnit { get; set; }
 
     public static MaterialDetails FromModel(Material material)
@@ -12,7 +14,7 @@ public class MaterialDetails
         {
             Id = material.Id,
             Name = material.Name,
-            Unit = material.Unit,
+            Unit = new (material.Unit),
             PricePerUnit = material.PricePerUnit
         };
     }

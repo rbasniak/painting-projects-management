@@ -1,3 +1,22 @@
-﻿namespace rbkApiModules.Commons.Core.Abstractions;
+﻿using System.Text.Json.Serialization;
 
-public record EnumReference(int Id, string Value);
+namespace rbkApiModules.Commons.Core.Abstractions;
+
+public record EnumReference
+{
+    [JsonConstructor]
+    public EnumReference(int id, string value)
+    {
+        Id = id;
+        Value = value;
+    }
+
+    public EnumReference(Enum value)
+    {
+        Id = Convert.ToInt32(value);
+        Value = value.ToString();
+    }
+
+    public int Id { get; init; }
+    public string Value { get; init; }
+}

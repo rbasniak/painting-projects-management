@@ -43,7 +43,7 @@ public static class HttpAssertionExtensions
 
     public static void ShouldBeSuccess<T>(this HttpResponse<T> response, out T result) where T : class
     {
-        response.IsSuccess.ShouldBeTrue($"Expected success response, but the response was not successful. Messages: {string.Join(", ", response.Messages)}");
+        response.IsSuccess.ShouldBeTrue($"Expected success response, but the response was not successful. Messages: [ {string.Join(", ", response.Messages)} ]");
         response.Data.ShouldNotBeNull($"Expected response of type {typeof(T).Name}, but the response was empty");
         response.Data.ShouldBeOfType(typeof(T), $"Expected response of type {typeof(T).Name}, but the response was of type {response.Data.GetType().Name}");
 
@@ -52,12 +52,12 @@ public static class HttpAssertionExtensions
 
     public static void ShouldBeSuccess(this HttpResponse response)
     {
-        response.IsSuccess.ShouldBeTrue($"Expected success response, but the response was not successful. Messages: {string.Join(", ", response.Messages)}");
+        response.IsSuccess.ShouldBeTrue($"Expected success response, but the response was not successful. Messages: [ {string.Join(", ", response.Messages)} ]");
     }
 
     public static void ShouldBeForbidden(this HttpResponse response)
     {
-        response.Code.ShouldBe(HttpStatusCode.Forbidden, $"Expected forbidden response, but the response was not forbidden. Messages: {string.Join(", ", response.Messages)}");
+        response.Code.ShouldBe(HttpStatusCode.Forbidden, $"Expected forbidden response, but the response was not forbidden. Messages: [ {string.Join(", ", response.Messages)} ]");
     } 
 }
 

@@ -47,7 +47,7 @@ public class ClaimOverride
         return new ClaimOverride
         {
             Claim = new EntityReference(model.Claim.Id, model.Claim.Description),
-            Access = new EnumReference((int)model.Access, model.Access.ToString())
+            Access = new EnumReference(model.Access)
         };
     }
 } 
