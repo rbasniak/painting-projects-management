@@ -30,7 +30,7 @@ public class CreateMaterial : IEndpoint
                 .MaximumLength(100)
                 .MustAsync(async (name, cancellationToken) =>
                     !await context.Set<Material>().AnyAsync(m => m.Name == name, cancellationToken))
-                .WithMessage(localization.LocalizeString(MaterialWithNameAlreadyExists.Create.MaterialWithNameAlreadyExists));
+                .WithMessage(localization.LocalizeString(MaterialsMessages.Create.MaterialWithNameAlreadyExists));
 
             RuleFor(x => x.PricePerUnit)
                 .GreaterThan(0)
