@@ -300,7 +300,7 @@ public class Create_Material_Tests
         // Prepare
         var request = new CreateMaterial.Request
         {
-            Name = "8x4 magnet",
+            Name = "8x4 magnet for test",
             Unit = MaterialUnit.Unit,
             PricePerUnit = 19,
         };
@@ -312,7 +312,7 @@ public class Create_Material_Tests
         response.ShouldBeSuccess(out var result);
 
         result.Id.ShouldNotBe(Guid.Empty);
-        result.Name.ShouldBe("8x4 magnet");
+        result.Name.ShouldBe("8x4 magnet for test");
         result.PricePerUnit.ShouldBe(19);
         result.Unit.ShouldNotBeNull();
         result.Unit.Id.ShouldBe((int)MaterialUnit.Unit);
@@ -323,7 +323,7 @@ public class Create_Material_Tests
 
         entity.ShouldNotBeNull();
         entity.Id.ShouldBe(result.Id);
-        entity.Name.ShouldBe("8x4 magnet");
+        entity.Name.ShouldBe("8x4 magnet for test");
         entity.PricePerUnit.ShouldBe(19);
         entity.Unit.ShouldBe(MaterialUnit.Unit);
     }

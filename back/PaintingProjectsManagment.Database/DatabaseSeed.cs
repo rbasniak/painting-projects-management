@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.Features.Paints;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Core;
@@ -9,11 +10,12 @@ public class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatabaseSeede
 {
     public DatabaseSeed()
     {
-        AddSeed("2025-07-19: Initial development seed", new SeedInfo<DatabaseContext>(InitialDevelopmentSeed));
+        AddSeed("2025-07-19 16:00: Users seed", new SeedInfo<DatabaseContext>(UsersSeed));
+        AddSeed("2025-07-19 16:48: Development materials seed", new SeedInfo<DatabaseContext>(DevelopmentMaterialsSeed));
         // AddSeed("2025-07-20: Army Painter Seed", new SeedInfo<DatabaseContext>(ArmyPainterFanaticsSeed));
     }
 
-    private void InitialDevelopmentSeed(DatabaseContext context, IServiceProvider provider)
+    private void UsersSeed(DatabaseContext context, IServiceProvider provider)
     {
         var tenant1 = context.Add(new Tenant("rodrigo.basniak", "Rodrigo Basniak")).Entity;
         var tenant2 = context.Add(new Tenant("ricardo.smarzaro", "Ricardo Smarzaro")).Entity;
@@ -28,6 +30,37 @@ public class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatabaseSeede
 
         context.SaveChanges();
     }
+
+    private void DevelopmentMaterialsSeed(DatabaseContext context, IServiceProvider provider)
+    {
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "6x3 magnet", MaterialUnit.Unit, 6));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "6x4 magnet", MaterialUnit.Unit, 7));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "8x4 magnet", MaterialUnit.Unit, 8));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "8x3 magnet", MaterialUnit.Unit, 9));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "5x3 magnet", MaterialUnit.Unit, 10));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "5x2 magnet", MaterialUnit.Unit, 11));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "5x1 magnet", MaterialUnit.Unit, 12));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "4x3 magnet", MaterialUnit.Unit, 13));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "3x2 magnet", MaterialUnit.Unit, 14));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "3x1 magnet", MaterialUnit.Unit, 15));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "10x5 magnet", MaterialUnit.Unit, 16));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Tamiya masking tape 1mm", MaterialUnit.Centimeters, 1.0));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Tamiya masking tape 3mm", MaterialUnit.Centimeters, 1.1));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Tamiya masking tape 5mm", MaterialUnit.Centimeters, 1.2));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Tamiya masking tape 10mm", MaterialUnit.Centimeters, 1.3));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Tamiya masking tape 15mm", MaterialUnit.Centimeters, 1.4));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Tamiya masking tape 20mm", MaterialUnit.Centimeters, 1.5));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Green Stuff World Gloss Black Primer", MaterialUnit.Centimeters, 1.5));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Green Stuff World Gloss Varnish", MaterialUnit.Centimeters, 1.5));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Vallejo Gloss Varnish", MaterialUnit.Centimeters, 1.5));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Vallejo Matt Varnish", MaterialUnit.Centimeters, 1.5));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Vallejo Ultra Matt Varnish", MaterialUnit.Centimeters, 1.5));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "Vallejo Satin Varnish", MaterialUnit.Centimeters, 1.5));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", "The Army Painter Satin Varnish", MaterialUnit.Centimeters, 1.5));
+
+        context.SaveChanges();
+    }
+
     private void ArmyPainterFanaticsSeed(DatabaseContext context, IServiceProvider provider)
     {
         var armyPainter = new PaintBrand(Guid.CreateVersion7(), "TheArmyPainter");
