@@ -14,7 +14,7 @@ public class Tenant_Roles_Basic_Independent_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        await TestingServer.LoginAsync("admin1", "123", "buzios");
+        await TestingServer.CacheCredentialsAsync("admin1", "123", "buzios");
     }
 
     /// <summary>

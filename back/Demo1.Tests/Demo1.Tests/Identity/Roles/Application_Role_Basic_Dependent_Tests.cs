@@ -22,8 +22,8 @@ public class Application_Role_Basic_Dependent_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Login()
     {
-        await TestingServer.LoginAsync("superuser", "admin", null);
-        await TestingServer.LoginAsync("admin1", "123", "buzios");
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("admin1", "123", "buzios");
     }
 
     #region tables

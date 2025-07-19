@@ -534,7 +534,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
     /// <summary>
     /// Login using Mocked Windows Authentication
     /// </summary>
-    public async Task<HttpResponse<JwtResponse>> LoginAsync(string username, string tenant)
+    public async Task CacheCredentials(string username, string tenant)
     {
         using (var httpClient = CreateHttpClient())
         {
@@ -547,7 +547,29 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
                 Tenant = tenant
             });
 
+            if (!result.IsSuccess)
+            {
+                var exception = new InvalidOperationException($"Could not login with user {username} (Status Code = {result.Code}). Messages: {String.Join(", ", result.Messages)}");
+                exception.Data.Add("Details", result);
+                throw exception;
+            }
+
             CachedCredentials.Add(new Credentials(username, string.Empty, tenant), result.Data.AccessToken);
+        }
+    }
+
+    public async Task<HttpResponse<JwtResponse>> LoginAsync(string username, string? tenant)
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(MockedWindowsAuthenticationSchemeName);
+            httpClient.DefaultRequestHeaders.Add(MockedWindowsAuthenticationHeaderName, username);
+
+            var result = await PostAsync<JwtResponse>(httpClient, "api/authentication/login", new UserLogin.Request
+            {
+                Username = username,
+                Tenant = tenant
+            });
 
             return result;
         }
@@ -556,7 +578,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
     /// <summary>
     /// Login using normal credentials
     /// </summary>
-    public async Task<HttpResponse<JwtResponse>> LoginAsync(string username, string password, string? tenant)
+    public async Task CacheCredentialsAsync(string username, string password, string? tenant)
     {
         using (var httpClient = CreateHttpClient())
         {
@@ -569,13 +591,25 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
             if (!result.IsSuccess)
             {
-                var exception = new InvalidOperationException($"Could not login with user {username}");
+                var exception = new InvalidOperationException($"Could not login with user {username} (Status Code = {result.Code}). Messages: {String.Join(", ", result.Messages)}");
                 exception.Data.Add("Details", result);
-
                 throw exception;
             }
 
             CachedCredentials.Add(new Credentials(username, password, tenant), result.Data.AccessToken);
+        }
+    }
+
+    public async Task<HttpResponse<JwtResponse>> LoginAsync(string username, string password, string? tenant)
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            var result = await PostAsync<JwtResponse>(httpClient, "api/authentication/login", new UserLogin.Request
+            {
+                Username = username,
+                Password = password,
+                Tenant = tenant
+            });
 
             return result;
         }

@@ -30,7 +30,7 @@ public class User_Creation_Tests
         context.SaveChanges();
 
         // Default user for all tests
-        await TestingServer.LoginAsync("admin", "admin123", "wayne inc");
+        await TestingServer.CacheCredentialsAsync("admin", "admin123", "wayne inc");
     }
 
     /// <summary>

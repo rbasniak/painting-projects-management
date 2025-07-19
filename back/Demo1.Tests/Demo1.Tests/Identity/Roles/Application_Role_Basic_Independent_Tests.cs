@@ -18,7 +18,7 @@ public class Application_Role_Basic_Independent_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Login()
     {
-        await TestingServer.LoginAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
     }
 
     /// <summary>

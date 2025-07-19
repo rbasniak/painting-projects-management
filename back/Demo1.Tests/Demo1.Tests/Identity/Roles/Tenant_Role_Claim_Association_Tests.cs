@@ -48,7 +48,7 @@ public class Tenant_Role_Claim_Association_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        await TestingServer.LoginAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
         _admin1Token = new JwtToken((await TestingServer.LoginAsync("admin1", "123", "buzios")).Data!.AccessToken);
         var admin1bs = new JwtToken((await TestingServer.LoginAsync("admin1", "123", "un-Bs")).Data!.AccessToken);
 

@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using rbkApiModules.Identity.Core;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
@@ -11,20 +10,9 @@ public class Create_Material_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        // Setup test data directly in database
-        using (var context = TestingServer.CreateContext())
-        {
-            // Create a test tenant
-            var tenant = new Tenant("TEST", "Test Tenant", "");
-            context.Set<Tenant>().Add(tenant);
-            await context.SaveChangesAsync();
-        }
-
-        // Prepare
         // Create a test material for duplicate name validation tests
-        var existingMaterial = new Material("TEST", "Existing Material", MaterialUnit.Unit, 10.0);
+        var existingMaterial = new Material("rodrigo.basniak", "Existing Material", MaterialUnit.Unit, 10.0);
 
-        // Act          
         using (var context = TestingServer.CreateContext())
         {
             var connectionString = context.Database.GetConnectionString();
@@ -39,6 +27,10 @@ public class Create_Material_Tests
             var savedMaterial = context.Set<Material>().FirstOrDefault(x => x.Name == "Existing Material");
             savedMaterial.ShouldNotBeNull();
         }
+
+        // Login with the users that will be used in the tests, so they will be cached in the TestingServer for easy access
+        await TestingServer.CacheCredentialsAsync("rodrigo.basniak", "trustno1", "rodrigo.basniak");
+        await TestingServer.CacheCredentialsAsync("ricardo.smarzaro", "zemiko987", "ricardo.smarzaro");
     }
 
     [Test, NotInParallel(Order = 2)]
@@ -53,7 +45,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -75,7 +67,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -97,7 +89,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name cannot exceed 100 characters.");
@@ -119,7 +111,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "A material with this name already exists.");
@@ -141,7 +133,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Price per unit must be greater than zero.");
@@ -163,7 +155,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Price per unit must be greater than zero.");
@@ -185,7 +177,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.", "Price per unit must be greater than zero.");
@@ -207,7 +199,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -229,7 +221,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         // This might pass validation, but we're testing the edge case
@@ -259,7 +251,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         // This might pass validation, but we're testing the edge case
@@ -289,7 +281,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Unit has an invalid value.");
@@ -314,7 +306,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);

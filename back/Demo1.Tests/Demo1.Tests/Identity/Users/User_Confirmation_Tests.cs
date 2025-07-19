@@ -13,7 +13,7 @@ public class User_Confirmation_Tests
     {
         TestingServer.ClearMailsFolder();
 
-        await TestingServer.LoginAsync("admin1", "123", "buzios");
+        await TestingServer.CacheCredentialsAsync("admin1", "123", "buzios");
     }
 
     /// <summary>

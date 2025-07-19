@@ -97,7 +97,7 @@ public class Program
 
         app.UseRbkUIDefinitions();
 
-        // app.SeedDatabase<DatabaseSeed>();
+        app.SeedDatabase<DatabaseSeed>();
 
         app.MapDefaultEndpoints();
 

@@ -19,8 +19,8 @@ public class Tenant_Management_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Login()
     {
-        await TestingServer.LoginAsync("superuser", "admin", null);
-        await TestingServer.LoginAsync("admin1", "123", "buzios");
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("admin1", "123", "buzios");
     }
 
     /// <summary>
@@ -506,7 +506,7 @@ public class Tenant_Management_Tests
         var createTenantResponse = await TestingServer.PostAsync<TenantDetails>("api/authorization/tenants", createTenantRequest, "superuser");
         createTenantResponse.ShouldBeSuccess();
 
-        await TestingServer.LoginAsync("tony.admin", "12345", "Stark");
+        await TestingServer.CacheCredentialsAsync("tony.admin", "12345", "Stark");
 
         var roleNames = new[] { "Role1", "Role2" };
         foreach (var roleName in roleNames)

@@ -46,8 +46,8 @@ public class Application_Role_Claim_Association_Tests
     public async Task Setup()
     {
         // Prepare the default access token
-        await TestingServer.LoginAsync("superuser", "admin", null);
-        await TestingServer.LoginAsync("admin1", "123", "buzios");
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("admin1", "123", "buzios");
 
         var createClaimCommands = new[]
         {

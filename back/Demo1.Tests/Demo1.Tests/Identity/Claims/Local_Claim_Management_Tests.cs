@@ -14,8 +14,8 @@ public class Local_Claim_Management_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        await TestingServer.LoginAsync("superuser", "admin", null);
-        await TestingServer.LoginAsync("admin1", "123", "buzios");
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("admin1", "123", "buzios");
 
         var context = TestingServer.CreateContext();
         context.Add(new Claim("CAN_MANAGE_APPROVALS", "can manage approvals"));

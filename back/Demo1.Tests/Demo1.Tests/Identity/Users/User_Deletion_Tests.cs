@@ -32,8 +32,8 @@ public class User_Deletion_Tests
         context.SaveChanges();
 
         // Default user for all tests
-        await TestingServer.LoginAsync("user", "user123", "wayne inc");
-        await TestingServer.LoginAsync("admin", "admin123", "wayne inc");
+        await TestingServer.CacheCredentialsAsync("user", "user123", "wayne inc");
+        await TestingServer.CacheCredentialsAsync("admin", "admin123", "wayne inc");
 
         var users = TestingServer.CreateContext().Set<User>().Where(x => x.TenantId == "WAYNE INC").ToList();
         users.Count.ShouldBe(2);

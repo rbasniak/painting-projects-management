@@ -4,13 +4,33 @@ namespace rbkApiModules.Commons.Core;
 
 public abstract class TenantEntity : BaseEntity
 {
+    private string? _tenantId;
+
     protected TenantEntity() : base()
     {
 
     }
 
+    // TODO: Estava dando problema no SetupTenant quando o tenantId nao era nulavel. Tem que descobrir e corrigir isso
     [MaxLength(32)]
-    public string? TenantId { get; protected set; }
+    public string? TenantId
+    {
+        get
+        {
+            return _tenantId;
+        }
+        set
+        {
+            if (value == null)
+            {
+                _tenantId = null;
+            }
+            else
+            {
+                _tenantId = value.ToUpper();
+            }
+        }
+    }
 
     public bool HasTenant => !String.IsNullOrEmpty(TenantId);
 
