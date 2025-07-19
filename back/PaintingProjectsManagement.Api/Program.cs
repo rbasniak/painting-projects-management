@@ -95,6 +95,8 @@ public class Program
             .WithEmail("admin@my-company.com")
         );
 
+        app.UseRbkUIDefinitions();
+
         // app.SeedDatabase<DatabaseSeed>();
 
         app.MapDefaultEndpoints();

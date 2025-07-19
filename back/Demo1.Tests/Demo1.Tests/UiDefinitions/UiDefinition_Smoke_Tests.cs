@@ -8,7 +8,7 @@ public class UiDefinition_Smoke_Tests
     public required Demo1TestingServer TestingServer { get; set; } = default!;
 
     [Test, NotInParallel(Order = 1)]
-    public async Task Global_Admin_Can_Create_Claim()
+    public async Task UiDefinitions_Returns_Success()
     {
         var response = await TestingServer.GetAsync("api/ui-definitions");
 
