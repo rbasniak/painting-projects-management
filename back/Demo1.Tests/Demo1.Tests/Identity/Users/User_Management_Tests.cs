@@ -24,7 +24,8 @@ public class User_Management_Tests
         _tokens.Add("jane.doe", new JwtToken((await TestingServer.LoginAsync("jane.doe", "123", "buzios")).Data!.AccessToken));
         _tokens.Add("admin1-bz", new JwtToken((await TestingServer.LoginAsync("admin1", "123", "buzios")).Data!.AccessToken));
         _tokens.Add("admin1-bs", new JwtToken((await TestingServer.LoginAsync("admin1", "123", "un-bs")).Data!.AccessToken));
-        _tokens.Add("superuser", new JwtToken((await TestingServer.LoginAsync("superuser", "admin", null)).Data!.AccessToken));
+        
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
     }
 
     /// <summary>

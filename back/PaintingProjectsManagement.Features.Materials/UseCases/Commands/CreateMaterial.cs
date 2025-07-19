@@ -24,7 +24,7 @@ public class CreateMaterial : IEndpoint
         public double PricePerUnit { get; set; }
     }
 
-    public class Validator : TenantDatabaseConstraintValidator<Request, Material>
+    public class Validator : DatabaseConstraintValidator<Request, Material>
     {
         public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {

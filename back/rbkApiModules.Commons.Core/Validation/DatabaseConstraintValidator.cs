@@ -8,6 +8,7 @@ namespace rbkApiModules.Commons.Core;
 
 /// <summary>
 /// Base validator that automatically applies database constraints to validation rules
+/// Supports both regular entities and tenant entities with automatic tenant-aware validation
 /// </summary>
 /// <typeparam name="TRequest">The request type to validate</typeparam>
 /// <typeparam name="TModel">The entity model type that has EF configuration</typeparam>
@@ -16,6 +17,10 @@ public abstract class DatabaseConstraintValidator<TRequest, TModel> : AbstractVa
 {
     protected readonly DbContext Context;
     protected readonly ILocalizationService? LocalizationService;
+
+    // Helper properties to determine if we're dealing with tenant entities and authenticated requests
+    private static readonly bool IsTenantEntity = typeof(TenantEntity).IsAssignableFrom(typeof(TModel));
+    private static readonly bool IsAuthenticatedRequest = typeof(AuthenticatedRequest).IsAssignableFrom(typeof(TRequest));
 
     protected DatabaseConstraintValidator(DbContext context, ILocalizationService? localizationService = null)
     {
@@ -204,36 +209,92 @@ public abstract class DatabaseConstraintValidator<TRequest, TModel> : AbstractVa
         var propertyType = requestProperty.PropertyType;
         
         // Only apply primary key validation for non-zero values (assuming 0 is not a valid ID)
-        CreateRuleFor<object>(requestProperty)
-            .MustAsync(async (value, cancellationToken) =>
-            {
-                if (value == null) return true; // Let required validation handle nulls
-                
-                // Skip validation for zero values (new entities)
-                if (value is int intValue && intValue == 0) return true;
-                if (value is long longValue && longValue == 0) return true;
-                if (value is Guid guidValue && guidValue == Guid.Empty) return true;
-                
-                try
+        if (IsTenantEntity && IsAuthenticatedRequest)
+        {
+            // Use tenant-aware validation
+            CreateTenantAwareRuleFor<object>(requestProperty)
+                .MustAsync(async (request, value, cancellationToken) =>
                 {
-                    // Use a simpler approach - just check if the entity exists
-                    var dbSet = Context.Set<TModel>();
-                    var parameter = Expression.Parameter(typeof(TModel), "x");
-                    var propertyAccess = Expression.Property(parameter, "Id");
-                    var valueExpression = Expression.Constant(value);
-                    var equalsExpression = Expression.Equal(propertyAccess, valueExpression);
-                    var lambda = Expression.Lambda<Func<TModel, bool>>(equalsExpression, parameter);
+                    if (value == null) return true; // Let required validation handle nulls
+
+                    // Skip validation for zero values (new entities)
+                    if (value is int intValue && intValue == 0) return true;
+                    if (value is long longValue && longValue == 0) return true;
+                    if (value is Guid guidValue && guidValue == Guid.Empty) return true;
+
+                    try
+                    {
+                        // Use a simpler approach - just check if the entity exists within the same tenant
+                        var dbSet = Context.Set<TModel>();
+                        var query = dbSet.AsQueryable();
+
+                        // Filter by tenant if authenticated and request is an AuthenticatedRequest
+                        if (request is AuthenticatedRequest authenticatedRequest && 
+                            authenticatedRequest.IsAuthenticated && 
+                            authenticatedRequest.Identity.HasTenant)
+                        {
+                            // For tenant entities, we need to filter by tenant
+                            // Use expression tree to access TenantId property safely
+                            var tenantParam = Expression.Parameter(typeof(TModel), "e");
+                            var tenantIdProperty = Expression.Property(tenantParam, "TenantId");
+                            var tenantValue = Expression.Constant(authenticatedRequest.Identity.Tenant);
+                            var tenantEquals = Expression.Equal(tenantIdProperty, tenantValue);
+                            var tenantLambda = Expression.Lambda<Func<TModel, bool>>(tenantEquals, tenantParam);
+                            
+                            query = query.Where(tenantLambda);
+                        }
+
+                        var parameter = Expression.Parameter(typeof(TModel), "x");
+                        var propertyAccess = Expression.Property(parameter, "Id");
+                        var valueExpression = Expression.Constant(value);
+                        var equalsExpression = Expression.Equal(propertyAccess, valueExpression);
+                        var lambda = Expression.Lambda<Func<TModel, bool>>(equalsExpression, parameter);
+
+                        return await query.AnyAsync(lambda, cancellationToken);
+                    }
+                    catch
+                    {
+                        // If there's any error in the primary key validation, assume it's valid
+                        // This prevents the validator from breaking due to reflection issues
+                        return false;
+                    }
+                })
+                .WithMessage(GetLocalizedMessage("PrimaryKeyNotFound", requestProperty.Name));
+        }
+        else
+        {
+            // Use regular validation (non-tenant-aware)
+            CreateRuleFor<object>(requestProperty)
+                .MustAsync(async (value, cancellationToken) =>
+                {
+                    if (value == null) return true; // Let required validation handle nulls
                     
-                    return await dbSet.AnyAsync(lambda, cancellationToken);
-                }
-                catch (Exception ex) 
-                {
-                    // If there's any error in the primary key validation, assume it's valid
-                    // This prevents the validator from breaking due to reflection issues
-                    return false;
-                }
-            })
-            .WithMessage(GetLocalizedMessage("PrimaryKeyNotFound", requestProperty.Name));
+                    // Skip validation for zero values (new entities)
+                    if (value is int intValue && intValue == 0) return true;
+                    if (value is long longValue && longValue == 0) return true;
+                    if (value is Guid guidValue && guidValue == Guid.Empty) return true;
+                    
+                    try
+                    {
+                        // Use a simpler approach - just check if the entity exists
+                        var dbSet = Context.Set<TModel>();
+                        var parameter = Expression.Parameter(typeof(TModel), "x");
+                        var propertyAccess = Expression.Property(parameter, "Id");
+                        var valueExpression = Expression.Constant(value);
+                        var equalsExpression = Expression.Equal(propertyAccess, valueExpression);
+                        var lambda = Expression.Lambda<Func<TModel, bool>>(equalsExpression, parameter);
+                        
+                        return await dbSet.AnyAsync(lambda, cancellationToken);
+                    }
+                    catch
+                    {
+                        // If there's any error in the primary key validation, assume it's valid
+                        // This prevents the validator from breaking due to reflection issues
+                        return false;
+                    }
+                })
+                .WithMessage(GetLocalizedMessage("PrimaryKeyNotFound", requestProperty.Name));
+        }
     }
 
     protected virtual void ApplyForeignKeyConstraint(IForeignKey foreignKey, PropertyInfo requestProperty)
@@ -246,43 +307,102 @@ public abstract class DatabaseConstraintValidator<TRequest, TModel> : AbstractVa
             var principalProperty = principalKey.Properties.First();
             var principalEntityClrType = principalEntityType.ClrType;
             
-            CreateRuleFor<object>(requestProperty)
-                .MustAsync(async (value, cancellationToken) =>
-                {
-                    if (value == null) return true; // Let required validation handle nulls
-                    
-                    try
+            if (IsTenantEntity && IsAuthenticatedRequest)
+            {
+                // Use tenant-aware validation
+                CreateTenantAwareRuleFor<object>(requestProperty)
+                    .MustAsync(async (request, value, cancellationToken) =>
                     {
-                        // Use reflection to call the generic Set method
-                        var setMethod = Context.GetType().GetMethod("Set", Type.EmptyTypes)?.MakeGenericMethod(principalEntityClrType);
-                        var dbSet = setMethod?.Invoke(Context, null);
-                        
-                        if (dbSet == null) return false;
-                        
-                        var parameter = Expression.Parameter(principalEntityClrType, "x");
-                        var propertyAccess = Expression.Property(parameter, principalProperty.Name);
-                        var valueExpression = Expression.Constant(value);
-                        var equalsExpression = Expression.Equal(propertyAccess, valueExpression);
-                        var lambda = Expression.Lambda(equalsExpression, parameter);
-                        
-                        // Use reflection to call AnyAsync since we don't know the exact type at compile time
-                        var anyAsyncMethod = dbSet.GetType().GetMethod("AnyAsync", new[] { lambda.Type, typeof(CancellationToken) });
-                        if (anyAsyncMethod != null)
+                        if (value == null) return true; // Let required validation handle nulls
+
+                        try
                         {
-                            var result = anyAsyncMethod.Invoke(dbSet, new object[] { lambda, cancellationToken });
-                            return result is Task<bool> task ? await task : false;
+                            // Use reflection to call the generic Set method
+                            var setMethod = Context.GetType().GetMethod("Set", Type.EmptyTypes)?.MakeGenericMethod(principalEntityClrType);
+                            var dbSet = setMethod?.Invoke(Context, null);
+
+                            if (dbSet == null) return false;
+
+                            var parameter = Expression.Parameter(principalEntityClrType, "x");
+                            var propertyAccess = Expression.Property(parameter, principalProperty.Name);
+                            var valueExpression = Expression.Constant(value);
+                            var equalsExpression = Expression.Equal(propertyAccess, valueExpression);
+
+                            // Add tenant filtering if the principal entity is a TenantEntity and request is authenticated
+                            Expression finalExpression = equalsExpression;
+                            if (typeof(TenantEntity).IsAssignableFrom(principalEntityClrType) && 
+                                request is AuthenticatedRequest authenticatedRequest && 
+                                authenticatedRequest.IsAuthenticated && 
+                                authenticatedRequest.Identity.HasTenant)
+                            {
+                                var tenantPropertyAccess = Expression.Property(parameter, "TenantId");
+                                var tenantValueExpression = Expression.Constant(authenticatedRequest.Identity.Tenant);
+                                var tenantEqualsExpression = Expression.Equal(tenantPropertyAccess, tenantValueExpression);
+                                finalExpression = Expression.AndAlso(equalsExpression, tenantEqualsExpression);
+                            }
+
+                            var lambda = Expression.Lambda(finalExpression, parameter);
+
+                            // Use reflection to call AnyAsync since we don't know the exact type at compile time
+                            var anyAsyncMethod = dbSet.GetType().GetMethod("AnyAsync", new[] { lambda.Type, typeof(CancellationToken) });
+                            if (anyAsyncMethod != null)
+                            {
+                                var result = anyAsyncMethod.Invoke(dbSet, new object[] { lambda, cancellationToken });
+                                return result is Task<bool> task ? await task : false;
+                            }
+
+                            return false;
                         }
-                        
-                        return false;
-                    }
-                    catch
+                        catch
+                        {
+                            // If there's any error in the foreign key validation, assume it's valid
+                            // This prevents the validator from breaking due to reflection issues
+                            return true;
+                        }
+                    })
+                    .WithMessage(GetLocalizedMessage("ForeignKeyNotFound", requestProperty.Name));
+            }
+            else
+            {
+                // Use regular validation (non-tenant-aware)
+                CreateRuleFor<object>(requestProperty)
+                    .MustAsync(async (value, cancellationToken) =>
                     {
-                        // If there's any error in the foreign key validation, assume it's valid
-                        // This prevents the validator from breaking due to reflection issues
-                        return true;
-                    }
-                })
-                .WithMessage(GetLocalizedMessage("ForeignKeyNotFound", requestProperty.Name));
+                        if (value == null) return true; // Let required validation handle nulls
+                        
+                        try
+                        {
+                            // Use reflection to call the generic Set method
+                            var setMethod = Context.GetType().GetMethod("Set", Type.EmptyTypes)?.MakeGenericMethod(principalEntityClrType);
+                            var dbSet = setMethod?.Invoke(Context, null);
+                            
+                            if (dbSet == null) return false;
+                            
+                            var parameter = Expression.Parameter(principalEntityClrType, "x");
+                            var propertyAccess = Expression.Property(parameter, principalProperty.Name);
+                            var valueExpression = Expression.Constant(value);
+                            var equalsExpression = Expression.Equal(propertyAccess, valueExpression);
+                            var lambda = Expression.Lambda(equalsExpression, parameter);
+                            
+                            // Use reflection to call AnyAsync since we don't know the exact type at compile time
+                            var anyAsyncMethod = dbSet.GetType().GetMethod("AnyAsync", new[] { lambda.Type, typeof(CancellationToken) });
+                            if (anyAsyncMethod != null)
+                            {
+                                var result = anyAsyncMethod.Invoke(dbSet, new object[] { lambda, cancellationToken });
+                                return result is Task<bool> task ? await task : false;
+                            }
+                            
+                            return false;
+                        }
+                        catch
+                        {
+                            // If there's any error in the foreign key validation, assume it's valid
+                            // This prevents the validator from breaking due to reflection issues
+                            return true;
+                        }
+                    })
+                    .WithMessage(GetLocalizedMessage("ForeignKeyNotFound", requestProperty.Name));
+            }
         }
     }
 
@@ -315,6 +435,26 @@ public abstract class DatabaseConstraintValidator<TRequest, TModel> : AbstractVa
         
         var lambda = Expression.Lambda<Func<TRequest, TProperty>>(convertedPropertyAccess, parameter);
         
+        return RuleFor(lambda);
+    }
+
+    /// <summary>
+    /// Creates a tenant-aware rule for properties when dealing with tenant entities and authenticated requests
+    /// </summary>
+    private IRuleBuilder<TRequest, TProperty> CreateTenantAwareRuleFor<TProperty>(PropertyInfo property)
+    {
+        var parameter = Expression.Parameter(typeof(TRequest), "x");
+        var propertyAccess = Expression.Property(parameter, property.Name);
+
+        // Convert the property access to the correct type if needed
+        Expression convertedPropertyAccess = propertyAccess;
+        if (propertyAccess.Type != typeof(TProperty))
+        {
+            convertedPropertyAccess = Expression.Convert(propertyAccess, typeof(TProperty));
+        }
+
+        var lambda = Expression.Lambda<Func<TRequest, TProperty>>(convertedPropertyAccess, parameter);
+
         return RuleFor(lambda);
     }
 }

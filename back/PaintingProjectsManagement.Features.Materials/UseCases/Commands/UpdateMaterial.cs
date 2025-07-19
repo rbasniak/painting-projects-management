@@ -23,7 +23,7 @@ public class UpdateMaterial : IEndpoint
         public double PricePerUnit { get; set; }
     }
 
-    public class Validator : TenantDatabaseConstraintValidator<Request, Material>
+    public class Validator : DatabaseConstraintValidator<Request, Material>
     {
         public Validator(DbContext context) : base(context)
         {
