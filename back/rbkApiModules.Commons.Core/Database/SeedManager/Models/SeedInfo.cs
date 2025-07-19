@@ -10,6 +10,12 @@ public class SeedInfo<T> where T : DbContext
         EnvironmentUsage = environmentUsage;
     }
 
+    public SeedInfo(Action<T, IServiceProvider> function)
+    {
+        Function = function;
+        EnvironmentUsage = EnvironmentUsage.Production | EnvironmentUsage.Development | EnvironmentUsage.Staging | EnvironmentUsage.Testing;
+    }
+
     public Action<T, IServiceProvider> Function { get; }
     
     public EnvironmentUsage EnvironmentUsage { get; }

@@ -416,3 +416,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/back/PaintingProjectsManagement.Api/app.db
+/back/PaintingProjectsManagement.Api/app.db-shm
+/back/PaintingProjectsManagement.Api/app.db-wal

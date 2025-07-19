@@ -51,7 +51,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
     {
         var projectDir = Path.GetDirectoryName(typeof(TProgram).Assembly.Location);
 
-        ContentFolder = Path.Combine(projectDir, "wwwroot");
+        ContentFolder = Path.Combine(projectDir, Guid.NewGuid().ToString("N"), "wwwroot");
 
         if (Directory.Exists(ContentFolder))
         {
@@ -90,31 +90,28 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         return client;
     }
 
-    public virtual DbContext Context
+    public virtual DbContext CreateContext()
     {
-        get
+        var scope = TestingServer!.Services.CreateScope();
+
+        var contexts = scope.ServiceProvider.GetService<IEnumerable<DbContext>>();
+
+        if (contexts != null && contexts.Count() > 1)
         {
-            var scope = TestingServer!.Services.CreateScope();
+            var context = contexts.GetDefaultContext();
 
-            var contexts = scope.ServiceProvider.GetService<IEnumerable<DbContext>>();
-
-            if (contexts != null && contexts.Count() > 1)
+            return context ?? throw new Exception("Could not find DbContext");
+        }
+        else
+        {
+            if (contexts == null)
             {
-                var context = contexts.GetDefaultContext();
-
-                return context ?? throw new Exception("Could not find DbContext");
+                throw new Exception("Could not find a DbContext in the DI container");
             }
-            else
-            {
-                if (contexts == null)
-                {
-                    throw new Exception("Could not find a DbContext in the DI container");
-                }
 
-                var context = contexts.First();
+            var context = contexts.First();
 
-                return context ?? throw new Exception("Could not find DbContext");
-            }
+            return context ?? throw new Exception("Could not find DbContext");
         }
     }
 
@@ -537,7 +534,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
     /// <summary>
     /// Login using Mocked Windows Authentication
     /// </summary>
-    public async Task<HttpResponse<JwtResponse>> LoginAsync(string username, string tenant)
+    public async Task CacheCredentials(string username, string tenant)
     {
         using (var httpClient = CreateHttpClient())
         {
@@ -550,7 +547,29 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
                 Tenant = tenant
             });
 
+            if (!result.IsSuccess)
+            {
+                var exception = new InvalidOperationException($"Could not login with user {username} (Status Code = {result.Code}). Messages: {String.Join(", ", result.Messages)}");
+                exception.Data.Add("Details", result);
+                throw exception;
+            }
+
             CachedCredentials.Add(new Credentials(username, string.Empty, tenant), result.Data.AccessToken);
+        }
+    }
+
+    public async Task<HttpResponse<JwtResponse>> LoginAsync(string username, string? tenant)
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(MockedWindowsAuthenticationSchemeName);
+            httpClient.DefaultRequestHeaders.Add(MockedWindowsAuthenticationHeaderName, username);
+
+            var result = await PostAsync<JwtResponse>(httpClient, "api/authentication/login", new UserLogin.Request
+            {
+                Username = username,
+                Tenant = tenant
+            });
 
             return result;
         }
@@ -559,7 +578,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
     /// <summary>
     /// Login using normal credentials
     /// </summary>
-    public async Task<HttpResponse<JwtResponse>> LoginAsync(string username, string password, string? tenant)
+    public async Task CacheCredentialsAsync(string username, string password, string? tenant)
     {
         using (var httpClient = CreateHttpClient())
         {
@@ -572,13 +591,25 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
             if (!result.IsSuccess)
             {
-                var exception = new InvalidOperationException($"Could not login with user {username}");
+                var exception = new InvalidOperationException($"Could not login with user {username} (Status Code = {result.Code}). Messages: {String.Join(", ", result.Messages)}");
                 exception.Data.Add("Details", result);
-
                 throw exception;
             }
 
             CachedCredentials.Add(new Credentials(username, password, tenant), result.Data.AccessToken);
+        }
+    }
+
+    public async Task<HttpResponse<JwtResponse>> LoginAsync(string username, string password, string? tenant)
+    {
+        using (var httpClient = CreateHttpClient())
+        {
+            var result = await PostAsync<JwtResponse>(httpClient, "api/authentication/login", new UserLogin.Request
+            {
+                Username = username,
+                Password = password,
+                Tenant = tenant
+            });
 
             return result;
         }

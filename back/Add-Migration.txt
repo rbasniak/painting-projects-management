@@ -1,0 +1,1 @@
+dotnet ef migrations add Initial --context DatabaseContext --project PaintingProjectsManagment.Database --startup-project PaintingProjectsManagement.Api

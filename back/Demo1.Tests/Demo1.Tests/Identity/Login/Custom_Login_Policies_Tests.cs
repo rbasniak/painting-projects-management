@@ -53,6 +53,6 @@ public class Custom_Login_Policies_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

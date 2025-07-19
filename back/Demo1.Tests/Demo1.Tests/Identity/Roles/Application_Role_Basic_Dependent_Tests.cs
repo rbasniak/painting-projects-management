@@ -22,8 +22,8 @@ public class Application_Role_Basic_Dependent_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Login()
     {
-        await TestingServer.LoginAsync("superuser", "admin", null);
-        await TestingServer.LoginAsync("admin1", "123", "buzios");
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("admin1", "123", "buzios");
     }
 
     #region tables
@@ -61,7 +61,7 @@ public class Application_Role_Basic_Dependent_Tests
         response.Data.Claims.Length.ShouldBe(0);
 
         // Assert the database
-        var role = TestingServer.Context.Set<Role>()
+        var role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
             .FirstOrDefault(x => x.Id == response.Data.Id);
 
@@ -88,7 +88,7 @@ public class Application_Role_Basic_Dependent_Tests
     public async Task Local_Admin_Cannot_Delete_An_Application_Role()
     {
         // Prepare 
-        var role = TestingServer.Context.Set<Role>().Single(x => x.Name == "General");
+        var role = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "General");
         role.IsApplicationWide.ShouldBeTrue();
 
         // Act
@@ -115,7 +115,7 @@ public class Application_Role_Basic_Dependent_Tests
     public async Task Global_Admin_Can_Rename_Application_Role()
     {
         // Prepare
-        var role = TestingServer.Context.Set<Role>().First(x => x.Name == "General");
+        var role = TestingServer.CreateContext().Set<Role>().First(x => x.Name == "General");
 
         var request = new RenameRole.Request
         {
@@ -136,7 +136,7 @@ public class Application_Role_Basic_Dependent_Tests
         response.Data.Claims.Length.ShouldBe(0);
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
             .FirstOrDefault(x => x.Id == response.Data.Id);
 
@@ -192,7 +192,7 @@ public class Application_Role_Basic_Dependent_Tests
     public async Task Local_Admin_Cannot_Rename_Application_Role()
     {
         // Prepare
-        var preExistingRole = TestingServer.Context.Set<Role>().Single(x => x.Name == "General User");
+        var preExistingRole = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "General User");
         preExistingRole.ShouldNotBeNull();
 
         var request = new RenameRole.Request
@@ -271,7 +271,7 @@ public class Application_Role_Basic_Dependent_Tests
     public async Task Global_Admin_Cannot_Rename_Role_With_Empty_Or_Null_Name(string? name)
     {
         // Prepare
-        var role = TestingServer.Context.Set<Role>().First(x => x.Name == "General User");
+        var role = TestingServer.CreateContext().Set<Role>().First(x => x.Name == "General User");
 
         var request = new RenameRole.Request
         {
@@ -305,7 +305,7 @@ public class Application_Role_Basic_Dependent_Tests
     public async Task Global_Admin_Can_Create_Application_Role_Even_If_Exists_In_a_Tenant()
     {
         // Prepare 
-        var preExistingRole = TestingServer.Context.Set<Role>().First(x => x.Name == "Tenant Role");
+        var preExistingRole = TestingServer.CreateContext().Set<Role>().First(x => x.Name == "Tenant Role");
 
         var request = new CreateRole.Request
         {
@@ -327,7 +327,7 @@ public class Application_Role_Basic_Dependent_Tests
         response.Data.Claims.Length.ShouldBe(0);
 
         // Assert the database
-        var roles = TestingServer.Context.Set<Role>()
+        var roles = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
             .Where(x => x.Name == "Tenant Role")
             .ToList();
@@ -354,8 +354,8 @@ public class Application_Role_Basic_Dependent_Tests
     public async Task Global_Admin_Cannot_Rename_Application_Role_If_Name_Already_Exist_Even_With_Different_Casing()
     {
         // Prepare
-        var role1 = TestingServer.Context.Set<Role>().Single(x => x.Name == "General User" && x.TenantId == null);
-        var role2 = TestingServer.Context.Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == null);
+        var role1 = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "General User" && x.TenantId == null);
+        var role2 = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == null);
 
         var renameCommand = new RenameRole.Request
         {
@@ -370,7 +370,7 @@ public class Application_Role_Basic_Dependent_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name already used");
 
         // Assert the database
-        var check = TestingServer.Context.Set<Role>().SingleOrDefault(x => x.Id == role2.Id);
+        var check = TestingServer.CreateContext().Set<Role>().SingleOrDefault(x => x.Id == role2.Id);
         check.ShouldNotBeNull();
         check.Name.ShouldBe("Tenant Role");
     }
@@ -394,7 +394,7 @@ public class Application_Role_Basic_Dependent_Tests
     public async Task Global_Admin_Can_Delete_Application_Roles()
     {
         // Prepare
-        var role = TestingServer.Context.Set<Role>().First(x => x.Name == "General User");
+        var role = TestingServer.CreateContext().Set<Role>().First(x => x.Name == "General User");
 
         // Act
         var response = await TestingServer.DeleteAsync($"api/authorization/roles/{role.Id}", "superuser");
@@ -403,7 +403,7 @@ public class Application_Role_Basic_Dependent_Tests
         response.ShouldBeSuccess();
 
         // Assert the database
-        var check = TestingServer.Context.Set<Role>().FirstOrDefault(x => x.Id == role.Id);
+        var check = TestingServer.CreateContext().Set<Role>().FirstOrDefault(x => x.Id == role.Id);
 
         check.ShouldBeNull();
     }
@@ -427,8 +427,8 @@ public class Application_Role_Basic_Dependent_Tests
     public async Task Global_Admin_Can_Rename_Application_Role_Even_If_Exists_As_Tenant_Role()
     {
         // Prepare
-        var applicationRole = TestingServer.Context.Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == null);
-        var tenantRole = TestingServer.Context.Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == "BUZIOS");
+        var applicationRole = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == null);
+        var tenantRole = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == "BUZIOS");
 
         // *** Test 1 *** Rename to something else
         {
@@ -445,7 +445,7 @@ public class Application_Role_Basic_Dependent_Tests
             response.ShouldBeSuccess();
 
             // Assert the database
-            var check = TestingServer.Context.Set<Role>().SingleOrDefault(x => x.Id == applicationRole.Id);
+            var check = TestingServer.CreateContext().Set<Role>().SingleOrDefault(x => x.Id == applicationRole.Id);
             check.ShouldNotBeNull();
             check.Name.ShouldBe("Renamed Tenant Role");
         }
@@ -465,7 +465,7 @@ public class Application_Role_Basic_Dependent_Tests
             response.ShouldBeSuccess();
 
             // Assert the database
-            var check = TestingServer.Context.Set<Role>().SingleOrDefault(x => x.Id == tenantRole.Id);
+            var check = TestingServer.CreateContext().Set<Role>().SingleOrDefault(x => x.Id == tenantRole.Id);
             check.ShouldNotBeNull();
             check.Name.ShouldBe("Tenant Role");
         }
@@ -489,8 +489,8 @@ public class Application_Role_Basic_Dependent_Tests
     public async Task Global_Admin_Cannot_Delete_Tenant_Roles()
     {
         // Prepare
-        var applicationRole = TestingServer.Context.Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == null);
-        var tenantRole = TestingServer.Context.Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == "BUZIOS");
+        var applicationRole = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == null);
+        var tenantRole = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == "BUZIOS");
 
         // Act
         var response = await TestingServer.DeleteAsync($"api/authorization/roles/{tenantRole.Id}", "superuser");
@@ -499,8 +499,8 @@ public class Application_Role_Basic_Dependent_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Role not found");
 
         // Assert the database
-        tenantRole = TestingServer.Context.Set<Role>().SingleOrDefault(x => x.Name == "Tenant Role" && x.TenantId == null);
-        applicationRole = TestingServer.Context.Set<Role>().SingleOrDefault(x => x.Name == "Tenant Role" && x.TenantId == "BUZIOS");
+        tenantRole = TestingServer.CreateContext().Set<Role>().SingleOrDefault(x => x.Name == "Tenant Role" && x.TenantId == null);
+        applicationRole = TestingServer.CreateContext().Set<Role>().SingleOrDefault(x => x.Name == "Tenant Role" && x.TenantId == "BUZIOS");
 
         applicationRole.ShouldNotBeNull();
         tenantRole.ShouldNotBeNull();
@@ -524,8 +524,8 @@ public class Application_Role_Basic_Dependent_Tests
     public async Task Global_Admin_Can_Delete_Application_Role_That_Already_Exist_As_A_Tenant_Role()
     {
         // Prepare
-        var applicationRole = TestingServer.Context.Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == null);
-        var tenantRole = TestingServer.Context.Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == "BUZIOS");
+        var applicationRole = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == null);
+        var tenantRole = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Tenant Role" && x.TenantId == "BUZIOS");
 
         // Act
         var response = await TestingServer.DeleteAsync($"api/authorization/roles/{applicationRole.Id}", "superuser");
@@ -534,8 +534,8 @@ public class Application_Role_Basic_Dependent_Tests
         response.ShouldBeSuccess();
 
         // Assert the database
-        applicationRole = TestingServer.Context.Set<Role>().SingleOrDefault(x => x.Name == "Tenant Role" && x.TenantId == null);
-        tenantRole = TestingServer.Context.Set<Role>().SingleOrDefault(x => x.Name == "Tenant Role" && x.TenantId == "BUZIOS");
+        applicationRole = TestingServer.CreateContext().Set<Role>().SingleOrDefault(x => x.Name == "Tenant Role" && x.TenantId == null);
+        tenantRole = TestingServer.CreateContext().Set<Role>().SingleOrDefault(x => x.Name == "Tenant Role" && x.TenantId == "BUZIOS");
 
         applicationRole.ShouldBeNull();
         tenantRole.ShouldNotBeNull();
@@ -546,6 +546,6 @@ public class Application_Role_Basic_Dependent_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

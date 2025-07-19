@@ -22,11 +22,11 @@ public class User_Request_Password_Reset_Tests
     public async Task User_Cannot_Request_Password_Reset_If_It_Is_Not_Confirmed()
     {
         // Prepare
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
         context.Set<User>().Add(new User("BUZIOS", "new_user", "new_user@company.com", "123456", "", "Newcomer", AuthenticationMode.Credentials));
         context.SaveChanges();
 
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
         user.ActivationCode.ShouldNotBe(null);
         user.ActivationCode.ShouldNotBe("");
@@ -56,7 +56,7 @@ public class User_Request_Password_Reset_Tests
     public async Task User_Cannot_Request_Password_Reset_Without_Tenant(string? tenant)
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeTrue();
         user.Email.ShouldNotBeNull();
 
@@ -102,7 +102,7 @@ public class User_Request_Password_Reset_Tests
     public async Task User_Cannot_Request_Password_Reset_With_Wrong_Tenant()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeTrue();
         user.Email.ShouldNotBeNull();
 
@@ -129,7 +129,7 @@ public class User_Request_Password_Reset_Tests
     public async Task User_Cannot_Request_Password_Reset_Without_Email(string? email)
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeTrue();
         user.TenantId.ShouldNotBeNull();
 
@@ -154,7 +154,7 @@ public class User_Request_Password_Reset_Tests
     public async Task User_Can_Request_Password_Reset_When_State_Is_Correct()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeTrue();
         user.Email.ShouldNotBeNull();
         user.TenantId.ShouldNotBeNull();
@@ -172,7 +172,7 @@ public class User_Request_Password_Reset_Tests
         response.ShouldBeSuccess();
 
         // Assert the database
-        user = TestingServer.Context.Set<User>().First(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
+        user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
         user.Email.ShouldNotBeNull();
         user.PasswordRedefineCode.ShouldNotBeNull();
         user.PasswordRedefineCode.CreationDate.ShouldNotBeNull();
@@ -188,6 +188,6 @@ public class User_Request_Password_Reset_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

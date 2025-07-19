@@ -31,6 +31,6 @@ public class Endpoints_Availability_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     } 
 }

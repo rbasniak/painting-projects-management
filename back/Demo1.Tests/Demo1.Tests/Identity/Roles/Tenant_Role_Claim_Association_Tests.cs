@@ -48,7 +48,7 @@ public class Tenant_Role_Claim_Association_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        await TestingServer.LoginAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
         _admin1Token = new JwtToken((await TestingServer.LoginAsync("admin1", "123", "buzios")).Data!.AccessToken);
         var admin1bs = new JwtToken((await TestingServer.LoginAsync("admin1", "123", "un-Bs")).Data!.AccessToken);
 
@@ -75,9 +75,9 @@ public class Tenant_Role_Claim_Association_Tests
         response3.ShouldBeSuccess();
         response4.ShouldBeSuccess();
     }
-    private Claim GetClaim(string identification) => TestingServer.Context.Set<Claim>().Single(x => x.Identification.ToLower() == identification.ToLower());
+    private Claim GetClaim(string identification) => TestingServer.CreateContext().Set<Claim>().Single(x => x.Identification.ToLower() == identification.ToLower());
 
-    private Role GetRole(string name, string? tenant = null) => TestingServer.Context.Set<Role>().Single(x => x.Name.ToLower() == name.ToLower() && x.TenantId == tenant);
+    private Role GetRole(string name, string? tenant = null) => TestingServer.CreateContext().Set<Role>().Single(x => x.Name.ToLower() == name.ToLower() && x.TenantId == tenant);
 
     /// <summary>
     /// A local admin should not be able to change the claims of a role that does not exist as a tenant wide role
@@ -108,7 +108,7 @@ public class Tenant_Role_Claim_Association_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Role not found");
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
             .FirstOrDefault(x => x.Id == role.Id);
 
@@ -215,7 +215,7 @@ public class Tenant_Role_Claim_Association_Tests
 
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -265,7 +265,7 @@ public class Tenant_Role_Claim_Association_Tests
         // Ensure the state of the entity is really correct
         var role = GetRole("General User", "BUZIOS");
 
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -303,7 +303,7 @@ public class Tenant_Role_Claim_Association_Tests
 
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -373,7 +373,7 @@ public class Tenant_Role_Claim_Association_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Unknown claim in the list");
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -410,7 +410,7 @@ public class Tenant_Role_Claim_Association_Tests
     {
         // Prepare 
         var role = GetRole("General User", "BUZIOS");
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -436,7 +436,7 @@ public class Tenant_Role_Claim_Association_Tests
         result.Claims.Length.ShouldBe(0);
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -459,6 +459,6 @@ public class Tenant_Role_Claim_Association_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

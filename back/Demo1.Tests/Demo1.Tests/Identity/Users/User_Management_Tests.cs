@@ -24,7 +24,8 @@ public class User_Management_Tests
         _tokens.Add("jane.doe", new JwtToken((await TestingServer.LoginAsync("jane.doe", "123", "buzios")).Data!.AccessToken));
         _tokens.Add("admin1-bz", new JwtToken((await TestingServer.LoginAsync("admin1", "123", "buzios")).Data!.AccessToken));
         _tokens.Add("admin1-bs", new JwtToken((await TestingServer.LoginAsync("admin1", "123", "un-bs")).Data!.AccessToken));
-        _tokens.Add("superuser", new JwtToken((await TestingServer.LoginAsync("superuser", "admin", null)).Data!.AccessToken));
+        
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
     }
 
     /// <summary>
@@ -76,12 +77,12 @@ public class User_Management_Tests
     public async Task Local_Admin_Can_Set_List_Of_Roles()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
+        var user = TestingServer.CreateContext().Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
         user.ShouldNotBeNull();
         user.Roles.ToList().Count().ShouldBe(0);
 
-        var role1 = TestingServer.Context.Set<Role>().Single(x => x.Name == "Employee" && x.TenantId == null);
-        var role2 = TestingServer.Context.Set<Role>().Single(x => x.Name == "Manager" && x.TenantId == null);
+        var role1 = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Employee" && x.TenantId == null);
+        var role2 = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Manager" && x.TenantId == null);
 
         var request = new ReplaceUserRoles.Request 
         { 
@@ -101,7 +102,7 @@ public class User_Management_Tests
         response.Data.Roles.SingleOrDefault(x => x.Id == role2.Id).ShouldNotBeNull();
 
         // Assert the database
-        user = TestingServer.Context.Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
+        user = TestingServer.CreateContext().Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
         user.ShouldNotBeNull();
         user.Roles.ToList().Count().ShouldBe(2);
         user.Roles.SingleOrDefault(x => x.RoleId == role1.Id).ShouldNotBeNull();
@@ -116,7 +117,7 @@ public class User_Management_Tests
     public async Task Local_Admin_Can_Remove_All_Roles_From_User()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
+        var user = TestingServer.CreateContext().Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
         user.ShouldNotBeNull();
         user.Roles.ToList().Count().ShouldBe(2);
 
@@ -136,7 +137,7 @@ public class User_Management_Tests
         response.Data.Roles.Length.ShouldBe(0);
 
         // Assert the database
-        user = TestingServer.Context.Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
+        user = TestingServer.CreateContext().Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
         user.ShouldNotBeNull();
         user.Roles.ToList().Count().ShouldBe(0);
     }
@@ -151,8 +152,8 @@ public class User_Management_Tests
     public async Task Local_Admin_Cannot_Set_List_Of_Roles_With_Empty_User(string? username)
     {
         // Prepare  
-        var role1 = TestingServer.Context.Set<Role>().Single(x => x.Name == "Employee" && x.TenantId == null);
-        var role2 = TestingServer.Context.Set<Role>().Single(x => x.Name == "Manager" && x.TenantId == null);
+        var role1 = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Employee" && x.TenantId == null);
+        var role2 = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Manager" && x.TenantId == null);
 
         var request = new ReplaceUserRoles.Request
         {
@@ -175,8 +176,8 @@ public class User_Management_Tests
     public async Task Local_Admin_Cannot_Set_List_Of_Roles_With_Non_Existant_User()
     {
         // Prepare
-        var role1 = TestingServer.Context.Set<Role>().Single(x => x.Name == "Employee" && x.TenantId == null);
-        var role2 = TestingServer.Context.Set<Role>().Single(x => x.Name == "Manager" && x.TenantId == null);
+        var role1 = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Employee" && x.TenantId == null);
+        var role2 = TestingServer.CreateContext().Set<Role>().Single(x => x.Name == "Manager" && x.TenantId == null);
 
         var request = new ReplaceUserRoles.Request
         {
@@ -199,7 +200,7 @@ public class User_Management_Tests
     public async Task Local_Admin_Cannot_Set_List_Of_Roles_With_Invalid_Roles()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
+        var user = TestingServer.CreateContext().Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
         user.ShouldNotBeNull();
         user.Roles.ToList().Count().ShouldBe(0);
 
@@ -224,7 +225,7 @@ public class User_Management_Tests
     public async Task Local_Admin_Cannot_Set_List_Of_Roles_With_Null_List()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
+        var user = TestingServer.CreateContext().Set<User>().Include(x => x.Roles).SingleOrDefault(x => x.Username == "tony.stark" && x.TenantId == "UN-BS");
         user.ShouldNotBeNull();
         user.Roles.ToList().Count().ShouldBe(0);
 
@@ -244,6 +245,6 @@ public class User_Management_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

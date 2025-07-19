@@ -1,0 +1,18 @@
+Integration tests
+
+- Use TUnit, which is already installed in the project
+- Never try to install xUnit
+- Integration tests:
+    - must be split in files per use case
+    - all files must start with a test called Seed 
+    - the Seed test is used to store login credentials that could be used across the tests or create entities directly in the database that are required for multiple tests
+    - all files must end with a test called CleanUp that deletes the database
+    - success test must always be the last (before clean up)
+    - all tests must have 4 comment sections: Prepare / Act / Assert the response / Assert the database
+    - test must be named like this: {Persona}_{ExpectedBehavior}_{Condition} i.e. User_Can_Create_Material, User_Cannot_Create_Material_When_Name_Is_Empty
+    - After seed, first test should be checking if non authenticated user gets 401, then validations and then success
+
+
+Domain models
+- tenantId must always be the first property in the constructors
+- if entity inherist from tenantId the request must always be authenticated

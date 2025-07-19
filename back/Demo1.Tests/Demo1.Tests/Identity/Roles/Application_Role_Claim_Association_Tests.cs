@@ -46,8 +46,8 @@ public class Application_Role_Claim_Association_Tests
     public async Task Setup()
     {
         // Prepare the default access token
-        await TestingServer.LoginAsync("superuser", "admin", null);
-        await TestingServer.LoginAsync("admin1", "123", "buzios");
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("admin1", "123", "buzios");
 
         var createClaimCommands = new[]
         {
@@ -73,12 +73,12 @@ public class Application_Role_Claim_Association_Tests
 
     private Claim GetClaim(string identification)
     {
-        return TestingServer.Context.Set<Claim>().Single(x => x.Identification.ToLower() == identification.ToLower());
+        return TestingServer.CreateContext().Set<Claim>().Single(x => x.Identification.ToLower() == identification.ToLower());
     }
 
     private Role GetRole(string name, string? tenant = null)
     {
-        return TestingServer.Context.Set<Role>().Single(x => x.Name.ToLower() == name.ToLower() && x.TenantId == tenant);
+        return TestingServer.CreateContext().Set<Role>().Single(x => x.Name.ToLower() == name.ToLower() && x.TenantId == tenant);
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public class Application_Role_Claim_Association_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Role not found");
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
             .FirstOrDefault(x => x.Id == role.Id);
 
@@ -145,7 +145,7 @@ public class Application_Role_Claim_Association_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Role not found");
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
             .FirstOrDefault(x => x.Id == role.Id);
 
@@ -253,7 +253,7 @@ public class Application_Role_Claim_Association_Tests
 
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -303,7 +303,7 @@ public class Application_Role_Claim_Association_Tests
         // Ensure the state of the entity is really correct
         var role = GetRole("General User");
 
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -342,7 +342,7 @@ public class Application_Role_Claim_Association_Tests
 
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -412,7 +412,7 @@ public class Application_Role_Claim_Association_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Unknown claim in the list");
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -449,7 +449,7 @@ public class Application_Role_Claim_Association_Tests
     {
         // Prepare 
         var role = GetRole("General User");
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -475,7 +475,7 @@ public class Application_Role_Claim_Association_Tests
         result.Claims.Length.ShouldBe(0);
 
         // Assert the database
-        role = TestingServer.Context.Set<Role>()
+        role = TestingServer.CreateContext().Set<Role>()
             .Include(x => x.Claims)
                 .ThenInclude(x => x.Claim)
             .SingleOrDefault(x => x.Id == role.Id);
@@ -498,6 +498,6 @@ public class Application_Role_Claim_Association_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

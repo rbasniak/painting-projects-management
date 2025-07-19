@@ -13,7 +13,7 @@ public abstract class BaseResponse
     {
         get
         {
-            if (!IsValid)
+            if (IsValid)
             {
                 throw new InvalidOperationException("Cannot access Error when response is valid.");
             }

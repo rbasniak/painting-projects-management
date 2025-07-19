@@ -63,7 +63,7 @@ public class User_Password_Reset_Tests
     {
         User GetUser()
         {
-            var user = TestingServer.Context.Set<User>().Single(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
+            var user = TestingServer.CreateContext().Set<User>().Single(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
             return user;
         }
 
@@ -106,7 +106,7 @@ public class User_Password_Reset_Tests
     public async Task User_Can_Still_Login_With_Old_Password()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().Single(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().Single(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
         user.PasswordRedefineCode.ShouldNotBeNull();
 
         var request = new UserLogin.Request
@@ -123,7 +123,7 @@ public class User_Password_Reset_Tests
         response.ShouldBeSuccess();
 
         // Assert the database
-        user = TestingServer.Context.Set<User>().Single(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
+        user = TestingServer.CreateContext().Set<User>().Single(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
         user.PasswordRedefineCode.ShouldBeNull();
     }
 
@@ -136,7 +136,7 @@ public class User_Password_Reset_Tests
     {
         User GetUser()
         {
-            var user = TestingServer.Context.Set<User>().Single(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
+            var user = TestingServer.CreateContext().Set<User>().Single(x => x.Username == "admin1" && x.TenantId == "BUZIOS");
             return user;
         }
 
@@ -231,6 +231,6 @@ public class User_Password_Reset_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

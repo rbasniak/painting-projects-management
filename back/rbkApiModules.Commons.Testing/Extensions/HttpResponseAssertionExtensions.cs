@@ -52,12 +52,46 @@ public static class HttpAssertionExtensions
 
     public static void ShouldBeSuccess(this HttpResponse response)
     {
-        response.IsSuccess.ShouldBeTrue($"Expected success response, but the response was not successful. Messages: [ {string.Join(", ", response.Messages)} ]");
+        string messages;
+        if (response.Messages.Any())
+        {
+            messages = string.Join(", ", response.Messages);
+        }
+        else
+        {
+            switch (response.Code)
+            {
+                case HttpStatusCode.BadRequest:
+                    messages = "Response might have validation errors. Please check the contents of the response.";
+                    break;
+                case HttpStatusCode.Unauthorized:
+                    messages = "Request was not authenticated. Did you pass the correct credentials?";
+                    break;
+                case HttpStatusCode.Forbidden:
+                    messages = "User was not authorized to do this action, Did you pass the correct credentials?";
+                    break;
+                case HttpStatusCode.NotFound:
+                    messages = "Endpoint was not found. Is the Url correct and is the endpoint registered?";
+                    break;
+                case HttpStatusCode.MethodNotAllowed:
+                case HttpStatusCode.UnsupportedMediaType:
+                    messages = "Http method might be wrong. Please check if the endpoint mapping is correct or if the test is calling the correct http method.";
+                    break;
+                case HttpStatusCode.InternalServerError:
+                    messages = "Request was interrupted because of a critical failure. Please check the contents of the response.";
+                    break;
+                default:
+                    messages = $"Error code: {response.Code}";
+                    break;
+            }
+        }
+
+        response.IsSuccess.ShouldBeTrue($"Http request failed. Messages: [ {messages} ]");
     }
 
     public static void ShouldBeForbidden(this HttpResponse response)
     {
-        response.Code.ShouldBe(HttpStatusCode.Forbidden, $"Expected forbidden response, but the response was not forbidden. Messages: [ {string.Join(", ", response.Messages)} ]");
-    } 
+        response.Code.ShouldBe(HttpStatusCode.Forbidden, $"Resquest bypassed authorization. Messages: [ {string.Join(", ", response.Messages)} ]");
+    }
 }
 

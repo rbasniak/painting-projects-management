@@ -1,4 +1,6 @@
-﻿namespace PaintingProjectsManagement.Features.Materials;
+﻿using rbkApiModules.Commons.Core;
+
+namespace PaintingProjectsManagement.Features.Materials;
 
 public class CreateMaterial : IEndpoint
 {
@@ -10,27 +12,32 @@ public class CreateMaterial : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Create Material")
         .WithTags("Materials");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public string Name { get; set; } = string.Empty;
         public MaterialUnit Unit { get; set; }
         public double PricePerUnit { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : DatabaseConstraintValidator<Request, Material>
     {
-        public Validator(DbContext context, ILocalizationService localization)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        {
+        }
+
+        protected override void ValidateBusinessRules()
         {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
-                .MustAsync(async (name, cancellationToken) =>
-                    !await context.Set<Material>().AnyAsync(m => m.Name == name, cancellationToken))
-                .WithMessage(localization.LocalizeString(MaterialsMessages.Create.MaterialWithNameAlreadyExists));
+                .MustAsync(async (request, name, cancellationToken) =>
+                {
+                    return !await Context.Set<Material>().AnyAsync(m => m.Name == name && m.TenantId == request.Identity.Tenant, cancellationToken);
+                })
+                .WithMessage(LocalizationService?.LocalizeString(MaterialsMessages.Create.MaterialWithNameAlreadyExists) ?? "A material with this name already exists.");
 
             RuleFor(x => x.PricePerUnit)
                 .GreaterThan(0)
@@ -40,10 +47,14 @@ public class CreateMaterial : IEndpoint
 
     public class Handler(DbContext _context) : ICommandHandler<Request>
     { 
-
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var material = new Material(request.Name, request.Unit, request.PricePerUnit);
+            var material = new Material(
+                request.Identity.Tenant,
+                request.Name, 
+                request.Unit, 
+                request.PricePerUnit
+            );
             
             await _context.AddAsync(material, cancellationToken);
 

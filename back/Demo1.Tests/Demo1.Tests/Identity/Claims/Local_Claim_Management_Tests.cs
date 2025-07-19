@@ -14,10 +14,10 @@ public class Local_Claim_Management_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        await TestingServer.LoginAsync("superuser", "admin", null);
-        await TestingServer.LoginAsync("admin1", "123", "buzios");
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("admin1", "123", "buzios");
 
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
         context.Add(new Claim("CAN_MANAGE_APPROVALS", "can manage approvals"));
         context.SaveChanges();
     }
@@ -100,7 +100,7 @@ public class Local_Claim_Management_Tests
     public async Task Local_Admin_Cannot_Update_Claim()
     {
         // Prepare
-        var existingClaim = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
+        var existingClaim = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
         existingClaim.ShouldNotBeNull();
 
         var request = new CreateClaim.Request
@@ -123,7 +123,7 @@ public class Local_Claim_Management_Tests
     public async Task Local_Admin_Cannot_Protect_Claim()
     {
         // Prepare
-        var existingClaim = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
+        var existingClaim = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
         existingClaim.ShouldNotBeNull();
 
         var request = new ProtectClaim.Request
@@ -145,7 +145,7 @@ public class Local_Claim_Management_Tests
     public async Task Local_Admin_Cannot_Unprotect_Claim()
     {
         // Prepare
-        var existingClaim = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
+        var existingClaim = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
         existingClaim.ShouldNotBeNull();
 
         var request = new UnprotectClaim.Request
@@ -233,7 +233,7 @@ public class Local_Claim_Management_Tests
     public async Task Global_Admin_Cannot_Update_Claim_Without_Description(string description)
     {
         // Prepare
-        var existingClaim = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
+        var existingClaim = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
         existingClaim.ShouldNotBeNull();
 
         var request = new UpdateClaim.Request
@@ -300,7 +300,7 @@ public class Local_Claim_Management_Tests
     public async Task Global_Admin_Cannot_Delete_a_Claim_Used_By_a_Role()
     {
         // Prepare
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
         var claim = context.Add(new Claim("MY_NEW_CLAIM_1", "My new claim")).Entity;
         context.SaveChanges();
 
@@ -309,10 +309,10 @@ public class Local_Claim_Management_Tests
 
         context.SaveChanges();
 
-        role = TestingServer.Context.Set<Role>().Include(x => x.Claims).First(x => x.Name == role.Name);
+        role = TestingServer.CreateContext().Set<Role>().Include(x => x.Claims).First(x => x.Name == role.Name);
         role.Claims.Count().ShouldBe(1);
 
-        claim = TestingServer.Context.Set<Claim>()
+        claim = TestingServer.CreateContext().Set<Claim>()
             .Include(x => x.Users)
             .Include(x => x.Roles)
             .First(x => x.Identification == "MY_NEW_CLAIM_1");
@@ -333,7 +333,7 @@ public class Local_Claim_Management_Tests
     public async Task Global_Admin_Cannot_Delete_a_Claim_Used_By_An_User()
     {
         // Prepare
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
         var claim = context.Add(new Claim("MY_NEW_CLAIM_2", "My new claim")).Entity;
         context.SaveChanges();
 
@@ -342,10 +342,10 @@ public class Local_Claim_Management_Tests
 
         context.SaveChanges();
 
-        user = TestingServer.Context.Set<User>().Include(x => x.Claims).First(x => x.Username == user.Username && x.TenantId == user.TenantId);
+        user = TestingServer.CreateContext().Set<User>().Include(x => x.Claims).First(x => x.Username == user.Username && x.TenantId == user.TenantId);
         user.Claims.Count().ShouldBeGreaterThan(0);
 
-        claim = TestingServer.Context.Set<Claim>()
+        claim = TestingServer.CreateContext().Set<Claim>()
             .Include(x => x.Users)
             .Include(x => x.Roles)
             .First(x => x.Identification == "MY_NEW_CLAIM_2");
@@ -362,6 +362,6 @@ public class Local_Claim_Management_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

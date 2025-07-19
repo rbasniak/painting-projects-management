@@ -25,25 +25,30 @@ internal class CreatePaintColor : IEndpoint
         public string? ManufacturerCode { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : DatabaseConstraintValidator<Request, PaintColor>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context) : base(context)
         {
-            RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
-            RuleFor(x => x.HexColor).NotEmpty().MaximumLength(7)
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+            RuleFor(x => x.HexColor)
                 .Matches("^#[0-9A-Fa-f]{6}$")
                 .WithMessage("Hex color must be in format #RRGGBB");
-            RuleFor(x => x.BottleSize).GreaterThan(0);
-            RuleFor(x => x.Price).GreaterThan(0);
-            RuleFor(x => x.LineId).NotEmpty();
-            
-            RuleFor(x => x.LineId).MustAsync(async (lineId, cancellationToken) =>
-                await context.Set<PaintLine>().AnyAsync(x => x.Id == lineId, cancellationToken))
+
+            RuleFor(x => x.BottleSize)
+                .GreaterThan(0)
+                .WithMessage("Bottle size must be greater than zero.");
+
+            RuleFor(x => x.Price)
+                .GreaterThan(0)
+                .WithMessage("Price must be greater than zero.");
+
+            RuleFor(x => x.LineId)
+                .MustAsync(async (lineId, cancellationToken) =>
+                    await Context.Set<PaintLine>().AnyAsync(x => x.Id == lineId, cancellationToken))
                 .WithMessage("Paint line with the specified ID does not exist.");
-                
-            When(x => !string.IsNullOrEmpty(x.ManufacturerCode), () => {
-                RuleFor(x => x.ManufacturerCode).MaximumLength(50);
-            });
         }
     }
 

@@ -13,7 +13,7 @@ public class User_Change_Password_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
 
         context.Set<Tenant>().Add(new Tenant("WAYNE INC", "Wayne Industries"));
 
@@ -23,7 +23,7 @@ public class User_Change_Password_Tests
         context.SaveChanges();
 
         // Default user for all tests
-        await TestingServer.LoginAsync("admin", "admin123", "wayne inc");
+        await TestingServer.CacheCredentialsAsync("admin", "admin123", "wayne inc");
     }
 
     /// <summary>
@@ -113,7 +113,7 @@ public class User_Change_Password_Tests
         // Assert the response
         response.ShouldBeSuccess();
 
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "admin");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "admin");
         user.Password.ShouldNotBeNull();
         PasswordHasher.VerifyPassword("new password", user.Password).ShouldBeTrue();
     }
@@ -121,6 +121,6 @@ public class User_Change_Password_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

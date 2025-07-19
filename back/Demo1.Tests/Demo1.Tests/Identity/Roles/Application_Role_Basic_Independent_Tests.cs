@@ -18,7 +18,7 @@ public class Application_Role_Basic_Independent_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Login()
     {
-        await TestingServer.LoginAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public class Application_Role_Basic_Independent_Tests
     public async Task Global_Admin_Cannot_Delete_Application_Role_Associated_With_User()
     {
         // Prepare 
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
 
         var role = context.Add(new Role("Test Role 99")).Entity;
 
@@ -95,7 +95,7 @@ public class Application_Role_Basic_Independent_Tests
 
         context.SaveChanges();
 
-        role = TestingServer.Context.Set<Role>().Include(x => x.Users).First(x => x.Id == role.Id);
+        role = TestingServer.CreateContext().Set<Role>().Include(x => x.Users).First(x => x.Id == role.Id);
         role.Users.Count().ShouldBe(1);
 
         // Act
@@ -108,7 +108,7 @@ public class Application_Role_Basic_Independent_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 
 }

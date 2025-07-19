@@ -10,11 +10,12 @@ public class UpdateMaterial : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Update Material")
         .WithTags("Materials");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; } 
         public string Name { get; set; } = string.Empty;
@@ -22,23 +23,21 @@ public class UpdateMaterial : IEndpoint
         public double PricePerUnit { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : DatabaseConstraintValidator<Request, Material>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context) : base(context)
         {
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .MustAsync(async (id, cancellationToken) =>
-                    await context.Set<Material>().AnyAsync(m => m.Id == id, cancellationToken))
-                .WithMessage("Material with the specified ID does not exist.");
-                
+        }
+
+        protected override void ValidateBusinessRules()
+        {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
                 .MustAsync(async (request, name, cancellationToken) => 
-                    !await context.Set<Material>().AnyAsync(m => m.Name == name && m.Id != request.Id, cancellationToken))
+                {
+                    return !await Context.Set<Material>().AnyAsync(m => m.Name == name && m.Id != request.Id && m.TenantId == request.Identity.Tenant, cancellationToken);
+                })
                 .WithMessage("A material with this name already exists.");
-                
+
             RuleFor(x => x.PricePerUnit)
                 .GreaterThan(0)
                 .WithMessage("Price per unit must be greater than zero.");
@@ -50,7 +49,15 @@ public class UpdateMaterial : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var material = await _context.Set<Material>().FirstAsync(x => x.Id == request.Id, cancellationToken);
+            var query = _context.Set<Material>().AsQueryable();
+            
+            // Filter by tenant if authenticated
+            if (request.IsAuthenticated && request.Identity.HasTenant)
+            {
+                query = query.Where(m => m.TenantId == request.Identity.Tenant);
+            }
+            
+            var material = await query.FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             material.UpdateDetails(request.Name, request.Unit, request.PricePerUnit);
 

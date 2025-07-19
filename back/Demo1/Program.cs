@@ -86,6 +86,8 @@ namespace Demo1
 
             app.SeedDatabase<DatabaseSeed>();
 
+            app.UseRbkUIDefinitions();
+
             // Register endpoints
             CreatePost.MapEndpoint(app);
             UpdatePost.MapEndpoint(app);

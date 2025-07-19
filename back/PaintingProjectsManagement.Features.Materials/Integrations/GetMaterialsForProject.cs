@@ -1,4 +1,5 @@
 ﻿using PaintingProjectsManagement.Features.Materials.Abstractions;
+using rbkApiModules.Commons.Core;
 
 namespace PaintingProjectsManagement.Features.Materials.Integrations;
 public static partial class GetMaterialsForProject
@@ -14,6 +15,7 @@ public static partial class GetMaterialsForProject
         public async Task<QueryResponse<IReadOnlyCollection<ReadOnlyMaterial>>> HandleAsync(Abstractions.GetMaterialsForProject.Request request, CancellationToken cancellationToken)
         {
             var materials = await _context.Set<Material>()
+                .Where(m => m.TenantId == request.Identity.Tenant)
                 .Where(x => request.MaterialIds.Contains(x.Id))
                 .ToListAsync(cancellationToken);
 

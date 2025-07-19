@@ -40,7 +40,7 @@ public static class Builder
 
                     foreach (var @interface in interfaces)
                     {
-                        Debug.WriteLine($"***** Registering handler for {type.FullName.Split('.').Last().Split('+').First()}");
+                        // Debug.WriteLine($"***** Registering handler for {type.FullName.Split('.').Last().Split('+').First()}");
                         services.AddScoped(@interface, type);
                     }
                 }
@@ -55,7 +55,7 @@ public static class Builder
 
     private static void RegisterValidators(IServiceCollection services, Assembly[] assemblies)
     {
-        var type = typeof(AbstractValidator<>);
+        var validatorType = typeof(AbstractValidator<>);
 
         foreach (var assembly in assemblies)
         {
@@ -63,13 +63,18 @@ public static class Builder
             {
                 var validators = assembly.GetTypes()
                     .Where(x => x.IsClass && !x.IsAbstract)
-                    .Where(x => x.BaseType != null && x.BaseType.IsGenericType)
-                    .Where(x => x.BaseType.GetGenericTypeDefinition() == typeof(AbstractValidator<>))
-                    .Where(x => !x.Name.Contains("InlineValidator"));
+                    .Where(x => InheritsFromAbstractValidator(x))
+                    .Where(x => !x.Name.Contains("InlineValidator"))
+                    .Where(x => !x.Name.Contains("ChildRulesContainer"))
+                    .ToList();
 
                 foreach (var validator in validators)
                 {
-                    services.AddScoped(validator.BaseType, validator);
+                    var serviceType = GetValidatorInterface(validator);
+                    if (serviceType != null)
+                    {
+                        services.AddScoped(serviceType, validator);
+                    }
                 }
             }
             catch (ReflectionTypeLoadException)
@@ -78,4 +83,35 @@ public static class Builder
             }
         }
     }
+
+    private static bool InheritsFromAbstractValidator(Type type)
+    {
+        while (type != null && type != typeof(object))
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(AbstractValidator<>))
+                return true;
+
+            type = type.BaseType;
+        }
+
+        return false;
+    }
+
+    private static Type GetValidatorInterface(Type validatorType)
+    {
+        // Find the AbstractValidator<T> type it implements
+        while (validatorType != null && validatorType != typeof(object))
+        {
+            if (validatorType.IsGenericType &&
+                validatorType.GetGenericTypeDefinition() == typeof(AbstractValidator<>))
+            {
+                return validatorType;
+            }
+
+            validatorType = validatorType.BaseType;
+        }
+
+        return null;
+    }
+
 }

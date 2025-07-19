@@ -19,8 +19,8 @@ public class Tenant_Management_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Login()
     {
-        await TestingServer.LoginAsync("superuser", "admin", null);
-        await TestingServer.LoginAsync("admin1", "123", "buzios");
+        await TestingServer.CacheCredentialsAsync("superuser", "admin", null);
+        await TestingServer.CacheCredentialsAsync("admin1", "123", "buzios");
     }
 
     /// <summary>
@@ -83,7 +83,7 @@ public class Tenant_Management_Tests
         response.Data.Name.ShouldBe("Acme Inc.");
 
         // Assert the database
-        var tenant = TestingServer.Context.Set<Tenant>().FirstOrDefault(x => x.Alias == response.Data.Alias);
+        var tenant = TestingServer.CreateContext().Set<Tenant>().FirstOrDefault(x => x.Alias == response.Data.Alias);
 
         tenant.ShouldNotBeNull();
         tenant.Alias.ShouldBe("ACME");
@@ -94,7 +94,7 @@ public class Tenant_Management_Tests
         var metadata = JsonSerializer.Deserialize<JsonElement>(tenant.Metadata.ToString());
         metadata.GetProperty("city").GetString().ShouldBe("Aalborg");
 
-        var user = await TestingServer.Context.Set<User>().Include(x => x.Claims).ThenInclude(x => x.Claim).FirstOrDefaultAsync(x => x.Username == "acme.admin" && x.TenantId == "ACME");
+        var user = await TestingServer.CreateContext().Set<User>().Include(x => x.Claims).ThenInclude(x => x.Claim).FirstOrDefaultAsync(x => x.Username == "acme.admin" && x.TenantId == "ACME");
         user.ShouldNotBeNull();
         user.Claims.Count().ShouldBe(4);
         user.Claims.SingleOrDefault(x => x.Claim.Identification == AuthenticationClaims.MANAGE_USERS && x.Access == ClaimAccessType.Allow).ShouldNotBeNull();
@@ -228,7 +228,7 @@ public class Tenant_Management_Tests
         response.Data.Name.ShouldBe("Acme Industries");
 
         // Assert the database
-        var tenant = TestingServer.Context.Set<Tenant>().FirstOrDefault(x => x.Alias == response.Data.Alias);
+        var tenant = TestingServer.CreateContext().Set<Tenant>().FirstOrDefault(x => x.Alias == response.Data.Alias);
 
         tenant.ShouldNotBeNull();
         tenant.Alias.ShouldBe("ACME");
@@ -262,7 +262,7 @@ public class Tenant_Management_Tests
         var preResponse = await TestingServer.PostAsync<TenantDetails>("api/authorization/tenants", preRequest, "superuser");
         preResponse.ShouldBeSuccess();
 
-        var existingTenant = TestingServer.Context.Set<Tenant>().SingleOrDefault(x => x.Alias == "WAYNE INC");
+        var existingTenant = TestingServer.CreateContext().Set<Tenant>().SingleOrDefault(x => x.Alias == "WAYNE INC");
         existingTenant.ShouldNotBeNull();
 
         var request = new UpdateTenant.Request
@@ -460,7 +460,7 @@ public class Tenant_Management_Tests
     public async Task Local_Admin_Cannot_Delete_Tenants()
     {
         // Prepare
-        var tenant = TestingServer.Context.Set<Tenant>().Single(x => x.Alias == "WAYNE INC");
+        var tenant = TestingServer.CreateContext().Set<Tenant>().Single(x => x.Alias == "WAYNE INC");
 
         // Act
         var response = await TestingServer.DeleteAsync($"api/authorization/tenants/WAYNE%20INC", "admin1");
@@ -506,7 +506,7 @@ public class Tenant_Management_Tests
         var createTenantResponse = await TestingServer.PostAsync<TenantDetails>("api/authorization/tenants", createTenantRequest, "superuser");
         createTenantResponse.ShouldBeSuccess();
 
-        await TestingServer.LoginAsync("tony.admin", "12345", "Stark");
+        await TestingServer.CacheCredentialsAsync("tony.admin", "12345", "Stark");
 
         var roleNames = new[] { "Role1", "Role2" };
         foreach (var roleName in roleNames)
@@ -515,7 +515,7 @@ public class Tenant_Management_Tests
             roleCreationResponse.ShouldBeSuccess();
         }
 
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
         context.Add(new User("STARK", "user1", "user1@stark-industries.com", "123", AvatarGenerator.GenerateBase64Avatar("U 1"), "username1", AuthenticationMode.Credentials));
         context.Add(new User("STARK", "user2", "user2@stark-industries.com", "123", AvatarGenerator.GenerateBase64Avatar("U 2"), "username2", AuthenticationMode.Credentials));
         context.Add(new User("STARK", "user3", "user3@stark-industries.com", "123", AvatarGenerator.GenerateBase64Avatar("U 3"), "username3", AuthenticationMode.Credentials));
@@ -525,8 +525,8 @@ public class Tenant_Management_Tests
         { 
             RoleIds = new[] 
             { 
-                TestingServer.Context.Set<Role>().First(x => x.Name == "Role1" && x.TenantId == "STARK").Id,
-                TestingServer.Context.Set<Role>().First(x => x.Name == "Role2" && x.TenantId == "STARK").Id
+                TestingServer.CreateContext().Set<Role>().First(x => x.Name == "Role1" && x.TenantId == "STARK").Id,
+                TestingServer.CreateContext().Set<Role>().First(x => x.Name == "Role2" && x.TenantId == "STARK").Id
             },
             Username = "User1"
         }, "tony.admin");
@@ -536,19 +536,19 @@ public class Tenant_Management_Tests
         {
             RoleIds = new[]
             {
-                TestingServer.Context.Set<Role>().First(x => x.Name == "Role1" && x.TenantId == "STARK").Id
+                TestingServer.CreateContext().Set<Role>().First(x => x.Name == "Role1" && x.TenantId == "STARK").Id
             },
             Username = "User2"
         }, "tony.admin");
         relationResponse2.ShouldBeSuccess();
 
-        var claimRequest = new AddClaimOverride.Request { AccessType = ClaimAccessType.Allow, Username = "user1", ClaimIds = new[] { TestingServer.Context.Set<Claim>().First().Id } };
+        var claimRequest = new AddClaimOverride.Request { AccessType = ClaimAccessType.Allow, Username = "user1", ClaimIds = new[] { TestingServer.CreateContext().Set<Claim>().First().Id } };
         var claimResponse = await TestingServer.PostAsync<UserDetails>("api/authorization/users/add-claims", claimRequest, "tony.admin");
         claimResponse.ShouldBeSuccess();
 
-        var user1 = TestingServer.Context.Set<User>().Include(x => x.Roles).Include(x => x.Claims).First(x => x.Username == "user1" && x.TenantId == "STARK");
-        var user2 = TestingServer.Context.Set<User>().Include(x => x.Roles).Include(x => x.Claims).First(x => x.Username == "user2" && x.TenantId == "STARK");
-        var user3 = TestingServer.Context.Set<User>().Include(x => x.Roles).Include(x => x.Claims).First(x => x.Username == "user3" && x.TenantId == "STARK");
+        var user1 = TestingServer.CreateContext().Set<User>().Include(x => x.Roles).Include(x => x.Claims).First(x => x.Username == "user1" && x.TenantId == "STARK");
+        var user2 = TestingServer.CreateContext().Set<User>().Include(x => x.Roles).Include(x => x.Claims).First(x => x.Username == "user2" && x.TenantId == "STARK");
+        var user3 = TestingServer.CreateContext().Set<User>().Include(x => x.Roles).Include(x => x.Claims).First(x => x.Username == "user3" && x.TenantId == "STARK");
 
         user1.Roles.Count().ShouldBe(2);
         user2.Roles.Count().ShouldBe(1);
@@ -565,19 +565,19 @@ public class Tenant_Management_Tests
         response.ShouldBeSuccess();
 
         // Assert the database
-        var tenant = TestingServer.Context.Set<Tenant>().FirstOrDefault(x => x.Alias == "STARK");
+        var tenant = TestingServer.CreateContext().Set<Tenant>().FirstOrDefault(x => x.Alias == "STARK");
         tenant.ShouldBeNull();
 
-        var roles = TestingServer.Context.Set<Role>().Where(x => x.TenantId == "STARK").ToList();
+        var roles = TestingServer.CreateContext().Set<Role>().Where(x => x.TenantId == "STARK").ToList();
         roles.Count.ShouldBe(0);
-        var users = TestingServer.Context.Set<User>().Where(x => x.TenantId == "STARK").ToList();
+        var users = TestingServer.CreateContext().Set<User>().Where(x => x.TenantId == "STARK").ToList();
         users.Count.ShouldBe(0);
     }
 
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }
 

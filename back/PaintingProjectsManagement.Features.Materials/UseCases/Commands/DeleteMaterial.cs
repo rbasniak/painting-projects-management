@@ -1,4 +1,6 @@
-﻿namespace PaintingProjectsManagement.Features.Materials;
+﻿using rbkApiModules.Commons.Core;
+
+namespace PaintingProjectsManagement.Features.Materials;
 
 public class DeleteMaterial : IEndpoint
 {
@@ -10,24 +12,25 @@ public class DeleteMaterial : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Delete Material")
         .WithTags("Materials");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; } 
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : DatabaseConstraintValidator<Request, Material>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .MustAsync(async (id, cancellationToken) =>
-                    await context.Set<Material>().AnyAsync(m => m.Id == id, cancellationToken))
-                .WithMessage("Material with the specified ID does not exist.");
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+            // TODO: material cannot be used in any painting project
         }
     }
 
@@ -36,7 +39,15 @@ public class DeleteMaterial : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var material = await _context.Set<Material>().FirstAsync(x => x.Id == request.Id, cancellationToken);
+            var query = _context.Set<Material>().AsQueryable();
+            
+            // Filter by tenant if authenticated
+            if (request.IsAuthenticated && request.Identity.HasTenant)
+            {
+                query = query.Where(m => m.TenantId == request.Identity.Tenant);
+            }
+            
+            var material = await query.FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             _context.Remove(material);
 

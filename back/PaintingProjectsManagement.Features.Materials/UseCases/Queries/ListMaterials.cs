@@ -14,7 +14,7 @@ public class ListMaterials : IEndpoint
         .WithTags("Materials");  
     }
 
-    public class Request : IQuery
+    public class Request : AuthenticatedRequest, IQuery
     {
     }
 
@@ -28,7 +28,9 @@ public class ListMaterials : IEndpoint
 
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var materials = await _context.Set<Material>().ToListAsync(cancellationToken);
+            var materials = await _context.Set<Material>()
+                .Where(m => m.TenantId == request.Identity.Tenant)
+                .ToListAsync(cancellationToken);
 
             return QueryResponse.Success(materials.Select(MaterialDetails.FromModel).AsReadOnly());
         }
