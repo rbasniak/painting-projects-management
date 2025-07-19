@@ -34,7 +34,7 @@ public class Program
         }
         else
         {
-            connectionString = "Data Source=C:\\git\\Development\\Personal\\app.db";
+            connectionString = "Data Source=app.db";
         }
 
         builder.Services.AddDbContext<DatabaseContext>((scope, options) =>
