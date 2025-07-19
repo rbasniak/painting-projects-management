@@ -25,7 +25,7 @@ internal class CreatePaintColor : IEndpoint
         public string? ManufacturerCode { get; set; }
     }
 
-    public class Validator : DatabaseConstraintValidator<Request, PaintColor>
+    public class Validator : SmartValidator<Request, PaintColor>
     {
         public Validator(DbContext context) : base(context)
         {

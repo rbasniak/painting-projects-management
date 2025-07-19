@@ -12,7 +12,7 @@ namespace rbkApiModules.Commons.Core;
 /// </summary>
 /// <typeparam name="TRequest">The request type to validate</typeparam>
 /// <typeparam name="TModel">The entity model type that has EF configuration</typeparam>
-public abstract class DatabaseConstraintValidator<TRequest, TModel> : AbstractValidator<TRequest>
+public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequest>
     where TModel : class
 {
     protected readonly DbContext Context;
@@ -22,7 +22,7 @@ public abstract class DatabaseConstraintValidator<TRequest, TModel> : AbstractVa
     private static readonly bool IsTenantEntity = typeof(TenantEntity).IsAssignableFrom(typeof(TModel));
     private static readonly bool IsAuthenticatedRequest = typeof(AuthenticatedRequest).IsAssignableFrom(typeof(TRequest));
 
-    protected DatabaseConstraintValidator(DbContext context, ILocalizationService? localizationService = null)
+    protected SmartValidator(DbContext context, ILocalizationService? localizationService = null)
     {
         Context = context;
         LocalizationService = localizationService;

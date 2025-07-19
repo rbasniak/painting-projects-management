@@ -88,7 +88,7 @@ public class DatabaseConstraintValidator_Tests
     }
     
     // Test validators
-    public class CreateTestModelValidator : DatabaseConstraintValidator<CreateTestModelRequest, TestModel>
+    public class CreateTestModelValidator : SmartValidator<CreateTestModelRequest, TestModel>
     {
         public CreateTestModelValidator(DbContext context, ILocalizationService? localizationService = null) 
             : base(context, localizationService)
@@ -103,7 +103,7 @@ public class DatabaseConstraintValidator_Tests
         }
     }
     
-    public class UpdateTestModelValidator : DatabaseConstraintValidator<UpdateTestModelRequest, TestModel>
+    public class UpdateTestModelValidator : SmartValidator<UpdateTestModelRequest, TestModel>
     {
         public UpdateTestModelValidator(DbContext context, ILocalizationService? localizationService = null) 
             : base(context, localizationService)
@@ -118,7 +118,7 @@ public class DatabaseConstraintValidator_Tests
         }
     }
     
-    public class CreateTestModelWithIdValidator : DatabaseConstraintValidator<CreateTestModelWithIdRequest, TestModel>
+    public class CreateTestModelWithIdValidator : SmartValidator<CreateTestModelWithIdRequest, TestModel>
     {
         public CreateTestModelWithIdValidator(DbContext context, ILocalizationService? localizationService = null) 
             : base(context, localizationService)
@@ -133,7 +133,7 @@ public class DatabaseConstraintValidator_Tests
         }
     }
     
-    public class SkipPrimaryKeyValidationValidator : DatabaseConstraintValidator<UpdateTestModelRequest, TestModel>
+    public class SkipPrimaryKeyValidationValidator : SmartValidator<UpdateTestModelRequest, TestModel>
     {
         public SkipPrimaryKeyValidationValidator(DbContext context, ILocalizationService? localizationService = null) 
             : base(context, localizationService)
