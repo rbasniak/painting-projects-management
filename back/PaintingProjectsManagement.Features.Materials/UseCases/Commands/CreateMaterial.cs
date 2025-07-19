@@ -21,16 +21,18 @@ public class CreateMaterial : IEndpoint
         public double PricePerUnit { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : DatabaseConstraintValidator<Request, Material>
     {
-        public Validator(DbContext context, ILocalizationService localization)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        {
+        }
+
+        protected override void ValidateBusinessRules()
         {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
                 .MustAsync(async (name, cancellationToken) =>
-                    !await context.Set<Material>().AnyAsync(m => m.Name == name, cancellationToken))
-                .WithMessage(localization.LocalizeString(MaterialsMessages.Create.MaterialWithNameAlreadyExists));
+                    !await Context.Set<Material>().AnyAsync(m => m.Name == name, cancellationToken))
+                .WithMessage(LocalizationService?.LocalizeString(MaterialsMessages.Create.MaterialWithNameAlreadyExists) ?? "A material with this name already exists.");
 
             RuleFor(x => x.PricePerUnit)
                 .GreaterThan(0)
@@ -40,7 +42,6 @@ public class CreateMaterial : IEndpoint
 
     public class Handler(DbContext _context) : ICommandHandler<Request>
     { 
-
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var material = new Material(request.Name, request.Unit, request.PricePerUnit);

@@ -22,23 +22,19 @@ public class UpdateMaterial : IEndpoint
         public double PricePerUnit { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : DatabaseConstraintValidator<Request, Material>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context) : base(context)
         {
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .MustAsync(async (id, cancellationToken) =>
-                    await context.Set<Material>().AnyAsync(m => m.Id == id, cancellationToken))
-                .WithMessage("Material with the specified ID does not exist.");
-                
+        }
+
+        protected override void ValidateBusinessRules()
+        {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
                 .MustAsync(async (request, name, cancellationToken) => 
-                    !await context.Set<Material>().AnyAsync(m => m.Name == name && m.Id != request.Id, cancellationToken))
+                    !await Context.Set<Material>().AnyAsync(m => m.Name == name && m.Id != request.Id, cancellationToken))
                 .WithMessage("A material with this name already exists.");
-                
+
             RuleFor(x => x.PricePerUnit)
                 .GreaterThan(0)
                 .WithMessage("Price per unit must be greater than zero.");
