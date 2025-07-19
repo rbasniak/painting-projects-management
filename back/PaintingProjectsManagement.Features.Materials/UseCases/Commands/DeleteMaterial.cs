@@ -12,6 +12,7 @@ public class DeleteMaterial : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Delete Material")
         .WithTags("Materials");
     }
@@ -21,19 +22,15 @@ public class DeleteMaterial : IEndpoint
         public Guid Id { get; set; } 
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : TenantDatabaseConstraintValidator<Request, Material>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .MustAsync(async (request, id, cancellationToken) =>
-                {
-                    return await context.Set<Material>()
-                        .Where(m => m.TenantId == request.Identity.Tenant)
-                        .AnyAsync(m => m.Id == id, cancellationToken);
-                })
-                .WithMessage("Material with the specified ID does not exist.");
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+            // TODO: material cannot be used in any painting project
         }
     }
 

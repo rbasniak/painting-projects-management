@@ -10,6 +10,7 @@ public class UpdateMaterial : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Update Material")
         .WithTags("Materials");
     }

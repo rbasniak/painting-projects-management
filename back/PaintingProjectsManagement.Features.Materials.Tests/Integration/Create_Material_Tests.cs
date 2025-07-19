@@ -291,6 +291,47 @@ public class Create_Material_Tests
         materials.ShouldBeEmpty();
     }
 
+    [Test, NotInParallel(Order = 16)]
+    public async Task User_Can_Create_Material_With_Same_Name_As_Another_User()
+    {
+        // Prepare
+        var request = new CreateMaterial.Request
+        {
+            Name = "Existing Material", // This name was created by rodrigo.basniak in Seed test
+            Unit = MaterialUnit.Drops,
+            PricePerUnit = 25,
+        };
+
+        // Act
+        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "ricardo.smarzaro");
+
+        // Assert the response
+        response.ShouldBeSuccess(out var result);
+
+        result.Id.ShouldNotBe(Guid.Empty);
+        result.Name.ShouldBe("Existing Material");
+        result.PricePerUnit.ShouldBe(25);
+        result.Unit.ShouldNotBeNull();
+        result.Unit.Id.ShouldBe((int)MaterialUnit.Drops);
+        result.Unit.Value.ShouldBe(MaterialUnit.Drops.ToString());
+
+        // Assert the database - should have two materials with the same name but different users
+        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Existing Material").ToList();
+        materials.Count.ShouldBe(2); // One from rodrigo.basniak (Seed) and one from ricardo.smarzaro
+
+        var rbMaterial = materials.FirstOrDefault(x => x.TenantId == "RODRIGO.BASNIAK" && x.Name == "Existing Material");
+        var rsMaterial = materials.FirstOrDefault(x => x.TenantId == "RICARDO.SMARZARO" && x.Name == "Existing Material");
+
+        rbMaterial.ShouldNotBeNull();
+        rbMaterial.Id.ShouldNotBe(rsMaterial.Id);
+        rbMaterial.PricePerUnit.ShouldBe(10.0); // From Seed test
+        rbMaterial.Unit.ShouldBe(MaterialUnit.Unit); // From Seed test
+
+        rsMaterial.ShouldNotBeNull();
+        rsMaterial.PricePerUnit.ShouldBe(25);
+        rsMaterial.Unit.ShouldBe(MaterialUnit.Drops);
+    }
+
     /// <summary>
     /// The user should be able to create a new material with valid data
     /// </summary>

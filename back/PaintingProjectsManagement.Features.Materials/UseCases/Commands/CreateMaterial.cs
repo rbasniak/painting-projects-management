@@ -12,6 +12,7 @@ public class CreateMaterial : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Create Material")
         .WithTags("Materials");
     }

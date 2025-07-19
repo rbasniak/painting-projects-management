@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using rbkApiModules.Identity.Core;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
@@ -11,22 +10,32 @@ public class Update_Material_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        // Setup test data directly in database
-        using (var context = TestingServer.CreateContext())
-        {
-            // Create a test tenant
-            var tenant = new Tenant("TEST", "Test Tenant", "");
-            context.Set<Tenant>().Add(tenant);
-            await context.SaveChangesAsync();
-        }
+        // Create test materials for different users
+        var existingMaterial = new Material("rodrigo.basniak", "Existing Material", MaterialUnit.Unit, 10.0);
+        var anotherUserMaterial = new Material("ricardo.smarzaro", "Another User Material", MaterialUnit.Unit, 5.0);
 
         using (var context = TestingServer.CreateContext())
         {
             var connectionString = context.Database.GetConnectionString();
 
-            context.Set<Material>().Add(new Material("TEST", "8x4 magnet", MaterialUnit.Unit, 19));
+            await context.AddAsync(existingMaterial);
+            await context.AddAsync(anotherUserMaterial);
             await context.SaveChangesAsync();
         }
+
+        // Assert the database
+        using (var context = TestingServer.CreateContext())
+        {
+            var savedMaterial = context.Set<Material>().FirstOrDefault(x => x.Name == "Existing Material");
+            savedMaterial.ShouldNotBeNull();
+
+            var savedAnotherUserMaterial = context.Set<Material>().FirstOrDefault(x => x.Name == "Another User Material");
+            savedAnotherUserMaterial.ShouldNotBeNull();
+        }
+
+        // Login with the users that will be used in the tests, so they will be cached in the TestingServer for easy access
+        await TestingServer.CacheCredentialsAsync("rodrigo.basniak", "trustno1", "rodrigo.basniak");
+        await TestingServer.CacheCredentialsAsync("ricardo.smarzaro", "zemiko987", "ricardo.smarzaro");
     }
 
     /// <summary>
@@ -35,8 +44,8 @@ public class Update_Material_Tests
     [Test, NotInParallel(Order = 2)]
     public async Task User_Can_Update_Material()
     {
-        // Prepare - Load the material created in the previous test
-        var existingMaterial = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Name == "8x4 magnet");
+        // Prepare - Load the material created in the seed test
+        var existingMaterial = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Name == "Existing Material");
         existingMaterial.ShouldNotBeNull("Material should exist from seed");
 
         var updateRequest = new UpdateMaterial.Request
@@ -48,7 +57,7 @@ public class Update_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/materials", updateRequest);
+        var response = await TestingServer.PutAsync("api/materials", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
