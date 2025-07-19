@@ -124,6 +124,12 @@ public abstract class DatabaseConstraintValidator<TRequest, TModel> : AbstractVa
             ApplyMaxLengthConstraint(requestProperty, maxLength);
         }
 
+        // Apply enum validation
+        if (requestProperty.PropertyType.IsEnum)
+        {
+            ApplyEnumConstraint(requestProperty);
+        }
+
         // Apply primary key constraint for "Id" properties
         if (property.Name.Equals("Id", StringComparison.OrdinalIgnoreCase) && !ShouldSkipPrimaryKeyValidation())
         {
@@ -177,6 +183,22 @@ public abstract class DatabaseConstraintValidator<TRequest, TModel> : AbstractVa
         }
     }
 
+    private void ApplyEnumConstraint(PropertyInfo requestProperty)
+    {
+        var enumType = requestProperty.PropertyType;
+        var validValues = Enum.GetValues(enumType);
+        
+        CreateRuleFor<object>(requestProperty)
+            .Must(value =>
+            {
+                if (value == null) return true; // Let required validation handle nulls
+                
+                // Check if the value is a valid enum value
+                return Enum.IsDefined(enumType, value);
+            })
+            .WithMessage(GetLocalizedMessage("InvalidEnum", requestProperty.Name));
+    }
+
     private void ApplyPrimaryKeyConstraint(PropertyInfo requestProperty)
     {
         var propertyType = requestProperty.PropertyType;
@@ -194,28 +216,15 @@ public abstract class DatabaseConstraintValidator<TRequest, TModel> : AbstractVa
                 
                 try
                 {
-                    // Use reflection to call the generic Set method
-                    var setMethod = Context.GetType().GetMethod("Set", Type.EmptyTypes)?.MakeGenericMethod(typeof(TModel));
-                    var dbSet = setMethod?.Invoke(Context, null);
-                    
-                    if (dbSet == null) return false;
-                    
-                    // Use reflection to call AnyAsync on the DbSet
-                    var anyAsyncMethod = dbSet.GetType().GetMethod("AnyAsync", new[] { typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(typeof(TModel), typeof(bool))), typeof(CancellationToken) });
-                    
-                    if (anyAsyncMethod == null) return false;
-                    
+                    // Use a simpler approach - just check if the entity exists
+                    var dbSet = Context.Set<TModel>();
                     var parameter = Expression.Parameter(typeof(TModel), "x");
                     var propertyAccess = Expression.Property(parameter, "Id");
                     var valueExpression = Expression.Constant(value);
                     var equalsExpression = Expression.Equal(propertyAccess, valueExpression);
+                    var lambda = Expression.Lambda<Func<TModel, bool>>(equalsExpression, parameter);
                     
-                    // Create the correct lambda type
-                    var lambdaType = typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(typeof(TModel), typeof(bool)));
-                    var lambda = Expression.Lambda(equalsExpression, parameter);
-                    
-                    var result = anyAsyncMethod.Invoke(dbSet, new object[] { lambda, cancellationToken });
-                    return result is Task<bool> task ? await task : false;
+                    return await dbSet.AnyAsync(lambda, cancellationToken);
                 }
                 catch
                 {
@@ -250,22 +259,21 @@ public abstract class DatabaseConstraintValidator<TRequest, TModel> : AbstractVa
                         
                         if (dbSet == null) return false;
                         
-                        // Use reflection to call AnyAsync on the DbSet
-                        var anyAsyncMethod = dbSet.GetType().GetMethod("AnyAsync", new[] { typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(principalEntityClrType, typeof(bool))), typeof(CancellationToken) });
-                        
-                        if (anyAsyncMethod == null) return false;
-                        
                         var parameter = Expression.Parameter(principalEntityClrType, "x");
                         var propertyAccess = Expression.Property(parameter, principalProperty.Name);
                         var valueExpression = Expression.Constant(value);
                         var equalsExpression = Expression.Equal(propertyAccess, valueExpression);
-                        
-                        // Create the correct lambda type
-                        var lambdaType = typeof(Expression<>).MakeGenericType(typeof(Func<,>).MakeGenericType(principalEntityClrType, typeof(bool)));
                         var lambda = Expression.Lambda(equalsExpression, parameter);
                         
-                        var result = anyAsyncMethod.Invoke(dbSet, new object[] { lambda, cancellationToken });
-                        return result is Task<bool> task ? await task : false;
+                        // Use reflection to call AnyAsync since we don't know the exact type at compile time
+                        var anyAsyncMethod = dbSet.GetType().GetMethod("AnyAsync", new[] { lambda.Type, typeof(CancellationToken) });
+                        if (anyAsyncMethod != null)
+                        {
+                            var result = anyAsyncMethod.Invoke(dbSet, new object[] { lambda, cancellationToken });
+                            return result is Task<bool> task ? await task : false;
+                        }
+                        
+                        return false;
                     }
                     catch
                     {
@@ -288,6 +296,7 @@ public abstract class DatabaseConstraintValidator<TRequest, TModel> : AbstractVa
             "MaxLength" => $"{propertyName} cannot exceed {parameter} characters.",
             "ForeignKeyNotFound" => $"{propertyName} references a non-existent record.",
             "PrimaryKeyNotFound" => $"{propertyName} references a non-existent record.",
+            "InvalidEnum" => $"{propertyName} has an invalid value.",
             _ => $"{propertyName} is invalid."
         };
     }

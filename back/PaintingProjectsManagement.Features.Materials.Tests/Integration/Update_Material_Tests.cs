@@ -29,7 +29,7 @@ public class Update_Material_Tests
     {
         // Prepare - Load the material created in the previous test
         var existingMaterial = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Name == "8x4 magnet");
-        existingMaterial.ShouldNotBeNull("Material should exist from previous test");
+        existingMaterial.ShouldNotBeNull("Material should exist from seed");
 
         var updateRequest = new UpdateMaterial.Request
         {

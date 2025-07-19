@@ -282,7 +282,7 @@ public class Create_Material_Tests
         var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
 
         // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "The Unit field is required.");
+        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Unit has an invalid value.");
 
         // Assert the database
         var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Invalid Unit Material").ToList();
