@@ -43,7 +43,7 @@ public class Global_Claim_Management_Tests
         result.IsProtected.ShouldBe(false);
 
         // Assert the database
-        var claim = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Id == new Guid(response.Data.Id));
+        var claim = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Id == new Guid(response.Data.Id));
 
         claim.Identification.ShouldBe("CAN_MANAGE_APPROVALS");
         claim.Description.ShouldBe("Can approval documents");
@@ -57,7 +57,7 @@ public class Global_Claim_Management_Tests
     public async Task Global_Admin_Can_Update_Claim()
     {
         // Prepare
-        var existingClaim = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
+        var existingClaim = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
         var request = new UpdateClaim.Request
         {
             Id = existingClaim.Id,
@@ -78,7 +78,7 @@ public class Global_Claim_Management_Tests
         response.Data.IsProtected.ShouldBe(false);
 
         // Assert the database
-        var claim = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Id == existingClaim.Id);
+        var claim = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Id == existingClaim.Id);
 
         claim.Identification.ShouldBe("CAN_MANAGE_APPROVALS");
         claim.Description.ShouldBe("Workflow approval");
@@ -132,7 +132,7 @@ public class Global_Claim_Management_Tests
     public async Task Global_Admin_Cannot_Update_Claim_With_Same_Description()
     {
         // Prepare
-        var existingClaim = TestingServer.Context.Set<Claim>().SingleOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
+        var existingClaim = TestingServer.CreateContext().Set<Claim>().SingleOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
         existingClaim.ShouldNotBeNull();
 
         var request = new UpdateClaim.Request
@@ -155,7 +155,7 @@ public class Global_Claim_Management_Tests
     public async Task Global_Admin_Can_Protect_Claim()
     {
         // Prepare
-        var existingClaim = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
+        var existingClaim = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
         existingClaim.IsProtected.ShouldBe(false);
 
         var request = new ProtectClaim.Request
@@ -176,7 +176,7 @@ public class Global_Claim_Management_Tests
         response.Data.IsProtected.ShouldBe(true);
 
         // Assert the database
-        var claim = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Id == existingClaim.Id);
+        var claim = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Id == existingClaim.Id);
 
         claim.Identification.ShouldBe(existingClaim.Identification);
         claim.Description.ShouldBe(existingClaim.Description);
@@ -190,7 +190,7 @@ public class Global_Claim_Management_Tests
     public async Task Global_Admin_Cannot_Delete_a_Protected_Claims()
     {
         // Prepare
-        var existingClaim = TestingServer.Context.Set<Claim>().Single(x => x.Identification == "CAN_MANAGE_APPROVALS");
+        var existingClaim = TestingServer.CreateContext().Set<Claim>().Single(x => x.Identification == "CAN_MANAGE_APPROVALS");
         existingClaim.IsProtected.ShouldBe(true);
 
         // Act
@@ -207,7 +207,7 @@ public class Global_Claim_Management_Tests
     public async Task Global_Admin_Can_Unprotect_Claim()
     {
         // Prepare
-        var existingClaim = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
+        var existingClaim = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Identification == "CAN_MANAGE_APPROVALS");
         existingClaim.IsProtected.ShouldBe(true);
 
         var request = new UnprotectClaim.Request
@@ -228,7 +228,7 @@ public class Global_Claim_Management_Tests
         response.Data.IsProtected.ShouldBe(false);
 
         // Assert the database
-        var claim = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Id == existingClaim.Id);
+        var claim = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Id == existingClaim.Id);
 
         claim.Identification.ShouldBe(existingClaim.Identification);
         claim.Description.ShouldBe(existingClaim.Description);
@@ -242,7 +242,7 @@ public class Global_Claim_Management_Tests
     public async Task Local_Admin_Cannot_Delete_Claims()
     {
         // Prepare
-        var existingClaim = TestingServer.Context.Set<Claim>().Single(x => x.Identification == "CAN_MANAGE_APPROVALS");
+        var existingClaim = TestingServer.CreateContext().Set<Claim>().Single(x => x.Identification == "CAN_MANAGE_APPROVALS");
 
         // Act
         var response = await TestingServer.DeleteAsync($"api/authorization/claims/{existingClaim.Id}", "admin1");
@@ -258,7 +258,7 @@ public class Global_Claim_Management_Tests
     public async Task Global_Admin_Can_Delete_Claims()
     {
         // Prepare
-        var existingClaim = TestingServer.Context.Set<Claim>().Single(x => x.Identification == "CAN_MANAGE_APPROVALS");
+        var existingClaim = TestingServer.CreateContext().Set<Claim>().Single(x => x.Identification == "CAN_MANAGE_APPROVALS");
 
         // Act
         var response = await TestingServer.DeleteAsync($"api/authorization/claims/{existingClaim.Id}", "superuser");
@@ -267,7 +267,7 @@ public class Global_Claim_Management_Tests
         response.ShouldBeSuccess();
 
         // Assert the database
-        var tenant = TestingServer.Context.Set<Claim>().FirstOrDefault(x => x.Identification == existingClaim.Identification);
+        var tenant = TestingServer.CreateContext().Set<Claim>().FirstOrDefault(x => x.Identification == existingClaim.Identification);
 
         tenant.ShouldBeNull();
     }
@@ -275,6 +275,6 @@ public class Global_Claim_Management_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     } 
 }

@@ -24,11 +24,11 @@ public class User_Confirmation_Tests
     public async Task User_Cannot_Be_Confirmed_With_Wrong_Code()
     {
         // Prepare
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
         context.Set<User>().Add(new User("BUZIOS", "new_user", "new_user@company.com", "123456", "avatar", "Newcomer", AuthenticationMode.Credentials));
         context.SaveChanges();
 
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
         user.ActivationCode.ShouldNotBe(null);
         user.ActivationCode.ShouldNotBe("");
@@ -40,7 +40,7 @@ public class User_Confirmation_Tests
         response.ShouldRedirect("/registration/fail");
 
         // Assert the database
-        user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
     }
 
@@ -52,7 +52,7 @@ public class User_Confirmation_Tests
     public async Task User_Cannot_Be_Confirmed_With_No_Code()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
         user.ActivationCode.ShouldNotBe(null);
         user.ActivationCode.ShouldNotBe("");
@@ -64,7 +64,7 @@ public class User_Confirmation_Tests
         response.ShouldRedirect("/registration/fail");
 
         // Assert the database
-        user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
     }
 
@@ -76,7 +76,7 @@ public class User_Confirmation_Tests
     public async Task User_Cannot_Be_Confirmed_With_No_Email()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
         user.ActivationCode.ShouldNotBe(null);
         user.ActivationCode.ShouldNotBe("");
@@ -88,7 +88,7 @@ public class User_Confirmation_Tests
         response.ShouldRedirect("/registration/fail");
 
         // Assert the database
-        user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
     }
 
@@ -100,7 +100,7 @@ public class User_Confirmation_Tests
     public async Task User_Cannot_Be_Confirmed_With_No_Tenant()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
         user.ActivationCode.ShouldNotBe(null);
         user.ActivationCode.ShouldNotBe("");
@@ -112,7 +112,7 @@ public class User_Confirmation_Tests
         response.ShouldRedirect("/registration/fail");
 
         // Assert the database
-        user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
     }
 
@@ -124,7 +124,7 @@ public class User_Confirmation_Tests
     public async Task User_Cannot_Be_Confirmed_With_Wrong_Email()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
         user.ActivationCode.ShouldNotBe(null);
         user.ActivationCode.ShouldNotBe("");
@@ -136,7 +136,7 @@ public class User_Confirmation_Tests
         response.ShouldRedirect("/registration/fail");
 
         // Assert the database
-        user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
     }
 
@@ -148,7 +148,7 @@ public class User_Confirmation_Tests
     public async Task User_Can_Receive_Confirmation_Email_Again_If_Not_Yet_Confirmed()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.ShouldNotBeNull();
         user.Email.ShouldNotBeNull();
         user.IsConfirmed.ShouldBeFalse();
@@ -172,7 +172,7 @@ public class User_Confirmation_Tests
         );
 
         // Assert the database
-        user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
     }
 
@@ -183,7 +183,7 @@ public class User_Confirmation_Tests
     [Test, NotInParallel(Order = 8)]
     public async Task User_Can_Be_Confirmed_Correctly()
     {
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeFalse();
         user.ActivationCode.ShouldNotBe(null);
         user.ActivationCode.ShouldNotBe("");
@@ -193,7 +193,7 @@ public class User_Confirmation_Tests
         // Assert the response
         response.ShouldRedirect("/registration/success");
 
-        user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.IsConfirmed.ShouldBeTrue();
         user.ActivationCode.ShouldBeNull();
         user.Email.ShouldNotBeNull();
@@ -212,7 +212,7 @@ public class User_Confirmation_Tests
     public async Task User_Cannot_Receive_Confirmation_Email_If_It_Is_Already_Confirmed()
     {
         // Prepare
-        var user = TestingServer.Context.Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
+        var user = TestingServer.CreateContext().Set<User>().First(x => x.Username == "new_user" && x.TenantId == "BUZIOS");
         user.Email.ShouldNotBeNull();
         user.IsConfirmed.ShouldBeTrue();
         user.ActivationCode.ShouldBeNull();
@@ -250,6 +250,6 @@ public class User_Confirmation_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

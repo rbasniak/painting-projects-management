@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
-using rbkApiModules.Commons.Core.Validation;
 using rbkApiModules.Commons.Core;
 using Shouldly;
 

@@ -2,7 +2,7 @@
 
 namespace PaintingProjectsManagment.Database;
 
-internal class DatabaseSeed(DatabaseContext _context)
+public class DatabaseSeed(DatabaseContext _context)
 {
     public void Seed()
     {

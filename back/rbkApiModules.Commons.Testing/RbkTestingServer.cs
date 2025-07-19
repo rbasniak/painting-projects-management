@@ -51,7 +51,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
     {
         var projectDir = Path.GetDirectoryName(typeof(TProgram).Assembly.Location);
 
-        ContentFolder = Path.Combine(projectDir, "wwwroot");
+        ContentFolder = Path.Combine(projectDir, Guid.NewGuid().ToString("N"), "wwwroot");
 
         if (Directory.Exists(ContentFolder))
         {
@@ -90,31 +90,28 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         return client;
     }
 
-    public virtual DbContext Context
+    public virtual DbContext CreateContext()
     {
-        get
+        var scope = TestingServer!.Services.CreateScope();
+
+        var contexts = scope.ServiceProvider.GetService<IEnumerable<DbContext>>();
+
+        if (contexts != null && contexts.Count() > 1)
         {
-            var scope = TestingServer!.Services.CreateScope();
+            var context = contexts.GetDefaultContext();
 
-            var contexts = scope.ServiceProvider.GetService<IEnumerable<DbContext>>();
-
-            if (contexts != null && contexts.Count() > 1)
+            return context ?? throw new Exception("Could not find DbContext");
+        }
+        else
+        {
+            if (contexts == null)
             {
-                var context = contexts.GetDefaultContext();
-
-                return context ?? throw new Exception("Could not find DbContext");
+                throw new Exception("Could not find a DbContext in the DI container");
             }
-            else
-            {
-                if (contexts == null)
-                {
-                    throw new Exception("Could not find a DbContext in the DI container");
-                }
 
-                var context = contexts.First();
+            var context = contexts.First();
 
-                return context ?? throw new Exception("Could not find DbContext");
-            }
+            return context ?? throw new Exception("Could not find DbContext");
         }
     }
 

@@ -1,0 +1,12 @@
+Integration tests
+
+- Use TUnit, which is already installed in the project
+- Never try to install xUnit
+- Integration tests:
+    - must be split in files per use case
+    - all files must start with a test called Seed 
+    - the Seed test is used to store login credentials that could be used across the tests or create entities directly in the database that are required for multiple tests
+    - all files must end with a test called CleanUp that deletes the database
+    - success test must always be the last (before clean up)
+    - all tests must have 4 comment sections: Prepare / Act / Assert the response / Assert the database
+

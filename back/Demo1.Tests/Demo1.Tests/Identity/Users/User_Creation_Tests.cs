@@ -15,7 +15,7 @@ public class User_Creation_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
 
         context.Set<Tenant>().Add(new Tenant("WAYNE INC", "Wayne Industries"));
 
@@ -42,7 +42,7 @@ public class User_Creation_Tests
     [Arguments("")]
     public async Task User_cannot_be_created_when_password_is_null_or_empty(string? password)
     {
-        var role1 = TestingServer.Context.Set<Role>().First(x => x.Name == "Role1");
+        var role1 = TestingServer.CreateContext().Set<Role>().First(x => x.Name == "Role1");
 
         // Prepare
         var request = new CreateUser.Request
@@ -76,7 +76,7 @@ public class User_Creation_Tests
     [Arguments("123456")]
     public async Task User_cannot_be_created_when_passwords_do_not_match(string? password)
     {
-        var role1 = TestingServer.Context.Set<Role>().First(x => x.Name == "Role1");
+        var role1 = TestingServer.CreateContext().Set<Role>().First(x => x.Name == "Role1");
 
         // Prepare
         var request = new CreateUser.Request
@@ -108,7 +108,7 @@ public class User_Creation_Tests
     [Test, NotInParallel(Order = 4)]
     public async Task User_cannot_be_created_when_password_policies_are_not_met()
     {
-        var role1 = TestingServer.Context.Set<Role>().First(x => x.Name == "Role1");
+        var role1 = TestingServer.CreateContext().Set<Role>().First(x => x.Name == "Role1");
 
         // Prepare
         var request = new CreateUser.Request
@@ -140,7 +140,7 @@ public class User_Creation_Tests
     [Test, NotInParallel(Order = 5)]
     public async Task User_can_be_created_without_picture()
     {
-        var role1 = TestingServer.Context.Set<Role>().First(x => x.Name == "Role1");
+        var role1 = TestingServer.CreateContext().Set<Role>().First(x => x.Name == "Role1");
 
         // Prepare
         var request = new CreateUser.Request
@@ -175,7 +175,7 @@ public class User_Creation_Tests
         response.Data.OverridedClaims.Length.ShouldBe(0);
 
         // Assert the database
-        var user = TestingServer.Context.Set<User>()
+        var user = TestingServer.CreateContext().Set<User>()
             .Include(x => x.Claims)
             .Include(x => x.Roles)
             .First(x => x.Username == "new-user" && x.TenantId == "WAYNE INC"); ;
@@ -209,7 +209,7 @@ public class User_Creation_Tests
     [Test, NotInParallel(Order = 6)]
     public async Task User_can_be_deleted()
     {
-        var role1 = TestingServer.Context.Set<Role>().First(x => x.Name == "Role1");
+        var role1 = TestingServer.CreateContext().Set<Role>().First(x => x.Name == "Role1");
 
         // Prepare
         var request = new DeleteUser.Request
@@ -224,7 +224,7 @@ public class User_Creation_Tests
         response.ShouldBeSuccess();
 
         // Assert the database
-        var user = TestingServer.Context.Set<User>()
+        var user = TestingServer.CreateContext().Set<User>()
             .Include(x => x.Claims)
             .Include(x => x.Roles)
             .FirstOrDefault(x => x.Username == "new-user" && x.TenantId == "WAYNE INC");
@@ -239,7 +239,7 @@ public class User_Creation_Tests
     [Test, NotInParallel(Order = 7)]
     public async Task User_can_be_created_with_url_picture()
     {
-        var role1 = TestingServer.Context.Set<Role>().First(x => x.Name == "Role1");
+        var role1 = TestingServer.CreateContext().Set<Role>().First(x => x.Name == "Role1");
 
         // Prepare
         var request = new CreateUser.Request
@@ -275,7 +275,7 @@ public class User_Creation_Tests
         response.Data.OverridedClaims.Length.ShouldBe(0);
 
         // Assert the database
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
         
         var user = context.Set<User>()
             .Include(x => x.Claims)
@@ -313,6 +313,6 @@ public class User_Creation_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

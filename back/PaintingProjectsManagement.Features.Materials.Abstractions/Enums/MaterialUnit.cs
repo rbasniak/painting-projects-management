@@ -2,6 +2,6 @@
 
 public enum MaterialUnit
 {
-    Drops,
-    Unit
+    Drops = 1,
+    Unit = 2
 }

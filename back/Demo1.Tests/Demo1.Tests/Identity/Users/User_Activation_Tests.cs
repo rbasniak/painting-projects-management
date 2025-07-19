@@ -12,7 +12,7 @@ public class User_Activation_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
 
         context.Set<Tenant>().Add(new Tenant("WAYNE INC", "Wayne Industries"));
 
@@ -36,7 +36,7 @@ public class User_Activation_Tests
         await TestingServer.LoginAsync("user", "user123", "wayne inc");
         await TestingServer.LoginAsync("admin", "admin123", "wayne inc");
 
-        var users = TestingServer.Context.Set<User>().Where(x => x.TenantId == "WAYNE INC").ToList();
+        var users = TestingServer.CreateContext().Set<User>().Where(x => x.TenantId == "WAYNE INC").ToList();
         users.Count.ShouldBe(2);
     }
 
@@ -109,7 +109,7 @@ public class User_Activation_Tests
     [Test, NotInParallel(Order = 5)]
     public async Task User_can_be_deactivated()
     {
-        var user = TestingServer.Context.Set<User>().FirstOrDefault(x => x.TenantId == "WAYNE INC" && x.Username == "user");
+        var user = TestingServer.CreateContext().Set<User>().FirstOrDefault(x => x.TenantId == "WAYNE INC" && x.Username == "user");
         user.ShouldNotBeNull();
         user.IsActive.ShouldBeTrue();
 
@@ -126,7 +126,7 @@ public class User_Activation_Tests
         response.ShouldBeSuccess();
 
         // Assert the database
-        var result = TestingServer.Context.Set<User>().FirstOrDefault(x => x.Id == user.Id);
+        var result = TestingServer.CreateContext().Set<User>().FirstOrDefault(x => x.Id == user.Id);
         result.ShouldNotBeNull();
         result.IsActive.ShouldBeFalse();
     }
@@ -202,7 +202,7 @@ public class User_Activation_Tests
     [Test, NotInParallel(Order = 9)]
     public async Task User_can_be_reactivated()
     {
-        var user = TestingServer.Context.Set<User>().FirstOrDefault(x => x.TenantId == "WAYNE INC" && x.Username == "user");
+        var user = TestingServer.CreateContext().Set<User>().FirstOrDefault(x => x.TenantId == "WAYNE INC" && x.Username == "user");
         user.ShouldNotBeNull();
         user.IsActive.ShouldBeFalse();
 
@@ -219,7 +219,7 @@ public class User_Activation_Tests
         response.ShouldBeSuccess();
 
         // Assert the database
-        var result = TestingServer.Context.Set<User>().FirstOrDefault(x => x.Id == user.Id);
+        var result = TestingServer.CreateContext().Set<User>().FirstOrDefault(x => x.Id == user.Id);
         result.ShouldNotBeNull();
         result.IsActive.ShouldBeTrue();
     }
@@ -227,6 +227,6 @@ public class User_Activation_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

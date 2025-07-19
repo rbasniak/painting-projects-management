@@ -58,6 +58,6 @@ public static class HttpAssertionExtensions
     public static void ShouldBeForbidden(this HttpResponse response)
     {
         response.Code.ShouldBe(HttpStatusCode.Forbidden, $"Expected forbidden response, but the response was not forbidden. Messages: [ {string.Join(", ", response.Messages)} ]");
-    } 
+    }
 }
 

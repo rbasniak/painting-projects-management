@@ -3,12 +3,15 @@ using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Paints;
 using PaintingProjectsManagement.Features.Projects;
+using PaintingProjectsManagment.Database;
 using rbkApiModules.Commons.Core;
 using rbkApiModules.Commons.Core.Helpers;
-using PaintingProjectsManagment.Database;
+using rbkApiModules.Commons.Core.UiDefinitions;
 using rbkApiModules.Commons.Relational;
+using rbkApiModules.Identity.Relational;
 using Scalar.AspNetCore;
 using System;
+using System.Reflection;
 
 namespace PaintingProjectsManagement.Api;
 
@@ -22,35 +25,77 @@ public class Program
         // Add services to the container.
         builder.Services.AddAuthorization();
 
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
-
-        builder.Services.AddMessaging();
-
         string connectionString;
         if (TestingEnvironmentChecker.IsTestingEnvironment)
         {
-            connectionString = $"Data Source=C:\\git\\Development\\Personal\\app_{Guid.NewGuid():N}.db";
+            var testDbPath = Path.Combine(AppContext.BaseDirectory, "wwwroot", "testing", $"testingdb_{Guid.NewGuid():N}.db");
+            Directory.CreateDirectory(Path.GetDirectoryName(testDbPath)!);
+            connectionString = $"Data Source={testDbPath}";
         }
         else
         {
             connectionString = "Data Source=C:\\git\\Development\\Personal\\app.db";
         }
 
-        builder.Services.AddHttpContextAccessor();
-
-        builder.Services.AddDbContext<DatabaseContext>(options =>
+        builder.Services.AddDbContext<DatabaseContext>((scope, options) =>
                 options.UseSqlite(connectionString));
-        
-        builder.Services.AddScoped<DbContext>(serviceProvider 
-            => serviceProvider.GetRequiredService<DatabaseContext>());
+
+        builder.Services.AddRbkApiCoreSetup(options => options
+             .EnableBasicAuthenticationHandler()
+             .UseDefaultCompression()
+             .UseDefaultCors()
+             .UseDefaultHsts(builder.Environment.IsDevelopment())
+             .UseDefaultHttpsRedirection()
+             .UseDefaultMemoryCache()
+             .UseDefaultHttpClient()
+             // .UseDefaultSwagger("PoC for the new API libraries")
+             .UseHttpContextAccessor()
+             .UseStaticFiles()
+             .RegisterDbContext<DatabaseContext>()
+         );
+
+        builder.Services.AddRbkRelationalAuthentication(options => options
+            .UseSymetricEncryptationKey()
+            .AllowUserCreationByAdmins()
+            .AllowUserSelfRegistration()
+        );
+
+        builder.Services.AddRbkUIDefinitions(Assembly.GetAssembly(typeof(Program)));
+
+        builder.Services.AddOpenApi();
 
         // Register file storage service
         builder.Services.AddSingleton<IFileStorage, LocalFileStorage>();
 
         var app = builder.Build();
 
-        
+        app.UseRbkApiCoreSetup();
+
+        app.UseRbkRelationalAuthentication();
+
+        app.SetupDatabase<DatabaseContext>(options => options
+            .MigrateOnStartup()
+        );
+
+        app.SetupRbkAuthenticationClaims(options => options
+            .WithCustomDescription(x => x.ChangeClaimProtection, "Change claim protection")
+            .WithCustomDescription(x => x.ManageClaims, "Manage application claims")
+            .WithCustomDescription(x => x.ManageTenantSpecificRoles, "Manage tenant roles")
+            .WithCustomDescription(x => x.ManageApplicationWideRoles, "Manage application roles")
+            .WithCustomDescription(x => x.ManageTenants, "Manage tenants")
+            .WithCustomDescription(x => x.ManageUsers, "Manage users")
+            .WithCustomDescription(x => x.ManageUserRoles, "Manage user roles")
+            .WithCustomDescription(x => x.OverrideUserClaims, "Override user claims")
+        );
+
+        app.SetupRbkDefaultAdmin(options => options
+            .WithUsername("superuser")
+            .WithPassword("admin")
+            .WithDisplayName("Administrator")
+            .WithEmail("admin@my-company.com")
+        );
+
+        // app.SeedDatabase<DatabaseSeed>();
 
         app.MapDefaultEndpoints();
 
@@ -66,21 +111,10 @@ public class Program
         });
         app.MapScalarApiReference();
 
-        app.UseHttpsRedirection();
-        
-        // Serve static files from wwwroot
-        app.UseStaticFiles();
-
-        app.UseAuthorization();
-
         app.MapMaterialsFeature();
         app.MapPrintingModelsFeature();
         app.MapPaintsFeature();
         app.MapProjectsFeature();
-
-        app.SetupDatabase<DatabaseContext>(options => options
-            .MigrateOnStartup()
-        );
 
         app.Run();
     }

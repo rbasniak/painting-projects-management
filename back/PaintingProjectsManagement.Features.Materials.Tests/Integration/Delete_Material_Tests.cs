@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
 public class Delete_Material_Tests
@@ -10,8 +12,10 @@ public class Delete_Material_Tests
     {
         //await TestingServer.LoginAsync("superuser", "admin", null);
 
-        using (var context = TestingServer.Context)
-        { 
+        using (var context = TestingServer.CreateContext())
+        {
+            var connectionString = context.Database.GetConnectionString();
+
             context.Set<Material>().Add(new Material("8x4 magnet", MaterialUnit.Unit, 19));
             await context.SaveChangesAsync();
         }
@@ -24,7 +28,7 @@ public class Delete_Material_Tests
     public async Task User_Can_Delete_Material()
     {
         // Prepare - Load the material created in the previous test
-        var existingMaterial = TestingServer.Context.Set<Material>().FirstOrDefault(x => x.Name == "8x4 magnet");
+        var existingMaterial = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Name == "8x4 magnet");
         existingMaterial.ShouldNotBeNull("Material should exist from previous test");
 
         // Act
@@ -34,13 +38,13 @@ public class Delete_Material_Tests
         response.ShouldBeSuccess();
 
         // Assert the database - material should be deleted
-        var deletedEntity = TestingServer.Context.Set<Material>().FirstOrDefault(x => x.Id == existingMaterial.Id);
+        var deletedEntity = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Id == existingMaterial.Id);
         deletedEntity.ShouldBeNull("Material should be deleted from database");
     }
 
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

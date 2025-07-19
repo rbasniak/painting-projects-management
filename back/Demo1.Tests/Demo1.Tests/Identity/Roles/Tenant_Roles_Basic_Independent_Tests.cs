@@ -69,7 +69,7 @@ public class Tenant_Roles_Basic_Independent_Tests
     public async Task Local_Admin_Cannot_Delete_Tenant_Role_Associated_With_User_When_There_Is_No_Replacement_Application_Role()
     {
         // Prepare 
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
 
         var tenantRole = context.Add(new Role("BUZIOS", "Test Role 99")).Entity;
 
@@ -78,7 +78,7 @@ public class Tenant_Roles_Basic_Independent_Tests
 
         context.SaveChanges();
 
-        tenantRole = TestingServer.Context.Set<Role>().Include(x => x.Users).First(x => x.Id == tenantRole.Id);
+        tenantRole = TestingServer.CreateContext().Set<Role>().Include(x => x.Users).First(x => x.Id == tenantRole.Id);
         tenantRole.Users.Count().ShouldBe(1);
 
         // Act
@@ -92,7 +92,7 @@ public class Tenant_Roles_Basic_Independent_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }
 

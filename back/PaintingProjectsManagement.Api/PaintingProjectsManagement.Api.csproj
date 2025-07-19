@@ -31,6 +31,7 @@
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Projects\PaintingProjectsManagement.Features.Projects.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.ServiceDefaults\PaintingProjectsManagement.ServiceDefaults.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagment.Database\PaintingProjectsManagment.Database.csproj" />
+    <ProjectReference Include="..\rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -16,7 +16,7 @@ public class User_Registration_Tests
     {
         TestingServer.ClearMailsFolder();
 
-        var context = TestingServer.Context;
+        var context = TestingServer.CreateContext();
 
         context.Set<Tenant>().Add(new Tenant("WAYNE INC", "Wayne Industries"));
 
@@ -429,7 +429,7 @@ public class User_Registration_Tests
         response.ShouldBeSuccess();
 
         // Assert the database
-        var user = TestingServer.Context.Set<User>()
+        var user = TestingServer.CreateContext().Set<User>()
             .Include(x => x.Claims)
             .Include(x => x.Roles)
             .First(x => x.Username == "new-user");
@@ -466,6 +466,6 @@ public class User_Registration_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.Context.Database.EnsureDeletedAsync();
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }
