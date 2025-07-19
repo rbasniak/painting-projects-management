@@ -1,0 +1,107 @@
+{
+  "name": "painting-projects-management",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/painting-projects-management/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/painting-projects-management",
+        "index": "apps/painting-projects-management/src/index.html",
+        "browser": "apps/painting-projects-management/src/main.ts",
+        "polyfills": [],
+        "tsConfig": "apps/painting-projects-management/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/painting-projects-management/public"
+          }
+        ],
+        "styles": ["apps/painting-projects-management/src/styles.scss"],
+        "scripts": [],
+        "server": "apps/painting-projects-management/src/main.server.ts",
+        "ssr": {
+          "entry": "apps/painting-projects-management/src/server.ts"
+        },
+        "outputMode": "server"
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all",
+          "fileReplacements": [
+            {
+              "replace": "apps/painting-projects-management/src/environments/environment.ts",
+              "with": "apps/painting-projects-management/src/environments/environment.production.ts"
+            }
+          ]
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "fileReplacements": [
+            {
+              "replace": "apps/painting-projects-management/src/environments/environment.ts",
+              "with": "apps/painting-projects-management/src/environments/environment.development.ts"
+            }
+          ]
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": []
+        }
+      ],
+      "configurations": {
+        "production": {
+          "buildTarget": "painting-projects-management:build:production"
+        },
+        "development": {
+          "buildTarget": "painting-projects-management:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "painting-projects-management:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "painting-projects-management:build",
+        "staticFilePath": "dist/apps/painting-projects-management/browser",
+        "spa": true
+      }
+    }
+  }
+}
