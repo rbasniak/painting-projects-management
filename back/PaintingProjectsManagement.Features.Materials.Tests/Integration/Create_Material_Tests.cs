@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using rbkApiModules.Identity.Core;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
@@ -10,9 +11,18 @@ public class Create_Material_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
+        // Setup test data directly in database
+        using (var context = TestingServer.CreateContext())
+        {
+            // Create a test tenant
+            var tenant = new Tenant("TEST", "Test Tenant", "");
+            context.Set<Tenant>().Add(tenant);
+            await context.SaveChangesAsync();
+        }
+
         // Prepare
         // Create a test material for duplicate name validation tests
-        var existingMaterial = new Material("Existing Material", MaterialUnit.Unit, 10.0);
+        var existingMaterial = new Material("TEST", "Existing Material", MaterialUnit.Unit, 10.0);
 
         // Act          
         using (var context = TestingServer.CreateContext())

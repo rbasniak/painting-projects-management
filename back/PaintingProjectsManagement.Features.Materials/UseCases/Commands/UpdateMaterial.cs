@@ -14,7 +14,7 @@ public class UpdateMaterial : IEndpoint
         .WithTags("Materials");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; } 
         public string Name { get; set; } = string.Empty;
@@ -22,7 +22,7 @@ public class UpdateMaterial : IEndpoint
         public double PricePerUnit { get; set; }
     }
 
-    public class Validator : DatabaseConstraintValidator<Request, Material>
+    public class Validator : TenantDatabaseConstraintValidator<Request, Material>
     {
         public Validator(DbContext context) : base(context)
         {
@@ -32,7 +32,9 @@ public class UpdateMaterial : IEndpoint
         {
             RuleFor(x => x.Name)
                 .MustAsync(async (request, name, cancellationToken) => 
-                    !await Context.Set<Material>().AnyAsync(m => m.Name == name && m.Id != request.Id, cancellationToken))
+                {
+                    return !await Context.Set<Material>().AnyAsync(m => m.Name == name && m.Id != request.Id && m.TenantId == request.Identity.Tenant, cancellationToken);
+                })
                 .WithMessage("A material with this name already exists.");
 
             RuleFor(x => x.PricePerUnit)
@@ -46,7 +48,15 @@ public class UpdateMaterial : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var material = await _context.Set<Material>().FirstAsync(x => x.Id == request.Id, cancellationToken);
+            var query = _context.Set<Material>().AsQueryable();
+            
+            // Filter by tenant if authenticated
+            if (request.IsAuthenticated && request.Identity.HasTenant)
+            {
+                query = query.Where(m => m.TenantId == request.Identity.Tenant);
+            }
+            
+            var material = await query.FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             material.UpdateDetails(request.Name, request.Unit, request.PricePerUnit);
 

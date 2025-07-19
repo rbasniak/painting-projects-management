@@ -6,8 +6,6 @@ public class TestingServer : RbkTestingServer<Program>
 
     protected override void ConfigureTestServices(IServiceCollection services)
     {
-
-
         base.ConfigureTestServices(services);
     }
 }

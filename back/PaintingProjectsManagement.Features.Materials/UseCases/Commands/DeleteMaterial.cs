@@ -1,4 +1,6 @@
-﻿namespace PaintingProjectsManagement.Features.Materials;
+﻿using rbkApiModules.Commons.Core;
+
+namespace PaintingProjectsManagement.Features.Materials;
 
 public class DeleteMaterial : IEndpoint
 {
@@ -14,7 +16,7 @@ public class DeleteMaterial : IEndpoint
         .WithTags("Materials");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; } 
     }
@@ -25,8 +27,12 @@ public class DeleteMaterial : IEndpoint
         {
             RuleFor(x => x.Id)
                 .NotEmpty()
-                .MustAsync(async (id, cancellationToken) =>
-                    await context.Set<Material>().AnyAsync(m => m.Id == id, cancellationToken))
+                .MustAsync(async (request, id, cancellationToken) =>
+                {
+                    return await context.Set<Material>()
+                        .Where(m => m.TenantId == request.Identity.Tenant)
+                        .AnyAsync(m => m.Id == id, cancellationToken);
+                })
                 .WithMessage("Material with the specified ID does not exist.");
         }
     }
@@ -36,7 +42,15 @@ public class DeleteMaterial : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var material = await _context.Set<Material>().FirstAsync(x => x.Id == request.Id, cancellationToken);
+            var query = _context.Set<Material>().AsQueryable();
+            
+            // Filter by tenant if authenticated
+            if (request.IsAuthenticated && request.Identity.HasTenant)
+            {
+                query = query.Where(m => m.TenantId == request.Identity.Tenant);
+            }
+            
+            var material = await query.FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             _context.Remove(material);
 

@@ -20,6 +20,9 @@ public class MaterialConfig : IEntityTypeConfiguration<Material>
         builder.Property(e => e.PricePerUnit)
             .IsRequired();
 
+        // Indexes
         builder.HasIndex(m => m.Name);
+        builder.HasIndex(m => m.TenantId);
+        builder.HasIndex(m => new { m.Name, m.TenantId }).IsUnique();
     }
 }

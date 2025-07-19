@@ -31,12 +31,21 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<double>("PricePerUnit")
                         .HasColumnType("REAL");
 
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(32)
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Unit")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("Name", "TenantId")
+                        .IsUnique();
 
                     b.ToTable("Materials", (string)null);
                 });
@@ -557,6 +566,14 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UsersToRoles", (string)null);
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Materials.Material", b =>
+                {
+                    b.HasOne("rbkApiModules.Identity.Core.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Models.Model", b =>

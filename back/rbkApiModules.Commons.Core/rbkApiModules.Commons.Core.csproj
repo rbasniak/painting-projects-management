@@ -26,7 +26,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Database\Commons\Validators\" />
-	  <Folder Include="Features\UiDefinition\" />
 	</ItemGroup>
 
 </Project>
