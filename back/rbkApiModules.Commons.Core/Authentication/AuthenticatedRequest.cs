@@ -32,10 +32,11 @@ public abstract class AuthenticatedRequest: IAuthenticatedRequest
 public class AuthenticatedUser
 {
     private readonly string[] _claims;
+    private string _tenant;
 
     public AuthenticatedUser(string tenant, string username, string[] claims)
     {
-        Tenant = tenant;
+        _tenant = tenant;
         Username = username;
         _claims = claims;
     }
@@ -45,7 +46,7 @@ public class AuthenticatedUser
     public bool HasNoTenant => String.IsNullOrEmpty(Tenant?.Trim());
     public IEnumerable<string> Claims => _claims;
     public string Username { get; }
-    public string Tenant { get; }
+    public string? Tenant => _tenant == null ? null : _tenant.ToUpper();
 
     public bool HasClaim(string claim)
     {

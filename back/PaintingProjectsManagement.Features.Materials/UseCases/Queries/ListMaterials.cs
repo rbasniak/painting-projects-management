@@ -10,6 +10,7 @@ public class ListMaterials : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("List Materials")
         .WithTags("Materials");  
     }
@@ -32,7 +33,9 @@ public class ListMaterials : IEndpoint
                 .Where(m => m.TenantId == request.Identity.Tenant)
                 .ToListAsync(cancellationToken);
 
-            return QueryResponse.Success(materials.Select(MaterialDetails.FromModel).AsReadOnly());
+            var result = materials.Select(MaterialDetails.FromModel).AsReadOnly();
+            
+            return QueryResponse.Success(result);
         }
     }
 }

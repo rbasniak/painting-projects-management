@@ -14,6 +14,7 @@ using rbkApiModules.Identity.Core;
 using Shouldly;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using rbkApiModules.Commons.Core;
 
 namespace rbkApiModules.Commons.Testing;
 
@@ -88,6 +89,16 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         var client = Server.CreateClient();
         client.BaseAddress = new Uri($"{(UseHttps ? "https" : "http")}://test-server.com/");
         return client;
+    }
+
+    public IDispatcher Dispatcher
+    {
+        get
+        {
+            var scope = TestingServer!.Services.CreateScope();
+            var dispatcher = scope.ServiceProvider.GetRequiredService<IDispatcher>();
+            return dispatcher;
+        }
     }
 
     public virtual DbContext CreateContext()

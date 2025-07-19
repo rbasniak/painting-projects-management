@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 using rbkApiModules.Commons.Testing;
 using Shouldly;
 
@@ -78,7 +79,7 @@ public static class HttpAssertionExtensions
                     messages = "Http method might be wrong. Please check if the endpoint mapping is correct or if the test is calling the correct http method.";
                     break;
                 case HttpStatusCode.InternalServerError:
-                    messages = "Request was interrupted because of a critical failure. Please check the contents of the response.";
+                    messages = "Request was interrupted because of a critical failure. Please check the contents of the response. " + response.Body;
                     break;
                 default:
                     messages = $"Error code: {response.Code}";

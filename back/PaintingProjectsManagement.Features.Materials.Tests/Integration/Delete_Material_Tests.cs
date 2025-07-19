@@ -39,10 +39,23 @@ public class Delete_Material_Tests
         await TestingServer.CacheCredentialsAsync("ricardo.smarzaro", "zemiko987", "ricardo.smarzaro");
     }
 
+    [Test, NotInParallel(Order = 2)]
+    public async Task Non_Authenticated_User_Cannot_Delete_Material()
+    {
+        // Prepare - Use a non-existent material ID
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        var response = await TestingServer.DeleteAsync($"api/materials/{nonExistentId}");
+
+        // Assert the response
+        response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
+    }
+
     /// <summary>
     /// User should not be able to delete a material that does not exist
     /// </summary>
-    [Test, NotInParallel(Order = 2)]
+    [Test, NotInParallel(Order = 3)]
     public async Task User_Cannot_Delete_Material_That_Does_Not_Exist()
     {
         // Prepare - Use a non-existent material ID
@@ -58,7 +71,7 @@ public class Delete_Material_Tests
     /// <summary>
     /// User should not be able to delete a material that belongs to another user
     /// </summary>
-    [Test, NotInParallel(Order = 3)]
+    [Test, NotInParallel(Order = 4)]
     public async Task User_Cannot_Delete_Material_That_Belongs_To_Another_User()
     {
         // Prepare - Load the material created by another user
@@ -80,7 +93,7 @@ public class Delete_Material_Tests
     /// <summary>
     /// User should not be able to delete a material that is used in any project
     /// </summary>
-    [Test, NotInParallel(Order = 4)]
+    [Test, NotInParallel(Order = 5)]
     public async Task User_Cannot_Delete_Material_Used_In_Project()
     {
         // TODO: Implement test for material used in project validation
@@ -91,7 +104,7 @@ public class Delete_Material_Tests
     /// <summary>
     /// User should be able to delete an existing material
     /// </summary>
-    [Test, NotInParallel(Order = 5)]
+    [Test, NotInParallel(Order = 6)]
     public async Task User_Can_Delete_Material()
     {
         // Prepare - Load the material created in the seed

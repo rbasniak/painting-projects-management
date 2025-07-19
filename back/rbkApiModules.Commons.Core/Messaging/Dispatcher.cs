@@ -7,8 +7,9 @@ using rbkApiModules.Commons.Core.Helpers;
 using System;
 using System.Data;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace rbkApiModules.Commons.Core;
 
@@ -192,6 +193,11 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
     {
         if (request is IAuthenticatedRequest authenticatedRequest)
         {
+            if (httpContextAccessor == null || httpContextAccessor.HttpContext == null)
+            {
+                return;
+            }
+
             var user = httpContextAccessor.HttpContext.User;
 
             if (user.Identity.IsAuthenticated)
