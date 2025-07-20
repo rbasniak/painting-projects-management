@@ -12,4 +12,10 @@
     <ProjectReference Include="..\PaintingProjectsManagement.FeatureDependencies\PaintingProjectsManagement.FeatureDependencies.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\rbkApiModules.Analysers\rbkApiModules.Analysers\rbkApiModules.Analysers.csproj"
+					OutputItemType="Analyzer"
+					ReferenceOutputAssembly="false" />
+	</ItemGroup>
+
 </Project>
