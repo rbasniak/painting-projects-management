@@ -10,11 +10,12 @@ internal class UpdateModelCategory : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Update Model Category")
         .WithTags("Model Categories");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;

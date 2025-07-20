@@ -1,29 +1,41 @@
-﻿namespace PaintingProjectsManagement.Features.Models;
+﻿using rbkApiModules.Commons.Core.Database;
+using System.Text.Json.Serialization;
+
+namespace PaintingProjectsManagement.Features.Models;
 
 public class Model
 {
     // Constructor for EF Core, do not remove it or make it public
+    [JsonConstructor]
     private Model() { }
 
-    public Model(string name, ModelCategory category, string artist, string[] tags, 
-        BaseSize baseSize, FigureSize figureSize,  int numberOfFigures)
+    public Model(string tenant, string name, ModelCategory category, string franchise, ModelType type, string artist, string[] tags, 
+        BaseSize baseSize, FigureSize figureSize, int numberOfFigures, int size)
     {
         Name = name;
         Category = category;
-        CategoryId = category.Id;
         Artist = artist;
         Tags = tags;
         Score = -1;
         BaseSize = baseSize;
         FigureSize = figureSize;
+        FigureSize = figureSize;
         NumberOfFigures = numberOfFigures;
         Priority = -1;  
+        Type = type;
+        Franchise = franchise;
+        Size = size;
     }
 
     public Guid Id { get; private set; }
     public string Name { get; private set; } = string.Empty;
+    public string Franchise { get; private set; } = string.Empty;
+    [JsonColumn]
+    public string[] Characters { get; private set; } = [];
+    public int Size { get; private set; } = 0;
     public Guid CategoryId { get; private set; }
     public ModelCategory Category { get; private set; }
+    public ModelType Type { get; private set; }
     public string? Artist { get; private set; }
     public string[] Tags { get; private set; } = Array.Empty<string>();
     public string? PictureUrl { get; private set; }
@@ -59,5 +71,10 @@ public class Model
     public void ResetPriority()
     {
         Priority = -1;
+    }
+
+    public void ChangeCategory(ModelCategory category)
+    {
+        Category = category;
     }
 }

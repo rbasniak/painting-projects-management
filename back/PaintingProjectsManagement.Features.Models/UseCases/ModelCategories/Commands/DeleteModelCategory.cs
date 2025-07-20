@@ -10,11 +10,12 @@ internal class DeleteModelCategory : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Delete Model Category")
         .WithTags("Model Categories");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; }
     }

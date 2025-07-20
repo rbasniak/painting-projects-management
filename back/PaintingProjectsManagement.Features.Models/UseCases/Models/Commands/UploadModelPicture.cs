@@ -10,11 +10,12 @@ internal class UploadModelPicture : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Upload Model Picture")
         .WithTags("Models");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid ModelId { get; set; }
         public string Base64Image { get; set; } = string.Empty;

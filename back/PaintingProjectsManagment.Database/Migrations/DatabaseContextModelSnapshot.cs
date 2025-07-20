@@ -66,8 +66,16 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("TEXT");
 
+                    b.PrimitiveCollection<string>("Characters")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("FigureSize")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Franchise")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -86,9 +94,15 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<int>("Score")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Size")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Tags")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -110,9 +124,15 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(32)
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name");
+
+                    b.HasIndex("TenantId");
 
                     b.ToTable("ModelCategories", (string)null);
                 });
@@ -585,6 +605,14 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Models.ModelCategory", b =>
+                {
+                    b.HasOne("rbkApiModules.Identity.Core.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Paints.PaintColor", b =>

@@ -10,11 +10,12 @@ internal class PrioritizeModels : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Prioritize Models")
         .WithTags("Models");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid[] ModelIds { get; set; } = Array.Empty<Guid>();
     }

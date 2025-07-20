@@ -2,6 +2,7 @@ namespace PaintingProjectsManagement.Features.Models;
 
 public enum FigureSize
 {
-    Normal = 0,
-    Big = 1
+    Unknown = 0,
+    Normal = 1,
+    Big = 2
 }

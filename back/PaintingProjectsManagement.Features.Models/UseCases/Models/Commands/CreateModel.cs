@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Builder;
+
 namespace PaintingProjectsManagement.Features.Models;
 
 internal class CreateModel : IEndpoint
@@ -10,19 +12,23 @@ internal class CreateModel : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Create Model")
         .WithTags("Models");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public string Name { get; set; } = string.Empty;
         public Guid CategoryId { get; set; }
         public string Artist { get; set; } = string.Empty;
         public string[] Tags { get; set; } = Array.Empty<string>();
-        public BaseSize BaseSize { get; set; } = BaseSize.Small;
-        public FigureSize FigureSize { get; set; } = FigureSize.Normal;
+        public BaseSize BaseSize { get; set; } = BaseSize.Unknown;
+        public FigureSize FigureSize { get; set; } = FigureSize.Unknown;
         public int NumberOfFigures { get; set; } = 1;
+        public string Franchise { get; set; } = string.Empty;
+        public ModelType ModelType { get; set; } = ModelType.Unknown;
+        public int Size { get; set; } = 0; 
     }
 
     public class Validator : AbstractValidator<Request>
@@ -61,13 +67,17 @@ internal class CreateModel : IEndpoint
                 .FirstAsync(x => x.Id == request.CategoryId, cancellationToken);
                 
             var model = new Model(
+                request.Identity.Tenant,
                 request.Name,
                 category,
+                request.Franchise,
+                request.ModelType,
                 request.Artist,
                 request.Tags ?? Array.Empty<string>(),
                 request.BaseSize,
                 request.FigureSize,
-                request.NumberOfFigures
+                request.NumberOfFigures,
+                request.Size
             );
             
             await _context.AddAsync(model, cancellationToken);

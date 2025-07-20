@@ -10,11 +10,12 @@ internal class CreateModelCategory : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization() 
         .WithName("Create Model Category")
         .WithTags("Model Categories");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public string Name { get; set; } = string.Empty;
     }
@@ -37,7 +38,7 @@ internal class CreateModelCategory : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var category = new ModelCategory(Guid.NewGuid(), request.Name);
+            var category = new ModelCategory(request.Identity.Tenant, request.Name);
             
             await _context.AddAsync(category, cancellationToken);
 

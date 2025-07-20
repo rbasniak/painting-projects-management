@@ -10,11 +10,12 @@ internal class UpdateModel : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .RequireAuthorization()
         .WithName("Update Model")
         .WithTags("Models");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
