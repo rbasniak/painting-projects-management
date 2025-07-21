@@ -13,9 +13,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\rbkApiModules.Analysers\rbkApiModules.Analysers\rbkApiModules.Analysers.csproj"
-					OutputItemType="Analyzer"
-					ReferenceOutputAssembly="false" />
+		<Analyzer Include="..\rbkApiModules.Analysers\rbkApiModules.Analysers\bin\Debug\netstandard2.0\rbkApiModules.Analysers.dll" />
 	</ItemGroup>
 
 </Project>

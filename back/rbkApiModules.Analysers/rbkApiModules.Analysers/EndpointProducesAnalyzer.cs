@@ -2,11 +2,8 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Threading;
 
 namespace rbkApiModules.Analysers
 {
@@ -16,7 +13,7 @@ namespace rbkApiModules.Analysers
         public const string DiagnosticId = "RBK001";
 
         private static readonly LocalizableString Title = "Missing Produces<T> on endpoint";
-        private static readonly LocalizableString MessageFormat = "Endpoint for '{0}' should declare .Produces<T>() to specify the return type";
+        private static readonly LocalizableString MessageFormat = "Endpoint for '{0} {1}' should declare .Produces<T>() to specify the return type";
         private static readonly LocalizableString Description = "Ensure that the endpoint declares Produces<T> with the actual returned type.";
         private const string Category = "Swagger";
 
@@ -29,8 +26,7 @@ namespace rbkApiModules.Analysers
             isEnabledByDefault: true,
             description: Description);
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-            ImmutableArray.Create(Rule);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -44,13 +40,15 @@ namespace rbkApiModules.Analysers
         {
             var invocation = (InvocationExpressionSyntax)context.Node;
             
-            // Check if this is a MapPost call (either direct or in a chain)
-            var mapPostCall = FindMapPostCall(invocation);
-            if (mapPostCall == null)
+            // Check if this is a MapPost, MapPut, MapGet or MapDelete call (either direct or in a chain)
+            var mapHttpCall = FindMapHttpCall(invocation);
+            if (mapHttpCall == null)
+            {
                 return;
+            }
 
             // Verify receiver is IEndpointRouteBuilder
-            var receiverType = context.SemanticModel.GetTypeInfo(mapPostCall.Expression).Type;
+            var receiverType = context.SemanticModel.GetTypeInfo(mapHttpCall.Expression).Type;
             if (receiverType == null || !receiverType.AllInterfaces.Any(i =>
                 i.Name == "IEndpointRouteBuilder" &&
                 i.ContainingNamespace.ToDisplayString() == "Microsoft.AspNetCore.Builder"))
@@ -58,10 +56,12 @@ namespace rbkApiModules.Analysers
                 return;
             }
 
-            // Find the parent method that contains this MapPost call
+            // Find the parent method that contains this MapXXX call
             var parentMethod = invocation.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
             if (parentMethod?.Body == null)
+            {
                 return;
+            }
 
             // Check if there's a .Produces<T>() call in the same method
             var producesFound = parentMethod.Body.DescendantNodes()
@@ -81,8 +81,8 @@ namespace rbkApiModules.Analysers
 
             if (!producesFound)
             {
-                // Get the route template from the MapPost call
-                var routeArg = mapPostCall.ArgumentList.Arguments.FirstOrDefault()?.Expression;
+                // Get the route template from the MapXXX call
+                var routeArg = mapHttpCall.ArgumentList.Arguments.FirstOrDefault()?.Expression;
                 string routeTemplate = "unknown";
                 
                 if (routeArg is LiteralExpressionSyntax literal)
@@ -90,28 +90,29 @@ namespace rbkApiModules.Analysers
                     routeTemplate = literal.Token.ValueText;
                 }
 
-                var diag = Diagnostic.Create(Rule,
-                    mapPostCall.Expression.GetLocation(),
-                    routeTemplate);
+                var diag = Diagnostic.Create(Rule, mapHttpCall.Expression.GetLocation(), routeTemplate);
                 context.ReportDiagnostic(diag);
             }
         }
 
-        private InvocationExpressionSyntax FindMapPostCall(InvocationExpressionSyntax invocation)
+        private InvocationExpressionSyntax FindMapHttpCall(InvocationExpressionSyntax invocation)
         {
-            // Check if this invocation is a MapPost call
+            // System.Diagnostics.Debugger.Launch();
+
+            var supportedMethods = new[] { "MapPost", "MapGet", "MapPut", "MapDelete" };
+            
             if (invocation.Expression is MemberAccessExpressionSyntax memberAccess &&
-                memberAccess.Name.Identifier.Text == "MapPost")
+                supportedMethods.Contains(memberAccess.Name.Identifier.Text))
             {
                 return invocation;
             }
 
-            // Check if this is part of a method chain that starts with MapPost
+            // Check if this is part of a method chain that starts with MapXXX
             var current = invocation;
             while (current != null)
             {
                 if (current.Expression is MemberAccessExpressionSyntax macc &&
-                    macc.Name.Identifier.Text == "MapPost")
+                    supportedMethods.Contains(macc.Name.Identifier.Text))
                 {
                     return current;
                 }
@@ -133,22 +134,26 @@ namespace rbkApiModules.Analysers
         private void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
         {
             var methodDeclaration = (MethodDeclarationSyntax)context.Node;
-            
+
             // Only analyze methods that might contain endpoints
             if (methodDeclaration.Body == null)
+            {
                 return;
+            }
 
-            // Look for MapPost calls in the method body
-            var mapPostCalls = methodDeclaration.Body.DescendantNodes()
+            // Look for MapXXX calls in the method body
+            var mapHttpCalls = methodDeclaration.Body.DescendantNodes()
                 .OfType<InvocationExpressionSyntax>()
-                .Where(inv => FindMapPostCall(inv) != null)
+                .Where(invocation => FindMapHttpCall(invocation) != null)
                 .ToList();
 
-            foreach (var mapPostCall in mapPostCalls)
+            foreach (var mapHttpCall in mapHttpCalls)
             {
-                var actualMapPostCall = FindMapPostCall(mapPostCall);
-                if (actualMapPostCall == null)
+                var actualMapHttpCall = FindMapHttpCall(mapHttpCall);
+                if (actualMapHttpCall == null)
+                {
                     continue;
+                }
 
                 // Check if there's a .Produces<T>() call in the same method
                 var producesFound = methodDeclaration.Body.DescendantNodes()
@@ -168,8 +173,8 @@ namespace rbkApiModules.Analysers
 
                 if (!producesFound)
                 {
-                    // Get the route template from the MapPost call
-                    var routeArg = actualMapPostCall.ArgumentList.Arguments.FirstOrDefault()?.Expression;
+                    // Get the route template from the MapXXX call
+                    var routeArg = actualMapHttpCall.ArgumentList.Arguments.FirstOrDefault()?.Expression;
                     string routeTemplate = "unknown";
                     
                     if (routeArg is LiteralExpressionSyntax literal)
@@ -177,8 +182,11 @@ namespace rbkApiModules.Analysers
                         routeTemplate = literal.Token.ValueText;
                     }
 
+                    var httpMethod = ((MemberAccessExpressionSyntax)actualMapHttpCall.Expression).Name.Identifier.Text.Replace("Map", "").ToUpper();
+
                     var diag = Diagnostic.Create(Rule,
-                        actualMapPostCall.Expression.GetLocation(),
+                        actualMapHttpCall.Expression.GetLocation(),
+                        httpMethod,
                         routeTemplate);
                     context.ReportDiagnostic(diag);
                 }
