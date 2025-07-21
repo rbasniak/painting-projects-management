@@ -1,12 +1,10 @@
-using Microsoft.AspNetCore.Builder;
-
 namespace PaintingProjectsManagement.Features.Models;
 
-internal class CreateModel : IEndpoint
+public class CreateModel : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/models", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/models", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 

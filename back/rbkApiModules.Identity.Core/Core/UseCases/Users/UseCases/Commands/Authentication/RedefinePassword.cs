@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace rbkApiModules.Identity.Core;
+﻿namespace rbkApiModules.Identity.Core;
 
 public class RedefinePassword : IEndpoint
 {

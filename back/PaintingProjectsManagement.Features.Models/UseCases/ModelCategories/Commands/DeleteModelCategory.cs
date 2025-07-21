@@ -1,10 +1,12 @@
+
+
 namespace PaintingProjectsManagement.Features.Models;
 
-internal class DeleteModelCategory : IEndpoint
+public class DeleteModelCategory : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/models/categories/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/api/models/categories/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
@@ -20,7 +22,7 @@ internal class DeleteModelCategory : IEndpoint
         public Guid Id { get; set; }
     }
 
-    public class Validator : SmartValidator<ModelCategory, Request>
+    public class Validator : SmartValidator<Request, ModelCategory>
     {
         public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
@@ -28,7 +30,6 @@ internal class DeleteModelCategory : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
- 
         }
     } 
 
@@ -36,8 +37,16 @@ internal class DeleteModelCategory : IEndpoint
     {
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var category = await _context.Set<ModelCategory>().FirstAsync(x => x.Id == request.Id, cancellationToken);
+            var query = _context.Set<ModelCategory>().AsQueryable();
             
+            // Filter by tenant if authenticated
+            if (request.IsAuthenticated && request.Identity.HasTenant)
+            {
+                query = query.Where(c => c.TenantId == request.Identity.Tenant);
+            }
+            
+            var category = await query.FirstAsync(x => x.Id == request.Id, cancellationToken);
+
             _context.Remove(category);
             
             await _context.SaveChangesAsync(cancellationToken);

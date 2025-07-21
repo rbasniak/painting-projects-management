@@ -1,6 +1,4 @@
-﻿using rbkApiModules.Commons.Core;
-
-namespace PaintingProjectsManagement.Features.Materials;
+﻿namespace PaintingProjectsManagement.Features.Materials;
 
 public class DeleteMaterial : IEndpoint
 {
@@ -13,7 +11,7 @@ public class DeleteMaterial : IEndpoint
             return ResultsMapper.FromResponse(result);
         })
         .Produces(StatusCodes.Status200OK)
-        // .RequireAuthorization()
+        .RequireAuthorization()
         .WithName("Delete Material")
         .WithTags("Materials");
     }

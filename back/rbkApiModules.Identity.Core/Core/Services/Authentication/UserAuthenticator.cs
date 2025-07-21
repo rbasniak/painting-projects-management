@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using rbkApiModules.Commons.Core;
 
 namespace rbkApiModules.Identity.Core;
 

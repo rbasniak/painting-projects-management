@@ -1,10 +1,10 @@
 namespace PaintingProjectsManagement.Features.Models;
 
-internal class CreateModelCategory : IEndpoint
+public class CreateModelCategory : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/models/categories", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/models/categories", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -20,7 +20,7 @@ internal class CreateModelCategory : IEndpoint
         public string Name { get; set; } = string.Empty;
     }
 
-    public class Validator : SmartValidator<ModelCategory, Request>
+    public class Validator : SmartValidator<Request, ModelCategory>
     {
         public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
@@ -30,8 +30,8 @@ internal class CreateModelCategory : IEndpoint
         {
             // TODO: detectar unique indexes no SmartValidator
             RuleFor(x => x.Name)
-                .MustAsync(async (name, cancellationToken) =>
-                    !await Context.Set<ModelCategory>().AnyAsync(c => c.Name == name, cancellationToken))
+                .MustAsync(async (request, name, cancellationToken) =>
+                    !await Context.Set<ModelCategory>().AnyAsync(c => c.Name == name && c.TenantId == request.Identity.Tenant, cancellationToken))
                 .WithMessage("A model category with this name already exists.");
         } 
     }

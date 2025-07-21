@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using rbkApiModules.Identity.Core.DataTransfer.Users;
+﻿using rbkApiModules.Identity.Core.DataTransfer.Users;
 
 namespace rbkApiModules.Identity.Core;
 

@@ -1,7 +1,5 @@
-using Demo1;
 using Demo1.Tests;
 using rbkApiModules.Identity.Core;
-using rbkApiModules.Testting.Core;
 
 namespace rbkApiModules.Identity.Tests.Claims;
 

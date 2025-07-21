@@ -130,9 +130,8 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
-                    b.HasIndex("TenantId");
+                    b.HasIndex("TenantId", "Name")
+                        .IsUnique();
 
                     b.ToTable("ModelCategories", (string)null);
                 });

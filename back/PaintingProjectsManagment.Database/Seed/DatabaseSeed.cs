@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PaintingProjectsManagement.Features.Materials;
+﻿using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Paints;
 using rbkApiModules.Commons.Relational;

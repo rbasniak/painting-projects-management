@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Net.Mail;
+﻿using System.Net.Mail;
 using System.Net.Mime;
 using System.Net;
 using System.Reflection;

@@ -1,6 +1,4 @@
-﻿using rbkApiModules.Commons.Core;
-
-namespace PaintingProjectsManagement.Features.Materials;
+﻿namespace PaintingProjectsManagement.Features.Materials;
 
 public class CreateMaterial : IEndpoint
 {

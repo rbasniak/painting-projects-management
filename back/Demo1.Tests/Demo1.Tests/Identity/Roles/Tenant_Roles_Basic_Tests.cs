@@ -2,7 +2,6 @@ using Demo1.Tests;
 using Microsoft.EntityFrameworkCore;
 using rbkApiModules.Identity.Core;
 using rbkApiModules.Identity.Core.DataTransfer;
-using rbkApiModules.Testting.Core;
 
 namespace rbkApiModules.Identity.Tests.Roles;
 

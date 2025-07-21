@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Builder;
-
 namespace PaintingProjectsManagement.Features.Projects;
 
 public static class Builder

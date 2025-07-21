@@ -1,6 +1,4 @@
-﻿using rbkApiModules.Commons.Core;
-
-namespace PaintingProjectsManagement.Features.Materials.Abstractions;
+﻿namespace PaintingProjectsManagement.Features.Materials.Abstractions;
 
 public static partial class GetMaterialsForProject 
 {

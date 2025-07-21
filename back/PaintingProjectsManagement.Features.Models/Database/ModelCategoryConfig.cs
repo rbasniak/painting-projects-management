@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace PaintingProjectsManagement.Features.Models;
 
 public class ModelCategoryConfig : IEntityTypeConfiguration<ModelCategory>

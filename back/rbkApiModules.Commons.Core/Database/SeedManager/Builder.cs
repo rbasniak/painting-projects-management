@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using rbkApiModules.Commons.Core.Helpers;
-using System.Diagnostics;
 
 namespace rbkApiModules.Commons.Relational;
 
