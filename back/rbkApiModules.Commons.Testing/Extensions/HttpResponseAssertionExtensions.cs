@@ -2,7 +2,7 @@ using System.Net;
 using rbkApiModules.Commons.Testing;
 using Shouldly;
 
-namespace rbkApiModules.Testting.Core;
+namespace rbkApiModules.Testing.Core;
 
 public static class HttpAssertionExtensions
 {

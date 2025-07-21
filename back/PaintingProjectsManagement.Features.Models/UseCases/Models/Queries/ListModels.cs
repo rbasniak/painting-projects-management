@@ -1,20 +1,22 @@
 namespace PaintingProjectsManagement.Features.Models;
 
-internal class ListModels : IEndpoint
+public class ListModels : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/models", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/models", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<IReadOnlyCollection<ModelDetails>>(StatusCodes.Status200OK)
+        .RequireAuthorization()
         .WithName("List Models")
         .WithTags("Models");  
     }
 
-    public class Request : IQuery
+    public class Request : AuthenticatedRequest, IQuery
     {
     }
 
@@ -29,11 +31,14 @@ internal class ListModels : IEndpoint
         {
             var models = await _context.Set<Model>()
                 .Include(x => x.Category)
+                .Where(x => x.Category.TenantId == request.Identity.Tenant)
                 .OrderBy(x => x.Category.Name)
                 .ThenBy(x => x.Name)    
                 .ToListAsync(cancellationToken);
 
-            return QueryResponse.Success(models.Select(ModelDetails.FromModel).AsReadOnly());
+            var result = models.Select(ModelDetails.FromModel).AsReadOnly();
+            
+            return QueryResponse.Success(result);
         }
     }
 }

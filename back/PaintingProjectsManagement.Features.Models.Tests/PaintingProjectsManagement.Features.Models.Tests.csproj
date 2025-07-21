@@ -20,11 +20,7 @@
 		<PackageReference Include="Shouldly" Version="4.3.0" />
 		<PackageReference Include="Testcontainers" Version="4.6.0" />
 		<PackageReference Include="Testcontainers.SqlEdge" Version="3.10.0" />
-		<PackageReference Include="xunit" Version="2.9.3" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="3.1.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<PackageReference Include="TUnit" Version="0.24.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -35,10 +31,6 @@
 		<ProjectReference Include="..\PaintingProjectsManagment.Database\PaintingProjectsManagment.Database.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj" />
 		<ProjectReference Include="..\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="UseCases\Models\" />
 	</ItemGroup>
 
 </Project>

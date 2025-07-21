@@ -1,10 +1,10 @@
 namespace PaintingProjectsManagement.Features.Models;
 
-internal class DeleteModel : IEndpoint
+public class DeleteModel : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/models/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/api/models/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
@@ -20,8 +20,15 @@ internal class DeleteModel : IEndpoint
         public Guid Id { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Model>
     {
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        {
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+        }
     }
 
     public class Handler(DbContext _context) : ICommandHandler<Request>
@@ -29,7 +36,15 @@ internal class DeleteModel : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var model = await _context.Set<Model>().FirstAsync(x => x.Id == request.Id, cancellationToken);
+            var query = _context.Set<Model>().AsQueryable();
+            
+            // Filter by tenant if authenticated
+            if (request.IsAuthenticated && request.Identity.HasTenant)
+            {
+                query = query.Where(m => m.Category.TenantId == request.Identity.Tenant);
+            }
+            
+            var model = await query.FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             _context.Remove(model);
 

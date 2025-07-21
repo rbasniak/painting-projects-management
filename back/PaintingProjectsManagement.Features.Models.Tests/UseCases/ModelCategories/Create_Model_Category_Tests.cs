@@ -1,4 +1,6 @@
-namespace PaintingProjectsManagement.Features.Models.Tests;
+using PaintingProjectsManagement.Features.Models.Tests;
+
+namespace PaintingProjectsManagement.Features.Models.Categories.Tests;
 
 public class Create_Model_Category_Tests
 {

@@ -29,25 +29,25 @@ public class CreateModel : IEndpoint
         public int Size { get; set; } = 0; 
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Model>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        {
+        }
+
+        protected override void ValidateBusinessRules()
         {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
-                .MustAsync(async (name, cancellationToken) => 
-                    !await context.Set<Model>().AnyAsync(m => m.Name == name, cancellationToken))
+                .MustAsync(async (request, name, cancellationToken) => 
+                    !await Context.Set<Model>().AnyAsync(m => m.Name == name && m.Category.TenantId == request.Identity.Tenant, cancellationToken))
                 .WithMessage("A model with this name already exists.");
 
             RuleFor(x => x.Artist)
-                .NotEmpty()
-                .MaximumLength(100);
+                .MaximumLength(150);
 
             RuleFor(x => x.CategoryId)
-                .NotEmpty()
-                .MustAsync(async (categoryId, cancellationToken) =>
-                    await context.Set<ModelCategory>().AnyAsync(c => c.Id == categoryId, cancellationToken))
+                .MustAsync(async (request, categoryId, cancellationToken) =>
+                    await Context.Set<ModelCategory>().AnyAsync(c => c.Id == categoryId && c.TenantId == request.Identity.Tenant, cancellationToken))
                 .WithMessage("The specified category does not exist.");
                 
             RuleFor(x => x.NumberOfFigures)
@@ -62,6 +62,7 @@ public class CreateModel : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var category = await _context.Set<ModelCategory>()
+                .Where(c => c.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.CategoryId, cancellationToken);
                 
             var model = new Model(
@@ -82,7 +83,9 @@ public class CreateModel : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success();
+            var result = ModelDetails.FromModel(model);
+
+            return CommandResponse.Success(result);
         }
     }
 }

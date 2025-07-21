@@ -4,7 +4,7 @@ using Shouldly;
 using System.Linq.Expressions;
 using DescriptionAttribute = System.ComponentModel.DescriptionAttribute;
 using rbkApiModules.Commons.Testing;
-using rbkApiModules.Testting.Core;
+using rbkApiModules.Testing.Core;
 
 namespace Giants.Tests.Integration;
 

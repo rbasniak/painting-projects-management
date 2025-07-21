@@ -1,10 +1,10 @@
 namespace PaintingProjectsManagement.Features.Models;
 
-internal class UpdateModel : IEndpoint
+public class UpdateModel : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/models", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/api/models", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -27,28 +27,25 @@ internal class UpdateModel : IEndpoint
         public int NumberOfFigures { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Model>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id)
-                .NotEmpty();
-                
+        }
+
+        protected override void ValidateBusinessRules()
+        {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
                 .MustAsync(async (request, name, cancellationToken) => 
-                    !await context.Set<Model>().AnyAsync(m => m.Name == name && m.Id != request.Id, cancellationToken))
+                    !await Context.Set<Model>().AnyAsync(m => m.Name == name && m.Id != request.Id && m.Category.TenantId == request.Identity.Tenant, cancellationToken))
                 .WithMessage("A model with this name already exists.");
 
             RuleFor(x => x.Artist)
-                .NotEmpty()
-                .MaximumLength(100);
+                .MaximumLength(150);
 
             RuleFor(x => x.CategoryId)
-                .NotEmpty()
-                .MustAsync(async (categoryId, cancellationToken) =>
-                    await context.Set<ModelCategory>().AnyAsync(c => c.Id == categoryId, cancellationToken))
+                .MustAsync(async (request, categoryId, cancellationToken) =>
+                    await Context.Set<ModelCategory>().AnyAsync(c => c.Id == categoryId && c.TenantId == request.Identity.Tenant, cancellationToken))
                 .WithMessage("The specified category does not exist.");
                 
             RuleFor(x => x.NumberOfFigures)
@@ -62,17 +59,26 @@ internal class UpdateModel : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var model = await _context.Set<Model>()
+            var query = _context.Set<Model>().AsQueryable();
+            
+            // Filter by tenant if authenticated
+            if (request.IsAuthenticated && request.Identity.HasTenant)
+            {
+                query = query.Where(m => m.Category.TenantId == request.Identity.Tenant);
+            }
+            
+            var model = await query
                 .Include(m => m.Category)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
                 
             var category = await _context.Set<ModelCategory>()
+                .Where(c => c.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.CategoryId, cancellationToken);
 
             model.UpdateDetails(
                 request.Name, 
                 category,
-                request.Artist ,
+                request.Artist,
                 request.Tags ?? Array.Empty<string>(),
                 request.BaseSize,
                 request.FigureSize,
@@ -81,7 +87,9 @@ internal class UpdateModel : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success();
+            var result = ModelDetails.FromModel(model);
+
+            return CommandResponse.Success(result);
         }
     }
 }
