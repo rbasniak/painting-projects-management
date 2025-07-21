@@ -11,11 +11,11 @@ namespace rbkApiModules.Analysers
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class EndpointProducesAnalyzer : DiagnosticAnalyzer
     {
-        public const string DiagnosticId_MissingProduces = "RBK001";
-        public const string DiagnosticId_WrongProducesType = "RBK002";
-        public const string DiagnosticId_MissingProducesVoid = "RBK003";
-        public const string DiagnosticId_ProducesVoidWithReturnType = "RBK004";
-        public const string DiagnosticId_HandlerReturnsMultipleTypes = "RBK005";
+        public const string DiagnosticId_MissingProduces = "RBK101";
+        public const string DiagnosticId_WrongProducesType = "RBK102";
+        public const string DiagnosticId_MissingProducesVoid = "RBK103";
+        public const string DiagnosticId_ProducesVoidWithReturnType = "RBK104";
+        public const string DiagnosticId_HandlerReturnsMultipleTypes = "RBK105";
 
         private static readonly string Category = "Swagger";
 
