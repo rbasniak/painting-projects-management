@@ -12,7 +12,7 @@ public class DeleteMaterial : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
-        .Produces<MaterialDetails>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Delete Material")
         .WithTags("Materials");

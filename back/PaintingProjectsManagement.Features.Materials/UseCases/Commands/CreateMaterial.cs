@@ -56,7 +56,7 @@ public class CreateMaterial : IEndpoint
                 request.Unit, 
                 request.PricePerUnit
             );
-            
+
             await _context.AddAsync(material, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);

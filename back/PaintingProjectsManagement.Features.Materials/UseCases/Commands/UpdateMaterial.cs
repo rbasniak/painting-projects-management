@@ -64,7 +64,9 @@ public class UpdateMaterial : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success();
+            var result = MaterialDetails.FromModel(material);  
+
+            return CommandResponse.Success(result);
         } 
     }
 
