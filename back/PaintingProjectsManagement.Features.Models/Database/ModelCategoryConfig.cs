@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace PaintingProjectsManagement.Features.Models;
 
 public class ModelCategoryConfig : IEntityTypeConfiguration<ModelCategory>
@@ -12,6 +14,7 @@ public class ModelCategoryConfig : IEntityTypeConfiguration<ModelCategory>
             .IsRequired()
             .HasMaxLength(100);
 
-        builder.HasIndex(c => c.Name);
+        builder.HasIndex(e => new { e.TenantId, e.Name})
+            .IsUnique();
     }
 }

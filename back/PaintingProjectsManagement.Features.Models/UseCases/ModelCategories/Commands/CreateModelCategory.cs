@@ -20,22 +20,24 @@ internal class CreateModelCategory : IEndpoint
         public string Name { get; set; } = string.Empty;
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<ModelCategory, Request>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
-                .MustAsync(async (name, cancellationToken) => 
-                    !await context.Set<ModelCategory>().AnyAsync(c => c.Name == name, cancellationToken))
-                .WithMessage("A model category with this name already exists.");
         }
+
+        protected override void ValidateBusinessRules()
+        {
+            // TODO: detectar unique indexes no SmartValidator
+            RuleFor(x => x.Name)
+                .MustAsync(async (name, cancellationToken) =>
+                    !await Context.Set<ModelCategory>().AnyAsync(c => c.Name == name, cancellationToken))
+                .WithMessage("A model category with this name already exists.");
+        } 
     }
 
     public class Handler(DbContext _context) : ICommandHandler<Request>
     {
-
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var category = new ModelCategory(request.Identity.Tenant, request.Name);
@@ -44,7 +46,9 @@ internal class CreateModelCategory : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success();
+            var result = ModelCategoryDetails.FromModel(category);
+
+            return CommandResponse.Success(result);
         }
     }
 }

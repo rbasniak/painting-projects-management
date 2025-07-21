@@ -20,25 +20,28 @@ internal class DeleteModelCategory : IEndpoint
         public Guid Id { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<ModelCategory, Request>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .MustAsync(async (id, cancellationToken) =>
-                    !await context.Set<Model>().AnyAsync(m => m.CategoryId == id, cancellationToken))
-                .WithMessage("Cannot delete a category that has models associated with it.");
         }
-    }
+
+        protected override void ValidateBusinessRules()
+        {
+ 
+        }
+    } 
 
     public class Handler(DbContext _context) : ICommandHandler<Request>
     {
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var category = await _context.Set<ModelCategory>().FirstAsync(x => x.Id == request.Id, cancellationToken);
+            
             _context.Remove(category);
+            
             await _context.SaveChangesAsync(cancellationToken);
+            
             return CommandResponse.Success();
         }
     }
