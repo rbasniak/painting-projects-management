@@ -31,6 +31,7 @@ public class RateModel : IEndpoint
         {
             RuleFor(x => x.Score)
                 .GreaterThanOrEqualTo(1)
+                .WithMessage("Score must be a value between 1 and 5.")
                 .LessThanOrEqualTo(5)
                 .WithMessage("Score must be a value between 1 and 5.");
         }

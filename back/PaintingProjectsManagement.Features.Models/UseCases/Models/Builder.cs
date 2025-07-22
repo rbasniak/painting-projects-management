@@ -4,6 +4,7 @@ public static class ModelsBuilder
 {
     public static IEndpointRouteBuilder MapModelsFeature(this IEndpointRouteBuilder app)
     {
+        RateModel.MapEndpoint(app);
         CreateModel.MapEndpoint(app);
         UpdateModel.MapEndpoint(app);
         DeleteModel.MapEndpoint(app);
