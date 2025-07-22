@@ -71,8 +71,13 @@ public class Model : TenantEntity
         Priority = 0;
     }
 
-    internal void UpdatePriority(int priority)
+    public void UpdatePriority(int priority)
     {
         Priority = priority;
+    }
+
+    public void SetScore(int score)
+    {
+        Score = Math.Min(Math.Max(score, 0), 5);
     }
 }

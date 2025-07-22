@@ -1,10 +1,10 @@
 namespace PaintingProjectsManagement.Features.Models;
 
-internal class UploadModelPicture : IEndpoint
+public class UploadModelPicture : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/models/picture", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/models/picture", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 

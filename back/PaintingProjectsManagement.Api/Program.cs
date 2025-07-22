@@ -113,7 +113,7 @@ public class Program
         app.MapScalarApiReference();
 
         app.MapMaterialsFeature();
-        app.MapPrintingModelsFeature();
+        app.MapModelsFeature();
         app.MapPaintsFeature();
         app.MapProjectsFeature();
 

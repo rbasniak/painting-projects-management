@@ -1,10 +1,10 @@
 namespace PaintingProjectsManagement.Features.Models;
 
-internal class PrioritizeModels : IEndpoint
+public class PrioritizeModels : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/models/prioritize", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/models/prioritize", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -26,13 +26,15 @@ internal class PrioritizeModels : IEndpoint
         {
             RuleFor(x => x.ModelIds)
                 .NotNull()
+                .NotEmpty()
                 .Must(ids => ids.Length == ids.Distinct().Count())
                 .WithMessage("Model IDs must not contain duplicates.");
 
             RuleForEach(x => x.ModelIds)
                 .NotEmpty()
-                .MustAsync(async (id, cancellationToken) =>
-                    await context.Set<Model>().AnyAsync(m => m.Id == id && m.Score == 5, cancellationToken))
+                .WithMessage("All IDs in the list must be valid.")
+                .MustAsync(async (request, id, cancellationToken) =>
+                    await context.Set<Model>().AnyAsync(m => m.Id == id && m.Score == 5 && m.TenantId == request.Identity.Tenant, cancellationToken))
                 .WithMessage("All models must exist and be eligible for prioritization.");
         }
     }
@@ -43,7 +45,10 @@ internal class PrioritizeModels : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             // Reset all model priorities to the default value (-1)
-            var allModels = await _context.Set<Model>().ToListAsync(cancellationToken);
+            var allModels = await _context.Set<Model>()
+                .Where(x => x.TenantId == request.Identity.Tenant)
+                .ToListAsync(cancellationToken);
+
             foreach (var model in allModels)
             {
                 model.ResetPriority();

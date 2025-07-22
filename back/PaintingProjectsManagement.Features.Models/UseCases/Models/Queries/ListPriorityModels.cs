@@ -4,7 +4,7 @@ internal class ListPriorityModels : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/models/prioritized", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/models/prioritized", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
