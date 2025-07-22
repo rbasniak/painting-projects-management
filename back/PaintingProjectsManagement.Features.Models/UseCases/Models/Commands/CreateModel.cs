@@ -26,7 +26,7 @@ public class CreateModel : IEndpoint
         public FigureSize FigureSize { get; set; }
         public int NumberOfFigures { get; set; }
         public string Franchise { get; set; } = string.Empty;
-        public ModelType ModelType { get; set; } = ModelType.Unknown;
+        public ModelType Type { get; set; } = ModelType.Unknown;
         public int SizeInMb { get; set; } = 0;
     }
 
@@ -38,38 +38,21 @@ public class CreateModel : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
-            RuleFor(x => x.Tags)
-                .NotNull()
-                .WithMessage("Tags cannot be null")
-                .DependentRules(() => 
-                {
-                    RuleForEach(x => x.Tags)
-                        .NotNull()
-                        .WithMessage("Each tag cannot be null")
-                        .NotEmpty()
-                        .WithMessage("Each tag cannot be empty")
-                        .Must(tag => !string.IsNullOrWhiteSpace(tag))
-                        .WithMessage("Each tag cannot be whitespace")
-                        .MaximumLength(25)
-                        .WithMessage("Each tag cannot exceed 25 characters");
-                });
+            RuleForEach(x => x.Tags)
+                .NotEmpty()
+                .WithMessage("Each tag cannot be empty")
+                .Must(tag => !string.IsNullOrWhiteSpace(tag))
+                .WithMessage("Each tag cannot be whitespace")
+                .MaximumLength(25)
+                .WithMessage("Each tag cannot exceed 25 characters");
 
-
-            RuleFor(x => x.Characters)
-                .NotNull()
-                .WithMessage("Characters cannot be null")
-                .DependentRules(() => 
-                {
-                    RuleForEach(x => x.Characters)
-                        .NotNull()
-                        .WithMessage("Each character cannot be null")
-                        .NotEmpty()
-                        .WithMessage("Each character cannot be empty")
-                        .Must(character => !string.IsNullOrWhiteSpace(character))
-                        .WithMessage("Each character cannot be whitespace")
-                        .MaximumLength(50)
-                        .WithMessage("Each character cannot exceed 50 characters");
-                });
+            RuleForEach(x => x.Characters)
+                .NotEmpty()
+                .WithMessage("Each character cannot be empty")
+                .Must(character => !string.IsNullOrWhiteSpace(character))
+                .WithMessage("Each character cannot be whitespace")
+                .MaximumLength(50)
+                .WithMessage("Each character cannot exceed 50 characters");
 
             RuleFor(x => x.NumberOfFigures)
                 .GreaterThan(0)
@@ -89,14 +72,14 @@ public class CreateModel : IEndpoint
             var category = await _context.Set<ModelCategory>()
                 .Where(c => c.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.CategoryId, cancellationToken);
-                
+
             var model = new Model(
                 request.Identity.Tenant,
                 request.Name,
                 category,
                 request.Characters ?? Array.Empty<string>(),
                 request.Franchise,
-                request.ModelType,
+                request.Type,
                 request.Artist,
                 request.Tags ?? Array.Empty<string>(),
                 request.BaseSize,
@@ -104,7 +87,7 @@ public class CreateModel : IEndpoint
                 request.NumberOfFigures,
                 request.SizeInMb
             );
-            
+
             await _context.AddAsync(model, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);

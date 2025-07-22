@@ -35,7 +35,7 @@ public class Model : TenantEntity
     public Guid CategoryId { get; private set; }
     public ModelCategory Category { get; private set; }
     public ModelType Type { get; private set; }
-    public string? Artist { get; private set; }
+    public string Artist { get; private set; }
     public string[] Tags { get; private set; } = Array.Empty<string>();
     public string? PictureUrl { get; private set; }
     public int Score { get; private set; }

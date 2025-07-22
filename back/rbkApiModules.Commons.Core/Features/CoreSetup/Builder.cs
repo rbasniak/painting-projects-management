@@ -320,7 +320,7 @@ public static class CommonsCoreBuilder
         optionsConfig(options);
 
         ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
-        ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Continue;
+        ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Stop;
 
         services.AddSingleton(options);
 

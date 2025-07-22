@@ -26,10 +26,10 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
     {
         Context = context;
         LocalizationService = localizationService;
-        
+ 
         // Apply database constraints automatically
         ApplyDatabaseConstraints();
-        
+
         // Apply custom rules
         ValidateBusinessRules();
     }
@@ -85,7 +85,7 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
             foreach (var property in entityType.GetProperties())
             {
                 var requestPropertyName = GetRequestPropertyName(property.Name, propertyMappings);
-                
+
                 if (ignoredProperties.Contains(requestPropertyName))
                 {
                     continue;
@@ -110,8 +110,8 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
 
     private string GetRequestPropertyName(string modelPropertyName, Dictionary<string, string> propertyMappings)
     {
-        return propertyMappings.TryGetValue(modelPropertyName, out var mappedName) 
-            ? mappedName 
+        return propertyMappings.TryGetValue(modelPropertyName, out var mappedName)
+            ? mappedName
             : modelPropertyName;
     }
 
@@ -152,7 +152,7 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
     private void ApplyRequiredConstraint(PropertyInfo requestProperty)
     {
         var propertyType = requestProperty.PropertyType;
-        
+
         if (propertyType == typeof(string))
         {
             CreateRuleFor<string>(requestProperty)
@@ -192,14 +192,15 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
     {
         var enumType = requestProperty.PropertyType;
         var validValues = Enum.GetValues(enumType);
-        
+
         CreateRuleFor<object>(requestProperty)
             .Must(value =>
             {
                 if (value == null) return true; // Let required validation handle nulls
-                
+
                 // Check if the value is a valid enum value
-                return Enum.IsDefined(enumType, value);
+                var result = Enum.IsDefined(enumType, value);
+                return result;
             })
             .WithMessage(GetLocalizedMessage("InvalidEnum", requestProperty.Name));
     }
@@ -207,7 +208,7 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
     protected virtual void ApplyPrimaryKeyConstraint(PropertyInfo requestProperty)
     {
         var propertyType = requestProperty.PropertyType;
-        
+
         // Only apply primary key validation for non-zero values (assuming 0 is not a valid ID)
         if (IsTenantEntity && IsAuthenticatedRequest)
         {
@@ -229,8 +230,8 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
                         var query = dbSet.AsQueryable();
 
                         // Filter by tenant if authenticated and request is an AuthenticatedRequest
-                        if (request is AuthenticatedRequest authenticatedRequest && 
-                            authenticatedRequest.IsAuthenticated && 
+                        if (request is AuthenticatedRequest authenticatedRequest &&
+                            authenticatedRequest.IsAuthenticated &&
                             authenticatedRequest.Identity.HasTenant)
                         {
                             // For tenant entities, we need to filter by tenant
@@ -240,7 +241,7 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
                             var tenantValue = Expression.Constant(authenticatedRequest.Identity.Tenant);
                             var tenantEquals = Expression.Equal(tenantIdProperty, tenantValue);
                             var tenantLambda = Expression.Lambda<Func<TModel, bool>>(tenantEquals, tenantParam);
-                            
+
                             query = query.Where(tenantLambda);
                         }
 
@@ -268,12 +269,12 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
                 .MustAsync(async (value, cancellationToken) =>
                 {
                     if (value == null) return true; // Let required validation handle nulls
-                    
+
                     // Skip validation for zero values (new entities)
                     if (value is int intValue && intValue == 0) return true;
                     if (value is long longValue && longValue == 0) return true;
                     if (value is Guid guidValue && guidValue == Guid.Empty) return true;
-                    
+
                     try
                     {
                         // Use a simpler approach - just check if the entity exists
@@ -283,7 +284,7 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
                         var valueExpression = Expression.Constant(value);
                         var equalsExpression = Expression.Equal(propertyAccess, valueExpression);
                         var lambda = Expression.Lambda<Func<TModel, bool>>(equalsExpression, parameter);
-                        
+
                         return await dbSet.AnyAsync(lambda, cancellationToken);
                     }
                     catch
@@ -301,12 +302,12 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
     {
         var principalEntityType = foreignKey.PrincipalEntityType;
         var principalKey = foreignKey.PrincipalKey;
-        
+
         if (principalKey.Properties.Count == 1)
         {
             var principalProperty = principalKey.Properties.First();
             var principalEntityClrType = principalEntityType.ClrType;
-            
+
             if (IsTenantEntity && IsAuthenticatedRequest)
             {
                 // Use tenant-aware validation
@@ -330,9 +331,9 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
 
                             // Add tenant filtering if the principal entity is a TenantEntity and request is authenticated
                             Expression finalExpression = equalsExpression;
-                            if (typeof(TenantEntity).IsAssignableFrom(principalEntityClrType) && 
-                                request is AuthenticatedRequest authenticatedRequest && 
-                                authenticatedRequest.IsAuthenticated && 
+                            if (typeof(TenantEntity).IsAssignableFrom(principalEntityClrType) &&
+                                request is AuthenticatedRequest authenticatedRequest &&
+                                authenticatedRequest.IsAuthenticated &&
                                 authenticatedRequest.Identity.HasTenant)
                             {
                                 var tenantPropertyAccess = Expression.Property(parameter, "TenantId");
@@ -343,21 +344,48 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
 
                             var lambda = Expression.Lambda(finalExpression, parameter);
 
-                            // Use reflection to call AnyAsync since we don't know the exact type at compile time
-                            var anyAsyncMethod = dbSet.GetType().GetMethod("AnyAsync", new[] { lambda.Type, typeof(CancellationToken) });
-                            if (anyAsyncMethod != null)
+                            // 1. Find the AnyAsync extension method
+                            var queryableType = typeof(EntityFrameworkQueryableExtensions);
+                            var anyAsyncMethods = queryableType
+                                .GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
+                                .Where(m => m.Name == "AnyAsync" && m.GetParameters().Length == 3)
+                                .ToList();
+
+                            // 2. Get the correct overload (IQueryable<TSource>, Expression<Func<TSource, bool>>, CancellationToken)
+                            var anyAsyncMethodDef = anyAsyncMethods
+                                .FirstOrDefault(m =>
+                                    m.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof(IQueryable<>) &&
+                                    m.GetParameters()[1].ParameterType.GetGenericTypeDefinition() == typeof(Expression<>) &&
+                                    m.GetParameters()[2].ParameterType == typeof(CancellationToken)
+                                );
+
+                            if (anyAsyncMethodDef == null)
+                                throw new InvalidOperationException("Cannot find the correct AnyAsync extension method.");
+
+                            var anyAsyncMethod = anyAsyncMethodDef.MakeGenericMethod(principalEntityClrType);
+
+                            // 3. Call the method (note: dbSet implements IQueryable<T>)
+                            var resultTask = anyAsyncMethod.Invoke(
+                                null, // static method
+                                new object[] { dbSet, lambda, cancellationToken }
+                            );
+
+                            // 4. Await the task and return the result
+                            if (resultTask is Task<bool> boolTask)
                             {
-                                var result = anyAsyncMethod.Invoke(dbSet, new object[] { lambda, cancellationToken });
-                                return result is Task<bool> task ? await task : false;
+                                var result = await boolTask;
+
+                                return result;
+                            }
+                            else
+                            {
+                                return false;
                             }
 
-                            return false;
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            // If there's any error in the foreign key validation, assume it's valid
-                            // This prevents the validator from breaking due to reflection issues
-                            return true;
+                            throw new InvalidOperationException($"Validator crashed when trying to check foreign key {value} for {request.GetType().FullName} .", ex);
                         }
                     })
                     .WithMessage(GetLocalizedMessage("ForeignKeyNotFound", requestProperty.Name));
@@ -369,21 +397,21 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
                     .MustAsync(async (value, cancellationToken) =>
                     {
                         if (value == null) return true; // Let required validation handle nulls
-                        
+
                         try
                         {
                             // Use reflection to call the generic Set method
                             var setMethod = Context.GetType().GetMethod("Set", Type.EmptyTypes)?.MakeGenericMethod(principalEntityClrType);
                             var dbSet = setMethod?.Invoke(Context, null);
-                            
+
                             if (dbSet == null) return false;
-                            
+
                             var parameter = Expression.Parameter(principalEntityClrType, "x");
                             var propertyAccess = Expression.Property(parameter, principalProperty.Name);
                             var valueExpression = Expression.Constant(value);
                             var equalsExpression = Expression.Equal(propertyAccess, valueExpression);
                             var lambda = Expression.Lambda(equalsExpression, parameter);
-                            
+
                             // Use reflection to call AnyAsync since we don't know the exact type at compile time
                             var anyAsyncMethod = dbSet.GetType().GetMethod("AnyAsync", new[] { lambda.Type, typeof(CancellationToken) });
                             if (anyAsyncMethod != null)
@@ -391,7 +419,7 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
                                 var result = anyAsyncMethod.Invoke(dbSet, new object[] { lambda, cancellationToken });
                                 return result is Task<bool> task ? await task : false;
                             }
-                            
+
                             return false;
                         }
                         catch
@@ -425,16 +453,16 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
     {
         var parameter = Expression.Parameter(typeof(TRequest), "x");
         var propertyAccess = Expression.Property(parameter, property.Name);
-        
+
         // Convert the property access to the correct type if needed
         Expression convertedPropertyAccess = propertyAccess;
         if (propertyAccess.Type != typeof(TProperty))
         {
             convertedPropertyAccess = Expression.Convert(propertyAccess, typeof(TProperty));
         }
-        
+
         var lambda = Expression.Lambda<Func<TRequest, TProperty>>(convertedPropertyAccess, parameter);
-        
+
         return RuleFor(lambda);
     }
 
