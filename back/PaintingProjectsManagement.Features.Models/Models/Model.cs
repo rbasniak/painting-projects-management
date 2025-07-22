@@ -17,11 +17,11 @@ public class Model : TenantEntity
         Artist = artist;
         Tags = tags;
         Characters = characters;
-        Score = -1;
+        Score = 0;
         BaseSize = baseSize;
         FigureSize = figureSize;
         NumberOfFigures = numberOfFigures;
-        Priority = -1;  
+        Priority = 0;  
         Type = type;
         Franchise = franchise;
         TenantId = tenant;
@@ -76,8 +76,8 @@ public class Model : TenantEntity
         Priority = priority;
     }
 
-    public void SetScore(int score)
+    public void Rate(int score)
     {
         Score = Math.Min(Math.Max(score, 0), 5);
-    }
+    } 
 }

@@ -123,13 +123,13 @@ public class Prioritize_Models_Tests
             numberOfFigures: 1, 
             sizeInMb: 384);
 
-        tenant1Model1Ready.SetScore(5);
-        tenant1Model2Ready.SetScore(5);
-        tenant1Model3Ready.SetScore(5);
-        tenant1Model4Ready.SetScore(5);
-        tenant1ModelNotReady.SetScore(4);
-        tenant2Model1Ready.SetScore(5);
-        tenant2Model2Ready.SetScore(5);
+        tenant1Model1Ready.Rate(5);
+        tenant1Model2Ready.Rate(5);
+        tenant1Model3Ready.Rate(5);
+        tenant1Model4Ready.Rate(5);
+        tenant1ModelNotReady.Rate(4);
+        tenant2Model1Ready.Rate(5);
+        tenant2Model2Ready.Rate(5);
 
         using (var context = TestingServer.CreateContext())
         {
@@ -177,7 +177,7 @@ public class Prioritize_Models_Tests
         // Assert the database - priorities should not be changed
         var models = TestingServer.CreateContext().Set<Model>().Where(x => x.Id == _tenant1Model1Id || x.Id == _tenant1Model2Id).ToList();
         models.Count.ShouldBe(2);
-        models.All(x => x.Priority == -1).ShouldBeTrue(); // Should remain at default priority
+        models.All(x => x.Priority == 0).ShouldBeTrue(); // Should remain at default priority
     }
 
     [Test, NotInParallel(Order = 3)]
@@ -198,7 +198,7 @@ public class Prioritize_Models_Tests
         // Assert the database - priorities should not be changed
         var models = TestingServer.CreateContext().Set<Model>().Where(x => x.Id == _tenant2Model1Id || x.Id == _tenant2Model2Id).ToList();
         models.Count.ShouldBe(2);
-        models.All(x => x.Priority == -1).ShouldBeTrue(); // Should remain at default priority
+        models.All(x => x.Priority == 0).ShouldBeTrue(); // Should remain at default priority
     }
 
     [Test, NotInParallel(Order = 4)]
@@ -220,7 +220,7 @@ public class Prioritize_Models_Tests
         var models = TestingServer.CreateContext().Set<Model>()
             .Where(x => x.TenantId == "RODRIGO.BASNIAK")
             .ToList();
-        models.All(x => x.Priority == -1).ShouldBeTrue(); // Should remain at default priority
+        models.All(x => x.Priority == 0).ShouldBeTrue(); // Should remain at default priority
     }
 
     [Test, NotInParallel(Order = 5)]
@@ -242,7 +242,7 @@ public class Prioritize_Models_Tests
         var models = TestingServer.CreateContext().Set<Model>()
             .Where(x => x.TenantId == "RODRIGO.BASNIAK")
             .ToList();
-        models.All(x => x.Priority == -1).ShouldBeTrue(); // Should remain at default priority
+        models.All(x => x.Priority == 0).ShouldBeTrue(); // Should remain at default priority
     }
 
     [Test, NotInParallel(Order = 6)]
@@ -264,7 +264,7 @@ public class Prioritize_Models_Tests
         var models = TestingServer.CreateContext().Set<Model>()
             .Where(x => x.TenantId == "RODRIGO.BASNIAK")
             .ToList();
-        models.All(x => x.Priority == -1).ShouldBeTrue(); // Should remain at default priority
+        models.All(x => x.Priority == 0).ShouldBeTrue(); // Should remain at default priority
     }
 
     [Test, NotInParallel(Order = 7)]
@@ -286,7 +286,7 @@ public class Prioritize_Models_Tests
         var models = TestingServer.CreateContext().Set<Model>()
             .Where(x => x.TenantId == "RODRIGO.BASNIAK")
             .ToList();
-        models.All(x => x.Priority == -1).ShouldBeTrue(); // Should remain at default priority
+        models.All(x => x.Priority == 0).ShouldBeTrue(); // Should remain at default priority
     }
 
     [Test, NotInParallel(Order = 8)]
@@ -308,7 +308,7 @@ public class Prioritize_Models_Tests
         var models = TestingServer.CreateContext().Set<Model>()
             .Where(x => x.TenantId == "RODRIGO.BASNIAK")
             .ToList();
-        models.All(x => x.Priority == -1).ShouldBeTrue(); // Should remain at default priority
+        models.All(x => x.Priority == 0).ShouldBeTrue(); // Should remain at default priority
     }
 
     [Test, NotInParallel(Order = 9)]
@@ -330,7 +330,7 @@ public class Prioritize_Models_Tests
         var models = TestingServer.CreateContext().Set<Model>()
             .Where(x => x.TenantId == "RODRIGO.BASNIAK")
             .ToList();
-        models.All(x => x.Priority == -1).ShouldBeTrue(); // Should remain at default priority
+        models.All(x => x.Priority == 0).ShouldBeTrue(); // Should remain at default priority
     }
 
     [Test, NotInParallel(Order = 10)]
@@ -350,7 +350,7 @@ public class Prioritize_Models_Tests
 
         // Assert the database - priorities should not be changed
         var models = TestingServer.CreateContext().Set<Model>().Where(x => x.TenantId == "RODRIGO.BASNIAK").ToList();
-        models.All(x => x.Priority == -1).ShouldBeTrue(); // Should remain at default priority
+        models.All(x => x.Priority == 0).ShouldBeTrue(); // Should remain at default priority
     }
 
     [Test, NotInParallel(Order = 11)]

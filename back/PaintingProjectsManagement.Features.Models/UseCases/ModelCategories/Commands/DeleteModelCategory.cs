@@ -37,15 +37,9 @@ public class DeleteModelCategory : IEndpoint
     {
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var query = _context.Set<ModelCategory>().AsQueryable();
-            
-            // Filter by tenant if authenticated
-            if (request.IsAuthenticated && request.Identity.HasTenant)
-            {
-                query = query.Where(c => c.TenantId == request.Identity.Tenant);
-            }
-            
-            var category = await query.FirstAsync(x => x.Id == request.Id, cancellationToken);
+            var category = await _context.Set<ModelCategory>()
+                .Where(c => c.TenantId == request.Identity.Tenant)
+                .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             _context.Remove(category);
             

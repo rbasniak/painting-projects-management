@@ -50,15 +50,9 @@ public class UpdateMaterial : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var query = _context.Set<Material>().AsQueryable();
-            
-            // Filter by tenant if authenticated
-            if (request.IsAuthenticated && request.Identity.HasTenant)
-            {
-                query = query.Where(m => m.TenantId == request.Identity.Tenant);
-            }
-            
-            var material = await query.FirstAsync(x => x.Id == request.Id, cancellationToken);
+            var material = await _context.Set<Material>()
+                .Where(m => m.TenantId == request.Identity.Tenant)
+                .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             material.UpdateDetails(request.Name, request.Unit, request.PricePerUnit);
 
