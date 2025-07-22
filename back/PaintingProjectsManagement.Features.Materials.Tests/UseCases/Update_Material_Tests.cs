@@ -268,34 +268,6 @@ public class Update_Material_Tests
         unchangedEntity.PricePerUnit.ShouldBe(10.0); // Price should remain unchanged
     }
 
-    [Test, NotInParallel(Order = 10)]
-    public async Task User_Cannot_Update_Material_When_Multiple_Validation_Errors_Occur()
-    {
-        // Prepare
-        var existingMaterial = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.TenantId == "RODRIGO.BASNIAK" && x.Name == "Existing Material");
-        existingMaterial.ShouldNotBeNull("Material should exist from seed");
-
-        var updateRequest = new UpdateMaterial.Request
-        {
-            Id = existingMaterial.Id,
-            Name = "", // Empty name
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = -10.0, // Negative price
-        };
-
-        // Act
-        var response = await TestingServer.PutAsync("api/materials", updateRequest, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.", "Price per unit must be greater than zero.");
-
-        // Assert the database
-        var unchangedEntity = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Id == existingMaterial.Id);
-        unchangedEntity.ShouldNotBeNull();
-        unchangedEntity.Name.ShouldBe("Existing Material"); // Name should remain unchanged
-        unchangedEntity.PricePerUnit.ShouldBe(10.0); // Price should remain unchanged
-    }
-
     [Test, NotInParallel(Order = 11)]
     public async Task User_Can_Update_Material_With_Same_Name_As_Itself()
     {

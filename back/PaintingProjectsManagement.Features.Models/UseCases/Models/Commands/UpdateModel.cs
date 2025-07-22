@@ -27,7 +27,7 @@ public class UpdateModel : IEndpoint
         public FigureSize FigureSize { get; set; }
         public int NumberOfFigures { get; set; }
         public string Franchise { get; set; } = string.Empty;
-        public ModelType ModelType { get; set; } = ModelType.Unknown;
+        public ModelType Type { get; set; } = ModelType.Unknown;
         public int SizeInMb { get; set; } = 0;
     }
 
@@ -39,38 +39,22 @@ public class UpdateModel : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
-            RuleFor(x => x.Tags)
-                .NotNull()
-                .WithMessage("Tags cannot be null")
-                .DependentRules(() => 
-                {
-                    RuleForEach(x => x.Tags)
-                        .NotNull()
-                        .WithMessage("Each tag cannot be null")
-                        .NotEmpty()
-                        .WithMessage("Each tag cannot be empty")
-                        .Must(tag => !string.IsNullOrWhiteSpace(tag))
-                        .WithMessage("Each tag cannot be whitespace")
-                        .MaximumLength(25)
-                        .WithMessage("Each tag cannot exceed 25 characters");
-                });
+            RuleForEach(x => x.Tags)
+                .NotEmpty()
+                .WithMessage("Each tag cannot be empty")
+                .Must(tag => !string.IsNullOrWhiteSpace(tag))
+                .WithMessage("Each tag cannot be whitespace")
+                .MaximumLength(25)
+                .WithMessage("Each tag cannot exceed 25 characters");
 
 
-            RuleFor(x => x.Characters)
-                .NotNull()
-                .WithMessage("Characters cannot be null")
-                .DependentRules(() => 
-                {
-                    RuleForEach(x => x.Characters)
-                        .NotNull()
-                        .WithMessage("Each character cannot be null")
-                        .NotEmpty()
-                        .WithMessage("Each character cannot be empty")
-                        .Must(character => !string.IsNullOrWhiteSpace(character))
-                        .WithMessage("Each character cannot be whitespace")
-                        .MaximumLength(50)
-                        .WithMessage("Each character cannot exceed 50 characters");
-                });
+            RuleForEach(x => x.Characters)
+                .NotEmpty()
+                .WithMessage("Each character cannot be empty")
+                .Must(character => !string.IsNullOrWhiteSpace(character))
+                .WithMessage("Each character cannot be whitespace")
+                .MaximumLength(50)
+                .WithMessage("Each character cannot exceed 50 characters");
 
             RuleFor(x => x.NumberOfFigures)
                 .GreaterThan(0)
@@ -88,23 +72,23 @@ public class UpdateModel : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var query = _context.Set<Model>().AsQueryable();
-            
+
             // Filter by tenant if authenticated
             if (request.IsAuthenticated && request.Identity.HasTenant)
             {
                 query = query.Where(m => m.Category.TenantId == request.Identity.Tenant);
             }
-            
+
             var model = await query
                 .Include(m => m.Category)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
-                
+
             var category = await _context.Set<ModelCategory>()
                 .Where(c => c.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.CategoryId, cancellationToken);
 
             model.UpdateDetails(
-                request.Name, 
+                request.Name,
                 category,
                 request.Characters ?? Array.Empty<string>(),
                 request.Artist,
@@ -113,7 +97,7 @@ public class UpdateModel : IEndpoint
                 request.FigureSize,
                 request.NumberOfFigures,
                 request.Franchise,
-                request.ModelType,
+                request.Type,
                 request.SizeInMb
             );
 

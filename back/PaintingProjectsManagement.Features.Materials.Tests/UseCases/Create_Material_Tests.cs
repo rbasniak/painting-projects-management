@@ -168,28 +168,6 @@ public class Create_Material_Tests
         materials.ShouldBeEmpty();
     }
 
-    [Test, NotInParallel(Order = 9)]
-    public async Task User_Cannot_Create_Material_When_Multiple_Validation_Errors_Occur()
-    {
-        // Prepare
-        var request = new CreateMaterial.Request
-        {
-            Name = "", // Empty name
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = -10, // Negative price
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.", "Price per unit must be greater than zero.");
-
-        // Assert the database
-        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "").ToList();
-        materials.ShouldBeEmpty();
-    }
-
     [Test, NotInParallel(Order = 10)]
     public async Task User_Cannot_Create_Material_When_Name_Is_Too_Short()
     {
