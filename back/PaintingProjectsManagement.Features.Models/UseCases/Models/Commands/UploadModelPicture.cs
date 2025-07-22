@@ -10,6 +10,7 @@ public class UploadModelPicture : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Upload Model Picture")
         .WithTags("Models");

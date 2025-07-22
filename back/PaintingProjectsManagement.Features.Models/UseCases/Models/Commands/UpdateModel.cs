@@ -10,6 +10,7 @@ public class UpdateModel : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<ModelDetails>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Update Model")
         .WithTags("Models");

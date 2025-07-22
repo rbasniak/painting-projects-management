@@ -74,7 +74,6 @@ internal class UpdatePaintColor : IEndpoint
                 request.Name,
                 request.HexColor,
                 request.BottleSize,
-                request.Price,
                 request.Type,
                 line,
                 request.ManufacturerCode

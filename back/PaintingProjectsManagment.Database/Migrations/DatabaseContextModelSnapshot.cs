@@ -156,7 +156,8 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("PaintBrands", (string)null);
                 });
@@ -186,9 +187,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("REAL");
 
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");
@@ -220,9 +218,8 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BrandId");
-
-                    b.HasIndex("Name");
+                    b.HasIndex("BrandId", "Name")
+                        .IsUnique();
 
                     b.ToTable("PaintLines", (string)null);
                 });

@@ -10,6 +10,7 @@ public class CreateModelCategory : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<ModelCategoryDetails>(StatusCodes.Status200OK)
         .RequireAuthorization() 
         .WithName("Create Model Category")
         .WithTags("Model Categories");

@@ -10,6 +10,7 @@ public class CreateModel : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<ModelDetails>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Create Model")
         .WithTags("Models");

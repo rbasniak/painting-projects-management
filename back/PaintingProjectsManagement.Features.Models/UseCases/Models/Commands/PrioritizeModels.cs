@@ -10,6 +10,7 @@ public class PrioritizeModels : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Prioritize Models")
         .WithTags("Models");

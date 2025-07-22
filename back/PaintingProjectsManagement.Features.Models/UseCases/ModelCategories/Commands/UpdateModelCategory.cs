@@ -12,6 +12,7 @@ public class UpdateModelCategory : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<ModelCategoryDetails>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Update Model Category")
         .WithTags("Model Categories");

@@ -19,13 +19,7 @@ public class PaintConfig : IEntityTypeConfiguration<PaintColor>
             .HasMaxLength(7);
             
         builder.Property(e => e.ManufacturerCode)
-            .HasMaxLength(50);
-            
-        builder.Property(e => e.BottleSize)
-            .IsRequired();
-            
-        builder.Property(e => e.Price)
-            .IsRequired();
+            .HasMaxLength(50); 
             
         builder.Property(e => e.Type)
             .IsRequired();

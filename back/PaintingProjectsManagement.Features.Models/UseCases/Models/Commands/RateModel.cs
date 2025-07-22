@@ -10,6 +10,7 @@ public class RateModel : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<ModelDetails>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Rate Model")
         .WithTags("Models");

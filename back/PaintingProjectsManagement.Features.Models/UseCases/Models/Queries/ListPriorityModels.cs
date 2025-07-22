@@ -10,6 +10,8 @@ internal class ListPriorityModels : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<IReadOnlyCollection<ModelDetails>>(StatusCodes.Status200OK)
+        .RequireAuthorization()
         .WithName("List Priority Models")
         .WithTags("Models");  
     }
@@ -24,7 +26,6 @@ internal class ListPriorityModels : IEndpoint
 
     public class Handler(DbContext _context) : IQueryHandler<Request>
     {
-
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var models = await _context.Set<Model>()

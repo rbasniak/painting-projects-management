@@ -67,7 +67,6 @@ internal class CreatePaintColor : IEndpoint
                 request.Name,
                 request.HexColor,
                 request.BottleSize,
-                request.Price,
                 request.Type,
                 request.ManufacturerCode
             );

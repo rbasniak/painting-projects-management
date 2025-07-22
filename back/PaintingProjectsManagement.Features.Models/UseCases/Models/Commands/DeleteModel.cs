@@ -10,6 +10,7 @@ public class DeleteModel : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Delete Model")
         .WithTags("Models");

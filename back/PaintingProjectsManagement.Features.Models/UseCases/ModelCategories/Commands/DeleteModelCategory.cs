@@ -12,6 +12,7 @@ public class DeleteModelCategory : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Delete Model Category")
         .WithTags("Model Categories");
