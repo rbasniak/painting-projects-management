@@ -31,7 +31,9 @@ jobs:
         dotnet-version: 9.0.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
+    - name: Build analyser project first
+      run: dotnet build rbkApiModules.Analysers/rbkApiModules.Analysers/rbkApiModules.Analysers.csproj --no-restore
+    - name: Build remaining projects
       run: dotnet build --no-restore
     - name: Test
       run: |
