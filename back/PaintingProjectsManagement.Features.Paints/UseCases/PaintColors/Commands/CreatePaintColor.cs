@@ -10,6 +10,8 @@ internal class CreatePaintColor : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<PaintColorDetails>(StatusCodes.Status200OK)
+        .RequireAuthorization(Claims.MANAGE_PAINTS)
         .WithName("Create Paint Color")
         .WithTags("Paint Colors");
     }
@@ -19,7 +21,6 @@ internal class CreatePaintColor : IEndpoint
         public string Name { get; set; } = string.Empty;
         public string HexColor { get; set; } = string.Empty;
         public double BottleSize { get; set; }
-        public double Price { get; set; }
         public PaintType Type { get; set; }
         public Guid LineId { get; set; }
         public string? ManufacturerCode { get; set; }
@@ -27,7 +28,7 @@ internal class CreatePaintColor : IEndpoint
 
     public class Validator : SmartValidator<Request, PaintColor>
     {
-        public Validator(DbContext context) : base(context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
         }
 
@@ -41,14 +42,13 @@ internal class CreatePaintColor : IEndpoint
                 .GreaterThan(0)
                 .WithMessage("Bottle size must be greater than zero.");
 
-            RuleFor(x => x.Price)
-                .GreaterThan(0)
-                .WithMessage("Price must be greater than zero.");
-
-            RuleFor(x => x.LineId)
-                .MustAsync(async (lineId, cancellationToken) =>
-                    await Context.Set<PaintLine>().AnyAsync(x => x.Id == lineId, cancellationToken))
-                .WithMessage("Paint line with the specified ID does not exist.");
+            // Check for unique name within the same paint line
+            RuleFor(x => x).MustAsync(async (request, cancellationToken) =>
+                !await Context.Set<PaintColor>().AnyAsync(x => 
+                    x.LineId == request.LineId && 
+                    x.Name == request.Name, 
+                    cancellationToken))
+                .WithMessage("A paint color with this name already exists in this paint line.");
         }
     }
 
@@ -67,7 +67,6 @@ internal class CreatePaintColor : IEndpoint
                 request.Name,
                 request.HexColor,
                 request.BottleSize,
-                request.Price,
                 request.Type,
                 request.ManufacturerCode
             );

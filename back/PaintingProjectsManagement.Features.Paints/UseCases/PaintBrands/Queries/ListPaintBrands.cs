@@ -10,6 +10,8 @@ internal class ListPaintBrands : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<IReadOnlyCollection<PaintBrandDetails>>(StatusCodes.Status200OK)
+        .RequireAuthorization()
         .WithName("List Paint Brands")
         .WithTags("Paint Brands");  
     }
@@ -18,8 +20,16 @@ internal class ListPaintBrands : IEndpoint
     {
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, PaintBrand>
     {
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        {
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+            // No business rules needed for listing
+        }
     }
 
     public class Handler(DbContext _context) : IQueryHandler<Request>
@@ -31,7 +41,9 @@ internal class ListPaintBrands : IEndpoint
                 .OrderBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
-            return QueryResponse.Success(brands.Select(PaintBrandDetails.FromModel).AsReadOnly());
+            var result = brands.Select(PaintBrandDetails.FromModel).AsReadOnly();
+
+            return QueryResponse.Success(result);
         }
     }
 }

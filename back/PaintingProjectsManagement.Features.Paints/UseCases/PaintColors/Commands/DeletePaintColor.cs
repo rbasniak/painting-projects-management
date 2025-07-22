@@ -10,6 +10,8 @@ internal class DeletePaintColor : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces(StatusCodes.Status200OK)
+        .RequireAuthorization(Claims.MANAGE_PAINTS)
         .WithName("Delete Paint Color")
         .WithTags("Paint Colors");
     }
@@ -19,16 +21,16 @@ internal class DeletePaintColor : IEndpoint
         public Guid Id { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, PaintColor>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id).NotEmpty();
-            
-            // Check that the paint color exists
-            RuleFor(x => x.Id).MustAsync(async (id, cancellationToken) =>
-                await context.Set<PaintColor>().AnyAsync(x => x.Id == id, cancellationToken))
-                .WithMessage("Paint color with the specified ID does not exist.");
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+            // No additional business rules needed for deletion
+            // SmartValidator automatically handles existence validation
         }
     }
 

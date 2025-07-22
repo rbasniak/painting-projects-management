@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Models;
 
-internal static class ModelCategoriesBuilder
+public static class ModelCategoriesBuilder
 {
     public static IEndpointRouteBuilder MapModelCategoriesFeature(this IEndpointRouteBuilder app)
     {

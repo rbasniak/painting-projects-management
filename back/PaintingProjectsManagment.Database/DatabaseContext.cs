@@ -6,7 +6,6 @@ using PaintingProjectsManagement.Features.Projects;
 using rbkApiModules.Authentication;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity;
-using System;
 
 namespace PaintingProjectsManagment.Database;
 

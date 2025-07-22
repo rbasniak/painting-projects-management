@@ -10,6 +10,8 @@ internal class ListPaintLines : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<IReadOnlyCollection<PaintLineDetails>>(StatusCodes.Status200OK)
+        .RequireAuthorization()
         .WithName("List Paint Lines")
         .WithTags("Paint Lines");  
     }
@@ -18,8 +20,16 @@ internal class ListPaintLines : IEndpoint
     {
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, PaintLine>
     {
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        {
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+            // No business rules needed for listing
+        }
     }
 
     public class Handler(DbContext _context) : IQueryHandler<Request>
@@ -33,7 +43,9 @@ internal class ListPaintLines : IEndpoint
                 .ThenBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
-            return QueryResponse.Success(paintLines.Select(PaintLineDetails.FromModel).AsReadOnly());
+            var result = paintLines.Select(PaintLineDetails.FromModel).AsReadOnly();
+
+            return QueryResponse.Success(result);
         }
     }
 }

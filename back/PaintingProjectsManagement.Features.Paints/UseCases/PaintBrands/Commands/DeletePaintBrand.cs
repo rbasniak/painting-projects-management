@@ -10,6 +10,8 @@ internal class DeletePaintBrand : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces(StatusCodes.Status200OK)
+        .RequireAuthorization(Claims.MANAGE_PAINTS)
         .WithName("Delete Paint Brand")
         .WithTags("Paint Brands");
     }
@@ -19,20 +21,17 @@ internal class DeletePaintBrand : IEndpoint
         public Guid Id { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, PaintBrand>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id).NotEmpty();
-            
-            // Check that the brand exists
-            RuleFor(x => x.Id).MustAsync(async (id, cancellationToken) =>
-                await context.Set<PaintBrand>().AnyAsync(x => x.Id == id, cancellationToken))
-                .WithMessage("Paint brand with the specified ID does not exist.");
-            
+        }
+
+        protected override void ValidateBusinessRules()
+        {
             // Check that there are no paint lines associated with this brand
             RuleFor(x => x.Id).MustAsync(async (id, cancellationToken) => 
-                !await context.Set<PaintLine>().AnyAsync(x => x.BrandId == id, cancellationToken))
+                !await Context.Set<PaintLine>().AnyAsync(x => x.BrandId == id, cancellationToken))
                 .WithMessage("Cannot delete a paint brand that has associated paint lines. Remove the paint lines first.");
         }
     }

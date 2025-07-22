@@ -1,10 +1,8 @@
-﻿using FluentValidation;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
-using rbkApiModules.Commons.Core;
 using Microsoft.AspNetCore.Authorization;
 using rbkApiModules.Commons.Core.Helpers;
 using Microsoft.IdentityModel.Tokens;

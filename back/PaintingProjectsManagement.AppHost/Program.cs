@@ -1,6 +1,4 @@
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using PaintingProjectsManagement.AppHost;
-using System.Diagnostics;
 
 var builder = DistributedApplication.CreateBuilder(args);
 

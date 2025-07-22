@@ -10,7 +10,6 @@ using rbkApiModules.Commons.Core.UiDefinitions;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Relational;
 using Scalar.AspNetCore;
-using System;
 using System.Reflection;
 
 namespace PaintingProjectsManagement.Api;

@@ -5,4 +5,4 @@ global using Microsoft.Extensions.DependencyInjection;
 global using rbkApiModules.Commons.Testing;
 global using rbkApiModules.Identity.Core;
 global using System.Net;
-global using rbkApiModules.Testting.Core;
+global using rbkApiModules.Testing.Core;

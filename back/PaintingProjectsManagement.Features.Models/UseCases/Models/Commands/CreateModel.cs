@@ -1,17 +1,16 @@
-using Microsoft.AspNetCore.Builder;
-
 namespace PaintingProjectsManagement.Features.Models;
 
-internal class CreateModel : IEndpoint
+public class CreateModel : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/models", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/models", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<ModelDetails>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Create Model")
         .WithTags("Models");
@@ -19,42 +18,50 @@ internal class CreateModel : IEndpoint
 
     public class Request : AuthenticatedRequest, ICommand
     {
-        public string Name { get; set; } = string.Empty;
         public Guid CategoryId { get; set; }
         public string Artist { get; set; } = string.Empty;
         public string[] Tags { get; set; } = Array.Empty<string>();
-        public BaseSize BaseSize { get; set; } = BaseSize.Unknown;
-        public FigureSize FigureSize { get; set; } = FigureSize.Unknown;
-        public int NumberOfFigures { get; set; } = 1;
+        public string[] Characters { get; set; } = Array.Empty<string>();
+        public string Name { get; set; } = string.Empty;
+        public BaseSize BaseSize { get; set; }
+        public FigureSize FigureSize { get; set; }
+        public int NumberOfFigures { get; set; }
         public string Franchise { get; set; } = string.Empty;
-        public ModelType ModelType { get; set; } = ModelType.Unknown;
-        public int Size { get; set; } = 0; 
+        public ModelType Type { get; set; } = ModelType.Unknown;
+        public int SizeInMb { get; set; } = 0;
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Model>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
-                .MustAsync(async (name, cancellationToken) => 
-                    !await context.Set<Model>().AnyAsync(m => m.Name == name, cancellationToken))
-                .WithMessage("A model with this name already exists.");
+        }
 
-            RuleFor(x => x.Artist)
+        protected override void ValidateBusinessRules()
+        {
+            RuleForEach(x => x.Tags)
                 .NotEmpty()
-                .MaximumLength(100);
+                .WithMessage("Each tag cannot be empty")
+                .Must(tag => !string.IsNullOrWhiteSpace(tag))
+                .WithMessage("Each tag cannot be whitespace")
+                .MaximumLength(25)
+                .WithMessage("Each tag cannot exceed 25 characters");
 
-            RuleFor(x => x.CategoryId)
+            RuleForEach(x => x.Characters)
                 .NotEmpty()
-                .MustAsync(async (categoryId, cancellationToken) =>
-                    await context.Set<ModelCategory>().AnyAsync(c => c.Id == categoryId, cancellationToken))
-                .WithMessage("The specified category does not exist.");
-                
+                .WithMessage("Each character cannot be empty")
+                .Must(character => !string.IsNullOrWhiteSpace(character))
+                .WithMessage("Each character cannot be whitespace")
+                .MaximumLength(50)
+                .WithMessage("Each character cannot exceed 50 characters");
+
             RuleFor(x => x.NumberOfFigures)
                 .GreaterThan(0)
-                .WithMessage("Number of figures must be greater than zero.");
+                .WithMessage("NumberOfFigures must be greater than zero");
+
+            RuleFor(x => x.SizeInMb)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("SizeInMb must be greater than or equal to zero");
         }
     }
 
@@ -64,27 +71,31 @@ internal class CreateModel : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var category = await _context.Set<ModelCategory>()
+                .Where(c => c.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.CategoryId, cancellationToken);
-                
+
             var model = new Model(
                 request.Identity.Tenant,
                 request.Name,
                 category,
+                request.Characters ?? Array.Empty<string>(),
                 request.Franchise,
-                request.ModelType,
+                request.Type,
                 request.Artist,
                 request.Tags ?? Array.Empty<string>(),
                 request.BaseSize,
                 request.FigureSize,
                 request.NumberOfFigures,
-                request.Size
+                request.SizeInMb
             );
-            
+
             await _context.AddAsync(model, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success();
+            var result = ModelDetails.FromModel(model);
+
+            return CommandResponse.Success(result);
         }
     }
 }

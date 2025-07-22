@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace PaintingProjectsManagement.Features.Paints;
 
@@ -15,6 +14,7 @@ public class BrandConfig : IEntityTypeConfiguration<PaintBrand>
             .IsRequired()
             .HasMaxLength(100);
 
-        builder.HasIndex(b => b.Name);
+        builder.HasIndex(e => e.Name)
+           .IsUnique();
     }
 }

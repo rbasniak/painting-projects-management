@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using rbkApiModules.Identity.Core;
+﻿using rbkApiModules.Identity.Core;
 using rbkApiModules.Commons.Relational;
 
 namespace rbkApiModules.Identity.Relational;

@@ -419,3 +419,4 @@ FodyWeavers.xsd
 /back/PaintingProjectsManagement.Api/app.db
 /back/PaintingProjectsManagement.Api/app.db-shm
 /back/PaintingProjectsManagement.Api/app.db-wal
+/back/error_test.txt

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace rbkApiModules.Identity.Core;
+﻿namespace rbkApiModules.Identity.Core;
 
 public interface ICustomLoginPolicyValidator
 {

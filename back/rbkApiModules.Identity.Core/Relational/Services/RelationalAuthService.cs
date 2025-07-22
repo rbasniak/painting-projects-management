@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using rbkApiModules.Identity.Core;
-using rbkApiModules.Commons.Core;
+﻿using rbkApiModules.Identity.Core;
 using Microsoft.Extensions.Logging;
 using rbkApiModules.Commons.Relational;
 

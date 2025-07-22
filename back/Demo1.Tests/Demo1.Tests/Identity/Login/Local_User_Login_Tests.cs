@@ -1,8 +1,6 @@
 ﻿
 using Demo1.Tests;
-using Microsoft.EntityFrameworkCore;
 using rbkApiModules.Identity.Core;
-using rbkApiModules.Identity.Core.DataTransfer;
 
 namespace rbkApiModules.Identity.Tests.Login;
 

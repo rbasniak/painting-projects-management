@@ -10,6 +10,8 @@ internal class DeletePaintLine : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces(StatusCodes.Status200OK)
+        .RequireAuthorization(Claims.MANAGE_PAINTS)
         .WithName("Delete Brand Line")
         .WithTags("Paint Lines");
     }
@@ -19,19 +21,18 @@ internal class DeletePaintLine : IEndpoint
         public Guid Id { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, PaintLine>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id).NotEmpty();
-            
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+            // Check that there are no paint colors associated with this line
             RuleFor(x => x.Id).MustAsync(async (id, cancellationToken) => 
-                await context.Set<PaintLine>().AnyAsync(x => x.Id == id, cancellationToken))
-            .WithMessage("Paint line with the specified ID does not exist.");
-            
-            RuleFor(x => x.Id).MustAsync(async (id, cancellationToken) => 
-                !await context.Set<PaintColor>().AnyAsync(x => x.LineId == id, cancellationToken))
-            .WithMessage("Cannot delete a paint line that has associated paint colors. Remove the paint colors first.");
+                !await Context.Set<PaintColor>().AnyAsync(x => x.LineId == id, cancellationToken))
+                .WithMessage("Cannot delete a paint line that has associated paint colors. Remove the paint colors first.");
         }
     }
 

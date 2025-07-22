@@ -1,10 +1,8 @@
 using System.Net;
-using System.Text.Json;
-using Org.BouncyCastle.Asn1.Ocsp;
 using rbkApiModules.Commons.Testing;
 using Shouldly;
 
-namespace rbkApiModules.Testting.Core;
+namespace rbkApiModules.Testing.Core;
 
 public static class HttpAssertionExtensions
 {

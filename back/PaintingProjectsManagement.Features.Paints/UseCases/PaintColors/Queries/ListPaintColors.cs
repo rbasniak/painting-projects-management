@@ -10,6 +10,8 @@ internal class ListPaintColors : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<IReadOnlyCollection<PaintColorDetails>>(StatusCodes.Status200OK)
+        .RequireAuthorization()
         .WithName("List Paint Colors")
         .WithTags("Paint Colors");  
     }
@@ -20,21 +22,25 @@ internal class ListPaintColors : IEndpoint
         public Guid? BrandId { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, PaintColor>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        {
+        }
+
+        protected override void ValidateBusinessRules()
         {
             // If lineId is provided, check that it exists
             When(x => x.LineId.HasValue, () => {
                 RuleFor(x => x.LineId).MustAsync(async (lineId, cancellationToken) =>
-                    await context.Set<PaintLine>().AnyAsync(x => x.Id == lineId, cancellationToken))
+                    await Context.Set<PaintLine>().AnyAsync(x => x.Id == lineId, cancellationToken))
                     .WithMessage("Paint line with the specified ID does not exist.");
             });
             
             // If brandId is provided, check that it exists
             When(x => x.BrandId.HasValue, () => {
                 RuleFor(x => x.BrandId).MustAsync(async (brandId, cancellationToken) =>
-                    await context.Set<PaintBrand>().AnyAsync(x => x.Id == brandId, cancellationToken))
+                    await Context.Set<PaintBrand>().AnyAsync(x => x.Id == brandId, cancellationToken))
                     .WithMessage("Brand with the specified ID does not exist.");
             });
         }
@@ -65,7 +71,9 @@ internal class ListPaintColors : IEndpoint
                 .ThenBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
-            return QueryResponse.Success(paintColors.Select(PaintColorDetails.FromModel).AsReadOnly());
+            var result = paintColors.Select(PaintColorDetails.FromModel).AsReadOnly();
+
+            return QueryResponse.Success(result);
         }
     }
 }

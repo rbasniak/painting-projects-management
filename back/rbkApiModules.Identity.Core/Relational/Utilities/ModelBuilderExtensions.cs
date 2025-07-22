@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore;
-using rbkApiModules.Commons.Core;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 using rbkApiModules.Identity.Core;

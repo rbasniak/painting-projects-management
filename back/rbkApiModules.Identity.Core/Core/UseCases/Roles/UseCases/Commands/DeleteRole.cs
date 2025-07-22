@@ -1,6 +1,4 @@
-﻿using rbkApiModules.Identity.Core.DataTransfer;
-
-namespace rbkApiModules.Identity.Core;
+﻿namespace rbkApiModules.Identity.Core;
 
 public class DeleteRole : IEndpoint
 {

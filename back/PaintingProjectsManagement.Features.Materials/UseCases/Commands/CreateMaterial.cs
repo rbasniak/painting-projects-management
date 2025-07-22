@@ -1,6 +1,4 @@
-﻿using rbkApiModules.Commons.Core;
-
-namespace PaintingProjectsManagement.Features.Materials;
+﻿namespace PaintingProjectsManagement.Features.Materials;
 
 public class CreateMaterial : IEndpoint
 {
@@ -12,6 +10,7 @@ public class CreateMaterial : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<MaterialDetails>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Create Material")
         .WithTags("Materials");
@@ -55,7 +54,7 @@ public class CreateMaterial : IEndpoint
                 request.Unit, 
                 request.PricePerUnit
             );
-            
+
             await _context.AddAsync(material, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);

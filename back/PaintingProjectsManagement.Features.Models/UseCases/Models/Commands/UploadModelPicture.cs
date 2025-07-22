@@ -1,15 +1,16 @@
 namespace PaintingProjectsManagement.Features.Models;
 
-internal class UploadModelPicture : IEndpoint
+public class UploadModelPicture : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/models/picture", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/models/picture", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Upload Model Picture")
         .WithTags("Models");
@@ -21,20 +22,18 @@ internal class UploadModelPicture : IEndpoint
         public string Base64Image { get; set; } = string.Empty;
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Model>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.ModelId)
-                .NotEmpty()
-                .MustAsync(async (id, cancellationToken) =>
-                    await context.Set<Model>().AnyAsync(m => m.Id == id, cancellationToken))
-                .WithMessage("Model with the specified ID does not exist.");
-                
+        }
+
+        protected override void ValidateBusinessRules()
+        {
             RuleFor(x => x.Base64Image)
                 .NotEmpty()
                 .WithMessage("Base64 image content is required.")
-                .Must(base64 => IsValidBase64Image(base64))
+                .Must(data => IsValidBase64Image(data))
                 .WithMessage("Invalid base64 image format. Must be a valid base64 encoded image with proper header.");
         }
         

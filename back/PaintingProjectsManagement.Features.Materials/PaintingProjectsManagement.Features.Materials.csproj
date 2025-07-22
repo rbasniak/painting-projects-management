@@ -12,4 +12,8 @@
     <ProjectReference Include="..\PaintingProjectsManagement.FeatureDependencies\PaintingProjectsManagement.FeatureDependencies.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Analyzer Include="..\rbkApiModules.Analysers\rbkApiModules.Analysers\bin\Debug\netstandard2.0\rbkApiModules.Analysers.dll" />
+	</ItemGroup>
+
 </Project>

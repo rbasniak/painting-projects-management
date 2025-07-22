@@ -10,6 +10,7 @@ public class ListMaterials : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<IReadOnlyCollection<MaterialDetails>>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("List Materials")
         .WithTags("Materials");  

@@ -10,6 +10,8 @@ internal class CreatePaintBrand : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<PaintBrandDetails>(StatusCodes.Status200OK)
+        .RequireAuthorization(Claims.MANAGE_PAINTS)
         .WithName("Create Paint Brand")
         .WithTags("Paint Brands");
     }
@@ -19,15 +21,19 @@ internal class CreatePaintBrand : IEndpoint
         public string Name { get; set; } = string.Empty;
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, PaintBrand>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+            // TODO: if we comment this, will SmartValidator still validate the model?
+            // Check for unique name constraint (this is handled by database unique index, but we can add a custom message)
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
                 .MustAsync(async (name, cancellationToken) => 
-                    !await context.Set<PaintBrand>().AnyAsync(b => b.Name == name, cancellationToken))
+                    !await Context.Set<PaintBrand>().AnyAsync(b => b.Name == name, cancellationToken))
                 .WithMessage("A brand with this name already exists.");
         }
     }
@@ -43,7 +49,9 @@ internal class CreatePaintBrand : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success();
+            var result = PaintBrandDetails.FromModel(brand);
+
+            return CommandResponse.Success(result);
         }
     }
 }

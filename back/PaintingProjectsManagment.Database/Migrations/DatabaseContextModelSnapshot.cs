@@ -57,7 +57,8 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Artist")
-                        .HasMaxLength(150)
+                        .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("BaseSize")
@@ -75,6 +76,7 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.Property<string>("Franchise")
                         .IsRequired()
+                        .HasMaxLength(75)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -94,11 +96,15 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<int>("Score")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Size")
+                    b.Property<int>("SizeInMb")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Tags")
+                    b.PrimitiveCollection<string>("Tags")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(32)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Type")
@@ -108,7 +114,8 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("TenantId", "Name")
+                        .IsUnique();
 
                     b.ToTable("Models", (string)null);
                 });
@@ -130,9 +137,8 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
-                    b.HasIndex("TenantId");
+                    b.HasIndex("TenantId", "Name")
+                        .IsUnique();
 
                     b.ToTable("ModelCategories", (string)null);
                 });
@@ -150,7 +156,8 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("PaintBrands", (string)null);
                 });
@@ -180,9 +187,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("REAL");
 
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");
@@ -214,9 +218,8 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BrandId");
-
-                    b.HasIndex("Name");
+                    b.HasIndex("BrandId", "Name")
+                        .IsUnique();
 
                     b.ToTable("PaintLines", (string)null);
                 });
@@ -603,6 +606,11 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("rbkApiModules.Identity.Core.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Category");
                 });

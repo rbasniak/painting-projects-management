@@ -1,4 +1,6 @@
-﻿namespace PaintingProjectsManagement.Features.Paints;
+﻿using rbkApiModules.Commons.Core.Abstractions;
+
+namespace PaintingProjectsManagement.Features.Paints;
 
 public class PaintColorDetails
 {
@@ -6,13 +8,10 @@ public class PaintColorDetails
     public string Name { get; set; } = string.Empty;
     public string HexColor { get; set; } = string.Empty;
     public string? ManufacturerCode { get; set; }
-    public double BottleSize { get; set; }
-    public double Price { get; set; }
+    public double BottleSize { get; set; } 
     public PaintType Type { get; set; }
-    public Guid LineId { get; set; }
-    public string? LineName { get; set; }
-    public Guid? BrandId { get; set; }
-    public string? BrandName { get; set; }
+    public EntityReference Line { get; set; }
+    public EntityReference Brand { get; set; }
 
     public static PaintColorDetails FromModel(PaintColor paint)
     {
@@ -23,12 +22,9 @@ public class PaintColorDetails
             HexColor = paint.HexColor,
             ManufacturerCode = paint.ManufacturerCode,
             BottleSize = paint.BottleSize,
-            Price = paint.Price,
             Type = paint.Type,
-            LineId = paint.LineId,
-            LineName = paint.Line?.Name,
-            BrandId = paint.Line?.Brand?.Id,
-            BrandName = paint.Line?.Brand?.Name
+            Line = new EntityReference(paint.LineId, paint.Line.Name),
+            Brand = new EntityReference(paint.Line.Brand.Id, paint.Line.Brand.Name)
         };
     }
 }

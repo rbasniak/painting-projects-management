@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using rbkApiModules.Commons.Core.Abstractions;
 
 namespace rbkApiModules.Identity.Core.DataTransfer;

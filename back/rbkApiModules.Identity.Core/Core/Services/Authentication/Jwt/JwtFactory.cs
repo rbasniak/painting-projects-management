@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using rbkApiModules.Commons.Core;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 

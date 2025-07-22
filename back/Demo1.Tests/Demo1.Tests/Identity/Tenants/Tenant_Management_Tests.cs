@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using rbkApiModules.Identity.Core;
 using rbkApiModules.Identity.Core.DataTransfer;
 using rbkApiModules.Identity.Core.DataTransfer.Users;
-using rbkApiModules.Testting.Core;
 
 namespace rbkApiModules.Identity.Tests.Tenants;
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using System.Diagnostics;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace PaintingProjectsManagement.Features.Models;
 
@@ -134,6 +134,7 @@ public static class ModelsSeeder
                         tenant: "rodrigo.basniak",
                         name: character,
                         category: category,
+                        characters: characters,
                         franchise: GetFranchise(franchise),
                         type: type,
                         artist: artist,
@@ -141,7 +142,7 @@ public static class ModelsSeeder
                         baseSize: BaseSize.Unknown,
                         figureSize: FigureSize.Unknown,
                         numberOfFigures: -1,
-                        size: totalSizeInMb));
+                        sizeInMb: totalSizeInMb));
                 }
             }
         }

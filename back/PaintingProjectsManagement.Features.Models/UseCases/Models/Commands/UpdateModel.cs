@@ -1,15 +1,16 @@
 namespace PaintingProjectsManagement.Features.Models;
 
-internal class UpdateModel : IEndpoint
+public class UpdateModel : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/models", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/api/models", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<ModelDetails>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Update Model")
         .WithTags("Models");
@@ -18,42 +19,51 @@ internal class UpdateModel : IEndpoint
     public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
         public Guid CategoryId { get; set; }
         public string Artist { get; set; } = string.Empty;
         public string[] Tags { get; set; } = Array.Empty<string>();
+        public string[] Characters { get; set; } = Array.Empty<string>();
+        public string Name { get; set; } = string.Empty;
         public BaseSize BaseSize { get; set; }
         public FigureSize FigureSize { get; set; }
         public int NumberOfFigures { get; set; }
+        public string Franchise { get; set; } = string.Empty;
+        public ModelType Type { get; set; } = ModelType.Unknown;
+        public int SizeInMb { get; set; } = 0;
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Model>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id)
-                .NotEmpty();
-                
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
-                .MustAsync(async (request, name, cancellationToken) => 
-                    !await context.Set<Model>().AnyAsync(m => m.Name == name && m.Id != request.Id, cancellationToken))
-                .WithMessage("A model with this name already exists.");
+        }
 
-            RuleFor(x => x.Artist)
+        protected override void ValidateBusinessRules()
+        {
+            RuleForEach(x => x.Tags)
                 .NotEmpty()
-                .MaximumLength(100);
+                .WithMessage("Each tag cannot be empty")
+                .Must(tag => !string.IsNullOrWhiteSpace(tag))
+                .WithMessage("Each tag cannot be whitespace")
+                .MaximumLength(25)
+                .WithMessage("Each tag cannot exceed 25 characters");
 
-            RuleFor(x => x.CategoryId)
+
+            RuleForEach(x => x.Characters)
                 .NotEmpty()
-                .MustAsync(async (categoryId, cancellationToken) =>
-                    await context.Set<ModelCategory>().AnyAsync(c => c.Id == categoryId, cancellationToken))
-                .WithMessage("The specified category does not exist.");
-                
+                .WithMessage("Each character cannot be empty")
+                .Must(character => !string.IsNullOrWhiteSpace(character))
+                .WithMessage("Each character cannot be whitespace")
+                .MaximumLength(50)
+                .WithMessage("Each character cannot exceed 50 characters");
+
             RuleFor(x => x.NumberOfFigures)
                 .GreaterThan(0)
-                .WithMessage("Number of figures must be greater than zero.");
+                .WithMessage("NumberOfFigures must be greater than zero");
+
+            RuleFor(x => x.SizeInMb)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("SizeInMb must be greater than or equal to zero");
         }
     }
 
@@ -62,26 +72,41 @@ internal class UpdateModel : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var model = await _context.Set<Model>()
+            var query = _context.Set<Model>().AsQueryable();
+
+            // Filter by tenant if authenticated
+            if (request.IsAuthenticated && request.Identity.HasTenant)
+            {
+                query = query.Where(m => m.Category.TenantId == request.Identity.Tenant);
+            }
+
+            var model = await query
                 .Include(m => m.Category)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
-                
+
             var category = await _context.Set<ModelCategory>()
+                .Where(c => c.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.CategoryId, cancellationToken);
 
             model.UpdateDetails(
-                request.Name, 
+                request.Name,
                 category,
-                request.Artist ,
+                request.Characters ?? Array.Empty<string>(),
+                request.Artist,
                 request.Tags ?? Array.Empty<string>(),
                 request.BaseSize,
                 request.FigureSize,
-                request.NumberOfFigures
+                request.NumberOfFigures,
+                request.Franchise,
+                request.Type,
+                request.SizeInMb
             );
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success();
+            var result = ModelDetails.FromModel(model);
+
+            return CommandResponse.Success(result);
         }
     }
 }
