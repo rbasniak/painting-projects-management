@@ -140,7 +140,7 @@ public static class ModelsSeeder
                         baseSize: BaseSize.Unknown,
                         figureSize: FigureSize.Unknown,
                         numberOfFigures: -1,
-                        size: totalSizeInMb));
+                        sizeInMb: totalSizeInMb));
                 }
             }
         }

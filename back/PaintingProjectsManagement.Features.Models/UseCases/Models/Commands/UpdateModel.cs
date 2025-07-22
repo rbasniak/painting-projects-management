@@ -18,13 +18,17 @@ public class UpdateModel : IEndpoint
     public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
         public Guid CategoryId { get; set; }
         public string Artist { get; set; } = string.Empty;
         public string[] Tags { get; set; } = Array.Empty<string>();
+        public string[] Characters { get; set; } = Array.Empty<string>();
+        public string Name { get; set; } = string.Empty;
         public BaseSize BaseSize { get; set; }
         public FigureSize FigureSize { get; set; }
         public int NumberOfFigures { get; set; }
+        public string Franchise { get; set; } = string.Empty;
+        public ModelType ModelType { get; set; } = ModelType.Unknown;
+        public int SizeInMb { get; set; } = 0;
     }
 
     public class Validator : SmartValidator<Request, Model>
@@ -35,22 +39,46 @@ public class UpdateModel : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
-            RuleFor(x => x.Name)
-                .MustAsync(async (request, name, cancellationToken) => 
-                    !await Context.Set<Model>().AnyAsync(m => m.Name == name && m.Id != request.Id && m.Category.TenantId == request.Identity.Tenant, cancellationToken))
-                .WithMessage("A model with this name already exists.");
+            RuleFor(x => x.Tags)
+                .NotNull()
+                .WithMessage("Tags cannot be null")
+                .DependentRules(() => 
+                {
+                    RuleForEach(x => x.Tags)
+                        .NotNull()
+                        .WithMessage("Each tag cannot be null")
+                        .NotEmpty()
+                        .WithMessage("Each tag cannot be empty")
+                        .Must(tag => !string.IsNullOrWhiteSpace(tag))
+                        .WithMessage("Each tag cannot be whitespace")
+                        .MaximumLength(25)
+                        .WithMessage("Each tag cannot exceed 25 characters");
+                });
 
-            RuleFor(x => x.Artist)
-                .MaximumLength(150);
 
-            RuleFor(x => x.CategoryId)
-                .MustAsync(async (request, categoryId, cancellationToken) =>
-                    await Context.Set<ModelCategory>().AnyAsync(c => c.Id == categoryId && c.TenantId == request.Identity.Tenant, cancellationToken))
-                .WithMessage("The specified category does not exist.");
-                
+            RuleFor(x => x.Characters)
+                .NotNull()
+                .WithMessage("Characters cannot be null")
+                .DependentRules(() => 
+                {
+                    RuleForEach(x => x.Characters)
+                        .NotNull()
+                        .WithMessage("Each character cannot be null")
+                        .NotEmpty()
+                        .WithMessage("Each character cannot be empty")
+                        .Must(character => !string.IsNullOrWhiteSpace(character))
+                        .WithMessage("Each character cannot be whitespace")
+                        .MaximumLength(50)
+                        .WithMessage("Each character cannot exceed 50 characters");
+                });
+
             RuleFor(x => x.NumberOfFigures)
                 .GreaterThan(0)
-                .WithMessage("Number of figures must be greater than zero.");
+                .WithMessage("NumberOfFigures must be greater than zero");
+
+            RuleFor(x => x.SizeInMb)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("SizeInMb must be greater than or equal to zero");
         }
     }
 
@@ -78,11 +106,15 @@ public class UpdateModel : IEndpoint
             model.UpdateDetails(
                 request.Name, 
                 category,
+                request.Characters ?? Array.Empty<string>(),
                 request.Artist,
                 request.Tags ?? Array.Empty<string>(),
                 request.BaseSize,
                 request.FigureSize,
-                request.NumberOfFigures
+                request.NumberOfFigures,
+                request.Franchise,
+                request.ModelType,
+                request.SizeInMb
             );
 
             await _context.SaveChangesAsync(cancellationToken);

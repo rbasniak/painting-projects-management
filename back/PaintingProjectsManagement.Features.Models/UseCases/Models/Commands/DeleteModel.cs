@@ -36,15 +36,7 @@ public class DeleteModel : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var query = _context.Set<Model>().AsQueryable();
-            
-            // Filter by tenant if authenticated
-            if (request.IsAuthenticated && request.Identity.HasTenant)
-            {
-                query = query.Where(m => m.Category.TenantId == request.Identity.Tenant);
-            }
-            
-            var model = await query.FirstAsync(x => x.Id == request.Id, cancellationToken);
+            var model = await _context.Set<Model>().FirstAsync(x => x.Id == request.Id && x.TenantId == request.Identity.Tenant, cancellationToken);
 
             _context.Remove(model);
 

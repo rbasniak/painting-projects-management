@@ -19,18 +19,17 @@ public class ModelConfig : IEntityTypeConfiguration<Model>
             .IsRequired();
             
         builder.Property(e => e.Artist)
-            .HasMaxLength(150);
-            
-        builder.Property(e => e.Tags)
-            .HasConversion(
-                v => string.Join(',', v.Order()),
-                v => string.IsNullOrEmpty(v) ? Array.Empty<string>() : v.Split(',', StringSplitOptions.RemoveEmptyEntries));
-            
+            .HasMaxLength(50);
+
+        builder.Property(e => e.Franchise)
+            .HasMaxLength(75);
+
         builder.HasOne(e => e.Category)
             .WithMany()
             .HasForeignKey(e => e.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(m => m.Name);
+        builder.HasIndex(e => new { e.TenantId, e.Name })
+           .IsUnique();
     }
 }
