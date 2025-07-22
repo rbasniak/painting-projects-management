@@ -33,7 +33,7 @@ internal class PrioritizeModels : IEndpoint
                 .NotEmpty()
                 .MustAsync(async (id, cancellationToken) =>
                     await context.Set<Model>().AnyAsync(m => m.Id == id && m.Score == 5, cancellationToken))
-                .WithMessage("All models must exist and have a score of 5.");
+                .WithMessage("All models must exist and be eligible for prioritization.");
         }
     }
 
