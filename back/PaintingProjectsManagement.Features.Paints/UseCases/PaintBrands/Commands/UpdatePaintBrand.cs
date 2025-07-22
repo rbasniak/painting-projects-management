@@ -10,6 +10,8 @@ internal class UpdatePaintBrand : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<PaintBrandDetails>(StatusCodes.Status200OK)
+        .RequireAuthorization(Claims.MANAGE_PAINTS)
         .WithName("Update Paint Brand")
         .WithTags("Paint Brands");
     }
@@ -20,20 +22,17 @@ internal class UpdatePaintBrand : IEndpoint
         public string Name { get; set; } = string.Empty;
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, PaintBrand>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id).NotEmpty();
-            RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
-            
-            RuleFor(x => x.Id).MustAsync(async (id, cancellationToken) =>
-                await context.Set<PaintBrand>().AnyAsync(x => x.Id == id, cancellationToken))
-                .WithMessage("Paint brand with the specified ID does not exist.");
-                
+        }
+
+        protected override void ValidateBusinessRules()
+        {
             // Check that the new name is not already taken by another brand
             RuleFor(x => x).MustAsync(async (request, cancellationToken) =>
-                !await context.Set<PaintBrand>().AnyAsync(
+                !await Context.Set<PaintBrand>().AnyAsync(
                     b => b.Name == request.Name && b.Id != request.Id, 
                     cancellationToken))
                 .WithMessage("Another brand with this name already exists.");
@@ -47,7 +46,8 @@ internal class UpdatePaintBrand : IEndpoint
             var brand = await _context.Set<PaintBrand>().FirstAsync(x => x.Id == request.Id, cancellationToken);
             brand.UpdateDetails(request.Name);
             await _context.SaveChangesAsync(cancellationToken);
-            return CommandResponse.Success();
+            var result = PaintBrandDetails.FromModel(brand);
+            return CommandResponse.Success(result);
         }
     }
 }

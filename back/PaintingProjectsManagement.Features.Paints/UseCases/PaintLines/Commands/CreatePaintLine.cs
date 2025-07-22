@@ -10,6 +10,8 @@ internal class CreatePaintLine : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<PaintLineDetails>(StatusCodes.Status200OK)
+        .RequireAuthorization(Claims.MANAGE_PAINTS)
         .WithName("Create Brand Line")
         .WithTags("Paint Lines");
     }
@@ -20,11 +22,18 @@ internal class CreatePaintLine : IEndpoint
         public string Name { get; set; } = string.Empty;
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, PaintLine>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+            // Check for unique name constraint within the same brand (this is handled by database unique index, but we can add a custom message)
+            RuleFor(x => x).MustAsync(async (request, cancellationToken) =>
+                !await Context.Set<PaintLine>().AnyAsync(x => x.BrandId == request.BrandId && x.Name == request.Name, cancellationToken))
+                .WithMessage("A paint line with this name already exists for this brand.");
         }
     }
 
@@ -40,7 +49,9 @@ internal class CreatePaintLine : IEndpoint
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success();
+            var result = PaintLineDetails.FromModel(line);
+
+            return CommandResponse.Success(result);
         }
     }
 }

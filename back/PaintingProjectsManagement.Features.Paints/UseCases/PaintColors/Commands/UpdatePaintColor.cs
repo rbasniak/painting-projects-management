@@ -10,6 +10,8 @@ internal class UpdatePaintColor : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<PaintColorDetails>(StatusCodes.Status200OK)
+        .RequireAuthorization(Claims.MANAGE_PAINTS)
         .WithName("Update Paint Color")
         .WithTags("Paint Colors");
     }
@@ -20,39 +22,35 @@ internal class UpdatePaintColor : IEndpoint
         public string Name { get; set; } = string.Empty;
         public string HexColor { get; set; } = string.Empty;
         public double BottleSize { get; set; }
-        public double Price { get; set; }
         public PaintType Type { get; set; }
         public Guid LineId { get; set; }
         public string? ManufacturerCode { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, PaintColor>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id).NotEmpty();
-            RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
-            RuleFor(x => x.HexColor).NotEmpty().MaximumLength(7)
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+            RuleFor(x => x.HexColor)
                 .Matches("^#[0-9A-Fa-f]{6}$")
                 .WithMessage("Hex color must be in format #RRGGBB");
-            RuleFor(x => x.BottleSize).GreaterThan(0);
-            RuleFor(x => x.Price).GreaterThan(0);
-            RuleFor(x => x.LineId).NotEmpty();
-            
-            // Check that the paint color exists
-            RuleFor(x => x.Id).MustAsync(async (id, cancellationToken) =>
-                await context.Set<PaintColor>().AnyAsync(x => x.Id == id, cancellationToken))
-                .WithMessage("Paint color with the specified ID does not exist.");
-            
-            // Check that the line exists
-            RuleFor(x => x.LineId).MustAsync(async (lineId, cancellationToken) =>
-                await context.Set<PaintLine>().AnyAsync(x => x.Id == lineId, cancellationToken))
-                .WithMessage("Paint line with the specified ID does not exist.");
-                
-            // Optional manufacturer code validation if provided
-            When(x => !string.IsNullOrEmpty(x.ManufacturerCode), () => {
-                RuleFor(x => x.ManufacturerCode).MaximumLength(50);
-            });
+
+            RuleFor(x => x.BottleSize)
+                .GreaterThan(0)
+                .WithMessage("Bottle size must be greater than zero.");
+
+            // Check for unique name within the same paint line (excluding current paint color)
+            RuleFor(x => x).MustAsync(async (request, cancellationToken) =>
+                !await Context.Set<PaintColor>().AnyAsync(x => 
+                    x.LineId == request.LineId && 
+                    x.Name == request.Name && 
+                    x.Id != request.Id, 
+                    cancellationToken))
+                .WithMessage("Another paint color with this name already exists in this paint line.");
         }
     }
 
@@ -81,7 +79,9 @@ internal class UpdatePaintColor : IEndpoint
             
             await _context.SaveChangesAsync(cancellationToken);
             
-            return CommandResponse.Success(PaintColorDetails.FromModel(paintColor));
+            var result = PaintColorDetails.FromModel(paintColor);
+
+            return CommandResponse.Success(result);
         }
     }
 }
