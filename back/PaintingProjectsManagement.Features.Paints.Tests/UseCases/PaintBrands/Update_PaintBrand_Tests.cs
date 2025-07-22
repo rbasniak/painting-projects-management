@@ -92,13 +92,16 @@ public class Update_PaintBrand_Tests
     }
 
     [Test, NotInParallel(Order = 5)]
-    public async Task Superuser_Cannot_Update_PaintBrand_When_Name_Is_Empty()
+    [Arguments("")]
+    [Arguments(null)]
+    [Arguments("   ")]
+    public async Task Superuser_Cannot_Update_PaintBrand_When_Name_Is_Empty(string? name)
     {
         // Prepare
         var request = new UpdatePaintBrand.Request
         {
             Id = _brandId,
-            Name = ""
+            Name = name!
         };
 
         // Act
@@ -114,50 +117,6 @@ public class Update_PaintBrand_Tests
     }
 
     [Test, NotInParallel(Order = 6)]
-    public async Task Superuser_Cannot_Update_PaintBrand_When_Name_Is_Null()
-    {
-        // Prepare
-        var request = new UpdatePaintBrand.Request
-        {
-            Id = _brandId,
-            Name = null!
-        };
-
-        // Act
-        var response = await TestingServer.PutAsync<PaintBrandDetails>("api/paints/brands", request, "superuser");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database - name should not be changed
-        var brand = TestingServer.CreateContext().Set<PaintBrand>().FirstOrDefault(x => x.Id == _brandId);
-        brand.ShouldNotBeNull();
-        brand.Name.ShouldBe("Test Brand for Update");
-    }
-
-    [Test, NotInParallel(Order = 7)]
-    public async Task Superuser_Cannot_Update_PaintBrand_When_Name_Is_Whitespace()
-    {
-        // Prepare
-        var request = new UpdatePaintBrand.Request
-        {
-            Id = _brandId,
-            Name = "   "
-        };
-
-        // Act
-        var response = await TestingServer.PutAsync<PaintBrandDetails>("api/paints/brands", request, "superuser");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database - name should not be changed
-        var brand = TestingServer.CreateContext().Set<PaintBrand>().FirstOrDefault(x => x.Id == _brandId);
-        brand.ShouldNotBeNull();
-        brand.Name.ShouldBe("Test Brand for Update");
-    }
-
-    [Test, NotInParallel(Order = 8)]
     public async Task Superuser_Cannot_Update_PaintBrand_When_Name_Already_Exists()
     {
         // Prepare - Create another brand first
@@ -186,7 +145,7 @@ public class Update_PaintBrand_Tests
         brand.Name.ShouldBe("Test Brand for Update");
     }
 
-    [Test, NotInParallel(Order = 9)]
+    [Test, NotInParallel(Order = 7)]
     public async Task Superuser_Can_Update_PaintBrand_When_Data_Is_Valid()
     {
         // Prepare
@@ -211,7 +170,7 @@ public class Update_PaintBrand_Tests
         brand.Name.ShouldBe("Updated Brand Name Valid");
     }
 
-    [Test, NotInParallel(Order = 10)]
+    [Test, NotInParallel(Order = 8)]
     public async Task Superuser_Can_Update_PaintBrand_To_Same_Name()
     {
         // Prepare

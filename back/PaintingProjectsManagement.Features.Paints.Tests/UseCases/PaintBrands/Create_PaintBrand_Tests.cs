@@ -55,12 +55,15 @@ public class Create_PaintBrand_Tests
     }
 
     [Test, NotInParallel(Order = 4)]
-    public async Task Superuser_Cannot_Create_PaintBrand_When_Name_Is_Empty()
+    [Arguments("")]
+    [Arguments(null)]
+    [Arguments("   ")]
+    public async Task Superuser_Cannot_Create_PaintBrand_When_Name_Is_Empty(string? name)
     {
         // Prepare
         var request = new CreatePaintBrand.Request
         {
-            Name = ""
+            Name = name!
         };
 
         // Act
@@ -70,51 +73,11 @@ public class Create_PaintBrand_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
 
         // Assert the database
-        var brands = TestingServer.CreateContext().Set<PaintBrand>().Where(x => x.Name == "").ToList();
+        var brands = TestingServer.CreateContext().Set<PaintBrand>().Where(x => x.Name == name).ToList();
         brands.ShouldBeEmpty();
     }
 
     [Test, NotInParallel(Order = 5)]
-    public async Task Superuser_Cannot_Create_PaintBrand_When_Name_Is_Null()
-    {
-        // Prepare
-        var request = new CreatePaintBrand.Request
-        {
-            Name = null!
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<PaintBrandDetails>("api/paints/brands", request, "superuser");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database
-        var brands = TestingServer.CreateContext().Set<PaintBrand>().Where(x => x.Name == null).ToList();
-        brands.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 6)]
-    public async Task Superuser_Cannot_Create_PaintBrand_When_Name_Is_Whitespace()
-    {
-        // Prepare
-        var request = new CreatePaintBrand.Request
-        {
-            Name = "   "
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<PaintBrandDetails>("api/paints/brands", request, "superuser");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database
-        var brands = TestingServer.CreateContext().Set<PaintBrand>().Where(x => x.Name == "   ").ToList();
-        brands.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 7)]
     public async Task Superuser_Cannot_Create_PaintBrand_When_Name_Already_Exists()
     {
         // Prepare - Create a brand first
@@ -141,7 +104,7 @@ public class Create_PaintBrand_Tests
         brands.Count.ShouldBe(1);
     }
 
-    [Test, NotInParallel(Order = 8)]
+    [Test, NotInParallel(Order = 6)]
     public async Task Superuser_Can_Create_PaintBrand_When_Data_Is_Valid()
     {
         // Prepare
