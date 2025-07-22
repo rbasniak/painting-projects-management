@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Paints;
 
-internal class ListPaintColors : IEndpoint
+public class ListPaintColors : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {

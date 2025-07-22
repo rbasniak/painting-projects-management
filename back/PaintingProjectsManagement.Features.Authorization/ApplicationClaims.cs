@@ -7,7 +7,7 @@ public static class Claims
 
 public static class ApplicationClaims
 {
-    public static ClaimValue MANAGE_PLANTS => new ClaimValue(Claims.MANAGE_PAINTS, "Paints Management");
+    public static ClaimValue MANAGE_PAINTS => new ClaimValue(Claims.MANAGE_PAINTS, "Paints Management");
 }
 
 public class ClaimValue

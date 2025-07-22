@@ -1,10 +1,10 @@
 ﻿namespace PaintingProjectsManagement.Features.Paints;
 
-internal class UpdatePaintBrand : IEndpoint
+public class UpdatePaintBrand : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/paints/brands", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/api/paints/brands", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 

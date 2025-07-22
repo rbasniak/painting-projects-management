@@ -1,4 +1,5 @@
-﻿using PaintingProjectsManagement.Features.Materials;
+﻿using PaintingProjectsManagement.Features;
+using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Paints;
 using rbkApiModules.Commons.Relational;
@@ -13,6 +14,7 @@ public partial class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatab
         AddSeed("2025-07-19 16:00: Users seed", new SeedInfo<DatabaseContext>(UsersSeed));
         AddSeed("2025-07-19 16:48: Development materials seed", new SeedInfo<DatabaseContext>(DevelopmentMaterialsSeed));
         AddSeed("2025-07-20 08:15: Development models seed", new SeedInfo<DatabaseContext>(DevelopmentModelsSeed));
+        AddSeed("2025-07-22 23:15: Admin claims seed", new SeedInfo<DatabaseContext>(AdminClaimsSeed));
         // AddSeed("2025-07-20: Army Painter Seed", new SeedInfo<DatabaseContext>(ArmyPainterFanaticsSeed));
     }
 
@@ -274,6 +276,21 @@ public partial class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatab
         context.Set<PaintColor>().Add(new PaintColor(Guid.CreateVersion7(), apFanatics, "Dark Emerald", "#415129", 17, PaintType.Metallic));
         context.Set<PaintColor>().Add(new PaintColor(Guid.CreateVersion7(), apFanatics, "Glittering Green", "#2f7e4d", 17, PaintType.Metallic));
         context.Set<PaintColor>().Add(new PaintColor(Guid.CreateVersion7(), apFanatics, "Gemstone Red", "#851f26", 17, PaintType.Metallic));
+
+        context.SaveChanges();
+    }
+
+    private void AdminClaimsSeed(DatabaseContext context, IServiceProvider provider)
+    {
+        var superuser = context.Set<User>().First(u => u.Username == "superuser");
+
+        var claim = new Claim(ApplicationClaims.MANAGE_PAINTS.Name, ApplicationClaims.MANAGE_PAINTS.Description);
+
+        context.Add(claim);
+
+        var userClaim = new UserToClaim(superuser, claim, ClaimAccessType.Allow);
+
+        context.Add(userClaim);
 
         context.SaveChanges();
     }

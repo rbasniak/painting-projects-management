@@ -1,0 +1,10 @@
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.DependencyInjection;
+global using NUnit.Framework;
+global using rbkApiModules.Commons.Core;
+global using rbkApiModules.Commons.Testing;
+global using rbkApiModules.Testing.Core;
+global using System.Net;
+global using System.Threading.Tasks;
+global using Shouldly;
+global using rbkApiModules.Identity.Core;

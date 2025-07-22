@@ -175,7 +175,6 @@ public class UserLogin
 
     public class Handler(IUserAuthenticator _tokenCreator) : ICommandHandler<Request>
     {
-
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var jwt = await _tokenCreator.Authenticate(request.Username, request.Tenant, cancellationToken);

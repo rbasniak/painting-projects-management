@@ -42,7 +42,18 @@ public static class HttpAssertionExtensions
 
     public static void ShouldBeSuccess<T>(this HttpResponse<T> response, out T result) where T : class
     {
-        response.IsSuccess.ShouldBeTrue($"Expected success response, but the response was not successful. Messages: [ {string.Join(", ", response.Messages)} ]");
+        string messages;
+        if (response.Messages.Any())
+        {
+            messages = string.Join(", ", response.Messages);
+        }
+        else
+        {
+            messages = GetFriendlyError(response.Code, response.Body);
+        }
+
+        response.IsSuccess.ShouldBeTrue($"Http request failed. Messages: [ {messages} ]");
+
         response.Data.ShouldNotBeNull($"Expected response of type {typeof(T).Name}, but the response was empty");
         response.Data.ShouldBeOfType(typeof(T), $"Expected response of type {typeof(T).Name}, but the response was of type {response.Data.GetType().Name}");
 
@@ -58,31 +69,7 @@ public static class HttpAssertionExtensions
         }
         else
         {
-            switch (response.Code)
-            {
-                case HttpStatusCode.BadRequest:
-                    messages = "Response might have validation errors. Please check the contents of the response.";
-                    break;
-                case HttpStatusCode.Unauthorized:
-                    messages = "Request was not authenticated. Did you pass the correct credentials?";
-                    break;
-                case HttpStatusCode.Forbidden:
-                    messages = "User was not authorized to do this action, Did you pass the correct credentials?";
-                    break;
-                case HttpStatusCode.NotFound:
-                    messages = "Endpoint was not found. Is the Url correct and is the endpoint registered?";
-                    break;
-                case HttpStatusCode.MethodNotAllowed:
-                case HttpStatusCode.UnsupportedMediaType:
-                    messages = "Http method might be wrong. Please check if the endpoint mapping is correct or if the test is calling the correct http method.";
-                    break;
-                case HttpStatusCode.InternalServerError:
-                    messages = "Request was interrupted because of a critical failure. Please check the contents of the response. " + response.Body;
-                    break;
-                default:
-                    messages = $"Error code: {response.Code}";
-                    break;
-            }
+            messages = GetFriendlyError(response.Code, response.Body);
         }
 
         response.IsSuccess.ShouldBeTrue($"Http request failed. Messages: [ {messages} ]");
@@ -91,6 +78,39 @@ public static class HttpAssertionExtensions
     public static void ShouldBeForbidden(this HttpResponse response)
     {
         response.Code.ShouldBe(HttpStatusCode.Forbidden, $"Resquest bypassed authorization. Messages: [ {string.Join(", ", response.Messages)} ]");
+    }
+
+    private static string GetFriendlyError(HttpStatusCode code, string body)
+    {
+        var messages = string.Empty;
+
+        switch (code)
+        {
+            case HttpStatusCode.BadRequest:
+                messages = "[400] Response might have validation errors. Please check the contents of the response.";
+                break;
+            case HttpStatusCode.Unauthorized:
+                messages = "[401] Request was not authenticated. Did you pass the correct credentials?";
+                break;
+            case HttpStatusCode.Forbidden:
+                messages = "[403] User was not authorized to do this action, Did you pass the correct credentials?";
+                break;
+            case HttpStatusCode.NotFound:
+                messages = "[404] Endpoint was not found. Is the Url correct and is the endpoint registered?";
+                break;
+            case HttpStatusCode.MethodNotAllowed:
+            case HttpStatusCode.UnsupportedMediaType:
+                messages = "[405/415] Http method might be wrong. Please check if the endpoint mapping is correct or if the test is calling the correct http method.";
+                break;
+            case HttpStatusCode.InternalServerError:
+                messages = "[500] Request was interrupted because of a critical failure. Please check the contents of the response. " + body;
+                break;
+            default:
+                messages = $"Error code: {code}";
+                break;
+        }
+
+        return messages;
     }
 }
 
