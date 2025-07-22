@@ -88,13 +88,16 @@ public class Update_Model_Category_Tests
     }
 
     [Test, NotInParallel(Order = 4)]
-    public async Task User_Cannot_Update_Model_Category_When_Name_Is_Empty()
+    [Arguments("")]
+    [Arguments(null)]
+    [Arguments("   ")]
+    public async Task User_Cannot_Update_Model_Category_When_Name_Is_Empty(string? name)
     {
         // Prepare
         var request = new UpdateModelCategory.Request
         {
             Id = _categoryId,
-            Name = "",
+            Name = name!,
         };
 
         // Act
@@ -110,28 +113,6 @@ public class Update_Model_Category_Tests
     }
 
     [Test, NotInParallel(Order = 5)]
-    public async Task User_Cannot_Update_Model_Category_When_Name_Is_Null()
-    {
-        // Prepare
-        var request = new UpdateModelCategory.Request
-        {
-            Id = _categoryId,
-            Name = null!,
-        };
-
-        // Act
-        var response = await TestingServer.PutAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database - name should not be changed
-        var category = TestingServer.CreateContext().Set<ModelCategory>().FirstOrDefault(x => x.Id == _categoryId);
-        category.ShouldNotBeNull();
-        category.Name.ShouldBe("Original Category");
-    }
-
-    [Test, NotInParallel(Order = 6)]
     public async Task User_Cannot_Update_Model_Category_When_Name_Exceeds_MaxLength()
     {
         // Prepare
@@ -153,7 +134,7 @@ public class Update_Model_Category_Tests
         category.Name.ShouldBe("Original Category");
     }
 
-    [Test, NotInParallel(Order = 7)]
+    [Test, NotInParallel(Order = 6)]
     public async Task User_Cannot_Update_Model_Category_When_Name_Already_Exists()
     {
         // Prepare
@@ -175,29 +156,7 @@ public class Update_Model_Category_Tests
         category.Name.ShouldBe("Original Category");
     }
 
-    [Test, NotInParallel(Order = 8)]
-    public async Task User_Cannot_Update_Model_Category_When_Name_Contains_Only_Whitespace()
-    {
-        // Prepare
-        var request = new UpdateModelCategory.Request
-        {
-            Id = _categoryId,
-            Name = "   ", // Only whitespace
-        };
-
-        // Act
-        var response = await TestingServer.PutAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database - name should not be changed
-        var category = TestingServer.CreateContext().Set<ModelCategory>().FirstOrDefault(x => x.Id == _categoryId);
-        category.ShouldNotBeNull();
-        category.Name.ShouldBe("Original Category");
-    }
-
-    [Test, NotInParallel(Order = 9)]
+    [Test, NotInParallel(Order = 7)]
     public async Task User_Can_Update_Model_Category_To_Same_Name_As_Another_User()
     {
         // Prepare
@@ -228,7 +187,7 @@ public class Update_Model_Category_Tests
         rbCategory.Id.ShouldNotBe(rsCategory.Id);
     }
 
-    [Test, NotInParallel(Order = 10)]
+    [Test, NotInParallel(Order = 8)]
     public async Task User_Can_Update_Model_Category_With_Valid_Data()
     {
         // Prepare - first update the category back to a unique name
@@ -254,7 +213,7 @@ public class Update_Model_Category_Tests
         category.TenantId.ShouldBe("RODRIGO.BASNIAK");
     }
 
-    [Test, NotInParallel(Order = 11)]
+    [Test, NotInParallel(Order = 9)]
     public async Task User_Cannot_Update_Model_Category_Of_Another_User()
     {
         // Prepare

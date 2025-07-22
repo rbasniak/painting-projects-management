@@ -56,12 +56,15 @@ public class Create_Material_Tests
     }
 
     [Test, NotInParallel(Order = 3)]
-    public async Task User_Cannot_Create_Material_When_Name_Is_Empty()
+    [Arguments("")]
+    [Arguments(null)]
+    [Arguments("   ")]
+    public async Task User_Cannot_Create_Material_When_Name_Is_Empty(string? name)
     {
         // Prepare
         var request = new CreateMaterial.Request
         {
-            Name = "",
+            Name = name!,
             Unit = MaterialUnit.Unit,
             PricePerUnit = 19,
         };
@@ -73,33 +76,11 @@ public class Create_Material_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
 
         // Assert the database
-        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "").ToList();
+        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == name).ToList();
         materials.ShouldBeEmpty();
     }
 
     [Test, NotInParallel(Order = 4)]
-    public async Task User_Cannot_Create_Material_When_Name_Is_Null()
-    {
-        // Prepare
-        var request = new CreateMaterial.Request
-        {
-            Name = null!,
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = 19,
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database
-        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == null).ToList();
-        materials.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 5)]
     public async Task User_Cannot_Create_Material_When_Name_Exceeds_MaxLength()
     {
         // Prepare
@@ -210,28 +191,6 @@ public class Create_Material_Tests
     }
 
     [Test, NotInParallel(Order = 10)]
-    public async Task User_Cannot_Create_Material_When_Name_Contains_Only_Whitespace()
-    {
-        // Prepare
-        var request = new CreateMaterial.Request
-        {
-            Name = "   ", // Only whitespace
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = 19,
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database
-        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name.Trim() == "").ToList();
-        materials.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 11)]
     public async Task User_Cannot_Create_Material_When_Name_Is_Too_Short()
     {
         // Prepare
@@ -261,7 +220,7 @@ public class Create_Material_Tests
         }
     }
 
-    [Test, NotInParallel(Order = 12)]
+    [Test, NotInParallel(Order = 11)]
     public async Task User_Cannot_Create_Material_When_PricePerUnit_Is_Very_Large()
     {
         // Prepare
@@ -291,7 +250,7 @@ public class Create_Material_Tests
         }
     }
 
-    [Test, NotInParallel(Order = 16)]
+    [Test, NotInParallel(Order = 12)]
     public async Task User_Cannot_Create_Material_When_Unit_Is_Invalid()
     {
         // Prepare
@@ -313,7 +272,7 @@ public class Create_Material_Tests
         materials.ShouldBeEmpty();
     }
 
-    [Test, NotInParallel(Order = 17)]
+    [Test, NotInParallel(Order = 13)]
     public async Task User_Can_Create_Material_With_Same_Name_As_Another_User()
     {
         // Prepare
@@ -357,7 +316,7 @@ public class Create_Material_Tests
     /// <summary>
     /// The user should be able to create a new material with valid data
     /// </summary>
-    [Test, NotInParallel(Order = 18)]
+    [Test, NotInParallel(Order = 14)]
     public async Task User_Can_Create_Material()
     {
         // Prepare

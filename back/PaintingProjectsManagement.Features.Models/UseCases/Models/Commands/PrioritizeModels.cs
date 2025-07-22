@@ -63,7 +63,7 @@ internal class PrioritizeModels : IEndpoint
                 {
                     // Priority is based on position (highest number = highest priority)
                     var priority = request.ModelIds.Length - i;
-                    model.ResetPriority(priority);
+                    model.UpdatePriority(priority);
                 }
             }
 

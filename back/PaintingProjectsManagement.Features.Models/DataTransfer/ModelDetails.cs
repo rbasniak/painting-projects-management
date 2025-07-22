@@ -28,7 +28,7 @@ public class ModelDetails
             Name = model.Name,
             Franchise = model.Franchise,
             Characters = model.Characters,
-            Size = model.Size,
+            Size = model.SizeInMb,
             Category = new EntityReference(model.Category.Id, model.Category.Name),
             Type = model.Type,
             Artist = model.Artist,

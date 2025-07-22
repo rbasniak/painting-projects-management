@@ -54,12 +54,15 @@ public class Create_Model_Category_Tests
     }
 
     [Test, NotInParallel(Order = 3)]
-    public async Task User_Cannot_Create_Model_Category_When_Name_Is_Empty()
+    [Arguments("")]
+    [Arguments(null)]
+    [Arguments("   ")]
+    public async Task User_Cannot_Create_Model_Category_When_Name_Is_Empty(string? name)
     {
         // Prepare
         var request = new CreateModelCategory.Request
         {
-            Name = "",
+            Name = name!,
         };
 
         // Act
@@ -69,31 +72,11 @@ public class Create_Model_Category_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
 
         // Assert the database
-        var categories = TestingServer.CreateContext().Set<ModelCategory>().Where(x => x.Name == "").ToList();
+        var categories = TestingServer.CreateContext().Set<ModelCategory>().Where(x => x.Name == name).ToList();
         categories.ShouldBeEmpty();
     }
 
     [Test, NotInParallel(Order = 4)]
-    public async Task User_Cannot_Create_Model_Category_When_Name_Is_Null()
-    {
-        // Prepare
-        var request = new CreateModelCategory.Request
-        {
-            Name = null!,
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database
-        var categories = TestingServer.CreateContext().Set<ModelCategory>().Where(x => x.Name == null).ToList();
-        categories.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 5)]
     public async Task User_Cannot_Create_Model_Category_When_Name_Exceeds_MaxLength()
     {
         // Prepare
@@ -134,26 +117,6 @@ public class Create_Model_Category_Tests
     }
 
     [Test, NotInParallel(Order = 7)]
-    public async Task User_Cannot_Create_Model_Category_When_Name_Contains_Only_Whitespace()
-    {
-        // Prepare
-        var request = new CreateModelCategory.Request
-        {
-            Name = "   ", // Only whitespace
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database
-        var categories = TestingServer.CreateContext().Set<ModelCategory>().Where(x => x.Name.Trim() == "").ToList();
-        categories.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 8)]
     public async Task User_Can_Create_Model_Category_With_Same_Name_As_Another_User()
     {
         // Prepare
@@ -187,7 +150,7 @@ public class Create_Model_Category_Tests
     /// <summary>
     /// The user should be able to create a new model category with valid data
     /// </summary>
-    [Test, NotInParallel(Order = 9)]
+    [Test, NotInParallel(Order = 8)]
     public async Task User_Can_Create_Model_Category()
     {
         // Prepare

@@ -124,7 +124,10 @@ public class Update_Material_Tests
     }
 
     [Test, NotInParallel(Order = 5)]
-    public async Task User_Cannot_Update_Material_When_Name_Is_Empty()
+    [Arguments("")]
+    [Arguments(null)]
+    [Arguments("   ")]
+    public async Task User_Cannot_Update_Material_When_Name_Is_Empty(string? name)
     {
         // Prepare
         var existingMaterial = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Name == "Existing Material");
@@ -133,7 +136,7 @@ public class Update_Material_Tests
         var updateRequest = new UpdateMaterial.Request
         {
             Id = existingMaterial.Id,
-            Name = "",
+            Name = name!,
             Unit = MaterialUnit.Unit,
             PricePerUnit = 25.0,
         };
@@ -151,60 +154,6 @@ public class Update_Material_Tests
     }
 
     [Test, NotInParallel(Order = 6)]
-    public async Task User_Cannot_Update_Material_When_Name_Is_Null()
-    {
-        // Prepare
-        var existingMaterial = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Name == "Existing Material");
-        existingMaterial.ShouldNotBeNull("Material should exist from seed");
-
-        var updateRequest = new UpdateMaterial.Request
-        {
-            Id = existingMaterial.Id,
-            Name = null!,
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = 25.0,
-        };
-
-        // Act
-        var response = await TestingServer.PutAsync("api/materials", updateRequest, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database
-        var unchangedEntity = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Id == existingMaterial.Id);
-        unchangedEntity.ShouldNotBeNull();
-        unchangedEntity.Name.ShouldBe("Existing Material"); // Name should remain unchanged
-    }
-
-    [Test, NotInParallel(Order = 7)]
-    public async Task User_Cannot_Update_Material_When_Name_Contains_Only_Whitespace()
-    {
-        // Prepare
-        var existingMaterial = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Name == "Existing Material");
-        existingMaterial.ShouldNotBeNull("Material should exist from seed");
-
-        var updateRequest = new UpdateMaterial.Request
-        {
-            Id = existingMaterial.Id,
-            Name = "   ",
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = 25.0,
-        };
-
-        // Act
-        var response = await TestingServer.PutAsync("api/materials", updateRequest, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
-
-        // Assert the database
-        var unchangedEntity = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Id == existingMaterial.Id);
-        unchangedEntity.ShouldNotBeNull();
-        unchangedEntity.Name.ShouldBe("Existing Material"); // Name should remain unchanged
-    }
-
-    [Test, NotInParallel(Order = 8)]
     public async Task User_Cannot_Update_Material_When_Name_Already_Exists()
     {
         // Prepare
@@ -231,7 +180,7 @@ public class Update_Material_Tests
         unchangedEntity.Name.ShouldBe("Existing Material"); // Name should remain unchanged
     }
 
-    [Test, NotInParallel(Order = 9)]
+    [Test, NotInParallel(Order = 7)]
     public async Task User_Can_Update_Material_With_Same_Name_As_Another_User()
     {
         // Prepare
@@ -265,7 +214,7 @@ public class Update_Material_Tests
         otherUserMaterial.ShouldNotBeNull();
     }
 
-    [Test, NotInParallel(Order = 10)]
+    [Test, NotInParallel(Order = 8)]
     public async Task User_Cannot_Update_Material_When_PricePerUnit_Is_Zero()
     {
         // Prepare
@@ -292,7 +241,7 @@ public class Update_Material_Tests
         unchangedEntity.PricePerUnit.ShouldBe(10.0); // Price should remain unchanged
     }
 
-    [Test, NotInParallel(Order = 11)]
+    [Test, NotInParallel(Order = 9)]
     public async Task User_Cannot_Update_Material_When_PricePerUnit_Is_Negative()
     {
         // Prepare
@@ -319,7 +268,7 @@ public class Update_Material_Tests
         unchangedEntity.PricePerUnit.ShouldBe(10.0); // Price should remain unchanged
     }
 
-    [Test, NotInParallel(Order = 12)]
+    [Test, NotInParallel(Order = 10)]
     public async Task User_Cannot_Update_Material_When_Multiple_Validation_Errors_Occur()
     {
         // Prepare
@@ -347,7 +296,7 @@ public class Update_Material_Tests
         unchangedEntity.PricePerUnit.ShouldBe(10.0); // Price should remain unchanged
     }
 
-    [Test, NotInParallel(Order = 13)]
+    [Test, NotInParallel(Order = 11)]
     public async Task User_Can_Update_Material_With_Same_Name_As_Itself()
     {
         // Prepare
@@ -376,7 +325,7 @@ public class Update_Material_Tests
         updatedEntity.PricePerUnit.ShouldBe(50.0); // Price was updated
     }
 
-    [Test, NotInParallel(Order = 14)]
+    [Test, NotInParallel(Order = 12)]
     public async Task User_Can_Update_Material()
     {
         // Prepare

@@ -64,5 +64,15 @@ public class Model : TenantEntity
     public void UpdatePicture(string pictureUrl)
     {
         PictureUrl = pictureUrl;
-    } 
+    }
+
+    internal void ResetPriority()
+    {
+        Priority = 0;
+    }
+
+    internal void UpdatePriority(int priority)
+    {
+        Priority = priority;
+    }
 }

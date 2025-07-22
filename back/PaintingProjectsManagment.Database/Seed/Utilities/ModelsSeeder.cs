@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using System.Diagnostics;
 using System.Text.Json;
 
@@ -133,6 +134,7 @@ public static class ModelsSeeder
                         tenant: "rodrigo.basniak",
                         name: character,
                         category: category,
+                        characters: characters,
                         franchise: GetFranchise(franchise),
                         type: type,
                         artist: artist,
