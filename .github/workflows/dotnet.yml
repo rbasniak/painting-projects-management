@@ -135,13 +135,11 @@ jobs:
           });
 
     - name: Generate and push badge
-      uses: schneegans/dynamic-badges-action@v1.6.0
+      uses: schneegans/dynamic-badges-action@v1.7.0
       with:
-        auth: ${{ secrets.GIST_SECRET }}
         label: coverage
-        message: ${{ steps.coverage.outputs.coverage_percentage }}%
-        namedLogo: github
-        color: ${{ steps.coverage.outputs.coverage_percentage > 79 && 'brightgreen' || steps.coverage.outputs.coverage_percentage > 59 && 'yellow' || 'red' }}
-        style: flat
+        auth: ${{ secrets.GIST_SECRET }}
         gistID: a1778faea690a8a406f92dd302cca1cf
         filename: coverage-badge.json
+        message: ${{ steps.coverage.outputs.coverage_percentage }}%
+        color: ${{ steps.coverage.outputs.coverage_percentage > 79 && 'brightgreen' || steps.coverage.outputs.coverage_percentage > 59 && 'yellow' || 'red' }}
