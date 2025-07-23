@@ -145,5 +145,5 @@ jobs:
         color: ${{ steps.coverage.outputs.coverage_percentage > 79 && 'brightgreen' || steps.coverage.outputs.coverage_percentage > 59 && 'yellow' || 'red' }}
         namedLogoWidth: 20
         style: flat
-        gistID: https://gist.github.com/rbasniak/a1778faea690a8a406f92dd302cca1cf
+        gistID: a1778faea690a8a406f92dd302cca1cf
         filename: coverage-badge.json
