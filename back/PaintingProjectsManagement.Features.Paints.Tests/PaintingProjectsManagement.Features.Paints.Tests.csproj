@@ -5,31 +5,24 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
+		<OutputType>Exe</OutputType>
 	</PropertyGroup>
 
+
 	<ItemGroup>
-		<PackageReference Include="coverlet.collector" Version="6.0.4">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.6" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.6" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2" />
+		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" Version="1.7.3" />
 		<PackageReference Include="Moq" Version="4.20.72" />
 		<PackageReference Include="Shouldly" Version="4.3.0" />
-		<PackageReference Include="Testcontainers" Version="4.6.0" />
-		<PackageReference Include="Testcontainers.SqlEdge" Version="3.10.0" />
 		<PackageReference Include="TUnit" Version="0.24.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Analyzer Include="..\rbkApiModules.Analysers\rbkApiModules.Analysers\bin\Debug\netstandard2.0\rbkApiModules.Analysers.dll" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\PaintingProjectsManagement.Features.Paints\PaintingProjectsManagement.Features.Paints.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj" />
+		<ProjectReference Include="..\PaintingProjectsManagment.Database\PaintingProjectsManagment.Database.csproj" />
 		<ProjectReference Include="..\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj" />
 	</ItemGroup>
 
