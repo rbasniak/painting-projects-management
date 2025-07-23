@@ -59,27 +59,27 @@ jobs:
         dotnet tool install -g dotnet-reportgenerator-globaltool
 
     - name: Generate coverage report
-      run: reportgenerator -reports:"**/TestsResults/*.cobertura.xml" -targetdir:"TestsResults/CoverageReport" -reporttypes:"Html;Cobertura;lcov;JsonSummary;Badges"
+      run: reportgenerator -reports:"**/TestsResults/*.cobertura.xml" -targetdir:"TestsResults/CoverageReport" -reporttypes:"Html;Cobertura;lcov;JsonSummary;Badges" -sourcefolders:"$(pwd)"
 
     - name: Upload coverage reports to GitHub
       uses: actions/upload-artifact@v4
       with:
         name: coverage-reports
-        path: TestsResults/CoverageReport/
+        path:  back/TestsResults/CoverageReport/
         retention-days: 30
 
     - name: Upload coverage info
       uses: actions/upload-artifact@v4
       with:
         name: coverage-info
-        path: coverage-info.txt
+        path:  back/coverage-info.txt
         retention-days: 30
 
     - name: Extract coverage percentage
       id: coverage
       run: |
-        if [ -f "TestsResults/CoverageReport/Summary.json" ]; then
-          COVERAGE_PERCENTAGE=$(jq -r '.summary.linecoverage' TestsResults/CoverageReport/Summary.json)
+        if [ -f "back/TestsResults/CoverageReport/Summary.json" ]; then
+          COVERAGE_PERCENTAGE=$(jq -r '.summary.linecoverage' back/TestsResults/CoverageReport/Summary.json)
           echo "coverage_percentage=$COVERAGE_PERCENTAGE" >> $GITHUB_OUTPUT
           echo "Coverage percentage: $COVERAGE_PERCENTAGE%"
         else
