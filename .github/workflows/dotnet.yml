@@ -11,7 +11,10 @@ on:
 
 jobs:
   build:
-
+    permissions:
+        contents: read
+        issues: write
+        pull-requests: write
     runs-on: ubuntu-latest
 
     defaults:
@@ -68,6 +71,27 @@ jobs:
         path:  back/TestsResults/CoverageReport/
         retention-days: 30
 
+    - name: Create coverage badge
+      run: |
+        COVERAGE_PERCENTAGE='${{ steps.coverage.outputs.coverage_percentage }}'
+        if [ "$COVERAGE_PERCENTAGE" -ge 80 ]; then
+          COLOR="brightgreen"
+        elif [ "$COVERAGE_PERCENTAGE" -ge 60 ]; then
+          COLOR="yellow"
+        else
+          COLOR="red"
+        fi
+        
+        echo "Creating coverage badge with $COVERAGE_PERCENTAGE% coverage (color: $COLOR)"
+        
+        # Create a simple badge using shields.io
+        BADGE_URL="https://img.shields.io/badge/coverage-${COVERAGE_PERCENTAGE}%25-${COLOR}.svg"
+        echo "Badge URL: $BADGE_URL"
+        
+        # Save badge info for documentation
+        echo "Coverage: $COVERAGE_PERCENTAGE%" > coverage-info.txt
+        echo "Badge URL: $BADGE_URL" >> coverage-info.txt
+
     - name: Upload coverage info
       uses: actions/upload-artifact@v4
       with:
@@ -108,23 +132,4 @@ jobs:
             body: comment
           });
 
-    - name: Create coverage badge
-      run: |
-        COVERAGE_PERCENTAGE='${{ steps.coverage.outputs.coverage_percentage }}'
-        if [ "$COVERAGE_PERCENTAGE" -ge 80 ]; then
-          COLOR="brightgreen"
-        elif [ "$COVERAGE_PERCENTAGE" -ge 60 ]; then
-          COLOR="yellow"
-        else
-          COLOR="red"
-        fi
-        
-        echo "Creating coverage badge with $COVERAGE_PERCENTAGE% coverage (color: $COLOR)"
-        
-        # Create a simple badge using shields.io
-        BADGE_URL="https://img.shields.io/badge/coverage-${COVERAGE_PERCENTAGE}%25-${COLOR}.svg"
-        echo "Badge URL: $BADGE_URL"
-        
-        # Save badge info for documentation
-        echo "Coverage: $COVERAGE_PERCENTAGE%" > coverage-info.txt
-        echo "Badge URL: $BADGE_URL" >> coverage-info.txt
+
