@@ -43,7 +43,7 @@ public class CreatePaintBrand : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var brand = new PaintBrand(Guid.NewGuid(), request.Name);
+            var brand = new PaintBrand(request.Name);
             
             await _context.AddAsync(brand, cancellationToken);
 

@@ -411,16 +411,46 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
                             var valueExpression = Expression.Constant(value);
                             var equalsExpression = Expression.Equal(propertyAccess, valueExpression);
                             var lambda = Expression.Lambda(equalsExpression, parameter);
+                           
+                            // 1. Find the AnyAsync extension method
+                            var queryableType = typeof(EntityFrameworkQueryableExtensions);
+                            var anyAsyncMethods = queryableType
+                                .GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
+                                .Where(m => m.Name == "AnyAsync" && m.GetParameters().Length == 3)
+                                .ToList();
 
-                            // Use reflection to call AnyAsync since we don't know the exact type at compile time
-                            var anyAsyncMethod = dbSet.GetType().GetMethod("AnyAsync", new[] { lambda.Type, typeof(CancellationToken) });
-                            if (anyAsyncMethod != null)
+                            // 2. Get the correct overload (IQueryable<TSource>, Expression<Func<TSource, bool>>, CancellationToken)
+                            var anyAsyncMethodDef = anyAsyncMethods
+                                .FirstOrDefault(m =>
+                                    m.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof(IQueryable<>) &&
+                                    m.GetParameters()[1].ParameterType.GetGenericTypeDefinition() == typeof(Expression<>) &&
+                                    m.GetParameters()[2].ParameterType == typeof(CancellationToken)
+                                );
+
+                            if (anyAsyncMethodDef == null)
                             {
-                                var result = anyAsyncMethod.Invoke(dbSet, new object[] { lambda, cancellationToken });
-                                return result is Task<bool> task ? await task : false;
+                                throw new InvalidOperationException("Cannot find the correct AnyAsync extension method.");
                             }
 
-                            return false;
+                            var anyAsyncMethod = anyAsyncMethodDef.MakeGenericMethod(principalEntityClrType);
+
+                            // 3. Call the method (note: dbSet implements IQueryable<T>)
+                            var resultTask = anyAsyncMethod.Invoke(
+                                null, // static method
+                                new object[] { dbSet, lambda, cancellationToken }
+                            );
+
+                            // 4. Await the task and return the result
+                            if (resultTask is Task<bool> boolTask)
+                            {
+                                var result = await boolTask;
+
+                                return result;
+                            }
+                            else
+                            {
+                                return false;
+                            }
                         }
                         catch
                         {

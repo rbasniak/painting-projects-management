@@ -4,7 +4,7 @@ public class DeletePaintLine : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/paints/lines/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/api/paints/lines/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
@@ -41,7 +41,9 @@ public class DeletePaintLine : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var paintLine = await _context.Set<PaintLine>().FirstAsync(x => x.Id == request.Id, cancellationToken);
+            var paintLine = await _context.Set<PaintLine>()
+                .Include(x => x.Brand)
+                .FirstAsync(x => x.Id == request.Id, cancellationToken);
             
             _context.Remove(paintLine);
             

@@ -1,4 +1,4 @@
-namespace PaintingProjectsManagement.Features.Paints.Tests;
+namespace PaintingProjectsManagement.Features.Paints.Brands.Tests;
 
 public class Delete_PaintBrand_Tests
 {
@@ -12,8 +12,8 @@ public class Delete_PaintBrand_Tests
     public async Task Seed()
     {
         // Create test brands for the tests
-        var testBrand = new PaintBrand(Guid.NewGuid(), "Test Brand for Delete");
-        var testBrandWithLines = new PaintBrand(Guid.NewGuid(), "Test Brand with Lines");
+        var testBrand = new PaintBrand("Test Brand for Delete");
+        var testBrandWithLines = new PaintBrand("Test Brand with Lines");
         
         using (var context = TestingServer.CreateContext())
         {
@@ -24,7 +24,7 @@ public class Delete_PaintBrand_Tests
             _brandWithLinesId = testBrandWithLines.Id;
 
             // Create a paint line for the second brand
-            var paintLine = new PaintLine(testBrandWithLines, Guid.NewGuid(), "Test Paint Line");
+            var paintLine = new PaintLine(testBrandWithLines, "Test Paint Line");
             await context.AddAsync(paintLine);
             await context.SaveChangesAsync();
         }

@@ -1,4 +1,4 @@
-namespace PaintingProjectsManagement.Features.Paints.Tests;
+namespace PaintingProjectsManagement.Features.Paints.Brands.Tests;
 
 public class List_PaintBrands_Tests
 {
@@ -12,8 +12,8 @@ public class List_PaintBrands_Tests
     public async Task Seed()
     {
         // Create test brands for the tests
-        var testBrand1 = new PaintBrand(Guid.NewGuid(), "Brand A");
-        var testBrand2 = new PaintBrand(Guid.NewGuid(), "Brand B");
+        var testBrand1 = new PaintBrand("Brand A");
+        var testBrand2 = new PaintBrand("Brand B");
         
         using (var context = TestingServer.CreateContext())
         {

@@ -2,7 +2,7 @@
 
 namespace PaintingProjectsManagement.Features.Paints;
 
-public class PaintConfig : IEntityTypeConfiguration<PaintColor>
+public class PaintColorConfig : IEntityTypeConfiguration<PaintColor>
 {
     public void Configure(EntityTypeBuilder<PaintColor> builder)
     {

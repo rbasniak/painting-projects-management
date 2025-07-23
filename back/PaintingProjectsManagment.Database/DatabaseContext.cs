@@ -25,7 +25,7 @@ public class DatabaseContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SeedHistory).Assembly);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MaterialConfig).Assembly);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(PaintConfig).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(PaintColorConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ModelConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProjectConfig).Assembly);
 

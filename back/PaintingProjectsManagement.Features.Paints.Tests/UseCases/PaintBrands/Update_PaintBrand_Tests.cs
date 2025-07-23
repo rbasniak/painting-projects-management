@@ -1,4 +1,4 @@
-namespace PaintingProjectsManagement.Features.Paints.Tests;
+namespace PaintingProjectsManagement.Features.Paints.Brands.Tests;
 
 public class Update_PaintBrand_Tests
 {
@@ -11,7 +11,7 @@ public class Update_PaintBrand_Tests
     public async Task Seed()
     {
         // Create a test brand for the tests
-        var testBrand = new PaintBrand(Guid.NewGuid(), "Test Brand for Update");
+        var testBrand = new PaintBrand( "Test Brand for Update");
         using (var context = TestingServer.CreateContext())
         {
             await context.AddAsync(testBrand);
@@ -120,7 +120,7 @@ public class Update_PaintBrand_Tests
     public async Task Superuser_Cannot_Update_PaintBrand_When_Name_Already_Exists()
     {
         // Prepare - Create another brand first
-        var existingBrand = new PaintBrand(Guid.NewGuid(), "Existing Brand Name");
+        var existingBrand = new PaintBrand( "Existing Brand Name");
         using (var context = TestingServer.CreateContext())
         {
             await context.AddAsync(existingBrand);

@@ -4,7 +4,7 @@ public class ListPaintLines : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/paints/lines", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/paints/lines", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 

@@ -62,7 +62,6 @@ public class CreatePaintColor : IEndpoint
                 .FirstAsync(x => x.Id == request.LineId, cancellationToken);
                 
             var paintColor = new PaintColor(
-                Guid.NewGuid(),
                 paintLine,
                 request.Name,
                 request.HexColor,
