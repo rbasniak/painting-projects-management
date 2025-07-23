@@ -43,7 +43,7 @@ jobs:
         export DOTNET_ENVIRONMENT=Testing
         # Run stable test projects
         echo "Running Core Testing Tests..."
-        dotnet run --configuration Release rbkApiModules.Testing.Core.Tests --no-build --verbosity normal --coverage --coverage-output-format cobertura --report-trx --results-directory TestsResults
+        dotnet run --configuration Release --project rbkApiModules.Testing.Core.Tests --no-build --verbosity normal --coverage --coverage-output-format cobertura --report-trx --results-directory TestsResults
         echo "Running Materials Tests..."
         dotnet run --configuration Release --project PaintingProjectsManagement.Features.Materials.Tests --no-build --verbosity normal --coverage --coverage-output-format cobertura --report-trx --results-directory TestsResults
         echo "Running Models Tests (may have minor failures)..."  
