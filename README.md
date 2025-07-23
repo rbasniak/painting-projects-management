@@ -4,7 +4,7 @@ A comprehensive system for managing painting projects, materials, and resources.
 
 ## 📊 Code Coverage
 
-[![Code Coverage](https://img.shields.io/badge/coverage-0%25-red.svg)](https://github.com/actions)
+![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rbasniak/a1778faea690a8a406f92dd302cca1cf/raw/coverage-badge.json)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/actions)
 [![.NET Version](https://img.shields.io/badge/.NET-9.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/9.0)
 
