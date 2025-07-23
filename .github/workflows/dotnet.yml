@@ -64,12 +64,17 @@ jobs:
     - name: Generate coverage report
       run: reportgenerator -reports:"**/TestsResults/*.cobertura.xml" -targetdir:"TestsResults/CoverageReport" -reporttypes:"Html;Cobertura;lcov;JsonSummary;Badges" -sourcefolders:"$(pwd)"
 
-    - name: Upload coverage reports to GitHub
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-reports
-        path:  back/TestsResults/CoverageReport/
-        retention-days: 30
+    - name: Extract coverage percentage
+      id: coverage
+      run: |
+        if [ -f "back/TestsResults/CoverageReport/Summary.json" ]; then
+          COVERAGE_PERCENTAGE=$(jq -r '.summary.linecoverage' back/TestsResults/CoverageReport/Summary.json)
+          echo "coverage_percentage=$COVERAGE_PERCENTAGE" >> $GITHUB_OUTPUT
+          echo "Coverage percentage: $COVERAGE_PERCENTAGE%"
+        else
+          echo "coverage_percentage=0" >> $GITHUB_OUTPUT
+          echo "No coverage report found, setting to 0%"
+        fi
 
     - name: Create coverage badge
       run: |
@@ -92,24 +97,19 @@ jobs:
         echo "Coverage: $COVERAGE_PERCENTAGE%" > coverage-info.txt
         echo "Badge URL: $BADGE_URL" >> coverage-info.txt
 
+    - name: Upload coverage reports to GitHub
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-reports
+        path:  back/TestsResults/CoverageReport/
+        retention-days: 30
+
     - name: Upload coverage info
       uses: actions/upload-artifact@v4
       with:
         name: coverage-info
         path:  back/coverage-info.txt
         retention-days: 30
-
-    - name: Extract coverage percentage
-      id: coverage
-      run: |
-        if [ -f "back/TestsResults/CoverageReport/Summary.json" ]; then
-          COVERAGE_PERCENTAGE=$(jq -r '.summary.linecoverage' back/TestsResults/CoverageReport/Summary.json)
-          echo "coverage_percentage=$COVERAGE_PERCENTAGE" >> $GITHUB_OUTPUT
-          echo "Coverage percentage: $COVERAGE_PERCENTAGE%"
-        else
-          echo "coverage_percentage=0" >> $GITHUB_OUTPUT
-          echo "No coverage report found, setting to 0%"
-        fi
 
     - name: Comment PR with coverage
       if: github.event_name == 'pull_request'
