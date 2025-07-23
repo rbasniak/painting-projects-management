@@ -421,3 +421,4 @@ FodyWeavers.xsd
 /back/PaintingProjectsManagement.Api/app.db-wal
 /back/error_test.txt
 /back/TestsResults/CoverageReport
+/back/TestsResults
