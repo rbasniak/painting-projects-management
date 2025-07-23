@@ -21,10 +21,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Analyzer Include="..\rbkApiModules.Analysers\rbkApiModules.Analysers\bin\Debug\netstandard2.0\rbkApiModules.Analysers.dll" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagment.Database\PaintingProjectsManagment.Database.csproj" />
 		<ProjectReference Include="..\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj" />
