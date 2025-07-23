@@ -67,8 +67,8 @@ jobs:
     - name: Extract coverage percentage
       id: coverage
       run: |
-        echo "Current directory: $(pwd)"
-        ls -l
+        # echo "Current directory: $(pwd)"
+        # ls -l
         if [ -f "TestsResults/CoverageReport/Summary.json" ]; then
           COVERAGE_PERCENTAGE=$(jq -r '.summary.linecoverage' TestsResults/CoverageReport/Summary.json)
           echo "coverage_percentage=$COVERAGE_PERCENTAGE" >> $GITHUB_OUTPUT
