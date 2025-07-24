@@ -4,7 +4,7 @@ public class CreatePaintColor : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/paints/colors", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/paints/colors", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -30,7 +30,7 @@ public class CreatePaintColor : IEndpoint
     {
         public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-        }
+        } 
 
         protected override void ValidateBusinessRules()
         {
@@ -44,11 +44,25 @@ public class CreatePaintColor : IEndpoint
 
             // Check for unique name within the same paint line
             RuleFor(x => x).MustAsync(async (request, cancellationToken) =>
-                !await Context.Set<PaintColor>().AnyAsync(x => 
+            {
+                var exists = await Context.Set<PaintColor>().AnyAsync(x => 
                     x.LineId == request.LineId && 
                     x.Name == request.Name, 
-                    cancellationToken))
-                .WithMessage("A paint color with this name already exists in this paint line.");
+                    cancellationToken);
+                return !exists;
+            })
+            .WithMessage("A paint color with this name already exists in this paint line.");
+
+            // Check for unique hex color within the same paint line
+            RuleFor(x => x).MustAsync(async (request, cancellationToken) =>
+            {
+                var exists = await Context.Set<PaintColor>().AnyAsync(x => 
+                    x.LineId == request.LineId && 
+                    x.HexColor == request.HexColor, 
+                    cancellationToken);
+                return !exists;
+            })
+            .WithMessage("A paint color with this hex color already exists in this paint line.");
         }
     }
 
