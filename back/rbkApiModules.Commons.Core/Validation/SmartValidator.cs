@@ -452,11 +452,9 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
                                 return false;
                             }
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            // If there's any error in the foreign key validation, assume it's valid
-                            // This prevents the validator from breaking due to reflection issues
-                            return true;
+                            throw new InvalidOperationException("Error validating forerign key for non tenant entity", ex);
                         }
                     })
                     .WithMessage(GetLocalizedMessage("ForeignKeyNotFound", requestProperty.Name));

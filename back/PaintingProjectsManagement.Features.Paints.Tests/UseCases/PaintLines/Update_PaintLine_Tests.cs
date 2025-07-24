@@ -7,25 +7,21 @@ public class Update_PaintLine_Tests
 
     private static Guid _lineId;
     private static Guid _brandId;
-    private static Guid _secondBrandId;
 
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
         // Create test brands and line for the tests
         var testBrand = new PaintBrand("Test Brand for Update");
-        var secondBrand = new PaintBrand("Second Test Brand");
         var testLine = new PaintLine(testBrand, "Test Line for Update");
         
         using (var context = TestingServer.CreateContext())
         {
             await context.AddAsync(testBrand);
-            await context.AddAsync(secondBrand);
             await context.AddAsync(testLine);
             await context.SaveChangesAsync();
             _lineId = testLine.Id;
             _brandId = testBrand.Id;
-            _secondBrandId = secondBrand.Id;
         }
 
         // Login with the users that will be used in the tests
@@ -100,28 +96,6 @@ public class Update_PaintLine_Tests
         line.Name.ShouldBe("Test Line for Update");
     }
 
-    [Test, NotInParallel(Order = 5)]
-    public async Task Superuser_Cannot_Update_PaintLine_When_BrandId_Is_Invalid()
-    {
-        // Prepare
-        var request = new UpdatePaintLine.Request
-        {
-            Id = _lineId,
-            Name = "Updated Line Name"
-        };
-
-        // Act
-        var response = await TestingServer.PutAsync<PaintLineDetails>("api/paints/lines", request, "superuser");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "BrandId references a non-existent record.");
-
-        // Assert the database - original line should not be changed
-        var line = TestingServer.CreateContext().Set<PaintLine>().FirstOrDefault(x => x.Id == _lineId);
-        line.ShouldNotBeNull();
-        line.Name.ShouldBe("Test Line for Update");
-    }
-
     [Test, NotInParallel(Order = 6)]
     [Arguments("")]
     [Arguments(null)]
@@ -151,9 +125,10 @@ public class Update_PaintLine_Tests
     public async Task Superuser_Cannot_Update_PaintLine_When_Name_Already_Exists_For_Same_Brand()
     {
         // Prepare - Create another line with the same brand first
-        var existingLine = new PaintLine(new PaintBrand("Test Brand"), "Existing Line Name");
         using (var context = TestingServer.CreateContext())
         {
+            var brand = await context.Set<PaintBrand>().FirstOrDefaultAsync(x => x.Id == _brandId);
+            var existingLine = new PaintLine(brand, "Existing Line Name");
             await context.AddAsync(existingLine);
             await context.SaveChangesAsync();
         }
@@ -230,34 +205,6 @@ public class Update_PaintLine_Tests
         line.ShouldNotBeNull();
         line.Name.ShouldBe("Updated Line Name Valid");
         line.BrandId.ShouldBe(_brandId);
-    }
-
-    [Test, NotInParallel(Order = 10)]
-    public async Task Superuser_Can_Update_PaintLine_To_Different_Brand()
-    {
-        // Prepare
-        var request = new UpdatePaintLine.Request
-        {
-            Id = _lineId,
-            Name = "Updated Line Name Valid"
-        };
-
-        // Act
-        var response = await TestingServer.PutAsync<PaintLineDetails>("api/paints/lines", request, "superuser");
-
-        // Assert the response
-        response.ShouldBeSuccess(out var result);
-        result.ShouldNotBeNull();
-        result.Id.ShouldBe(_lineId);
-        result.Name.ShouldBe("Updated Line Name Valid");
-        result.Brand.ShouldNotBeNull();
-        result.Brand.Id.ShouldBe(_secondBrandId);
-
-        // Assert the database
-        var line = TestingServer.CreateContext().Set<PaintLine>().FirstOrDefault(x => x.Id == _lineId);
-        line.ShouldNotBeNull();
-        line.Name.ShouldBe("Updated Line Name Valid");
-        line.BrandId.ShouldBe(_secondBrandId);
     }
 
     [Test, NotInParallel(Order = 99)]
