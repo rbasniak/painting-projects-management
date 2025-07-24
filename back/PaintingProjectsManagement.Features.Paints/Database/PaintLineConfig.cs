@@ -2,7 +2,7 @@
 
 namespace PaintingProjectsManagement.Features.Paints;
 
-public class BrandLineConfig : IEntityTypeConfiguration<PaintLine>
+public class PaintLineConfig : IEntityTypeConfiguration<PaintLine>
 {
     public void Configure(EntityTypeBuilder<PaintLine> builder)
     {

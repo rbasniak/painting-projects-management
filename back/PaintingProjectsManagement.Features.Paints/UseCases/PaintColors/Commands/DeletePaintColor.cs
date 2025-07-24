@@ -1,10 +1,10 @@
 namespace PaintingProjectsManagement.Features.Paints;
 
-internal class DeletePaintColor : IEndpoint
+public class DeletePaintColor : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/paints/colors/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/api/paints/colors/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
@@ -29,8 +29,6 @@ internal class DeletePaintColor : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
-            // No additional business rules needed for deletion
-            // SmartValidator automatically handles existence validation
         }
     }
 

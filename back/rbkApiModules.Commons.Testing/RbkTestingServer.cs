@@ -52,7 +52,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
     {
         var projectDir = Path.GetDirectoryName(typeof(TProgram).Assembly.Location);
 
-        ContentFolder = Path.Combine(projectDir, Guid.NewGuid().ToString("N"), "wwwroot");
+        ContentFolder = Path.Combine(projectDir, $"wwwroot_{Guid.NewGuid().ToString("N")}");
 
         if (Directory.Exists(ContentFolder))
         {

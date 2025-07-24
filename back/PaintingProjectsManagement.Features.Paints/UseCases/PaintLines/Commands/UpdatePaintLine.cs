@@ -1,10 +1,10 @@
 ﻿namespace PaintingProjectsManagement.Features.Paints;
 
-internal class UpdatePaintLine : IEndpoint
+public class UpdatePaintLine : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/paints/lines", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/api/paints/lines", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -20,7 +20,6 @@ internal class UpdatePaintLine : IEndpoint
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public Guid BrandId { get; set; }
     }
 
     public class Validator : SmartValidator<Request, PaintLine>
@@ -33,11 +32,22 @@ internal class UpdatePaintLine : IEndpoint
         {
             // Check for unique name constraint within the same brand (excluding current line)
             RuleFor(x => x).MustAsync(async (request, cancellationToken) =>
-                !await Context.Set<PaintLine>().AnyAsync(x => 
-                    x.BrandId == request.BrandId && 
+            {
+                // First get the line being updated to determine its brand
+                var currentLine = await Context.Set<PaintLine>().FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+
+                if (currentLine == null)
+                {
+                    return true; // ID validation will be handled separately
+                }
+                
+                // Check if another line with the same name exists in the same brand
+                return !await Context.Set<PaintLine>().AnyAsync(x => 
                     x.Name == request.Name && 
+                    x.BrandId == currentLine.BrandId && 
                     x.Id != request.Id, 
-                    cancellationToken))
+                    cancellationToken);
+            })
                 .WithMessage("Another paint line with this name already exists for this brand.");
         }
     }
@@ -47,11 +57,11 @@ internal class UpdatePaintLine : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var line = await _context.Set<PaintLine>().FirstAsync(x => x.Id == request.Id, cancellationToken);
+            var line = await _context.Set<PaintLine>()
+                .Include(x => x.Brand)
+                .FirstAsync(x => x.Id == request.Id, cancellationToken);
             
-            var brand = await _context.Set<PaintBrand>().FirstAsync(x => x.Id == request.BrandId, cancellationToken);
-            
-            line.UpdateDetails(request.Name, brand);
+            line.UpdateDetails(request.Name);
             
             await _context.SaveChangesAsync(cancellationToken);
 

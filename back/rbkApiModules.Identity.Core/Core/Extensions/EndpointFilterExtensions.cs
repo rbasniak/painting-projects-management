@@ -1,3 +1,5 @@
+namespace rbkApiModules.Identity.Core;
+
 public static class EndpointFilterExtensions
 {
     public static TBuilder RequireAuthorization<TBuilder>(this TBuilder builder, string requiredClaim)

@@ -1,10 +1,10 @@
 ﻿namespace PaintingProjectsManagement.Features.Paints;
 
-internal class CreatePaintBrand : IEndpoint
+public class CreatePaintBrand : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/paints/brands", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/paints/brands", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -43,7 +43,7 @@ internal class CreatePaintBrand : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var brand = new PaintBrand(Guid.NewGuid(), request.Name);
+            var brand = new PaintBrand(request.Name);
             
             await _context.AddAsync(brand, cancellationToken);
 

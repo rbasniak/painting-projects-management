@@ -1,13 +1,12 @@
 ﻿namespace PaintingProjectsManagement.Features.Paints;
 
-public class PaintColor
+public class PaintColor : BaseEntity
 {
     // Constructor for EF Core, do not remote it or make it public
     private PaintColor() { }
 
-    public PaintColor(Guid id, PaintLine line, string name, string hexColor, double bottleSize, PaintType type, string? manufacturerCode = null)
+    public PaintColor(PaintLine line, string name, string hexColor, double bottleSize, PaintType type, string? manufacturerCode = null)
     {
-        Id = id;
         Name = name;
         HexColor = hexColor;
         BottleSize = bottleSize;

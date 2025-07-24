@@ -2,7 +2,7 @@
 
 namespace PaintingProjectsManagement.Features.Paints;
 
-public class BrandConfig : IEntityTypeConfiguration<PaintBrand>
+public class PaintBrandConfig : IEntityTypeConfiguration<PaintBrand>
 {
     public void Configure(EntityTypeBuilder<PaintBrand> builder)
     {
