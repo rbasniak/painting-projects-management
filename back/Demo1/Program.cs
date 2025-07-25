@@ -27,7 +27,7 @@ namespace Demo1
             }
 
             builder.Services.AddDbContext<DatabaseContext>((scope, options) => options
-                .UseSqlServer(connectionString)
+                .UseSqlite(connectionString)
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging()
             );
