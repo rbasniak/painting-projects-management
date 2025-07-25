@@ -143,3 +143,11 @@ jobs:
         filename: coverage-badge.json
         message: ${{ steps.coverage.outputs.coverage_percentage }}%
         color: ${{ steps.coverage.outputs.coverage_percentage > 79 && 'brightgreen' || steps.coverage.outputs.coverage_percentage > 59 && 'yellow' || 'red' }}
+
+    - name: Deploy coverage report to GitHub Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./back/TestsResults/CoverageReport
+        publish_branch: gh-pages
