@@ -8,6 +8,8 @@ A comprehensive system for managing painting projects, materials, and resources.
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/actions)
 [![.NET Version](https://img.shields.io/badge/.NET-9.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/9.0)
 
+[Code coverage report](https://rbasniak.github.io/painting-projects-management/)
+
 ## 🏗️ Project Structure
 
 - **`back/`** - .NET 9.0 Backend API
