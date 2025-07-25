@@ -392,7 +392,7 @@ public class Create_PaintColor_Tests
         {
             var existingColor = new PaintColor(
                 line: context.Set<PaintLine>().First(x => x.Id == _lineId),
-                name: "Existing Color",
+                name: "Existing Color 13",
                 hexColor: "#FF0080",
                 bottleSize: 17.0,
                 type: PaintType.Metallic,

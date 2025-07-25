@@ -451,7 +451,7 @@ public class Update_PaintColor_Tests
         {
             var existingColor = new PaintColor(
                 line: context.Set<PaintLine>().First(x => x.Id == _lineId),
-                name: "Existing Color",
+                name: "Existing Color 14",
                 hexColor: "#00FFFF",
                 bottleSize: 17.0,
                 type: PaintType.Metallic,
