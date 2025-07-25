@@ -16,7 +16,7 @@ internal class DeleteProject : IEndpoint
         .WithTags("Projects");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; }
     }

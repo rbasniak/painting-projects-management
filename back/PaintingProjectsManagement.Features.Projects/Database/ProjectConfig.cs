@@ -60,7 +60,7 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
         builder.HasIndex(p => p.StartDate);
         builder.HasIndex(p => p.EndDate);
 
-        builder.HasIndex(x => new { x.Id, x.Name })
+        builder.HasIndex(x => new { x.TenantId, x.Name })
             .IsUnique();
     }
 }

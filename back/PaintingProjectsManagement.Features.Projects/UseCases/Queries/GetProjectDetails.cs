@@ -6,7 +6,7 @@ internal class GetProjectDetails : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/projects/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/projects/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
             
@@ -18,7 +18,7 @@ internal class GetProjectDetails : IEndpoint
         .WithTags("Projects");
     }
 
-    public class Request : IQuery
+    public class Request : AuthenticatedRequest, IQuery
     {
         public Guid Id { get; set; }
     }

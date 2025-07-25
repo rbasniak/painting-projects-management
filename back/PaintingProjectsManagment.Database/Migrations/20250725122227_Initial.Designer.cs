@@ -11,8 +11,8 @@ using PaintingProjectsManagment.Database;
 namespace PaintingProjectsManagment.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250722095605_Update3")]
-    partial class Update3
+    [Migration("20250725122227_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,7 +159,8 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("PaintBrands", (string)null);
                 });
@@ -190,9 +191,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("REAL");
-
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");
 
@@ -203,6 +201,12 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("Name");
 
                     b.HasIndex("Type");
+
+                    b.HasIndex("LineId", "HexColor")
+                        .IsUnique();
+
+                    b.HasIndex("LineId", "Name")
+                        .IsUnique();
 
                     b.ToTable("Paints", (string)null);
                 });
@@ -223,9 +227,8 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BrandId");
-
-                    b.HasIndex("Name");
+                    b.HasIndex("BrandId", "Name")
+                        .IsUnique();
 
                     b.ToTable("PaintLines", (string)null);
                 });
@@ -246,9 +249,10 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("ProjectId", "Name")
+                        .IsUnique();
 
                     b.ToTable("ProjectColorGroups", (string)null);
                 });
@@ -267,9 +271,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<Guid>("ColorGroupId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("SuggestedColorIds")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -279,11 +280,8 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ColorGroupId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("Zone");
+                    b.HasIndex("ColorGroupId", "Zone")
+                        .IsUnique();
 
                     b.ToTable("ProjectColorSections", (string)null);
                 });
@@ -327,13 +325,18 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(32)
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EndDate");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("StartDate");
+
+                    b.HasIndex("TenantId", "Name")
+                        .IsUnique();
 
                     b.ToTable("Projects", (string)null);
                 });
@@ -651,17 +654,20 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Navigation("Brand");
                 });
 
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorGroup", b =>
+                {
+                    b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
+                        .WithMany("Groups")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorSection", b =>
                 {
                     b.HasOne("PaintingProjectsManagement.Features.Projects.ColorGroup", "ColorGroup")
                         .WithMany("Sections")
                         .HasForeignKey("ColorGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
-                        .WithMany("Sections")
-                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -675,6 +681,14 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.Project", b =>
+                {
+                    b.HasOne("rbkApiModules.Identity.Core.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ProjectPicture", b =>
@@ -911,13 +925,13 @@ namespace PaintingProjectsManagment.Database.Migrations
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.Project", b =>
                 {
+                    b.Navigation("Groups");
+
                     b.Navigation("Materials");
 
                     b.Navigation("Pictures");
 
                     b.Navigation("References");
-
-                    b.Navigation("Sections");
 
                     b.Navigation("Steps")
                         .IsRequired();

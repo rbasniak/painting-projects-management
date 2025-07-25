@@ -4,7 +4,7 @@ internal class UpdateProject : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/projects", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/api/projects", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -16,7 +16,7 @@ internal class UpdateProject : IEndpoint
         .WithTags("Projects");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -32,11 +32,45 @@ internal class UpdateProject : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
+            RuleFor(x => x.Name)
+                .MustAsync(async (request, name, cancellationToken) => 
+                    !await Context.Set<Project>().AnyAsync(p => p.Name == name && p.TenantId == request.Identity.Tenant && p.Id != request.Id, cancellationToken))
+                .WithMessage("A project with this name already exists.");
+
+            RuleFor(x => x.Base64Image)
+                .Must(base64 => string.IsNullOrEmpty(base64) || IsValidBase64Image(base64))
+                .WithMessage("Invalid base64 image format. Must be a valid base64 encoded image with proper header.");
 
             RuleFor(x => x.EndDate)
                 .Must(endDate => !endDate.HasValue || endDate.Value <= DateTime.UtcNow)
                 .WithMessage("End date cannot be in the future.");
-        } 
+        }
+
+        private bool IsValidBase64Image(string base64)
+        {
+            if (string.IsNullOrEmpty(base64))
+            {
+                return true; // Allow empty/null for updates
+            }
+                
+            var hasImagePrefix = base64.StartsWith("data:image/") && base64.Contains(";base64,");
+            if (!hasImagePrefix)
+            {
+                return false;
+            }
+                
+            var base64Content = base64.Split(',')[1];
+            
+            try
+            {
+                var bytes = Convert.FromBase64String(base64Content);
+                return bytes.Length > 0;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 
     public class Handler(DbContext _context, IFileStorage _fileStorage) : ICommandHandler<Request>

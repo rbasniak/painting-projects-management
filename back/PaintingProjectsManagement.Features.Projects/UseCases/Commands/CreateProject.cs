@@ -16,7 +16,7 @@ internal class CreateProject : IEndpoint
         .WithTags("Projects");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public string Name { get; set; } = string.Empty;
         public Guid? ModelId { get; set; } 
@@ -31,6 +31,11 @@ internal class CreateProject : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
+            RuleFor(x => x.Name)
+                .MustAsync(async (request, name, cancellationToken) => 
+                    !await Context.Set<Project>().AnyAsync(p => p.Name == name && p.TenantId == request.Identity.Tenant, cancellationToken))
+                .WithMessage("A project with this name already exists.");
+
             RuleFor(x => x.Base64Image)
                 .NotEmpty()
                 .WithMessage("Base64 image content is required.")
