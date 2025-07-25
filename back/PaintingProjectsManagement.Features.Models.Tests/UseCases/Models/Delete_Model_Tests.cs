@@ -61,6 +61,70 @@ public class Delete_Model_Tests
         await TestingServer.CacheCredentialsAsync("ricardo.smarzaro", "zemiko987", "ricardo.smarzaro");
     }
 
+    [Test, NotInParallel(Order = 2)]
+    public async Task Non_Authenticated_User_Cannot_Delete_Model()
+    {
+        // Prepare - Use a non-existent model ID
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        var response = await TestingServer.DeleteAsync($"api/models/{nonExistentId}");
+
+        // Assert the response
+        response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
+    }
+
+    [Test, NotInParallel(Order = 3)]
+    public async Task User_Cannot_Delete_Model_That_Does_Not_Exist()
+    {
+        // Prepare - Use a non-existent model ID
+        var nonExistentId = Guid.NewGuid();
+
+        // Act
+        var response = await TestingServer.DeleteAsync($"api/models/{nonExistentId}", "rodrigo.basniak");
+
+        // Assert the response
+        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
+    }
+
+    [Test, NotInParallel(Order = 4)]
+    public async Task User_Cannot_Delete_Model_That_Belongs_To_Another_User()
+    {
+        // Prepare - Load the model created by another user
+        var anotherUserModel = TestingServer.CreateContext().Set<Model>().FirstOrDefault(x => x.Name == "Model 2");
+        anotherUserModel.ShouldNotBeNull("Model should exist from seed");
+        anotherUserModel.TenantId.ShouldBe("RICARDO.SMARZARO", "Model should belong to another user");
+
+        // Act - Try to delete as rodrigo.basniak (different user)
+        var response = await TestingServer.DeleteAsync($"api/models/{anotherUserModel.Id}", "rodrigo.basniak");
+
+        // Assert the response
+        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
+
+        // Assert the database - model should still exist
+        var stillExistingEntity = TestingServer.CreateContext().Set<Model>().FirstOrDefault(x => x.Id == anotherUserModel.Id);
+        stillExistingEntity.ShouldNotBeNull("Model should still exist in database");
+    }
+
+    [Test, NotInParallel(Order = 5)]
+    public async Task User_Can_Delete_Model()
+    {
+        // Prepare - Load the model created in the seed
+        var existingModel = TestingServer.CreateContext().Set<Model>().FirstOrDefault(x => x.Name == "Model 1");
+        existingModel.ShouldNotBeNull("Model should exist from seed");
+        existingModel.TenantId.ShouldBe("RODRIGO.BASNIAK", "Model should belong to the current user");
+
+        // Act
+        var response = await TestingServer.DeleteAsync($"api/models/{existingModel.Id}", "rodrigo.basniak");
+
+        // Assert the response
+        response.ShouldBeSuccess();
+
+        // Assert the database - model should be deleted
+        var deletedEntity = TestingServer.CreateContext().Set<Model>().FirstOrDefault(x => x.Id == existingModel.Id);
+        deletedEntity.ShouldBeNull("Model should be deleted from database");
+    }
+
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
