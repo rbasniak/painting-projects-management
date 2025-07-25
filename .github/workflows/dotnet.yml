@@ -12,9 +12,9 @@ on:
 jobs:
   build:
     permissions:
-        contents: read
+        contents: write
         issues: write
-        pull-requests: write
+        pull-requests: write 
     runs-on: ubuntu-latest
 
     defaults:
