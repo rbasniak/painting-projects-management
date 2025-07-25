@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage line-rate="0.7278123583000123" branch-rate="0.5962867864902232" lines-covered="17656" lines-valid="24259" branches-covered="3019" branches-valid="5063" complexity="7466" version="0" timestamp="1753432077">
+<coverage line-rate="0.7287604600354508" branch-rate="0.5962867864902232" lines-covered="17679" lines-valid="24259" branches-covered="3019" branches-valid="5063" complexity="7466" version="0" timestamp="1753433367">
   <sources />
   <packages>
     <package name="PaintingProjectsManagement.Api" line-rate="0.8554216867469879" branch-rate="0.9285714285714286" complexity="15">
@@ -1419,7 +1419,7 @@
         </class>
       </classes>
     </package>
-    <package name="PaintingProjectsManagement.Features.Models" line-rate="0.8785046728971962" branch-rate="0.7711864406779662" complexity="426">
+    <package name="PaintingProjectsManagement.Features.Models" line-rate="0.905373831775701" branch-rate="0.7711864406779662" complexity="426">
       <classes>
         <class name="PaintingProjectsManagement.Features.Models.Builder" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Features.Models/Builder.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
@@ -2165,16 +2165,16 @@
             <line number="37" hits="1" branch="false" />
           </lines>
         </class>
-        <class name="PaintingProjectsManagement.Features.Models.DeleteModel" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Features.Models/UseCases/Models/Commands/DeleteModel.cs" line-rate="0.38095238095238093" branch-rate="1" complexity="9">
+        <class name="PaintingProjectsManagement.Features.Models.DeleteModel" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Features.Models/UseCases/Models/Commands/DeleteModel.cs" line-rate="1" branch-rate="1" complexity="9">
           <methods>
-            <method name="MapEndpoint" signature="(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)" line-rate="0.7272727272727273" branch-rate="1" complexity="2">
+            <method name="MapEndpoint" signature="(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)" line-rate="1" branch-rate="1" complexity="2">
               <lines>
                 <line number="7" hits="3" branch="true" condition-coverage="100% (2/2)" />
                 <line number="8" hits="3" branch="false" />
-                <line number="9" hits="0" branch="false" />
+                <line number="9" hits="1" branch="false" />
                 <line number="10" hits="3" branch="false" />
-                <line number="11" hits="0" branch="false" />
-                <line number="12" hits="0" branch="false" />
+                <line number="11" hits="1" branch="false" />
+                <line number="12" hits="1" branch="false" />
                 <line number="13" hits="3" branch="false" />
                 <line number="14" hits="3" branch="false" />
                 <line number="15" hits="3" branch="false" />
@@ -2182,135 +2182,135 @@
                 <line number="17" hits="3" branch="false" />
               </lines>
             </method>
-            <method name="get_Id" signature="()" line-rate="0" branch-rate="1" complexity="1">
+            <method name="get_Id" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="21" hits="0" branch="false" />
+                <line number="21" hits="1" branch="false" />
               </lines>
             </method>
-            <method name="set_Id" signature="(System.Guid)" line-rate="0" branch-rate="1" complexity="1">
+            <method name="set_Id" signature="(System.Guid)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="21" hits="0" branch="false" />
+                <line number="21" hits="1" branch="false" />
               </lines>
             </method>
-            <method name=".ctor" signature="(Microsoft.EntityFrameworkCore.DbContext, rbkApiModules.Commons.Core.ILocalizationService)" line-rate="0" branch-rate="1" complexity="1">
+            <method name=".ctor" signature="(Microsoft.EntityFrameworkCore.DbContext, rbkApiModules.Commons.Core.ILocalizationService)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="26" hits="0" branch="false" />
-                <line number="28" hits="0" branch="false" />
+                <line number="26" hits="1" branch="false" />
+                <line number="28" hits="1" branch="false" />
               </lines>
             </method>
-            <method name="ValidateBusinessRules" signature="()" line-rate="0" branch-rate="1" complexity="1">
+            <method name="ValidateBusinessRules" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="32" hits="0" branch="false" />
+                <line number="32" hits="1" branch="false" />
               </lines>
             </method>
-            <method name=".ctor" signature="(Microsoft.EntityFrameworkCore.DbContext)" line-rate="0" branch-rate="1" complexity="1">
+            <method name=".ctor" signature="(Microsoft.EntityFrameworkCore.DbContext)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="35" hits="0" branch="false" />
+                <line number="35" hits="1" branch="false" />
               </lines>
             </method>
-            <method name="HandleAsync" signature="()" line-rate="0" branch-rate="1" complexity="1">
+            <method name="HandleAsync" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="40" hits="0" branch="false" />
-                <line number="42" hits="0" branch="false" />
-                <line number="44" hits="0" branch="false" />
-                <line number="46" hits="0" branch="false" />
-                <line number="47" hits="0" branch="false" />
+                <line number="40" hits="1" branch="false" />
+                <line number="42" hits="1" branch="false" />
+                <line number="44" hits="1" branch="false" />
+                <line number="46" hits="1" branch="false" />
+                <line number="47" hits="1" branch="false" />
               </lines>
             </method>
-            <method name="&lt;MapEndpoint" signature="()" line-rate="0.25" branch-rate="1" complexity="1">
+            <method name="&lt;MapEndpoint" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="9" hits="0" branch="false" />
+                <line number="9" hits="1" branch="false" />
                 <line number="10" hits="3" branch="false" />
-                <line number="11" hits="0" branch="false" />
-                <line number="12" hits="0" branch="false" />
+                <line number="11" hits="1" branch="false" />
+                <line number="12" hits="1" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
             <line number="7" hits="3" branch="true" condition-coverage="100% (2/2)" />
             <line number="8" hits="3" branch="false" />
-            <line number="9" hits="0" branch="false" />
+            <line number="9" hits="1" branch="false" />
             <line number="10" hits="3" branch="false" />
-            <line number="11" hits="0" branch="false" />
-            <line number="12" hits="0" branch="false" />
+            <line number="11" hits="1" branch="false" />
+            <line number="12" hits="1" branch="false" />
             <line number="13" hits="3" branch="false" />
             <line number="14" hits="3" branch="false" />
             <line number="15" hits="3" branch="false" />
             <line number="16" hits="3" branch="false" />
             <line number="17" hits="3" branch="false" />
-            <line number="21" hits="0" branch="false" />
-            <line number="26" hits="0" branch="false" />
-            <line number="28" hits="0" branch="false" />
-            <line number="32" hits="0" branch="false" />
-            <line number="35" hits="0" branch="false" />
-            <line number="40" hits="0" branch="false" />
-            <line number="42" hits="0" branch="false" />
-            <line number="44" hits="0" branch="false" />
-            <line number="46" hits="0" branch="false" />
-            <line number="47" hits="0" branch="false" />
+            <line number="21" hits="1" branch="false" />
+            <line number="26" hits="1" branch="false" />
+            <line number="28" hits="1" branch="false" />
+            <line number="32" hits="1" branch="false" />
+            <line number="35" hits="1" branch="false" />
+            <line number="40" hits="1" branch="false" />
+            <line number="42" hits="1" branch="false" />
+            <line number="44" hits="1" branch="false" />
+            <line number="46" hits="1" branch="false" />
+            <line number="47" hits="1" branch="false" />
           </lines>
         </class>
-        <class name="PaintingProjectsManagement.Features.Models.DeleteModel.Handler" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Features.Models/UseCases/Models/Commands/DeleteModel.cs" line-rate="0" branch-rate="1" complexity="2">
+        <class name="PaintingProjectsManagement.Features.Models.DeleteModel.Handler" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Features.Models/UseCases/Models/Commands/DeleteModel.cs" line-rate="1" branch-rate="1" complexity="2">
           <methods>
-            <method name=".ctor" signature="(Microsoft.EntityFrameworkCore.DbContext)" line-rate="0" branch-rate="1" complexity="1">
+            <method name=".ctor" signature="(Microsoft.EntityFrameworkCore.DbContext)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="35" hits="0" branch="false" />
+                <line number="35" hits="1" branch="false" />
               </lines>
             </method>
-            <method name="HandleAsync" signature="()" line-rate="0" branch-rate="1" complexity="1">
+            <method name="HandleAsync" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="40" hits="0" branch="false" />
-                <line number="42" hits="0" branch="false" />
-                <line number="44" hits="0" branch="false" />
-                <line number="46" hits="0" branch="false" />
-                <line number="47" hits="0" branch="false" />
+                <line number="40" hits="1" branch="false" />
+                <line number="42" hits="1" branch="false" />
+                <line number="44" hits="1" branch="false" />
+                <line number="46" hits="1" branch="false" />
+                <line number="47" hits="1" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="35" hits="0" branch="false" />
-            <line number="40" hits="0" branch="false" />
-            <line number="42" hits="0" branch="false" />
-            <line number="44" hits="0" branch="false" />
-            <line number="46" hits="0" branch="false" />
-            <line number="47" hits="0" branch="false" />
+            <line number="35" hits="1" branch="false" />
+            <line number="40" hits="1" branch="false" />
+            <line number="42" hits="1" branch="false" />
+            <line number="44" hits="1" branch="false" />
+            <line number="46" hits="1" branch="false" />
+            <line number="47" hits="1" branch="false" />
           </lines>
         </class>
-        <class name="PaintingProjectsManagement.Features.Models.DeleteModel.Request" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Features.Models/UseCases/Models/Commands/DeleteModel.cs" line-rate="0" branch-rate="1" complexity="2">
+        <class name="PaintingProjectsManagement.Features.Models.DeleteModel.Request" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Features.Models/UseCases/Models/Commands/DeleteModel.cs" line-rate="1" branch-rate="1" complexity="2">
           <methods>
-            <method name="get_Id" signature="()" line-rate="0" branch-rate="1" complexity="1">
+            <method name="get_Id" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="21" hits="0" branch="false" />
+                <line number="21" hits="1" branch="false" />
               </lines>
             </method>
-            <method name="set_Id" signature="(System.Guid)" line-rate="0" branch-rate="1" complexity="1">
+            <method name="set_Id" signature="(System.Guid)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="21" hits="0" branch="false" />
+                <line number="21" hits="1" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="21" hits="0" branch="false" />
+            <line number="21" hits="1" branch="false" />
           </lines>
         </class>
-        <class name="PaintingProjectsManagement.Features.Models.DeleteModel.Validator" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Features.Models/UseCases/Models/Commands/DeleteModel.cs" line-rate="0" branch-rate="1" complexity="2">
+        <class name="PaintingProjectsManagement.Features.Models.DeleteModel.Validator" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Features.Models/UseCases/Models/Commands/DeleteModel.cs" line-rate="1" branch-rate="1" complexity="2">
           <methods>
-            <method name=".ctor" signature="(Microsoft.EntityFrameworkCore.DbContext, rbkApiModules.Commons.Core.ILocalizationService)" line-rate="0" branch-rate="1" complexity="1">
+            <method name=".ctor" signature="(Microsoft.EntityFrameworkCore.DbContext, rbkApiModules.Commons.Core.ILocalizationService)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="26" hits="0" branch="false" />
-                <line number="28" hits="0" branch="false" />
+                <line number="26" hits="1" branch="false" />
+                <line number="28" hits="1" branch="false" />
               </lines>
             </method>
-            <method name="ValidateBusinessRules" signature="()" line-rate="0" branch-rate="1" complexity="1">
+            <method name="ValidateBusinessRules" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="32" hits="0" branch="false" />
+                <line number="32" hits="1" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="26" hits="0" branch="false" />
-            <line number="28" hits="0" branch="false" />
-            <line number="32" hits="0" branch="false" />
+            <line number="26" hits="1" branch="false" />
+            <line number="28" hits="1" branch="false" />
+            <line number="32" hits="1" branch="false" />
           </lines>
         </class>
         <class name="PaintingProjectsManagement.Features.Models.DeleteModelCategory" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Features.Models/UseCases/ModelCategories/Commands/DeleteModelCategory.cs" line-rate="1" branch-rate="1" complexity="9">
@@ -62994,7 +62994,7 @@
     </package>
     <package name="rbkApiModules.Testing.Core" line-rate="0.3496932515337423" branch-rate="0.7074010327022375" complexity="817">
       <classes>
-        <class name="&lt;AssemblyLoader_g&gt;F05C4DCE3F82B9332886A5BBBE0AE03543BE33CCE51D96D21FA5C0FAC722A1BE6__AssemblyLoadere049c68482eb4b5fabd5fcb0f852e95b" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.AssemblyLoaderGenerator/AssemblyLoader.g.cs" line-rate="0.005813953488372093" branch-rate="1" complexity="342">
+        <class name="&lt;AssemblyLoader_g&gt;F05C4DCE3F82B9332886A5BBBE0AE03543BE33CCE51D96D21FA5C0FAC722A1BE6__AssemblyLoaderf9ad2cfcd8df4defb518693a19d9ef81" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.AssemblyLoaderGenerator/AssemblyLoader.g.cs" line-rate="0.005813953488372093" branch-rate="1" complexity="342">
           <methods>
             <method name="Initialize" signature="()" line-rate="0.005813953488372093" branch-rate="1" complexity="342">
               <lines>
@@ -63348,7 +63348,7 @@
             <line number="179" hits="3" branch="false" />
           </lines>
         </class>
-        <class name="&lt;DisableReflectionScanner_g&gt;F334B2C91F5DBF2EE1181538298D1CA1BDB03453BD59FB2FAC5D08F3027796107__DisableReflectionScanner_926be35072404c9f80aa77df3753a026" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.DisableReflectionScannerGenerator/DisableReflectionScanner.g.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="&lt;DisableReflectionScanner_g&gt;F334B2C91F5DBF2EE1181538298D1CA1BDB03453BD59FB2FAC5D08F3027796107__DisableReflectionScanner_2a0bea9f13a1417d9db20f034fc8c5dc" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.DisableReflectionScannerGenerator/DisableReflectionScanner.g.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="Initialize" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>

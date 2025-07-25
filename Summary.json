@@ -1,23 +1,23 @@
 {
   "summary": {
-    "generatedon": "2025-07-25T08:27:57Z",
+    "generatedon": "2025-07-25T08:49:27Z",
     "parser": "MultiReport (4x Cobertura)",
     "assemblies": 12,
     "classes": 473,
     "files": 265,
-    "coveredlines": 17656,
-    "uncoveredlines": 6603,
+    "coveredlines": 17679,
+    "uncoveredlines": 6580,
     "coverablelines": 24259,
     "totallines": 29790,
-    "linecoverage": 72.7,
+    "linecoverage": 72.8,
     "coveredbranches": 3019,
     "totalbranches": 5063,
     "branchcoverage": 59.6,
-    "coveredmethods": 1449,
-    "fullcoveredmethods": 1267,
+    "coveredmethods": 1461,
+    "fullcoveredmethods": 1281,
     "totalmethods": 3244,
-    "methodcoverage": 44.6,
-    "fullmethodcoverage": 39
+    "methodcoverage": 45,
+    "fullmethodcoverage": 39.4
  },
   "coverage": {
     "assemblies": [
@@ -52,7 +52,7 @@
       { "name": "PaintingProjectsManagement.Features.Materials.Abstractions", "classes": 2, "coverage": 100, "coveredlines": 5, "coverablelines": 5, "totallines": 18, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 12, "fullcoveredmethods": 12, "totalmethods": 12, "classesinassembly": [
         { "name": "PaintingProjectsManagement.Features.Materials.Abstractions.GetMaterialsForProject.Request", "coverage": 100, "coveredlines": 1, "coverablelines": 1, "totallines": 10, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 3, "fullcoveredmethods": 3, "totalmethods": 3 },
         { "name": "PaintingProjectsManagement.Features.Materials.Abstractions.ReadOnlyMaterial", "coverage": 100, "coveredlines": 4, "coverablelines": 4, "totallines": 8, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 9, "fullcoveredmethods": 9, "totalmethods": 9 } ] },
-      { "name": "PaintingProjectsManagement.Features.Models", "classes": 51, "coverage": 87.8, "coveredlines": 752, "coverablelines": 856, "totallines": 3186, "branchcoverage": 77.1, "coveredbranches": 91, "totalbranches": 118, "methodcoverage": 90.3, "fullmethodcoverage": 89.2, "coveredmethods": 310, "fullcoveredmethods": 306, "totalmethods": 343, "classesinassembly": [
+      { "name": "PaintingProjectsManagement.Features.Models", "classes": 51, "coverage": 90.5, "coveredlines": 775, "coverablelines": 856, "totallines": 3186, "branchcoverage": 77.1, "coveredbranches": 91, "totalbranches": 118, "methodcoverage": 93.8, "fullmethodcoverage": 93.2, "coveredmethods": 322, "fullcoveredmethods": 320, "totalmethods": 343, "classesinassembly": [
         { "name": "PaintingProjectsManagement.Features.Models.Builder", "coverage": 100, "coveredlines": 3, "coverablelines": 3, "totallines": 12, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 1, "fullcoveredmethods": 1, "totalmethods": 1 },
         { "name": "PaintingProjectsManagement.Features.Models.CreateModel", "coverage": 100, "coveredlines": 68, "coverablelines": 68, "totallines": 101, "branchcoverage": 80, "coveredbranches": 8, "totalbranches": 10, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 29, "fullcoveredmethods": 29, "totalmethods": 29 },
         { "name": "PaintingProjectsManagement.Features.Models.CreateModel.Handler", "coverage": 100, "coveredlines": 23, "coverablelines": 23, "totallines": 101, "branchcoverage": 50, "coveredbranches": 2, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 },
@@ -62,10 +62,10 @@
         { "name": "PaintingProjectsManagement.Features.Models.CreateModelCategory.Handler", "coverage": 100, "coveredlines": 7, "coverablelines": 7, "totallines": 55, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 },
         { "name": "PaintingProjectsManagement.Features.Models.CreateModelCategory.Request", "coverage": 100, "coveredlines": 1, "coverablelines": 1, "totallines": 55, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 3, "fullcoveredmethods": 3, "totalmethods": 3 },
         { "name": "PaintingProjectsManagement.Features.Models.CreateModelCategory.Validator", "coverage": 100, "coveredlines": 7, "coverablelines": 7, "totallines": 55, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 3, "fullcoveredmethods": 3, "totalmethods": 3 },
-        { "name": "PaintingProjectsManagement.Features.Models.DeleteModel", "coverage": 38, "coveredlines": 8, "coverablelines": 21, "totallines": 49, "branchcoverage": 100, "coveredbranches": 2, "totalbranches": 2, "methodcoverage": 25, "fullmethodcoverage": 0, "coveredmethods": 2, "fullcoveredmethods": 0, "totalmethods": 8 },
-        { "name": "PaintingProjectsManagement.Features.Models.DeleteModel.Handler", "coverage": 0, "coveredlines": 0, "coverablelines": 6, "totallines": 49, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 2 },
-        { "name": "PaintingProjectsManagement.Features.Models.DeleteModel.Request", "coverage": 0, "coveredlines": 0, "coverablelines": 1, "totallines": 49, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 2 },
-        { "name": "PaintingProjectsManagement.Features.Models.DeleteModel.Validator", "coverage": 0, "coveredlines": 0, "coverablelines": 3, "totallines": 49, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 2 },
+        { "name": "PaintingProjectsManagement.Features.Models.DeleteModel", "coverage": 100, "coveredlines": 21, "coverablelines": 21, "totallines": 49, "branchcoverage": 100, "coveredbranches": 2, "totalbranches": 2, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 8, "fullcoveredmethods": 8, "totalmethods": 8 },
+        { "name": "PaintingProjectsManagement.Features.Models.DeleteModel.Handler", "coverage": 100, "coveredlines": 6, "coverablelines": 6, "totallines": 49, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 },
+        { "name": "PaintingProjectsManagement.Features.Models.DeleteModel.Request", "coverage": 100, "coveredlines": 1, "coverablelines": 1, "totallines": 49, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 },
+        { "name": "PaintingProjectsManagement.Features.Models.DeleteModel.Validator", "coverage": 100, "coveredlines": 3, "coverablelines": 3, "totallines": 49, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 },
         { "name": "PaintingProjectsManagement.Features.Models.DeleteModelCategory", "coverage": 100, "coveredlines": 23, "coverablelines": 23, "totallines": 52, "branchcoverage": 100, "coveredbranches": 2, "totalbranches": 2, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 8, "fullcoveredmethods": 8, "totalmethods": 8 },
         { "name": "PaintingProjectsManagement.Features.Models.DeleteModelCategory.Handler", "coverage": 100, "coveredlines": 8, "coverablelines": 8, "totallines": 52, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 },
         { "name": "PaintingProjectsManagement.Features.Models.DeleteModelCategory.Request", "coverage": 100, "coveredlines": 1, "coverablelines": 1, "totallines": 52, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 },
@@ -485,8 +485,8 @@
         { "name": "RolesValidators", "coverage": 0, "coveredlines": 0, "coverablelines": 23, "totallines": 32, "branchcoverage": 0, "coveredbranches": 0, "totalbranches": 4, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 2 },
         { "name": "RolesValidators\u003CT\u003E", "coverage": 0, "coveredlines": 0, "coverablelines": 23, "totallines": 32, "branchcoverage": 0, "coveredbranches": 0, "totalbranches": 4, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 2 } ] },
       { "name": "rbkApiModules.Testing.Core", "classes": 21, "coverage": 34.9, "coveredlines": 456, "coverablelines": 1304, "totallines": 5506, "branchcoverage": 70.7, "coveredbranches": 411, "totalbranches": 581, "methodcoverage": 45.8, "fullmethodcoverage": 40, "coveredmethods": 126, "fullcoveredmethods": 110, "totalmethods": 275, "classesinassembly": [
-        { "name": "\u003CAssemblyLoader_g\u003EF05C4DCE3F82B9332886A5BBBE0AE03543BE33CCE51D96D21FA5C0FAC722A1BE6__AssemblyLoadere049c68482eb4b5fabd5fcb0f852e95b", "coverage": 0.5, "coveredlines": 1, "coverablelines": 172, "totallines": 180, "branchcoverage": 100, "coveredbranches": 342, "totalbranches": 342, "methodcoverage": 100, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 1 },
-        { "name": "\u003CDisableReflectionScanner_g\u003EF334B2C91F5DBF2EE1181538298D1CA1BDB03453BD59FB2FAC5D08F3027796107__DisableReflectionScanner_926be35072404c9f80aa77df3753a026", "coverage": 100, "coveredlines": 2, "coverablelines": 2, "totallines": 10, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 1, "fullcoveredmethods": 1, "totalmethods": 1 },
+        { "name": "\u003CAssemblyLoader_g\u003EF05C4DCE3F82B9332886A5BBBE0AE03543BE33CCE51D96D21FA5C0FAC722A1BE6__AssemblyLoaderf9ad2cfcd8df4defb518693a19d9ef81", "coverage": 0.5, "coveredlines": 1, "coverablelines": 172, "totallines": 180, "branchcoverage": 100, "coveredbranches": 342, "totalbranches": 342, "methodcoverage": 100, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 1 },
+        { "name": "\u003CDisableReflectionScanner_g\u003EF334B2C91F5DBF2EE1181538298D1CA1BDB03453BD59FB2FAC5D08F3027796107__DisableReflectionScanner_2a0bea9f13a1417d9db20f034fc8c5dc", "coverage": 100, "coveredlines": 2, "coverablelines": 2, "totallines": 10, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 1, "fullcoveredmethods": 1, "totalmethods": 1 },
         { "name": "Giants.Tests.Integration.AssertExtensions", "coverage": 0, "coveredlines": 0, "coverablelines": 102, "totallines": 289, "branchcoverage": 0, "coveredbranches": 0, "totalbranches": 58, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 15 },
         { "name": "Giants.Tests.Integration.AssertExtensions\u003CT\u003E", "coverage": 0, "coveredlines": 0, "coverablelines": 102, "totallines": 289, "branchcoverage": 0, "coveredbranches": 0, "totalbranches": 58, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 15 },
         { "name": "Giants.Tests.Integration.EntityAssertionOptions\u003CT\u003E", "coverage": 0, "coveredlines": 0, "coverablelines": 12, "totallines": 289, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 7 },
