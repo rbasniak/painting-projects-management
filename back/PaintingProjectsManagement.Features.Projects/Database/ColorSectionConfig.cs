@@ -37,7 +37,7 @@ public class ColorSectionConfig : IEntityTypeConfiguration<ColorSection>
             .OnDelete(DeleteBehavior.Cascade);
 
         // Indexes
-        builder.HasIndex(cs => cs.ColorGroupId);
-        builder.HasIndex(cs => cs.Zone);
+        builder.HasIndex(cs => new { cs.ColorGroupId, cs.Zone })
+            .IsUnique(); 
     }
 }

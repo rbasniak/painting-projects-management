@@ -21,6 +21,7 @@ public class ColorGroupConfig : IEntityTypeConfiguration<ColorGroup>
 
         // Indexes
         builder.HasIndex(cg => cg.ProjectId);
-        builder.HasIndex(cg => cg.Name);
+        builder.HasIndex(cg => new { cg.ProjectId, cg.Name })
+            .IsUnique();
     }
 }

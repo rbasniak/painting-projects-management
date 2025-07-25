@@ -10,6 +10,8 @@ internal class ListProjects : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<IReadOnlyCollection<ProjectHeader>>(StatusCodes.Status200OK)
+        .RequireAuthorization()
         .WithName("List Projects")
         .WithTags("Projects");  
     }
@@ -18,8 +20,15 @@ internal class ListProjects : IEndpoint
     {
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Project>
     {
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        {
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+        }
     }
 
     public class Handler(DbContext _context) : IQueryHandler<Request>

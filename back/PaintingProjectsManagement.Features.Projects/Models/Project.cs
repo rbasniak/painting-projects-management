@@ -1,11 +1,11 @@
 ﻿namespace PaintingProjectsManagement.Features.Projects;
 
-public class Project
+public class Project : TenantEntity
 {
     private HashSet<MaterialForProject> _materials = new();
     private HashSet<ProjectReference> _references = new();
     private HashSet<ProjectPicture> _pictures = new();
-    private HashSet<ColorSection> _sections = new();
+    private HashSet<ColorGroup> _groups = new();
 
     // EF Core constructor, don't remote it
     private Project()
@@ -21,7 +21,6 @@ public class Project
         StartDate = startDate;
     }
 
-    public Guid Id { get; private set; }
     public string Name { get; private set; } = string.Empty;
     public string PictureUrl { get; private set; } = string.Empty;
     public DateTime StartDate { get; private set; }
@@ -32,7 +31,7 @@ public class Project
     public IEnumerable<MaterialForProject> Materials => _materials.AsReadOnly();
     public IEnumerable<ProjectReference> References => _references.AsReadOnly();
     public IEnumerable<ProjectPicture> Pictures => _pictures.AsReadOnly();
-    public IEnumerable<ColorSection> Sections => _sections.AsReadOnly();
+    public IEnumerable<ColorGroup> Groups => _groups.AsReadOnly();
 
     public void UpdateDetails(string name, string pictureUrl, DateTime startDate, DateTime? endDate)
     {
