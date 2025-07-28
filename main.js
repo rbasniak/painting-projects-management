@@ -308,22 +308,22 @@ var assemblies = [
       { "name": "PaintingProjectsManagement.Features.Models.ListModels.Handler", "rp": "PaintingProjectsManagement.Features.Models_Handler.6.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 44, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.ListPriorityModels", "rp": "PaintingProjectsManagement.Features.Models_ListPriorityModels.html", "cl": 23, "ucl": 0, "cal": 23, "tl": 46, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.ListPriorityModels.Handler", "rp": "PaintingProjectsManagement.Features.Models_Handler.7.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 46, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Models.Model", "rp": "PaintingProjectsManagement.Features.Models_Model.html", "cl": 51, "ucl": 2, "cal": 53, "tl": 83, "cb": 3, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Models.Model", "rp": "PaintingProjectsManagement.Features.Models_Model.html", "cl": 49, "ucl": 2, "cal": 51, "tl": 78, "cb": 3, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.ModelCategoriesBuilder", "rp": "PaintingProjectsManagement.Features.Models_ModelCategoriesBuilder.html", "cl": 5, "ucl": 0, "cal": 5, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.ModelCategory", "rp": "PaintingProjectsManagement.Features.Models_ModelCategory.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 20, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.ModelCategoryConfig", "rp": "PaintingProjectsManagement.Features.Models_ModelCategoryConfig.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.ModelCategoryDetails", "rp": "PaintingProjectsManagement.Features.Models_ModelCategoryDetails.html", "cl": 7, "ucl": 0, "cal": 7, "tl": 16, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Models.ModelConfig", "rp": "PaintingProjectsManagement.Features.Models_ModelConfig.html", "cl": 18, "ucl": 0, "cal": 18, "tl": 35, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Models.ModelConfig", "rp": "PaintingProjectsManagement.Features.Models_ModelConfig.html", "cl": 21, "ucl": 0, "cal": 21, "tl": 39, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.ModelDetails", "rp": "PaintingProjectsManagement.Features.Models_ModelDetails.html", "cl": 33, "ucl": 0, "cal": 33, "tl": 44, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.ModelsBuilder", "rp": "PaintingProjectsManagement.Features.Models_ModelsBuilder.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Models.PrioritizeModels", "rp": "PaintingProjectsManagement.Features.Models_PrioritizeModels.html", "cl": 40, "ucl": 0, "cal": 40, "tl": 81, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Models.PrioritizeModels.Handler", "rp": "PaintingProjectsManagement.Features.Models_Handler.8.html", "cl": 15, "ucl": 0, "cal": 15, "tl": 81, "cb": 8, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Models.PrioritizeModels.Request", "rp": "PaintingProjectsManagement.Features.Models_Request.5.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 81, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Models.PrioritizeModels.Validator", "rp": "PaintingProjectsManagement.Features.Models_Validator.5.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 81, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.RateModel", "rp": "PaintingProjectsManagement.Features.Models_RateModel.html", "cl": 31, "ucl": 0, "cal": 31, "tl": 60, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Models.RateModel.Handler", "rp": "PaintingProjectsManagement.Features.Models_Handler.9.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 60, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Models.RateModel.Request", "rp": "PaintingProjectsManagement.Features.Models_Request.6.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 60, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Models.RateModel.Validator", "rp": "PaintingProjectsManagement.Features.Models_Validator.6.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 60, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Models.RateModel.Handler", "rp": "PaintingProjectsManagement.Features.Models_Handler.8.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 60, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Models.RateModel.Request", "rp": "PaintingProjectsManagement.Features.Models_Request.5.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 60, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Models.RateModel.Validator", "rp": "PaintingProjectsManagement.Features.Models_Validator.5.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 60, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Models.SetModelMustHave", "rp": "PaintingProjectsManagement.Features.Models_SetModelMustHave.html", "cl": 28, "ucl": 0, "cal": 28, "tl": 57, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Models.SetModelMustHave.Handler", "rp": "PaintingProjectsManagement.Features.Models_Handler.9.html", "cl": 7, "ucl": 0, "cal": 7, "tl": 57, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Models.SetModelMustHave.Request", "rp": "PaintingProjectsManagement.Features.Models_Request.6.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 57, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Models.SetModelMustHave.Validator", "rp": "PaintingProjectsManagement.Features.Models_Validator.6.html", "cl": 7, "ucl": 0, "cal": 7, "tl": 57, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.UpdateModel", "rp": "PaintingProjectsManagement.Features.Models_UpdateModel.html", "cl": 73, "ucl": 0, "cal": 73, "tl": 112, "cb": 12, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.UpdateModel.Handler", "rp": "PaintingProjectsManagement.Features.Models_Handler.10.html", "cl": 27, "ucl": 0, "cal": 27, "tl": 112, "cb": 6, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Models.UpdateModel.Request", "rp": "PaintingProjectsManagement.Features.Models_Request.7.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 112, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -404,46 +404,47 @@ var assemblies = [
     "name": "PaintingProjectsManagement.Features.Projects",
     "classes": [
       { "name": "PaintingProjectsManagement.Features.Projects.Builder", "rp": "PaintingProjectsManagement.Features.Projects_Builder.html", "cl": 6, "ucl": 0, "cal": 6, "tl": 16, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ColorGroup", "rp": "PaintingProjectsManagement.Features.Projects_ColorGroup.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ColorGroupConfig", "rp": "PaintingProjectsManagement.Features.Projects_ColorGroupConfig.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 26, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ColorGroup", "rp": "PaintingProjectsManagement.Features.Projects_ColorGroup.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ColorGroupConfig", "rp": "PaintingProjectsManagement.Features.Projects_ColorGroupConfig.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 27, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ColorGroupDetails", "rp": "PaintingProjectsManagement.Features.Projects_ColorGroupDetails.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 37, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ColorSection", "rp": "PaintingProjectsManagement.Features.Projects_ColorSection.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ColorSection", "rp": "PaintingProjectsManagement.Features.Projects_ColorSection.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ColorSectionConfig", "rp": "PaintingProjectsManagement.Features.Projects_ColorSectionConfig.html", "cl": 23, "ucl": 0, "cal": 23, "tl": 43, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ColorSectionDetails", "rp": "PaintingProjectsManagement.Features.Projects_ColorSectionDetails.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 37, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject", "rp": "PaintingProjectsManagement.Features.Projects_CreateProject.html", "cl": 6, "ucl": 46, "cal": 52, "tl": 97, "cb": 2, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.html", "cl": 0, "ucl": 17, "cal": 17, "tl": 97, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 97, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.html", "cl": 0, "ucl": 24, "cal": 24, "tl": 97, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject", "rp": "PaintingProjectsManagement.Features.Projects_DeleteProject.html", "cl": 6, "ucl": 33, "cal": 39, "tl": 72, "cb": 2, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.2.html", "cl": 0, "ucl": 22, "cal": 22, "tl": 72, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.2.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 72, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.2.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 72, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails", "rp": "PaintingProjectsManagement.Features.Projects_GetProjectDetails.html", "cl": 6, "ucl": 32, "cal": 38, "tl": 73, "cb": 2, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.3.html", "cl": 0, "ucl": 24, "cal": 24, "tl": 73, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.3.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 73, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.3.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 73, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ListProjects", "rp": "PaintingProjectsManagement.Features.Projects_ListProjects.html", "cl": 6, "ucl": 11, "cal": 17, "tl": 39, "cb": 2, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ListProjects.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.4.html", "cl": 0, "ucl": 8, "cal": 8, "tl": 39, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject", "rp": "PaintingProjectsManagement.Features.Projects_CreateProject.html", "cl": 8, "ucl": 47, "cal": 55, "tl": 102, "cb": 2, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.html", "cl": 0, "ucl": 18, "cal": 18, "tl": 102, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 102, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.html", "cl": 0, "ucl": 23, "cal": 23, "tl": 102, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject", "rp": "PaintingProjectsManagement.Features.Projects_DeleteProject.html", "cl": 8, "ucl": 29, "cal": 37, "tl": 73, "cb": 2, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.2.html", "cl": 0, "ucl": 22, "cal": 22, "tl": 73, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.2.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 73, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.2.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 73, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails", "rp": "PaintingProjectsManagement.Features.Projects_GetProjectDetails.html", "cl": 8, "ucl": 31, "cal": 39, "tl": 77, "cb": 2, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.3.html", "cl": 0, "ucl": 24, "cal": 24, "tl": 77, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.3.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 77, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.3.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 77, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ListProjects", "rp": "PaintingProjectsManagement.Features.Projects_ListProjects.html", "cl": 8, "ucl": 14, "cal": 22, "tl": 48, "cb": 2, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ListProjects.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.4.html", "cl": 0, "ucl": 8, "cal": 8, "tl": 48, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ListProjects.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.4.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 48, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.MaterialDetails", "rp": "PaintingProjectsManagement.Features.Projects_MaterialDetails.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 23, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.MaterialForProject", "rp": "PaintingProjectsManagement.Features.Projects_MaterialForProject.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 7, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.MaterialForProjectConfig", "rp": "PaintingProjectsManagement.Features.Projects_MaterialForProjectConfig.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 24, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.Project", "rp": "PaintingProjectsManagement.Features.Projects_Project.html", "cl": 0, "ucl": 27, "cal": 27, "tl": 44, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectConfig.html", "cl": 40, "ucl": 0, "cal": 40, "tl": 64, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.Project", "rp": "PaintingProjectsManagement.Features.Projects_Project.html", "cl": 0, "ucl": 26, "cal": 26, "tl": 43, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectConfig.html", "cl": 41, "ucl": 0, "cal": 41, "tl": 66, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectDetails.html", "cl": 0, "ucl": 34, "cal": 34, "tl": 51, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectHeader", "rp": "PaintingProjectsManagement.Features.Projects_ProjectHeader.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 23, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectPicture", "rp": "PaintingProjectsManagement.Features.Projects_ProjectPicture.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectPicture", "rp": "PaintingProjectsManagement.Features.Projects_ProjectPicture.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectPictureConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectPictureConfig.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 25, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectReference", "rp": "PaintingProjectsManagement.Features.Projects_ProjectReference.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectReference", "rp": "PaintingProjectsManagement.Features.Projects_ProjectReference.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectReferenceConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectReferenceConfig.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 25, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepData", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepData.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 9, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepData", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepData.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepDataDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepDataDetails.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 49, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectSteps", "rp": "PaintingProjectsManagement.Features.Projects_ProjectSteps.html", "cl": 0, "ucl": 6, "cal": 6, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectSteps", "rp": "PaintingProjectsManagement.Features.Projects_ProjectSteps.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepsConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepsConfig.html", "cl": 35, "ucl": 0, "cal": 35, "tl": 54, "cb": 8, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepsDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepsDetails.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 49, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject", "rp": "PaintingProjectsManagement.Features.Projects_UpdateProject.html", "cl": 6, "ucl": 59, "cal": 65, "tl": 118, "cb": 2, "tb": 18, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.5.html", "cl": 0, "ucl": 22, "cal": 22, "tl": 118, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject", "rp": "PaintingProjectsManagement.Features.Projects_UpdateProject.html", "cl": 8, "ucl": 54, "cal": 62, "tl": 118, "cb": 2, "tb": 18, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.5.html", "cl": 0, "ucl": 23, "cal": 23, "tl": 118, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.4.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 118, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.4.html", "cl": 0, "ucl": 30, "cal": 30, "tl": 118, "cb": 0, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.5.html", "cl": 0, "ucl": 24, "cal": 24, "tl": 118, "cb": 0, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.UrlReference", "rp": "PaintingProjectsManagement.Features.Projects_UrlReference.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 51, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
@@ -458,19 +459,10 @@ var assemblies = [
       { "name": "PaintingProjectsManagement.Features.Models.ModelsSeeder", "rp": "PaintingProjectsManagment.Database_ModelsSeeder.html", "cl": 6, "ucl": 76, "cal": 82, "tl": 157, "cb": 1, "tb": 52, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagment.Database.DatabaseContext", "rp": "PaintingProjectsManagment.Database_DatabaseContext.html", "cl": 16, "ucl": 0, "cal": 16, "tl": 41, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagment.Database.DatabaseSeed", "rp": "PaintingProjectsManagment.Database_DatabaseSeed.html", "cl": 50, "ucl": 203, "cal": 253, "tl": 297, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.AddTenantIdToMaterials", "rp": "PaintingProjectsManagment.Database_AddTenantIdToMaterials.html", "cl": 870, "ucl": 13, "cal": 883, "tl": 970, "cb": 90, "tb": 90, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.AddTenantIdToModelCategories", "rp": "PaintingProjectsManagment.Database_AddTenantIdToModelCategories.html", "cl": 885, "ucl": 12, "cal": 897, "tl": 983, "cb": 92, "tb": 92, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.AddUniqueConstraintToPaintColorLineIdAndHexColor", "rp": "PaintingProjectsManagment.Database_AddUniqueConstraintToPaintColorLineIdAndHexColor.html", "cl": 894, "ucl": 4, "cal": 898, "tl": 980, "cb": 92, "tb": 92, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.AddUniqueConstraintToPaintColorNameAndLineId", "rp": "PaintingProjectsManagment.Database_AddUniqueConstraintToPaintColorNameAndLineId.html", "cl": 891, "ucl": 4, "cal": 895, "tl": 977, "cb": 92, "tb": 92, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.DatabaseContextModelSnapshot", "rp": "PaintingProjectsManagment.Database_DatabaseContextModelSnapshot.html", "cl": 888, "ucl": 0, "cal": 888, "tl": 949, "cb": 92, "tb": 92, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.Initial", "rp": "PaintingProjectsManagment.Database_Initial.html", "cl": 1340, "ucl": 43, "cal": 1383, "tl": 1531, "cb": 172, "tb": 172, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.ModelCategoryChanges", "rp": "PaintingProjectsManagment.Database_ModelCategoryChanges.html", "cl": 874, "ucl": 1, "cal": 875, "tl": 959, "cb": 92, "tb": 92, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.Update2", "rp": "PaintingProjectsManagment.Database_Update2.html", "cl": 910, "ucl": 18, "cal": 928, "tl": 1018, "cb": 92, "tb": 92, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.Update3", "rp": "PaintingProjectsManagment.Database_Update3.html", "cl": 897, "ucl": 10, "cal": 907, "tl": 989, "cb": 92, "tb": 92, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.update5", "rp": "PaintingProjectsManagment.Database_update5.html", "cl": 905, "ucl": 25, "cal": 930, "tl": 1022, "cb": 92, "tb": 92, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.UpdatedModels", "rp": "PaintingProjectsManagment.Database_UpdatedModels.html", "cl": 877, "ucl": 10, "cal": 887, "tl": 972, "cb": 90, "tb": 90, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.UpdatedModels2", "rp": "PaintingProjectsManagment.Database_UpdatedModels2.html", "cl": 868, "ucl": 4, "cal": 872, "tl": 953, "cb": 90, "tb": 90, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.UpdatedModels3", "rp": "PaintingProjectsManagment.Database_UpdatedModels3.html", "cl": 892, "ucl": 10, "cal": 902, "tl": 988, "cb": 92, "tb": 92, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagment.Database.Migrations.AddMustHaveToModel", "rp": "PaintingProjectsManagment.Database_AddMustHaveToModel.html", "cl": 909, "ucl": 4, "cal": 913, "tl": 997, "cb": 96, "tb": 96, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagment.Database.Migrations.DatabaseContextModelSnapshot", "rp": "PaintingProjectsManagment.Database_DatabaseContextModelSnapshot.html", "cl": 899, "ucl": 0, "cal": 899, "tl": 962, "cb": 96, "tb": 96, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagment.Database.Migrations.Initial", "rp": "PaintingProjectsManagment.Database_Initial.html", "cl": 1450, "ucl": 43, "cal": 1493, "tl": 1647, "cb": 180, "tb": 180, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagment.Database.Migrations.RemovePriorityFromModel", "rp": "PaintingProjectsManagment.Database_RemovePriorityFromModel.html", "cl": 903, "ucl": 7, "cal": 910, "tl": 994, "cb": 96, "tb": 96, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "rbkApiModules.Commons.Core",
@@ -738,8 +730,8 @@ var assemblies = [
   {
     "name": "rbkApiModules.Testing.Core",
     "classes": [
-      { "name": "<AssemblyLoader_g>F05C4DCE3F82B9332886A5BBBE0AE03543BE33CCE51D96D21FA5C0FAC722A1BE6__AssemblyLoaderb4a4b8fa0b244f47a84b8df18a0c467e", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F05C4lyLoaderb4a4b8fa0b244f47a84b8df18a0c467e.html", "cl": 1, "ucl": 171, "cal": 172, "tl": 180, "cb": 342, "tb": 342, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "<DisableReflectionScanner_g>F334B2C91F5DBF2EE1181538298D1CA1BDB03453BD59FB2FAC5D08F3027796107__DisableReflectionScanner_4c8f9c2ec5b742a3bfbc1a10d94b8189", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_4c8f9c2ec5b742a3bfbc1a10d94b8189.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader9573070b3d3b48f3818b0d8e7194da5f", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader9573070b3d3b48f3818b0d8e7194da5f.html", "cl": 1, "ucl": 171, "cal": 172, "tl": 180, "cb": 342, "tb": 342, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_09856a13b2bd44a9b444d539547b89cf", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_09856a13b2bd44a9b444d539547b89cf.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions", "rp": "rbkApiModules.Testing.Core_AssertExtensions.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions<T>", "rp": "rbkApiModules.Testing.Core_AssertExtensions_T_.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.EntityAssertionOptions<T>", "rp": "rbkApiModules.Testing.Core_EntityAssertionOptions_T_.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 289, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -809,7 +801,7 @@ var riskHotspots = [
       { "value": 18, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F05C4DCE3F82B9332886A5BBBE0AE03543BE33CCE51D96D21FA5C0FAC722A1BE6__AssemblyLoaderb4a4b8fa0b244f47a84b8df18a0c467e", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F05C4lyLoaderb4a4b8fa0b244f47a84b8df18a0c467e.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 8,
+    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader9573070b3d3b48f3818b0d8e7194da5f", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader9573070b3d3b48f3818b0d8e7194da5f.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 8,
     "metrics": [
       { "value": 342, "exceeded": true },
       { "value": 342, "exceeded": true },
@@ -911,88 +903,34 @@ var riskHotspots = [
       { "value": 10, "exceeded": false },
     ]},
   {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.Initial", "reportPath": "PaintingProjectsManagment.Database_Initial.html", "methodName": "Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)", "methodShortName": "Up(...)", "fileIndex": 0, "line": 13,
+    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.AddMustHaveToModel", "reportPath": "PaintingProjectsManagment.Database_AddMustHaveToModel.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
     "metrics": [
-      { "value": 84, "exceeded": true },
-      { "value": 84, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.AddTenantIdToModelCategories", "reportPath": "PaintingProjectsManagment.Database_AddTenantIdToModelCategories.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 82, "exceeded": true },
-      { "value": 82, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.AddUniqueConstraintToPaintColorLineIdAndHexColor", "reportPath": "PaintingProjectsManagment.Database_AddUniqueConstraintToPaintColorLineIdAndHexColor.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 82, "exceeded": true },
-      { "value": 82, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.AddUniqueConstraintToPaintColorNameAndLineId", "reportPath": "PaintingProjectsManagment.Database_AddUniqueConstraintToPaintColorNameAndLineId.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 82, "exceeded": true },
-      { "value": 82, "exceeded": true },
+      { "value": 86, "exceeded": true },
+      { "value": 86, "exceeded": true },
     ]},
   {
     "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.DatabaseContextModelSnapshot", "reportPath": "PaintingProjectsManagment.Database_DatabaseContextModelSnapshot.html", "methodName": "BuildModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildModel(...)", "fileIndex": 0, "line": 18,
     "metrics": [
-      { "value": 82, "exceeded": true },
-      { "value": 82, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.ModelCategoryChanges", "reportPath": "PaintingProjectsManagment.Database_ModelCategoryChanges.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 82, "exceeded": true },
-      { "value": 82, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.Update2", "reportPath": "PaintingProjectsManagment.Database_Update2.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 82, "exceeded": true },
-      { "value": 82, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.Update3", "reportPath": "PaintingProjectsManagment.Database_Update3.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 82, "exceeded": true },
-      { "value": 82, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.update5", "reportPath": "PaintingProjectsManagment.Database_update5.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 82, "exceeded": true },
-      { "value": 82, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.UpdatedModels3", "reportPath": "PaintingProjectsManagment.Database_UpdatedModels3.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 82, "exceeded": true },
-      { "value": 82, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.AddTenantIdToMaterials", "reportPath": "PaintingProjectsManagment.Database_AddTenantIdToMaterials.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 80, "exceeded": true },
-      { "value": 80, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.UpdatedModels", "reportPath": "PaintingProjectsManagment.Database_UpdatedModels.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 80, "exceeded": true },
-      { "value": 80, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.UpdatedModels2", "reportPath": "PaintingProjectsManagment.Database_UpdatedModels2.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 80, "exceeded": true },
-      { "value": 80, "exceeded": true },
+      { "value": 86, "exceeded": true },
+      { "value": 86, "exceeded": true },
     ]},
   {
     "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.Initial", "reportPath": "PaintingProjectsManagment.Database_Initial.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
     "metrics": [
-      { "value": 78, "exceeded": true },
-      { "value": 78, "exceeded": true },
+      { "value": 86, "exceeded": true },
+      { "value": 86, "exceeded": true },
+    ]},
+  {
+    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.RemovePriorityFromModel", "reportPath": "PaintingProjectsManagment.Database_RemovePriorityFromModel.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
+    "metrics": [
+      { "value": 86, "exceeded": true },
+      { "value": 86, "exceeded": true },
+    ]},
+  {
+    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.Initial", "reportPath": "PaintingProjectsManagment.Database_Initial.html", "methodName": "Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)", "methodShortName": "Up(...)", "fileIndex": 0, "line": 14,
+    "metrics": [
+      { "value": 84, "exceeded": true },
+      { "value": 84, "exceeded": true },
     ]},
   {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "LoadLocalizedValues()", "methodShortName": "LoadLocalizedValues()", "fileIndex": 14, "line": 34,
@@ -1013,13 +951,13 @@ var riskHotspots = [
       { "value": 11, "exceeded": false },
     ]},
   {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.GetProjectDetails", "reportPath": "PaintingProjectsManagement.Features.Projects_GetProjectDetails.html", "methodName": "HandleAsync()", "methodShortName": "HandleAsync()", "fileIndex": 0, "line": 38,
+    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.GetProjectDetails", "reportPath": "PaintingProjectsManagement.Features.Projects_GetProjectDetails.html", "methodName": "HandleAsync()", "methodShortName": "HandleAsync()", "fileIndex": 0, "line": 42,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.GetProjectDetails.Handler", "reportPath": "PaintingProjectsManagement.Features.Projects_Handler.3.html", "methodName": "HandleAsync()", "methodShortName": "HandleAsync()", "fileIndex": 0, "line": 38,
+    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.GetProjectDetails.Handler", "reportPath": "PaintingProjectsManagement.Features.Projects_Handler.3.html", "methodName": "HandleAsync()", "methodShortName": "HandleAsync()", "fileIndex": 0, "line": 42,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
@@ -1103,37 +1041,37 @@ var riskHotspots = [
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.CreateProject", "reportPath": "PaintingProjectsManagement.Features.Projects_CreateProject.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 43,
+    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.CreateProject", "reportPath": "PaintingProjectsManagement.Features.Projects_CreateProject.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 48,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.CreateProject.Validator", "reportPath": "PaintingProjectsManagement.Features.Projects_Validator.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 43,
+    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.CreateProject.Validator", "reportPath": "PaintingProjectsManagement.Features.Projects_Validator.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 48,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.DeleteProject", "reportPath": "PaintingProjectsManagement.Features.Projects_DeleteProject.html", "methodName": "HandleAsync()", "methodShortName": "HandleAsync()", "fileIndex": 0, "line": 39,
+    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.DeleteProject", "reportPath": "PaintingProjectsManagement.Features.Projects_DeleteProject.html", "methodName": "HandleAsync()", "methodShortName": "HandleAsync()", "fileIndex": 0, "line": 40,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.DeleteProject.Handler", "reportPath": "PaintingProjectsManagement.Features.Projects_Handler.2.html", "methodName": "HandleAsync()", "methodShortName": "HandleAsync()", "fileIndex": 0, "line": 39,
+    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.DeleteProject.Handler", "reportPath": "PaintingProjectsManagement.Features.Projects_Handler.2.html", "methodName": "HandleAsync()", "methodShortName": "HandleAsync()", "fileIndex": 0, "line": 40,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.UpdateProject", "reportPath": "PaintingProjectsManagement.Features.Projects_UpdateProject.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 53,
+    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.UpdateProject", "reportPath": "PaintingProjectsManagement.Features.Projects_UpdateProject.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 51,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.UpdateProject.Validator", "reportPath": "PaintingProjectsManagement.Features.Projects_Validator.4.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 53,
+    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.UpdateProject.Validator", "reportPath": "PaintingProjectsManagement.Features.Projects_Validator.5.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 51,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
