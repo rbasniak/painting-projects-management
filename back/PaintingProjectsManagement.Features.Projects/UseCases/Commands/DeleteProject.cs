@@ -4,30 +4,31 @@ internal class DeleteProject : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/projects/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/api/projects/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
+            var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
 
-            return Results.NoContent();
+            return ResultsMapper.FromResponse(result);
         })
+        .Produces(StatusCodes.Status200OK)
+        .RequireAuthorization()
         .WithName("Delete Project")
         .WithTags("Projects");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Project>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .MustAsync(async (id, cancellationToken) =>
-                    await context.Set<Project>().AnyAsync(p => p.Id == id, cancellationToken))
-                .WithMessage("Project with the specified ID does not exist.");
+        }
+
+        protected override void ValidateBusinessRules()
+        {
         }
     }
 
@@ -40,7 +41,7 @@ internal class DeleteProject : IEndpoint
                 .Include(p => p.Pictures)
                 .Include(p => p.Materials)
                 .Include(p => p.References)
-                .Include(p => p.Sections)
+                .Include(p => p.Groups)
                 .Include(p => p.Steps)
                 .FirstAsync(p => p.Id == request.Id, cancellationToken);
                 
@@ -60,7 +61,7 @@ internal class DeleteProject : IEndpoint
             _context.RemoveRange(project.Pictures);
             _context.RemoveRange(project.Materials);
             _context.RemoveRange(project.References);
-            _context.RemoveRange(project.Sections);
+            _context.RemoveRange(project.Groups);
             _context.RemoveRange(project.Steps);
             _context.Remove(project);
             

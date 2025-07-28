@@ -6,27 +6,31 @@ internal class GetProjectDetails : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/projects/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/projects/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
             
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<ProjectDetails>(StatusCodes.Status200OK)
+        .RequireAuthorization()
         .WithName("Get Project Details")
         .WithTags("Projects");
     }
 
-    public class Request : IQuery
+    public class Request : AuthenticatedRequest, IQuery
     {
         public Guid Id { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Project>
     {
-        public Validator()
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id)
-                .NotEmpty();
+        }
+
+        protected override void ValidateBusinessRules()
+        {
         }
     }
 
@@ -40,8 +44,8 @@ internal class GetProjectDetails : IEndpoint
                 .Include(x => x.References)
                 .Include(x => x.Pictures)
                 .Include(x => x.Materials)
-                .Include(x => x.Sections)
-                    .ThenInclude(s => s.ColorGroup)
+                .Include(x => x.Groups)
+                    .ThenInclude(s => s.Sections)
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             var materialIds = project.Materials.Select(m => m.MaterialId).ToArray();

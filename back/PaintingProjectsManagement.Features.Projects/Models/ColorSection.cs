@@ -1,9 +1,7 @@
 namespace PaintingProjectsManagement.Features.Projects;
 
-public class ColorSection
+public class ColorSection : BaseEntity
 {
-    public Guid Id { get; private set; }
-    public Guid ProjectId { get; private set; }
     public ColorZone Zone { get; private set; }
     public string Color { get; private set; } = string.Empty;
     public Guid[] SuggestedColorIds { get; private set; } = Array.Empty<Guid>();
