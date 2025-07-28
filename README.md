@@ -97,15 +97,63 @@ Each feature module is self-contained and follows these patterns:
 ```csharp
 public class Material : TenantEntity
 {
+    // EF Core requires a private empty constructor
+    private Material() { }
+
+    // Primary constructor must create a valid state
+    public Material(string tenantId, string name, MaterialUnit unit, double pricePerUnit)
+    {
+        TenantId = tenantId;
+        Name = name;
+        Unit = unit;
+        PricePerUnit = pricePerUnit;
+    }
+
+    // All properties must have private setters
     public string Name { get; private set; } = string.Empty;
     public MaterialUnit Unit { get; private set; }
     public double PricePerUnit { get; private set; }
 
+    // Methods should be named after use cases, not setters
     public void UpdateDetails(string name, MaterialUnit unit, double pricePerUnit)
     {
         Name = name;
         Unit = unit;
         PricePerUnit = pricePerUnit;
+    }
+
+    // Example of use case naming: Activate/Deactivate instead of SetActive/SetInactive
+    public void Activate() { /* activation logic */ }
+    public void Deactivate() { /* deactivation logic */ }
+}
+
+// Example with collections
+public class Project : TenantEntity
+{
+    private readonly HashSet<Material> _materials = new();
+
+    private Project() { } // EF Core constructor
+
+    public Project(string tenantId, string name) // Primary constructor
+    {
+        TenantId = tenantId;
+        Name = name;
+        // Collections are initialized only in primary constructor
+    }
+
+    public string Name { get; private set; } = string.Empty;
+    
+    // Collection properties backed by private HashSet
+    public IReadOnlyCollection<Material> Materials => _materials.AsReadOnly();
+
+    public void AddMaterial(Material material)
+    {
+        _materials.Add(material);
+    }
+
+    public void RemoveMaterial(Material material)
+    {
+        _materials.Remove(material);
     }
 }
 ```
@@ -150,12 +198,66 @@ public class CreateMaterial : IEndpoint
 
     public class Validator : SmartValidator<Request, Material>
     {
-        // Validation logic
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        {
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+            // SmartValidator automatically validates DB constraints, PKs, and FKs
+            // Focus only on business logic validation
+            RuleFor(x => x.Name)
+                .MustAsync(async (request, name, cancellationToken) =>
+                {
+                    return !await Context.Set<Material>().AnyAsync(m => 
+                        m.Name == name && m.TenantId == request.Identity.Tenant, cancellationToken);
+                })
+                .WithMessage("A material with this name already exists.");
+
+            RuleFor(x => x.PricePerUnit)
+                .GreaterThan(0)
+                .WithMessage("Price per unit must be greater than zero.");
+        }
     }
 
     public class Handler(DbContext _context) : ICommandHandler<Request>
     {
-        // Business logic
+        // Handler receives validated request - no additional checks needed
+        public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
+        {
+            var material = new Material(
+                request.Identity.Tenant,
+                request.Name, 
+                request.Unit, 
+                request.PricePerUnit
+            );
+
+            await _context.AddAsync(material, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var result = MaterialDetails.FromModel(material);
+            return CommandResponse.Success(result);
+        }
+    }
+}
+
+// Example of non-entity validator
+public class GetMaterialStatistics : IEndpoint
+{
+    public class Request : AuthenticatedRequest, IQuery
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+    }
+
+    public class Validator : AbstractValidator<Request> // Not SmartValidator for non-entity requests
+    {
+        public Validator()
+        {
+            RuleFor(x => x.StartDate)
+                .LessThan(x => x.EndDate)
+                .WithMessage("Start date must be before end date.");
+        }
     }
 }
 ```
@@ -260,6 +362,9 @@ public static class MaterialToReadOnlyMaterial
         };
     }
 }
+
+// Note: Mapping is done in the module project, not in abstractions
+// because abstractions don't have access to domain models
 ```
 
 ### Communication Rules
@@ -313,37 +418,60 @@ public class Create_Material_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        // Setup test data
+        // 1. Store credentials for use across tests
+        await TestingServer.CacheCredentialsAsync("user1", "password", "tenant1");
+        await TestingServer.CacheCredentialsAsync("user2", "password", "tenant2");;
+
+        // 2. Initialize test entities
+        var existingMaterial = new Material("tenant1", "Existing Material", MaterialUnit.Unit, 10.0);
+        using (var context = TestingServer.CreateContext())
+        {
+            await context.AddAsync(existingMaterial);
+            await context.SaveChangesAsync();
+        }
     }
 
     [Test, NotInParallel(Order = 2)]
     public async Task Non_Authenticated_User_Cannot_Create_Material()
     {
-        // Test authentication
+        // Authentication test - always 2nd
     }
 
     [Test, NotInParallel(Order = 3)]
     public async Task User_Cannot_Create_Material_When_Name_Is_Empty()
     {
-        // Test validation
+        // Validation tests - always 3rd+
     }
 
     [Test, NotInParallel(Order = 14)]
     public async Task User_Can_Create_Material()
     {
-        // Test success scenario
+        // Success tests - always last before cleanup
+    }
+
+    [Test, NotInParallel(Order = 99)]
+    public async Task CleanUp()
+    {
+        // Always last - delete database
+        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }
 ```
 
 ### Testing Guidelines
 
-1. **Test Ordering**: Use `NotInParallel` and `Order` attributes for test sequencing
-2. **Database Isolation**: Each test class uses a separate database instance
-3. **Authentication Testing**: Test both authenticated and unauthenticated scenarios
-4. **Validation Testing**: Test all validation rules and edge cases
-5. **Business Logic Testing**: Verify business rules and constraints
-6. **Database Verification**: Always verify database state after operations
+1. **Test Structure**: Each use case has its own test file
+2. **Test Ordering**: 
+   - Order 1: `Seed()` - Initialize credentials and test data
+   - Order 2-3: Authentication and authorization tests
+   - Order 4+: Validation tests (all validation rules and edge cases)
+   - Order 14+: Success tests (happy path scenarios)
+   - Order 99: `CleanUp()` - Delete database
+3. **Database Isolation**: Each test class uses a separate database instance
+4. **Authentication Testing**: Test both authenticated and unauthenticated scenarios
+5. **Validation Testing**: Test all validation rules and edge cases
+6. **Business Logic Testing**: Verify business rules and constraints
+7. **Database Verification**: Always verify database state after operations
 
 ### Test Categories
 
@@ -354,6 +482,42 @@ public class Create_Material_Tests
 - **Edge Case Tests**: Test boundary conditions and error scenarios
 
 ## Development Guidelines
+
+### Architectural Rules
+
+#### Domain Models
+- **Private Setters**: All properties must have private setters
+- **EF Core Constructor**: Must have a private empty constructor for EF Core
+- **Primary Constructor**: Must create a valid state when constructed
+- **Method Naming**: Avoid `SetX()` methods, use use case names like `.Activate()`, `.Deactivate()`
+- **Collections**: Must be backed by private `HashSet<T>` and initialized only in primary constructor
+
+#### Use Cases
+- **Class Structure**: Use case name as class with nested `Request`, `Validator`, `Handler`, and optional `Response`
+- **Endpoint Pattern**: Simple call to `IDispatcher` with request
+- **Return Pattern**: Always `return ResultsMapper.FromResponse(result);`
+- **Endpoint Requirements**: Minimum `AllowAnonymous`/`RequireAuthorization`, `WithName`, `WithTags`, `Produces`
+- **Validator Types**: 
+  - Use `SmartValidator` for database entity requests (auto-validates DB constraints)
+  - Use `AbstractValidator` for non-entity requests
+- **Validation Strategy**: All validation in validator, handlers receive validated requests
+- **Use Case Organization**:
+  - Frontend use cases: `UseCases/` folder
+  - Integration use cases: `Integrations/` folder (queries only)
+
+#### DTOs
+- **Frontend DTOs**: `{Entity}Header` or `{Entity}Details` (e.g., `MaterialDetails`)
+- **Integration DTOs**: `ReadOnly{Entity}` (e.g., `ReadOnlyMaterial`) in `.Abstractions` project
+- **Mapping**: Extension methods in module project (abstractions don't have access to domain models)
+
+#### Tests
+- **File Structure**: Each use case has its own test file
+- **Test Ordering**:
+  1. `Seed()` - Initialize credentials and test data
+  2. Authentication/Authorization tests
+  3. Validation tests (all rules and edge cases)
+  4. Success tests (happy path)
+  5. `CleanUp()` - Delete database
 
 ### Creating New Features
 
@@ -381,9 +545,13 @@ public class Create_Material_Tests
 
 1. **Models**: Place in `Models/` folder, inherit from `TenantEntity`
 2. **Database Config**: Place in `Database/` folder, implement `IEntityTypeConfiguration<T>`
-3. **Use Cases**: Place in `UseCases/` folder, separate Commands and Queries
-4. **DTOs**: Place in `DataTransfer/` folder
-5. **Mappers**: Place in `DataTransfer/Mappers/` folder
+3. **Use Cases**: 
+   - **Frontend Use Cases**: Place in `UseCases/` folder (CRUD operations, business logic)
+   - **Integration Use Cases**: Place in `Integrations/` folder (queries only, for cross-module communication)
+4. **DTOs**: 
+   - **Frontend DTOs**: `{Entity}Header` or `{Entity}Details` (e.g., `MaterialDetails`)
+   - **Integration DTOs**: `ReadOnly{Entity}` (e.g., `ReadOnlyMaterial`) - placed in `.Abstractions` project
+5. **Mappers**: Place in `DataTransfer/Mappers/` folder as extension methods
 6. **Integrations**: Place in `Integrations/` folder
 
 ### Naming Conventions
@@ -394,8 +562,24 @@ public class Create_Material_Tests
 - **Files**: Match class names (e.g., `CreateMaterial.cs`)
 - **Folders**: PascalCase (e.g., `UseCases/`, `DataTransfer/`)
 
+### Endpoint Requirements
+
+All endpoints must include:
+```csharp
+endpoints.MapPost("/api/materials", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+{
+    var result = await dispatcher.SendAsync(request, cancellationToken);
+    return ResultsMapper.FromResponse(result);
+})
+.Produces<MaterialDetails>(StatusCodes.Status200OK)  // Required
+.RequireAuthorization()                              // Required (or AllowAnonymous)
+.WithName("Create Material")                        // Required
+.WithTags("Materials");                             // Required
+```
+
 ### Validation Patterns
 
+#### SmartValidator (for database entities)
 ```csharp
 public class Validator : SmartValidator<Request, Material>
 {
@@ -405,6 +589,8 @@ public class Validator : SmartValidator<Request, Material>
 
     protected override void ValidateBusinessRules()
     {
+        // SmartValidator automatically validates DB constraints, PKs, and FKs
+        // Focus only on business logic validation
         RuleFor(x => x.Name)
             .MustAsync(async (request, name, cancellationToken) =>
             {
@@ -413,6 +599,19 @@ public class Validator : SmartValidator<Request, Material>
             })
             .WithMessage(LocalizationService?.LocalizeString(MaterialsMessages.Create.MaterialWithNameAlreadyExists) ?? 
                         "A material with this name already exists.");
+    }
+}
+```
+
+#### AbstractValidator (for non-entity requests)
+```csharp
+public class Validator : AbstractValidator<Request>
+{
+    public Validator()
+    {
+        RuleFor(x => x.StartDate)
+            .LessThan(x => x.EndDate)
+            .WithMessage("Start date must be before end date.");
     }
 }
 ```
