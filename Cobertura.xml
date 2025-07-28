@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage line-rate="0.7921811838972258" branch-rate="0.6703494926719279" lines-covered="14306" lines-valid="18059" branches-covered="2973" branches-valid="4435" complexity="7055" version="0" timestamp="1753717892">
+<coverage line-rate="0.7921811838972258" branch-rate="0.6703494926719279" lines-covered="14306" lines-valid="18059" branches-covered="2973" branches-valid="4435" complexity="7055" version="0" timestamp="1753730552">
   <sources />
   <packages>
     <package name="Demo1" line-rate="0.818955732122588" branch-rate="0.9536082474226805" complexity="336">
@@ -51277,7 +51277,7 @@
     </package>
     <package name="rbkApiModules.Testing.Core" line-rate="0.4156441717791411" branch-rate="0.7211703958691911" complexity="817">
       <classes>
-        <class name="&lt;AssemblyLoader_g&gt;F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader9573070b3d3b48f3818b0d8e7194da5f" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.AssemblyLoaderGenerator/AssemblyLoader.g.cs" line-rate="0.005813953488372093" branch-rate="1" complexity="342">
+        <class name="&lt;AssemblyLoader_g&gt;F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoadercd380b8885a34772a50a2d5fa657328b" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.AssemblyLoaderGenerator/AssemblyLoader.g.cs" line-rate="0.005813953488372093" branch-rate="1" complexity="342">
           <methods>
             <method name="Initialize" signature="()" line-rate="0.005813953488372093" branch-rate="1" complexity="342">
               <lines>
@@ -51631,7 +51631,7 @@
             <line number="179" hits="4" branch="false" />
           </lines>
         </class>
-        <class name="&lt;DisableReflectionScanner_g&gt;FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_09856a13b2bd44a9b444d539547b89cf" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.DisableReflectionScannerGenerator/DisableReflectionScanner.g.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="&lt;DisableReflectionScanner_g&gt;FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_ca777aaea8864b429536aeda12655de9" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.DisableReflectionScannerGenerator/DisableReflectionScanner.g.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="Initialize" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
