@@ -177,7 +177,7 @@ public class List_Models_Tests
         model.BaseSize.ShouldBe(BaseSize.Small);
         model.FigureSize.ShouldBe(FigureSize.Normal);
         model.NumberOfFigures.ShouldBe(1);
-        model.Priority.ShouldBe(0); // Default priority
+        model.MustHave.ShouldBeFalse(); // Default must-have flag
         model.Score.ShouldBe(0); // Default score
         model.PictureUrl.ShouldBeNull(); // No picture URL set
     }
