@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
+    <ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
   </ItemGroup>
 
 </Project>

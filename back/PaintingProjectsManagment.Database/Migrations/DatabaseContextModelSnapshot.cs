@@ -79,6 +79,11 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasMaxLength(75)
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("MustHave")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -89,9 +94,6 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.Property<string>("PictureUrl")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("Priority")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Score")
                         .HasColumnType("INTEGER");
@@ -246,9 +248,10 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("ProjectId", "Name")
+                        .IsUnique();
 
                     b.ToTable("ProjectColorGroups", (string)null);
                 });
@@ -267,9 +270,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<Guid>("ColorGroupId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("SuggestedColorIds")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -279,11 +279,8 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ColorGroupId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("Zone");
+                    b.HasIndex("ColorGroupId", "Zone")
+                        .IsUnique();
 
                     b.ToTable("ProjectColorSections", (string)null);
                 });
@@ -327,13 +324,18 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(32)
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EndDate");
 
-                    b.HasIndex("Name");
-
                     b.HasIndex("StartDate");
+
+                    b.HasIndex("TenantId", "Name")
+                        .IsUnique();
 
                     b.ToTable("Projects", (string)null);
                 });
@@ -651,17 +653,20 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Navigation("Brand");
                 });
 
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorGroup", b =>
+                {
+                    b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
+                        .WithMany("Groups")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorSection", b =>
                 {
                     b.HasOne("PaintingProjectsManagement.Features.Projects.ColorGroup", "ColorGroup")
                         .WithMany("Sections")
                         .HasForeignKey("ColorGroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
-                        .WithMany("Sections")
-                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -675,6 +680,14 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.Project", b =>
+                {
+                    b.HasOne("rbkApiModules.Identity.Core.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ProjectPicture", b =>
@@ -911,13 +924,13 @@ namespace PaintingProjectsManagment.Database.Migrations
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.Project", b =>
                 {
+                    b.Navigation("Groups");
+
                     b.Navigation("Materials");
 
                     b.Navigation("Pictures");
 
                     b.Navigation("References");
-
-                    b.Navigation("Sections");
 
                     b.Navigation("Steps")
                         .IsRequired();

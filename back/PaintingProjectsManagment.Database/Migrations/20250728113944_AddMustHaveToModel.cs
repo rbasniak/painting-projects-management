@@ -5,24 +5,25 @@
 namespace PaintingProjectsManagment.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUniqueConstraintToPaintColorNameAndLineId : Migration
+    public partial class AddMustHaveToModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateIndex(
-                name: "IX_Paints_LineId_Name",
-                table: "Paints",
-                columns: new[] { "LineId", "Name" },
-                unique: true);
+            migrationBuilder.AddColumn<bool>(
+                name: "MustHave",
+                table: "Models",
+                type: "INTEGER",
+                nullable: false,
+                defaultValue: false);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Paints_LineId_Name",
-                table: "Paints");
+            migrationBuilder.DropColumn(
+                name: "MustHave",
+                table: "Models");
         }
     }
 }

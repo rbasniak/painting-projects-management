@@ -24,6 +24,10 @@ public class ModelConfig : IEntityTypeConfiguration<Model>
         builder.Property(e => e.Franchise)
             .HasMaxLength(75);
 
+        builder.Property(e => e.MustHave)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         builder.HasOne(e => e.Category)
             .WithMany()
             .HasForeignKey(e => e.CategoryId)
