@@ -29,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{BE9FF0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{6398C842-1E51-4272-9993-0055BB2E71E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Commons.Core", "rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj", "{676179CB-A219-43FA-8197-68ADFF33B13F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Commons.Core", "rbkApiModules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj", "{676179CB-A219-43FA-8197-68ADFF33B13F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Materials", "PaintingProjectsManagement.Features.Materials\PaintingProjectsManagement.Features.Materials.csproj", "{9ABF31BF-F2E7-4154-B582-C06D187E6580}"
 EndProject
@@ -59,25 +59,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Materials.Abstractions", "PaintingProjectsManagement.Features.Materials.Abstractions\PaintingProjectsManagement.Features.Materials.Abstractions.csproj", "{14DC397B-CCB8-452B-A435-EA7F32A62AE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Testing.Core", "rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj", "{DEB36CAD-5F5E-49BE-9823-32B5A1751631}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Testing.Core", "rbkApiModules\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj", "{DEB36CAD-5F5E-49BE-9823-32B5A1751631}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Identity.Core", "rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj", "{23411605-BD48-420C-9FEE-BA21FE6E3AF7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Identity.Core", "rbkApiModules\rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj", "{23411605-BD48-420C-9FEE-BA21FE6E3AF7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demos", "Demos", "{D6A2B43E-D8DC-4DD2-B7FE-89042D75BC3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1", "Demo1\Demo1.csproj", "{71A8AFB5-A5AF-4AB0-A1F0-36E7C71AF2E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1", "rbkApiModules\Demo1\Demo1.csproj", "{71A8AFB5-A5AF-4AB0-A1F0-36E7C71AF2E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1.Tests", "Demo1.Tests\Demo1.Tests\Demo1.Tests.csproj", "{5B1A8CE3-1C65-437A-B733-85AACC62A339}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1.Tests", "rbkApiModules\Demo1.Tests\Demo1.Tests.csproj", "{5B1A8CE3-1C65-437A-B733-85AACC62A339}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Testing.Core.Tests", "rbkApiModules.Testing.Core.Tests\rbkApiModules.Testing.Core.Tests.csproj", "{BF0FE27D-C6C2-4FAC-A5D5-87A44F4F87FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Testing.Core.Tests", "rbkApiModules\rbkApiModules.Testing.Core.Tests\rbkApiModules.Testing.Core.Tests.csproj", "{BF0FE27D-C6C2-4FAC-A5D5-87A44F4F87FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Analysers", "rbkApiModules.Analysers\rbkApiModules.Analysers\rbkApiModules.Analysers.csproj", "{E0503E2D-F106-4A64-9746-85CA99C9FAC6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Analysers", "rbkApiModules\rbkApiModules.Analysers\rbkApiModules.Analysers\rbkApiModules.Analysers.csproj", "{E0503E2D-F106-4A64-9746-85CA99C9FAC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Analysers.CodeFixes", "rbkApiModules.Analysers\rbkApiModules.Analysers.CodeFixes\rbkApiModules.Analysers.CodeFixes.csproj", "{052AA607-C25C-4B41-A77A-885568177560}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Analysers.CodeFixes", "rbkApiModules\rbkApiModules.Analysers\rbkApiModules.Analysers.CodeFixes\rbkApiModules.Analysers.CodeFixes.csproj", "{052AA607-C25C-4B41-A77A-885568177560}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Analysers.Package", "rbkApiModules.Analysers\rbkApiModules.Analysers.Package\rbkApiModules.Analysers.Package.csproj", "{842321C3-904F-4F33-B414-CCDE774191D7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Analysers.Package", "rbkApiModules\rbkApiModules.Analysers\rbkApiModules.Analysers.Package\rbkApiModules.Analysers.Package.csproj", "{842321C3-904F-4F33-B414-CCDE774191D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Analysers.Test", "rbkApiModules.Analysers\rbkApiModules.Analysers.Test\rbkApiModules.Analysers.Test.csproj", "{74203436-A881-4E3C-B597-1DFA2B809513}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Analysers.Test", "rbkApiModules\rbkApiModules.Analysers\rbkApiModules.Analysers.Test\rbkApiModules.Analysers.Test.csproj", "{74203436-A881-4E3C-B597-1DFA2B809513}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rbkApiModules", "rbkApiModules", "{C48B301F-6F0F-40BE-9582-E1011174BFD1}"
 EndProject

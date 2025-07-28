@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36310.24
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1", "Demo1\Demo1.csproj", "{3FA16A51-4F5B-673E-32DD-4522147CA3B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1.Tests", "Demo1.Tests\Demo1.Tests\Demo1.Tests.csproj", "{BB96AB92-1049-5B34-4C9F-46B5E8E086B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1.Tests", "Demo1.Tests\Demo1.Tests.csproj", "{BB96AB92-1049-5B34-4C9F-46B5E8E086B9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbkApiModules.Commons.Core", "rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj", "{8A3C5E5A-117D-DDD1-2CC2-BDDB97000220}"
 EndProject

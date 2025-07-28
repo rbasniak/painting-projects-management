@@ -1,1 +1,0 @@
-# painting-projects-management

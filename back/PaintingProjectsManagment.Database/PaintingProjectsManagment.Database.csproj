@@ -16,8 +16,8 @@
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Models\PaintingProjectsManagement.Features.Models.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Paints\PaintingProjectsManagement.Features.Paints.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Projects\PaintingProjectsManagement.Features.Projects.csproj" />
-    <ProjectReference Include="..\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
-    <ProjectReference Include="..\rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj" />
+    <ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
+    <ProjectReference Include="..\rbkApiModules\rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj" />
   </ItemGroup>
 
 </Project>
