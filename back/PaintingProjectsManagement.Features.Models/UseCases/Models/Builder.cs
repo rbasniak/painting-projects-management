@@ -10,7 +10,7 @@ public static class ModelsBuilder
         DeleteModel.MapEndpoint(app);
         ListModels.MapEndpoint(app);
         UploadModelPicture.MapEndpoint(app); 
-        PrioritizeModels.MapEndpoint(app);
+        SetModelMustHave.MapEndpoint(app);
         ListPriorityModels.MapEndpoint(app);
 
         return app;

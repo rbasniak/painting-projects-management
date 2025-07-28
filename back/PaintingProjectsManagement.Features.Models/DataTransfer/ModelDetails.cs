@@ -18,7 +18,7 @@ public class ModelDetails
     public BaseSize BaseSize { get; set; }
     public FigureSize FigureSize { get; set; }
     public int NumberOfFigures { get; set; }
-    public int Priority { get; set; }
+    public bool MustHave { get; set; }
 
     public static ModelDetails FromModel(Model model)
     {
@@ -38,7 +38,7 @@ public class ModelDetails
             BaseSize = model.BaseSize,
             FigureSize = model.FigureSize,
             NumberOfFigures = model.NumberOfFigures,
-            Priority = model.Priority
+            MustHave = model.MustHave
         };
     }
 }

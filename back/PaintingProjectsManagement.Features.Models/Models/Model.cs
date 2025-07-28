@@ -21,11 +21,11 @@ public class Model : TenantEntity
         BaseSize = baseSize;
         FigureSize = figureSize;
         NumberOfFigures = numberOfFigures;
-        Priority = 0;  
         Type = type;
         Franchise = franchise;
         TenantId = tenant;
         SizeInMb = sizeInMb;
+        MustHave = false;
     }
 
     public string Name { get; private set; } = string.Empty;
@@ -42,8 +42,8 @@ public class Model : TenantEntity
     public BaseSize BaseSize { get; private set; }
     public FigureSize FigureSize { get; private set; }
     public int NumberOfFigures { get; private set; }
-    public int Priority { get; private set; }
     public int SizeInMb { get; private set; } = 0;
+    public bool MustHave { get; private set; }
 
     public void UpdateDetails(string name, ModelCategory category, string[] characters, string artist, string[] tags, 
         BaseSize baseSize, FigureSize figureSize, int numberOfFigures, string franchise, ModelType type, int sizeInMb)
@@ -66,18 +66,13 @@ public class Model : TenantEntity
         PictureUrl = pictureUrl;
     }
 
-    internal void ResetPriority()
-    {
-        Priority = 0;
-    }
-
-    public void UpdatePriority(int priority)
-    {
-        Priority = priority;
-    }
-
     public void Rate(int score)
     {
         Score = Math.Min(Math.Max(score, 0), 5);
-    } 
+    }
+
+    public void SetMustHave(bool mustHave)
+    {
+        MustHave = mustHave;
+    }
 }
