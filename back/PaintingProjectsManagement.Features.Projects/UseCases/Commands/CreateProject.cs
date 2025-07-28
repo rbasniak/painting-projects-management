@@ -4,33 +4,38 @@ internal class CreateProject : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/projects", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/projects", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<ProjectHeader>(StatusCodes.Status200OK)
+        .RequireAuthorization()
         .WithName("Create Project")
         .WithTags("Projects");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public string Name { get; set; } = string.Empty;
+        public Guid? ModelId { get; set; } 
         public string Base64Image { get; set; } = string.Empty;
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Project>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        {
+        }
+
+        protected override void ValidateBusinessRules()
         {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
-                .MustAsync(async (name, cancellationToken) => 
-                    !await context.Set<Project>().AnyAsync(p => p.Name == name, cancellationToken))
+                .MustAsync(async (request, name, cancellationToken) => 
+                    !await Context.Set<Project>().AnyAsync(p => p.Name == name && p.TenantId == request.Identity.Tenant, cancellationToken))
                 .WithMessage("A project with this name already exists.");
-                
+
             RuleFor(x => x.Base64Image)
                 .NotEmpty()
                 .WithMessage("Base64 image content is required.")
@@ -70,7 +75,6 @@ internal class CreateProject : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            // Generate a new ID for the project
             var projectId = Guid.NewGuid();
             
             // Store the image and get the URL
@@ -80,7 +84,6 @@ internal class CreateProject : IEndpoint
                 folderPath: "projects",
                 cancellationToken: cancellationToken);
                 
-            // Create the project
             var project = new Project(
                 projectId,
                 request.Name,
@@ -91,7 +94,9 @@ internal class CreateProject : IEndpoint
             await _context.AddAsync(project, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success();
+            var result = ProjectHeader.FromModel(project);
+
+            return CommandResponse.Success(result);
         }
     }
 }

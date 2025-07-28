@@ -4,22 +4,31 @@ internal class ListProjects : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/projects", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/projects", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<IReadOnlyCollection<ProjectHeader>>(StatusCodes.Status200OK)
+        .RequireAuthorization()
         .WithName("List Projects")
         .WithTags("Projects");  
     }
 
-    public class Request : IQuery
+    public class Request : AuthenticatedRequest, IQuery
     {
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Project>
     {
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        {
+        }
+
+        protected override void ValidateBusinessRules()
+        {
+        }
     }
 
     public class Handler(DbContext _context) : IQueryHandler<Request>

@@ -12,7 +12,7 @@ public class ProjectDetails
     public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();
     public UrlReference[] References { get; set; } = Array.Empty<UrlReference>();
     public UrlReference[] Pictures { get; set; } = Array.Empty<UrlReference>();
-    public ColorSectionDetails[] Sections { get; set; } = Array.Empty<ColorSectionDetails>();
+    public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();
 
     public static ProjectDetails FromModel(Project project, MaterialDetails[]? materialDetails = null)
     {
@@ -37,8 +37,8 @@ public class ProjectDetails
                 Id = p.Id,
                 Url = p.Url
             }).ToArray(),
-            Sections = project.Sections
-                .Select(ColorSectionDetails.FromModel)
+            Groups = project.Groups
+                .Select(ColorGroupDetails.FromModel)
                 .ToArray()
         };
     }

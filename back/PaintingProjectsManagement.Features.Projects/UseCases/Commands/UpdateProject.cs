@@ -4,17 +4,19 @@ internal class UpdateProject : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/projects", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/api/projects", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
             return ResultsMapper.FromResponse(result);
         })
+        .Produces<ProjectHeader>(StatusCodes.Status200OK)
+        .RequireAuthorization()
         .WithName("Update Project")
         .WithTags("Projects");
     }
 
-    public class Request : ICommand
+    public class Request : AuthenticatedRequest, ICommand
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -22,37 +24,33 @@ internal class UpdateProject : IEndpoint
         public DateTime? EndDate { get; set; }
     }
 
-    public class Validator : AbstractValidator<Request>
+    public class Validator : SmartValidator<Request, Project>
     {
-        public Validator(DbContext context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
-            RuleFor(x => x.Id)
-                .NotEmpty()
-                .MustAsync(async (id, cancellationToken) =>
-                    await context.Set<Project>().AnyAsync(p => p.Id == id, cancellationToken))
-                .WithMessage("Project with the specified ID does not exist.");
-                
+        }
+
+        protected override void ValidateBusinessRules()
+        {
             RuleFor(x => x.Name)
-                .NotEmpty()
-                .MaximumLength(100)
                 .MustAsync(async (request, name, cancellationToken) => 
-                    !await context.Set<Project>().AnyAsync(p => p.Name == name && p.Id != request.Id, cancellationToken))
+                    !await Context.Set<Project>().AnyAsync(p => p.Name == name && p.TenantId == request.Identity.Tenant && p.Id != request.Id, cancellationToken))
                 .WithMessage("A project with this name already exists.");
-                
+
             RuleFor(x => x.Base64Image)
                 .Must(base64 => string.IsNullOrEmpty(base64) || IsValidBase64Image(base64))
                 .WithMessage("Invalid base64 image format. Must be a valid base64 encoded image with proper header.");
-                
+
             RuleFor(x => x.EndDate)
                 .Must(endDate => !endDate.HasValue || endDate.Value <= DateTime.UtcNow)
                 .WithMessage("End date cannot be in the future.");
         }
-        
+
         private bool IsValidBase64Image(string base64)
         {
             if (string.IsNullOrEmpty(base64))
             {
-                return false;
+                return true; // Allow empty/null for updates
             }
                 
             var hasImagePrefix = base64.StartsWith("data:image/") && base64.Contains(";base64,");
@@ -83,9 +81,9 @@ internal class UpdateProject : IEndpoint
             var project = await _context.Set<Project>()
                 .Include(p => p.Steps)
                 .FirstAsync(p => p.Id == request.Id, cancellationToken);
-                
+
             string pictureUrl = project.PictureUrl;
-            
+
             if (!string.IsNullOrEmpty(request.Base64Image))
             {
                 // Delete the old picture if it exists
@@ -93,7 +91,7 @@ internal class UpdateProject : IEndpoint
                 {
                     await _fileStorage.DeleteFileAsync(project.PictureUrl, cancellationToken);
                 }
-                
+
                 // Store the new picture
                 pictureUrl = await _fileStorage.StoreFileFromBase64Async(
                     request.Base64Image,
@@ -101,7 +99,7 @@ internal class UpdateProject : IEndpoint
                     folderPath: "projects",
                     cancellationToken: cancellationToken);
             }
-            
+
             // Update the project details
             project.UpdateDetails(
                 request.Name,
@@ -109,10 +107,12 @@ internal class UpdateProject : IEndpoint
                 project.StartDate,  // Keep the original start date
                 request.EndDate
             );
-                
+
             await _context.SaveChangesAsync(cancellationToken);
-            
-            return CommandResponse.Success();
+
+            var result = ProjectHeader.FromModel(project);
+
+            return CommandResponse.Success(result);
         }
     }
 }
