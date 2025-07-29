@@ -33,7 +33,7 @@ public class UpdatePost : IEndpoint
             RuleFor(x => x.Id)
                 .NotEmpty()
                 .MustAsync(async (id, cancellationToken) =>
-                    await context.Set<Post>().AnyAsync(p => p.Id == id, cancellationToken))
+                    await context.Set<Post>().AnyAsync(x => x.Id == id, cancellationToken))
                 .WithMessage("Post with the specified ID does not exist.");
 
             RuleFor(x => x.Title)
@@ -41,7 +41,7 @@ public class UpdatePost : IEndpoint
                 .MinimumLength(2)
                 .MaximumLength(16)
                 .MustAsync(async (request, title, cancellationToken) =>
-                    !await context.Set<Post>().AnyAsync(p => p.Title == title && p.Id != request.Id, cancellationToken))
+                    !await context.Set<Post>().AnyAsync(x => x.Title == title && x.Id != request.Id, cancellationToken))
                 .WithMessage("A post with this title already exists.");
 
             RuleFor(x => x.Body)
@@ -54,7 +54,7 @@ public class UpdatePost : IEndpoint
                 .MinimumLength(1)
                 .MaximumLength(32)
                 .MustAsync(async (request, uniqueInApplication, cancellationToken) =>
-                    !await context.Set<Post>().AnyAsync(p => p.UniqueInApplication == uniqueInApplication && p.Id != request.Id, cancellationToken))
+                    !await context.Set<Post>().AnyAsync(x => x.UniqueInApplication == uniqueInApplication && x.Id != request.Id, cancellationToken))
                 .WithMessage("A post with this unique application value already exists.");
 
             RuleFor(x => x.UniqueInTenant)
@@ -62,7 +62,7 @@ public class UpdatePost : IEndpoint
                 .MinimumLength(1)
                 .MaximumLength(32)
                 .MustAsync(async (request, uniqueInTenant, cancellationToken) =>
-                    !await context.Set<Post>().AnyAsync(p => p.UniqueInTenant == uniqueInTenant && p.TenantId == request.Identity.Tenant && p.Id != request.Id, cancellationToken))
+                    !await context.Set<Post>().AnyAsync(x => x.UniqueInTenant == uniqueInTenant && x.TenantId == request.Identity.Tenant && x.Id != request.Id, cancellationToken))
                 .WithMessage("A post with this unique tenant value already exists.");
         }
     }
@@ -72,7 +72,7 @@ public class UpdatePost : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var post = await _context.Set<Post>()
-                .FirstAsync(p => p.Id == request.Id, cancellationToken);
+                .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             post.Update(
                 request.Title,

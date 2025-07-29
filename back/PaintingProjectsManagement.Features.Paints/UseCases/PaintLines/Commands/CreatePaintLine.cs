@@ -43,7 +43,7 @@ public class CreatePaintLine : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var brand = await _context.Set<PaintBrand>()
-                .FirstAsync(b => b.Id == request.BrandId, cancellationToken);
+                .FirstAsync(x => x.Id == request.BrandId, cancellationToken);
 
             var line = new PaintLine(brand, request.Name);
             

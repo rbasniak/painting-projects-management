@@ -8,21 +8,21 @@ public class MaterialConfig : IEntityTypeConfiguration<Material>
     {
         builder.ToTable("Materials");
 
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
         
-        builder.Property(e => e.Name)
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
         
-        builder.Property(e => e.Unit)
+        builder.Property(x => x.Unit)
             .IsRequired();
         
-        builder.Property(e => e.PricePerUnit)
+        builder.Property(x => x.PricePerUnit)
             .IsRequired();
 
         // Indexes
-        builder.HasIndex(m => m.Name);
-        builder.HasIndex(m => m.TenantId);
+        builder.HasIndex(x => x.Name);
+        builder.HasIndex(x => x.TenantId);
         builder.HasIndex(m => new { m.Name, m.TenantId }).IsUnique();
     }
 }

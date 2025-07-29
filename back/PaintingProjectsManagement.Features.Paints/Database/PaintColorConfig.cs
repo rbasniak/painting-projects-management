@@ -8,33 +8,33 @@ public class PaintColorConfig : IEntityTypeConfiguration<PaintColor>
     {
         builder.ToTable("Paints");
 
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
         
-        builder.Property(e => e.Name)
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
             
-        builder.Property(e => e.HexColor)
+        builder.Property(x => x.HexColor)
             .IsRequired()
             .HasMaxLength(7);
             
-        builder.Property(e => e.ManufacturerCode)
+        builder.Property(x => x.ManufacturerCode)
             .HasMaxLength(50); 
             
-        builder.Property(e => e.Type)
+        builder.Property(x => x.Type)
             .IsRequired();
             
-        builder.Property(e => e.LineId)
+        builder.Property(x => x.LineId)
             .IsRequired();
             
-        builder.HasOne(e => e.Line)
+        builder.HasOne(x => x.Line)
             .WithMany()
-            .HasForeignKey(e => e.LineId)
+            .HasForeignKey(x => x.LineId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(p => p.Name);
-        builder.HasIndex(p => p.LineId);
-        builder.HasIndex(p => p.Type);
+        builder.HasIndex(x => x.Name);
+        builder.HasIndex(x => x.LineId);
+        builder.HasIndex(x => x.Type);
         
         builder.HasIndex(p => new { p.LineId, p.Name })
             .IsUnique();

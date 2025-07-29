@@ -39,7 +39,7 @@ public class DeleteMaterial : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var material = await _context.Set<Material>()
-                .Where(m => m.TenantId == request.Identity.Tenant)
+                .Where(x => x.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             _context.Remove(material);

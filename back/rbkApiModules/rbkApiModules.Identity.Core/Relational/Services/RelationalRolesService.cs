@@ -95,7 +95,7 @@ public class RelationalRolesService : IRolesService
 
         foreach (var claimId in claimsIds)
         {
-            var claim = await _context.Set<Claim>().SingleAsync(c => c.Id == claimId, cancellationToken);
+            var claim = await _context.Set<Claim>().SingleAsync(x => x.Id == claimId, cancellationToken);
             role.AddClaim(claim);
         }
 

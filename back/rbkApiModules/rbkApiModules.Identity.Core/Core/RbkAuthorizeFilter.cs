@@ -17,8 +17,8 @@ internal sealed class RbkAuthorizationFilter : IEndpointFilter
         }
 
         var roles = user.Claims
-            .Where(c => c.Type == JwtClaimIdentifiers.Roles)
-            .Select(c => c.Value)
+            .Where(x => x.Type == JwtClaimIdentifiers.Roles)
+            .Select(x => x.Value)
             .ToList();
 
         if (!roles.Contains(_requiredClaim))

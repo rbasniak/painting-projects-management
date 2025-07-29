@@ -98,6 +98,8 @@ public class Delete_Material_Tests
         // TODO: Implement test for material used in project validation
         // This test should verify that a material cannot be deleted if it's referenced in any project
         // The implementation will depend on the project-material relationship structure
+
+        await Task.CompletedTask;
     }
      
     /// <summary>

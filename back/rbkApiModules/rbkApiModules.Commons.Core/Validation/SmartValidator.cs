@@ -348,7 +348,7 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
                             var queryableType = typeof(EntityFrameworkQueryableExtensions);
                             var anyAsyncMethods = queryableType
                                 .GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
-                                .Where(m => m.Name == "AnyAsync" && m.GetParameters().Length == 3)
+                                .Where(x => x.Name == "AnyAsync" && x.GetParameters().Length == 3)
                                 .ToList();
 
                             // 2. Get the correct overload (IQueryable<TSource>, Expression<Func<TSource, bool>>, CancellationToken)
@@ -416,7 +416,7 @@ public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequ
                             var queryableType = typeof(EntityFrameworkQueryableExtensions);
                             var anyAsyncMethods = queryableType
                                 .GetMethods(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
-                                .Where(m => m.Name == "AnyAsync" && m.GetParameters().Length == 3)
+                                .Where(x => x.Name == "AnyAsync" && x.GetParameters().Length == 3)
                                 .ToList();
 
                             // 2. Get the correct overload (IQueryable<TSource>, Expression<Func<TSource, bool>>, CancellationToken)

@@ -6,9 +6,9 @@ public class ModelCategoryConfig : IEntityTypeConfiguration<ModelCategory>
     {
         builder.ToTable("ModelCategories");
 
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
         
-        builder.Property(e => e.Name)
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
 

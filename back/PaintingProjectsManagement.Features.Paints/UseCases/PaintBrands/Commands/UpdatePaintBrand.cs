@@ -33,7 +33,7 @@ public class UpdatePaintBrand : IEndpoint
             // Check that the new name is not already taken by another brand
             RuleFor(x => x).MustAsync(async (request, cancellationToken) =>
                 !await Context.Set<PaintBrand>().AnyAsync(
-                    b => b.Name == request.Name && b.Id != request.Id, 
+                    x => x.Name == request.Name && x.Id != request.Id, 
                     cancellationToken))
                 .WithMessage("Another brand with this name already exists.");
         }

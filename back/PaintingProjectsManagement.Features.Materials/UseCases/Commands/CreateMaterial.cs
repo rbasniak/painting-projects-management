@@ -34,7 +34,7 @@ public class CreateMaterial : IEndpoint
             RuleFor(x => x.Name)
                 .MustAsync(async (request, name, cancellationToken) =>
                 {
-                    return !await Context.Set<Material>().AnyAsync(m => m.Name == name && m.TenantId == request.Identity.Tenant, cancellationToken);
+                    return !await Context.Set<Material>().AnyAsync(x => x.Name == name && x.TenantId == request.Identity.Tenant, cancellationToken);
                 })
                 .WithMessage(LocalizationService?.LocalizeString(MaterialsMessages.Create.MaterialWithNameAlreadyExists) ?? "A material with this name already exists.");
 

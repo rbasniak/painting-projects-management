@@ -138,7 +138,7 @@ public static class AssertExtensions
 
                     var enumType = valueFromExpectedObject.GetType();
                     var memberInfos = enumType.GetMember(valueFromExpectedObject.ToString());
-                    var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
+                    var enumValueMemberInfo = memberInfos.FirstOrDefault(x => x.DeclaringType == enumType);
                     var valueAttributes = enumValueMemberInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
                     string description;
@@ -162,7 +162,7 @@ public static class AssertExtensions
 
                     var enumType = valueFromExpectedObject.GetType();
                     var memberInfos = enumType.GetMember(valueFromExpectedObject.ToString());
-                    var enumValueMemberInfo = memberInfos.FirstOrDefault(m => m.DeclaringType == enumType);
+                    var enumValueMemberInfo = memberInfos.FirstOrDefault(x => x.DeclaringType == enumType);
                     var valueAttributes = enumValueMemberInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
                     string description;

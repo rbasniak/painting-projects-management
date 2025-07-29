@@ -33,7 +33,7 @@ public class CreateProject : IEndpoint
         {
             RuleFor(x => x.Name)
                 .MustAsync(async (request, name, cancellationToken) => 
-                    !await Context.Set<Project>().AnyAsync(p => p.Name == name && p.TenantId == request.Identity.Tenant, cancellationToken))
+                    !await Context.Set<Project>().AnyAsync(x => x.Name == name && x.TenantId == request.Identity.Tenant, cancellationToken))
                 .WithMessage("A project with this name already exists.");
 
             RuleFor(x => x.Base64Image)

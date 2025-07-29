@@ -35,7 +35,7 @@ public class UpdateMaterial : IEndpoint
             RuleFor(x => x.Name)
                 .MustAsync(async (request, name, cancellationToken) => 
                 {
-                    return !await Context.Set<Material>().AnyAsync(m => m.Name == name && m.Id != request.Id && m.TenantId == request.Identity.Tenant, cancellationToken);
+                    return !await Context.Set<Material>().AnyAsync(x => x.Name == name && x.Id != request.Id && x.TenantId == request.Identity.Tenant, cancellationToken);
                 })
                 .WithMessage("A material with this name already exists.");
 
@@ -51,7 +51,7 @@ public class UpdateMaterial : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var material = await _context.Set<Material>()
-                .Where(m => m.TenantId == request.Identity.Tenant)
+                .Where(x => x.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             material.UpdateDetails(request.Name, request.Unit, request.PricePerUnit);

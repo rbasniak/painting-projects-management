@@ -39,7 +39,7 @@ public class DeleteModelCategory : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var category = await _context.Set<ModelCategory>()
-                .Where(c => c.TenantId == request.Identity.Tenant)
+                .Where(x => x.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             _context.Remove(category);

@@ -29,7 +29,7 @@ public static class Builder
         {
             try
             {
-                var types = assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract).ToArray();
+                var types = assembly.GetTypes().Where(x => x.IsClass && !x.IsAbstract).ToArray();
 
                 foreach (var type in types)
                 { 

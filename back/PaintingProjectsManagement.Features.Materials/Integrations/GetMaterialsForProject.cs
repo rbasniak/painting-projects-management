@@ -19,7 +19,7 @@ public static partial class GetMaterialsForProject
         {
             var temp = await _context.Set<Material>().ToListAsync();
             var materials = await _context.Set<Material>()
-                .Where(m => m.TenantId == request.Identity.Tenant)
+                .Where(x => x.TenantId == request.Identity.Tenant)
                 .Where(x => request.MaterialIds.Contains(x.Id))
                 .ToListAsync(cancellationToken);
 

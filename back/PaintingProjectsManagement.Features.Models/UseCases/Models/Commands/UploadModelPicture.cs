@@ -70,7 +70,7 @@ public class UploadModelPicture : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var model = await _context.Set<Model>()
-                .Include(m => m.Category)
+                .Include(x => x.Category)
                 .FirstAsync(x => x.Id == request.ModelId, cancellationToken);
                 
             if (!string.IsNullOrEmpty(model.PictureUrl))

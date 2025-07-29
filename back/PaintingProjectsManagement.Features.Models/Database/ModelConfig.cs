@@ -9,28 +9,28 @@ public class ModelConfig : IEntityTypeConfiguration<Model>
     {
         builder.ToTable("Models");
 
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
         
-        builder.Property(e => e.Name)
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
             
-        builder.Property(e => e.CategoryId)
+        builder.Property(x => x.CategoryId)
             .IsRequired();
             
-        builder.Property(e => e.Artist)
+        builder.Property(x => x.Artist)
             .HasMaxLength(50);
 
-        builder.Property(e => e.Franchise)
+        builder.Property(x => x.Franchise)
             .HasMaxLength(75);
 
-        builder.Property(e => e.MustHave)
+        builder.Property(x => x.MustHave)
             .IsRequired()
             .HasDefaultValue(false);
 
-        builder.HasOne(e => e.Category)
+        builder.HasOne(x => x.Category)
             .WithMany()
-            .HasForeignKey(e => e.CategoryId)
+            .HasForeignKey(x => x.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(e => new { e.TenantId, e.Name })

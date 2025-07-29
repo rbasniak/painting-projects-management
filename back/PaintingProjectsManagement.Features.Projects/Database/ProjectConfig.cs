@@ -9,58 +9,58 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
     {
         builder.ToTable("Projects");
 
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
         
-        builder.Property(e => e.Id).ValueGeneratedOnAdd();
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
         
-        builder.Property(e => e.Name)
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
             
-        builder.Property(e => e.PictureUrl)
+        builder.Property(x => x.PictureUrl)
             .HasMaxLength(255);
             
-        builder.Property(e => e.StartDate)
+        builder.Property(x => x.StartDate)
             .IsRequired();
             
-        builder.Property(e => e.EndDate);
+        builder.Property(x => x.EndDate);
 
-        builder.OwnsOne(e => e.Steps, steps =>
+        builder.OwnsOne(x => x.Steps, steps =>
         {
-            steps.Property(s => s.Planning).HasConversion(new JsonValueConverter<ProjectStepData[]>());
-            steps.Property(s => s.Painting).HasConversion(new JsonValueConverter<ProjectStepData[]>());
-            steps.Property(s => s.Preparation).HasConversion(new JsonValueConverter<ProjectStepData[]>());
-            steps.Property(s => s.Supporting).HasConversion(new JsonValueConverter<ProjectStepData[]>());
+            steps.Property(x => x.Planning).HasConversion(new JsonValueConverter<ProjectStepData[]>());
+            steps.Property(x => x.Painting).HasConversion(new JsonValueConverter<ProjectStepData[]>());
+            steps.Property(x => x.Preparation).HasConversion(new JsonValueConverter<ProjectStepData[]>());
+            steps.Property(x => x.Supporting).HasConversion(new JsonValueConverter<ProjectStepData[]>());
         });
 
         // One-to-many relationships with collections
-        builder.HasMany(e => e.Materials)
+        builder.HasMany(x => x.Materials)
             .WithOne()
-            .HasForeignKey(e => e.ProjectId)
+            .HasForeignKey(x => x.ProjectId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
             
-        builder.HasMany(e => e.References)
+        builder.HasMany(x => x.References)
             .WithOne()
-            .HasForeignKey(e => e.ProjectId)
+            .HasForeignKey(x => x.ProjectId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
             
-        builder.HasMany(e => e.Pictures)
+        builder.HasMany(x => x.Pictures)
             .WithOne()
-            .HasForeignKey(e => e.ProjectId)
+            .HasForeignKey(x => x.ProjectId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
             
-        builder.HasMany(e => e.Groups)
+        builder.HasMany(x => x.Groups)
             .WithOne()
-            .HasForeignKey(e => e.ProjectId)
+            .HasForeignKey(x => x.ProjectId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         // Indexes
-        builder.HasIndex(p => p.StartDate);
-        builder.HasIndex(p => p.EndDate);
+        builder.HasIndex(x => x.StartDate);
+        builder.HasIndex(x => x.EndDate);
 
         builder.HasIndex(x => new { x.TenantId, x.Name })
             .IsUnique();

@@ -138,7 +138,7 @@ namespace rbkApiModules.Analysers
             // Find the HandleAsync method in Handler
             var handleAsync = handlerType.GetMembers()
                 .OfType<IMethodSymbol>()
-                .FirstOrDefault(m => m.Name == "HandleAsync" && m.MethodKind == MethodKind.Ordinary);
+                .FirstOrDefault(x => x.Name == "HandleAsync" && x.MethodKind == MethodKind.Ordinary);
 
             ITypeSymbol returnType = null;
             if (handleAsync != null && handleAsync.DeclaringSyntaxReferences.Length > 0)

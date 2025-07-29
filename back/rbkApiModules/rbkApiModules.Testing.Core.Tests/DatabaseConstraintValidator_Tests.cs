@@ -44,20 +44,20 @@ public class DatabaseConstraintValidator_Tests
         {
             modelBuilder.Entity<TestModel>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.Description).HasMaxLength(100);
-                entity.Property(e => e.CategoryId).IsRequired();
-                entity.HasOne(e => e.Category)
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Name).IsRequired().HasMaxLength(50);
+                entity.Property(x => x.Description).HasMaxLength(100);
+                entity.Property(x => x.CategoryId).IsRequired();
+                entity.HasOne(x => x.Category)
                       .WithMany()
-                      .HasForeignKey(e => e.CategoryId)
+                      .HasForeignKey(x => x.CategoryId)
                       .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<TestCategory>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(30);
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Name).IsRequired().HasMaxLength(30);
             });
         }
     }
@@ -386,17 +386,17 @@ public class DatabaseConstraintValidator_Tests
         properties.ShouldNotBeEmpty("Properties should be found");
 
         // Debug: Check specific properties
-        var nameProperty = properties.FirstOrDefault(p => p.Name == "Name");
+        var nameProperty = properties.FirstOrDefault(x => x.Name == "Name");
         nameProperty.ShouldNotBeNull("Name property should be found");
         nameProperty.IsNullable.ShouldBeFalse("Name property should not be nullable");
         nameProperty.GetMaxLength().ShouldBe(50, "Name property should have max length 50");
 
-        var descriptionProperty = properties.FirstOrDefault(p => p.Name == "Description");
+        var descriptionProperty = properties.FirstOrDefault(x => x.Name == "Description");
         descriptionProperty.ShouldNotBeNull("Description property should be found");
         descriptionProperty.IsNullable.ShouldBeTrue("Description property should be nullable");
         descriptionProperty.GetMaxLength().ShouldBe(100, "Description property should have max length 100");
 
-        var categoryIdProperty = properties.FirstOrDefault(p => p.Name == "CategoryId");
+        var categoryIdProperty = properties.FirstOrDefault(x => x.Name == "CategoryId");
         categoryIdProperty.ShouldNotBeNull("CategoryId property should be found");
         categoryIdProperty.IsNullable.ShouldBeFalse("CategoryId property should not be nullable");
 

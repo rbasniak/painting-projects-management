@@ -8,19 +8,19 @@ public class ColorGroupConfig : IEntityTypeConfiguration<ColorGroup>
     {
         builder.ToTable("ProjectColorGroups");
 
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
         
-        builder.Property(e => e.Id).ValueGeneratedOnAdd();
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
         
-        builder.Property(e => e.ProjectId)
+        builder.Property(x => x.ProjectId)
             .IsRequired();
             
-        builder.Property(e => e.Name)
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
 
         // Indexes
-        builder.HasIndex(cg => cg.ProjectId);
+        builder.HasIndex(x => x.ProjectId);
         builder.HasIndex(cg => new { cg.ProjectId, cg.Name })
             .IsUnique();
     }

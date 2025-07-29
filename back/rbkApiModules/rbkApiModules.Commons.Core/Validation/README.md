@@ -25,7 +25,7 @@ public class CreateMaterialValidator : DatabaseConstraintValidator<CreateMateria
         // Add your custom business rules here
         RuleFor(x => x.Name)
             .MustAsync(async (name, cancellationToken) =>
-                !await Context.Set<Material>().AnyAsync(m => m.Name == name, cancellationToken))
+                !await Context.Set<Material>().AnyAsync(x => x.Name == name, cancellationToken))
             .WithMessage("A material with this name already exists.");
     }
 }
@@ -38,14 +38,14 @@ public class MaterialConfig : IEntityTypeConfiguration<Material>
 {
     public void Configure(EntityTypeBuilder<Material> builder)
     {
-        builder.Property(e => e.Name)
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
         
-        builder.Property(e => e.Unit)
+        builder.Property(x => x.Unit)
             .IsRequired();
         
-        builder.Property(e => e.PricePerUnit)
+        builder.Property(x => x.PricePerUnit)
             .IsRequired();
     }
 }
@@ -99,7 +99,7 @@ protected override void ApplyCustomRules()
     // Complex validation
     RuleFor(x => x.Name)
         .MustAsync(async (name, cancellationToken) =>
-            !await Context.Set<Material>().AnyAsync(m => m.Name == name, cancellationToken))
+            !await Context.Set<Material>().AnyAsync(x => x.Name == name, cancellationToken))
         .WithMessage("Name must be unique.");
 }
 ```

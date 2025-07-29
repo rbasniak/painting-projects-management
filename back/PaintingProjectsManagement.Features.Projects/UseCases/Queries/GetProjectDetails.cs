@@ -45,10 +45,10 @@ internal class GetProjectDetails : IEndpoint
                 .Include(x => x.Pictures)
                 .Include(x => x.Materials)
                 .Include(x => x.Groups)
-                    .ThenInclude(s => s.Sections)
+                    .ThenInclude(x => x.Sections)
                 .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
-            var materialIds = project.Materials.Select(m => m.MaterialId).ToArray();
+            var materialIds = project.Materials.Select(x => x.MaterialId).ToArray();
             
             if (materialIds.Any())
             {

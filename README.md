@@ -171,8 +171,8 @@ public class MaterialConfig : IEntityTypeConfiguration<Material>
     public void Configure(EntityTypeBuilder<Material> builder)
     {
         builder.ToTable("Materials");
-        builder.HasKey(e => e.Id);
-        builder.Property(e => e.Name).IsRequired().HasMaxLength(100);
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
         builder.HasIndex(m => new { m.Name, m.TenantId }).IsUnique();
     }
 }
@@ -341,7 +341,7 @@ public static partial class GetMaterialsForProject
         public async Task<QueryResponse<IReadOnlyCollection<ReadOnlyMaterial>>> HandleAsync(Abstractions.GetMaterialsForProject.Request request, CancellationToken cancellationToken)
         {
             var materials = await _context.Set<Material>()
-                .Where(m => m.TenantId == request.Identity.Tenant)
+                .Where(x => x.TenantId == request.Identity.Tenant)
                 .Where(x => request.MaterialIds.Contains(x.Id))
                 .ToListAsync(cancellationToken);
 
