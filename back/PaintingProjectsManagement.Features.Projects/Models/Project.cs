@@ -33,7 +33,7 @@ public class Project : TenantEntity
     public IEnumerable<ProjectPicture> Pictures => _pictures.AsReadOnly();
     public IEnumerable<ColorGroup> Groups => _groups.AsReadOnly();
 
-    public void UpdateDetails(string name, string pictureUrl, DateTime startDate, DateTime? endDate)
+    public void UpdateDetails(string name, string pictureUrl, DateTime? startDate, DateTime? endDate)
     {
         Name = name;
         PictureUrl = pictureUrl;

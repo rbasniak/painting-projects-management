@@ -85,7 +85,7 @@ internal class CreateProject : IEndpoint
                 cancellationToken: cancellationToken);
                 
             var project = new Project(
-                projectId,
+                request.Identity.Tenant,
                 request.Name,
                 pictureUrl,
                 DateTime.UtcNow
