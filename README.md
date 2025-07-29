@@ -1,3 +1,9 @@
+![Coverage Badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rbasniak/a1778faea690a8a406f92dd302cca1cf/raw/coverage-badge.json)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/actions)
+[![.NET Version](https://img.shields.io/badge/.NET-9.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/9.0)
+
+[Code coverage report](https://rbasniak.github.io/painting-projects-management/)
+
 # Painting Projects Management
 
 A comprehensive .NET solution for managing painting projects, materials, models, and paints. This solution follows a modular architecture with clear separation of concerns and robust testing patterns.
