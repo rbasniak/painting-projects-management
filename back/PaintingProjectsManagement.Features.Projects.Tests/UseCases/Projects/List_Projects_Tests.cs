@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Projects.Tests;
 
-public class List_Models_Tests
+public class List_Projects_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
     public required TestingServer TestingServer { get; set; } = default!;
