@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Projects;
 
-internal class DeleteProject : IEndpoint
+public class DeleteProject : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {

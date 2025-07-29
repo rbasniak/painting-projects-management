@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using rbkApiModules.Commons.Relational;
 
 namespace PaintingProjectsManagement.Features.Projects;
 
@@ -24,12 +25,13 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
             
         builder.Property(e => e.EndDate);
 
-        // One-to-one relationship with ProjectSteps
-        builder.HasOne(e => e.Steps)
-            .WithOne()
-            .HasForeignKey<ProjectSteps>(e => e.ProjectId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.OwnsOne(e => e.Steps, steps =>
+        {
+            steps.Property(s => s.Planning).HasConversion(new JsonValueConverter<ProjectStepData[]>());
+            steps.Property(s => s.Painting).HasConversion(new JsonValueConverter<ProjectStepData[]>());
+            steps.Property(s => s.Preparation).HasConversion(new JsonValueConverter<ProjectStepData[]>());
+            steps.Property(s => s.Supporting).HasConversion(new JsonValueConverter<ProjectStepData[]>());
+        });
 
         // One-to-many relationships with collections
         builder.HasMany(e => e.Materials)

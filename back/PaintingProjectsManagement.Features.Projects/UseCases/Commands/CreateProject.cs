@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Projects;
 
-internal class CreateProject : IEndpoint
+public class CreateProject : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
