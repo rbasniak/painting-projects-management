@@ -1,6 +1,6 @@
 ﻿namespace PaintingProjectsManagement.Features.Projects;
 
-internal class ListProjects : IEndpoint
+public class ListProjects : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
@@ -13,20 +13,16 @@ internal class ListProjects : IEndpoint
         .Produces<IReadOnlyCollection<ProjectHeader>>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("List Projects")
-        .WithTags("Projects");  
+        .WithTags("Projects");
     }
 
     public class Request : AuthenticatedRequest, IQuery
     {
     }
 
-    public class Validator : SmartValidator<Request, Project>
+    public class Validator : SmartValidator<Project, Request>
     {
         public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
-        {
-        }
-
-        protected override void ValidateBusinessRules()
         {
         }
     }
@@ -37,6 +33,7 @@ internal class ListProjects : IEndpoint
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var projects = await _context.Set<Project>()
+                .Where(x => x.TenantId == request.Identity.Tenant)
                 .OrderByDescending(x => x.EndDate == null) // Unfinished projects first
                 .ThenByDescending(x => x.EndDate) // Most recently finished next
                 .ThenBy(x => x.Name) // Then alphabetically by name
@@ -45,4 +42,4 @@ internal class ListProjects : IEndpoint
             return QueryResponse.Success(projects.Select(ProjectHeader.FromModel).AsReadOnly());
         }
     }
-}
+} 
