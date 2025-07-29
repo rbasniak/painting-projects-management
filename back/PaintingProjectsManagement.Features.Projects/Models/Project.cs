@@ -13,9 +13,9 @@ public class Project : TenantEntity
         
     }
 
-    public Project(Guid id, string name, string pictureUrl, DateTime startDate)
+    public Project(string tenant, string name, string pictureUrl, DateTime startDate)
     {
-        Id = id;
+        TenantId = tenant;
         Name = name;
         PictureUrl = pictureUrl;
         StartDate = startDate;
@@ -23,7 +23,7 @@ public class Project : TenantEntity
 
     public string Name { get; private set; } = string.Empty;
     public string PictureUrl { get; private set; } = string.Empty;
-    public DateTime StartDate { get; private set; }
+    public DateTime? StartDate { get; private set; }
     public DateTime? EndDate { get; private set; }
 
     public ProjectSteps Steps { get; private set; } = new();
