@@ -11,16 +11,16 @@ public class UserToClaimConfig : IEntityTypeConfiguration<UserToClaim>
 
         entity.HasKey(t => new { t.ClaimId, t.UserId });
 
-        entity.HasOne(uc => uc.User)
-            .WithMany(u => u.Claims)
-            .HasForeignKey(uc => uc.UserId)
+        entity.HasOne(x => x.User)
+            .WithMany(x => x.Claims)
+            .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict)
             .Metadata.PrincipalToDependent
             .SetPropertyAccessMode(PropertyAccessMode.Field);
 
-        entity.HasOne(uc => uc.Claim)
-            .WithMany(c => c.Users)
-            .HasForeignKey(uc => uc.ClaimId)
+        entity.HasOne(x => x.Claim)
+            .WithMany(x => x.Users)
+            .HasForeignKey(x => x.ClaimId)
             .OnDelete(DeleteBehavior.Restrict)
             .Metadata.PrincipalToDependent
             .SetPropertyAccessMode(PropertyAccessMode.Field);

@@ -10,9 +10,9 @@ namespace rbkApiModules.Commons.Testing;
 public class DatabaseConstraintValidator_Tests
 {
     // Test models
-    public class TestModel
+    public class TestModel : IBaseEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; } 
 
         [Required]
         [MaxLength(50)]
@@ -22,14 +22,14 @@ public class DatabaseConstraintValidator_Tests
         public string? Description { get; set; }
 
         [Required]
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
 
         public TestCategory? Category { get; set; }
     }
 
-    public class TestCategory
+    public class TestCategory : IBaseEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
     }
 
@@ -44,20 +44,20 @@ public class DatabaseConstraintValidator_Tests
         {
             modelBuilder.Entity<TestModel>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.Description).HasMaxLength(100);
-                entity.Property(e => e.CategoryId).IsRequired();
-                entity.HasOne(e => e.Category)
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Name).IsRequired().HasMaxLength(50);
+                entity.Property(x => x.Description).HasMaxLength(100);
+                entity.Property(x => x.CategoryId).IsRequired();
+                entity.HasOne(x => x.Category)
                       .WithMany()
-                      .HasForeignKey(e => e.CategoryId)
+                      .HasForeignKey(x => x.CategoryId)
                       .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<TestCategory>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(30);
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Name).IsRequired().HasMaxLength(30);
             });
         }
     }
@@ -82,23 +82,25 @@ public class DatabaseConstraintValidator_Tests
     {
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
     }
 
-    public class UpdateTestModelRequest
+    public class UpdateTestModelRequest : IBaseEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
+
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
     }
 
-    public class CreateTestModelWithIdRequest
+    public class CreateTestModelWithIdRequest : IBaseEntity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
+
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
     }
 
     // Test validators
@@ -175,10 +177,11 @@ public class DatabaseConstraintValidator_Tests
         var localizationService = new MockLocalizationService();
         var validator = new CreateTestModelValidator(context, localizationService);
 
+
         var request = new CreateTestModelRequest
         {
             Name = "", // Empty required field
-            CategoryId = 1
+            CategoryId = Guid.NewGuid()
         };
 
         // Act
@@ -200,7 +203,7 @@ public class DatabaseConstraintValidator_Tests
         var request = new CreateTestModelRequest
         {
             Name = new string('A', 51), // Exceeds max length of 50
-            CategoryId = 1
+            CategoryId = Guid.NewGuid()
         };
 
         // Act
@@ -225,7 +228,7 @@ public class DatabaseConstraintValidator_Tests
         {
             Name = "TestName",
             Description = null, // Nullable field should be allowed
-            CategoryId = 1
+            CategoryId = Guid.NewGuid()
         };
 
         // Act
@@ -246,7 +249,7 @@ public class DatabaseConstraintValidator_Tests
         var request = new CreateTestModelRequest
         {
             Name = "InvalidName", // Doesn't start with "Test"
-            CategoryId = 1
+            CategoryId = Guid.NewGuid()
         };
 
         // Act
@@ -268,7 +271,7 @@ public class DatabaseConstraintValidator_Tests
         var request = new CreateTestModelRequest
         {
             Name = "TestName",
-            CategoryId = 999 // Non-existent foreign key
+            CategoryId = Guid.NewGuid() // Non-existent foreign key
         };
 
         // Act
@@ -291,7 +294,7 @@ public class DatabaseConstraintValidator_Tests
         {
             Name = "TestValidName", // Starts with "Test" to pass custom rule
             Description = "Valid description", // Within max length
-            CategoryId = 1 // Will be validated by foreign key constraint
+            CategoryId = Guid.NewGuid() // Will be validated by foreign key constraint
         };
 
         // Act
@@ -318,7 +321,7 @@ public class DatabaseConstraintValidator_Tests
         var request = new CreateTestModelRequest
         {
             Name = "InvalidName",
-            CategoryId = 1
+            CategoryId = Guid.NewGuid()
         };
 
         // Act
@@ -340,7 +343,7 @@ public class DatabaseConstraintValidator_Tests
         var request = new CreateTestModelRequest
         {
             Name = "TestName",
-            CategoryId = 1
+            CategoryId = Guid.NewGuid()
         };
 
         // Act
@@ -361,7 +364,7 @@ public class DatabaseConstraintValidator_Tests
         var request = new CreateTestModelRequest
         {
             Name = "TestName",
-            CategoryId = 1
+            CategoryId = Guid.NewGuid()
         };
 
         // Act
@@ -386,17 +389,17 @@ public class DatabaseConstraintValidator_Tests
         properties.ShouldNotBeEmpty("Properties should be found");
 
         // Debug: Check specific properties
-        var nameProperty = properties.FirstOrDefault(p => p.Name == "Name");
+        var nameProperty = properties.FirstOrDefault(x => x.Name == "Name");
         nameProperty.ShouldNotBeNull("Name property should be found");
         nameProperty.IsNullable.ShouldBeFalse("Name property should not be nullable");
         nameProperty.GetMaxLength().ShouldBe(50, "Name property should have max length 50");
 
-        var descriptionProperty = properties.FirstOrDefault(p => p.Name == "Description");
+        var descriptionProperty = properties.FirstOrDefault(x => x.Name == "Description");
         descriptionProperty.ShouldNotBeNull("Description property should be found");
         descriptionProperty.IsNullable.ShouldBeTrue("Description property should be nullable");
         descriptionProperty.GetMaxLength().ShouldBe(100, "Description property should have max length 100");
 
-        var categoryIdProperty = properties.FirstOrDefault(p => p.Name == "CategoryId");
+        var categoryIdProperty = properties.FirstOrDefault(x => x.Name == "CategoryId");
         categoryIdProperty.ShouldNotBeNull("CategoryId property should be found");
         categoryIdProperty.IsNullable.ShouldBeFalse("CategoryId property should not be nullable");
 
@@ -421,9 +424,9 @@ public class DatabaseConstraintValidator_Tests
 
         var request = new UpdateTestModelRequest
         {
-            Id = 999, // Non-existent ID
+            Id = Guid.NewGuid(), // Non-existent ID
             Name = "ValidName",
-            CategoryId = 1
+            CategoryId = Guid.NewGuid()
         };
 
         // Act
@@ -444,9 +447,9 @@ public class DatabaseConstraintValidator_Tests
 
         var request = new UpdateTestModelRequest
         {
-            Id = 1, // Non-existent ID should fail validation
+            Id = Guid.NewGuid(), // Non-existent ID should fail validation
             Name = "ValidName",
-            CategoryId = 1
+            CategoryId = Guid.NewGuid()
         };
 
         // Act
@@ -455,28 +458,6 @@ public class DatabaseConstraintValidator_Tests
         // Assert
         result.IsValid.ShouldBeFalse();
         result.Errors.ShouldContain(x => x.PropertyName == nameof(UpdateTestModelRequest.Id) && x.ErrorMessage.Contains("exist"));
-    }
-
-    [Test]
-    public async Task Should_Allow_Zero_Primary_Key_For_New_Entities()
-    {
-        // Arrange
-        using var context = await GetContext();
-        var localizationService = new MockLocalizationService();
-        var validator = new CreateTestModelWithIdValidator(context, localizationService);
-
-        var request = new CreateTestModelWithIdRequest
-        {
-            Id = 0, // Zero ID for new entity
-            Name = "TestValidName",
-            CategoryId = 0
-        };
-
-        // Act
-        var result = await validator.ValidateAsync(request);
-
-        // Assert
-        result.Errors.ShouldNotContain(x => x.PropertyName == nameof(CreateTestModelWithIdRequest.Id));
     }
 
     [Test]
@@ -489,53 +470,9 @@ public class DatabaseConstraintValidator_Tests
 
         var request = new UpdateTestModelRequest
         {
-            Id = 999, // Non-existent ID, but validation should be skipped
+            Id = Guid.NewGuid(), // Non-existent ID, but validation should be skipped
             Name = "ValidName",
-            CategoryId = 0
-        };
-
-        // Act
-        var result = await validator.ValidateAsync(request);
-
-        // Assert
-        result.Errors.ShouldNotContain(x => x.PropertyName == nameof(UpdateTestModelRequest.Id));
-    }
-
-    [Test]
-    public async Task Should_Handle_Guid_Primary_Keys()
-    {
-        // Arrange
-        using var context = await GetContext();
-        var localizationService = new MockLocalizationService();
-        var validator = new CreateTestModelWithIdValidator(context, localizationService);
-
-        var request = new CreateTestModelWithIdRequest
-        {
-            Id = 0, // Zero ID should be allowed
-            Name = "TestValidName",
-            CategoryId = 0
-        };
-
-        // Act
-        var result = await validator.ValidateAsync(request);
-
-        // Assert
-        result.Errors.ShouldNotContain(x => x.PropertyName == nameof(CreateTestModelWithIdRequest.Id));
-    }
-
-    [Test]
-    public async Task Should_Handle_Null_Primary_Key()
-    {
-        // Arrange
-        using var context = await GetContext();
-        var localizationService = new MockLocalizationService();
-        var validator = new UpdateTestModelValidator(context, localizationService);
-
-        var request = new UpdateTestModelRequest
-        {
-            Id = 0, // Zero ID should be allowed
-            Name = "ValidName",
-            CategoryId = 0
+            CategoryId = Guid.NewGuid()
         };
 
         // Act

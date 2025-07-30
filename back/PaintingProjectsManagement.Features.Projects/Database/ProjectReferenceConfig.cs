@@ -8,18 +8,18 @@ public class ProjectReferenceConfig : IEntityTypeConfiguration<ProjectReference>
     {
         builder.ToTable("ProjectReferences");
 
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
         
-        builder.Property(e => e.Id).ValueGeneratedOnAdd();
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
         
-        builder.Property(e => e.ProjectId)
+        builder.Property(x => x.ProjectId)
             .IsRequired();
             
-        builder.Property(e => e.Url)
+        builder.Property(x => x.Url)
             .IsRequired()
             .HasMaxLength(255);
 
         // Indexes
-        builder.HasIndex(pr => pr.ProjectId);
+        builder.HasIndex(x => x.ProjectId);
     }
 }

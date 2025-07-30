@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Projects;
 
-internal class DeleteProject : IEndpoint
+public class DeleteProject : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
@@ -38,12 +38,12 @@ internal class DeleteProject : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var project = await _context.Set<Project>()
-                .Include(p => p.Pictures)
-                .Include(p => p.Materials)
-                .Include(p => p.References)
-                .Include(p => p.Groups)
-                .Include(p => p.Steps)
-                .FirstAsync(p => p.Id == request.Id, cancellationToken);
+                .Include(x => x.Pictures)
+                .Include(x => x.Materials)
+                .Include(x => x.References)
+                .Include(x => x.Groups)
+                .Include(x => x.Steps)
+                .FirstAsync(x => x.Id == request.Id, cancellationToken);
                 
             if (!string.IsNullOrEmpty(project.PictureUrl))
             {

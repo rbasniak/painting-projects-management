@@ -182,13 +182,13 @@ public class List_Priority_Models_Tests
         result.Count.ShouldBe(3);
 
         // Verify all returned models belong to tenant 1 and have MustHave = true
-        result.ShouldAllBe(m => m.Id == _tenant1MustHaveModel1Id || m.Id == _tenant1MustHaveModel2Id || m.Id == _tenant1MustHaveModel3Id);
-        result.ShouldAllBe(m => m.MustHave == true);
+        result.ShouldAllBe(x => x.Id == _tenant1MustHaveModel1Id || x.Id == _tenant1MustHaveModel2Id || x.Id == _tenant1MustHaveModel3Id);
+        result.ShouldAllBe(x => x.MustHave == true);
 
         // Verify non-must-have models are not included
-        result.ShouldNotContain(m => m.Id == _tenant1NonMustHaveModelId);
-        result.ShouldNotContain(m => m.Id == _tenant2MustHaveModelId);
-        result.ShouldNotContain(m => m.Id == _tenant2NonMustHaveModelId);
+        result.ShouldNotContain(x => x.Id == _tenant1NonMustHaveModelId);
+        result.ShouldNotContain(x => x.Id == _tenant2MustHaveModelId);
+        result.ShouldNotContain(x => x.Id == _tenant2NonMustHaveModelId);
     }
 
     [Test, NotInParallel(Order = 4)]
@@ -208,7 +208,7 @@ public class List_Priority_Models_Tests
         // 3. Model name (alphabetical within same category and score)
         var expectedOrder = new[] { _tenant1MustHaveModel1Id, _tenant1MustHaveModel3Id, _tenant1MustHaveModel2Id };
 
-        result.Select(m => m.Id).ShouldBe(expectedOrder);
+        result.Select(x => x.Id).ShouldBe(expectedOrder);
 
         // Verify scores are in descending order
         result.ToArray()[0].Score.ShouldBe(5); // Must Have Model 1
@@ -227,7 +227,7 @@ public class List_Priority_Models_Tests
         result.ShouldNotBeNull();
 
         // Find the first must-have model to verify mapping
-        var model = result.FirstOrDefault(m => m.Id == _tenant1MustHaveModel1Id);
+        var model = result.FirstOrDefault(x => x.Id == _tenant1MustHaveModel1Id);
         model.ShouldNotBeNull();
 
         // Verify all properties are correctly mapped

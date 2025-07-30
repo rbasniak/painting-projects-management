@@ -12,14 +12,14 @@ public class RoleToClaimConfig : IEntityTypeConfiguration<RoleToClaim>
         entity.HasKey(rc => new { rc.ClaimId, rc.RoleId });
 
         entity.HasOne(rc => rc.Claim)
-            .WithMany(c => c.Roles)
+            .WithMany(x => x.Roles)
             .HasForeignKey(rc => rc.ClaimId)
             .OnDelete(DeleteBehavior.Restrict)
             .Metadata.PrincipalToDependent
             .SetPropertyAccessMode(PropertyAccessMode.Field);
 
         entity.HasOne(rc => rc.Role)
-            .WithMany(r => r.Claims)
+            .WithMany(x => x.Claims)
             .HasForeignKey(rc => rc.RoleId)
             .OnDelete(DeleteBehavior.Restrict)
             .Metadata.PrincipalToDependent

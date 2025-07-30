@@ -47,7 +47,7 @@ public class List_Model_Categories_Tests
         result.ShouldNotBeNull();
         result.Length.ShouldBe(2); // Only rodrigo.basniak's categories
 
-        var categoryNames = result.Select(c => c.Name).ToList();
+        var categoryNames = result.Select(x => x.Name).ToList();
         categoryNames.ShouldContain("Category 1");
         categoryNames.ShouldContain("Category 2");
         categoryNames.ShouldNotContain("Other User Category"); // Should not see other user's category
@@ -75,16 +75,16 @@ public class List_Model_Categories_Tests
         // Assert rodrigo's response
         rodrigoResponse.ShouldBeSuccess(out var rodrigoResult);
         rodrigoResult.Length.ShouldBe(2);
-        rodrigoResult.Any(c => c.Name == "Category 1").ShouldBeTrue();
-        rodrigoResult.Any(c => c.Name == "Category 2").ShouldBeTrue();
-        rodrigoResult.Any(c => c.Name == "Other User Category").ShouldBeFalse();
+        rodrigoResult.Any(x => x.Name == "Category 1").ShouldBeTrue();
+        rodrigoResult.Any(x => x.Name == "Category 2").ShouldBeTrue();
+        rodrigoResult.Any(x => x.Name == "Other User Category").ShouldBeFalse();
 
         // Assert ricardo's response
         ricardoResponse.ShouldBeSuccess(out var ricardoResult);
         ricardoResult.Length.ShouldBe(1);
-        ricardoResult.Any(c => c.Name == "Other User Category").ShouldBeTrue();
-        ricardoResult.Any(c => c.Name == "Category 1").ShouldBeFalse();
-        ricardoResult.Any(c => c.Name == "Category 2").ShouldBeFalse();
+        ricardoResult.Any(x => x.Name == "Other User Category").ShouldBeTrue();
+        ricardoResult.Any(x => x.Name == "Category 1").ShouldBeFalse();
+        ricardoResult.Any(x => x.Name == "Category 2").ShouldBeFalse();
     }
 
     [Test, NotInParallel(Order = 6)]

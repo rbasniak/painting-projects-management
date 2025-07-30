@@ -220,7 +220,7 @@ public class RelationalAuthService: IAuthService
 
         foreach (var roleId in roleIds)
         {
-            var role = await _context.Set<Role>().Include(x => x.Claims).ThenInclude(x => x.Claim).SingleAsync(c => c.Id == roleId);
+            var role = await _context.Set<Role>().Include(x => x.Claims).ThenInclude(x => x.Claim).SingleAsync(x => x.Id == roleId);
             user.AddRole(role);
         }
 

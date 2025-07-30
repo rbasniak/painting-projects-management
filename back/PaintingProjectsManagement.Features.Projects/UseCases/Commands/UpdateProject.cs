@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Projects;
 
-internal class UpdateProject : IEndpoint
+public class UpdateProject : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
@@ -34,7 +34,7 @@ internal class UpdateProject : IEndpoint
         {
             RuleFor(x => x.Name)
                 .MustAsync(async (request, name, cancellationToken) => 
-                    !await Context.Set<Project>().AnyAsync(p => p.Name == name && p.TenantId == request.Identity.Tenant && p.Id != request.Id, cancellationToken))
+                    !await Context.Set<Project>().AnyAsync(x => x.Name == name && x.TenantId == request.Identity.Tenant && x.Id != request.Id, cancellationToken))
                 .WithMessage("A project with this name already exists.");
 
             RuleFor(x => x.Base64Image)
@@ -79,8 +79,8 @@ internal class UpdateProject : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var project = await _context.Set<Project>()
-                .Include(p => p.Steps)
-                .FirstAsync(p => p.Id == request.Id, cancellationToken);
+                .Include(x => x.Steps)
+                .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             string pictureUrl = project.PictureUrl;
 

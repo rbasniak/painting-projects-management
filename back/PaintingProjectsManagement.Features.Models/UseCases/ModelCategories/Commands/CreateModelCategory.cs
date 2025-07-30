@@ -32,7 +32,7 @@ public class CreateModelCategory : IEndpoint
             // TODO: detectar unique indexes no SmartValidator
             RuleFor(x => x.Name)
                 .MustAsync(async (request, name, cancellationToken) =>
-                    !await Context.Set<ModelCategory>().AnyAsync(c => c.Name == name && c.TenantId == request.Identity.Tenant, cancellationToken))
+                    !await Context.Set<ModelCategory>().AnyAsync(x => x.Name == name && x.TenantId == request.Identity.Tenant, cancellationToken))
                 .WithMessage("A model category with this name already exists.");
         } 
     }

@@ -77,15 +77,15 @@ public class UpdateModel : IEndpoint
             // Filter by tenant if authenticated
             if (request.IsAuthenticated && request.Identity.HasTenant)
             {
-                query = query.Where(m => m.Category.TenantId == request.Identity.Tenant);
+                query = query.Where(x => x.Category.TenantId == request.Identity.Tenant);
             }
 
             var model = await query
-                .Include(m => m.Category)
+                .Include(x => x.Category)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             var category = await _context.Set<ModelCategory>()
-                .Where(c => c.TenantId == request.Identity.Tenant)
+                .Where(x => x.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.CategoryId, cancellationToken);
 
             model.UpdateDetails(

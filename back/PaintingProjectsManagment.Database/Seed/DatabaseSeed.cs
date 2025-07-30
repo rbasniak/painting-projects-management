@@ -282,7 +282,7 @@ public partial class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatab
 
     private void AdminClaimsSeed(DatabaseContext context, IServiceProvider provider)
     {
-        var superuser = context.Set<User>().First(u => u.Username == "superuser");
+        var superuser = context.Set<User>().First(x => x.Username == "superuser");
 
         var claim = new Claim(ApplicationClaims.MANAGE_PAINTS.Name, ApplicationClaims.MANAGE_PAINTS.Description);
 

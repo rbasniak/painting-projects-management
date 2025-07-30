@@ -382,23 +382,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.ToTable("ProjectReferences", (string)null);
                 });
 
-            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ProjectSteps", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId")
-                        .IsUnique();
-
-                    b.ToTable("ProjectSteps", (string)null);
-                });
-
             modelBuilder.Entity("rbkApiModules.Commons.Relational.SeedHistory", b =>
                 {
                     b.Property<string>("Id")
@@ -688,6 +671,38 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .WithMany()
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.OwnsOne("PaintingProjectsManagement.Features.Projects.ProjectSteps", "Steps", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectId")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("Painting")
+                                .IsRequired()
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("Planning")
+                                .IsRequired()
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("Preparation")
+                                .IsRequired()
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("Supporting")
+                                .IsRequired()
+                                .HasColumnType("TEXT");
+
+                            b1.HasKey("ProjectId");
+
+                            b1.ToTable("Projects");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectId");
+                        });
+
+                    b.Navigation("Steps")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ProjectPicture", b =>
@@ -705,119 +720,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .WithMany("References")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ProjectSteps", b =>
-                {
-                    b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
-                        .WithOne("Steps")
-                        .HasForeignKey("PaintingProjectsManagement.Features.Projects.ProjectSteps", "ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.OwnsOne("PaintingProjectsManagement.Features.Projects.ProjectStepData", "Painting", b1 =>
-                        {
-                            b1.Property<Guid>("StepId")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<DateTime>("Date")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<double>("Duration")
-                                .HasColumnType("REAL");
-
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("TEXT");
-
-                            b1.HasKey("StepId");
-
-                            b1.ToTable("ProjectSteps");
-
-                            b1.WithOwner()
-                                .HasForeignKey("StepId");
-                        });
-
-                    b.OwnsOne("PaintingProjectsManagement.Features.Projects.ProjectStepData", "Planning", b1 =>
-                        {
-                            b1.Property<Guid>("StepId")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<DateTime>("Date")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<double>("Duration")
-                                .HasColumnType("REAL");
-
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("TEXT");
-
-                            b1.HasKey("StepId");
-
-                            b1.ToTable("ProjectSteps");
-
-                            b1.WithOwner()
-                                .HasForeignKey("StepId");
-                        });
-
-                    b.OwnsOne("PaintingProjectsManagement.Features.Projects.ProjectStepData", "Preparation", b1 =>
-                        {
-                            b1.Property<Guid>("StepId")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<DateTime>("Date")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<double>("Duration")
-                                .HasColumnType("REAL");
-
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("TEXT");
-
-                            b1.HasKey("StepId");
-
-                            b1.ToTable("ProjectSteps");
-
-                            b1.WithOwner()
-                                .HasForeignKey("StepId");
-                        });
-
-                    b.OwnsOne("PaintingProjectsManagement.Features.Projects.ProjectStepData", "Supporting", b1 =>
-                        {
-                            b1.Property<Guid>("StepId")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<DateTime>("Date")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<double>("Duration")
-                                .HasColumnType("REAL");
-
-                            b1.Property<Guid>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("TEXT");
-
-                            b1.HasKey("StepId");
-
-                            b1.ToTable("ProjectSteps");
-
-                            b1.WithOwner()
-                                .HasForeignKey("StepId");
-                        });
-
-                    b.Navigation("Painting")
-                        .IsRequired();
-
-                    b.Navigation("Planning")
-                        .IsRequired();
-
-                    b.Navigation("Preparation")
-                        .IsRequired();
-
-                    b.Navigation("Supporting")
                         .IsRequired();
                 });
 
@@ -931,9 +833,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Navigation("Pictures");
 
                     b.Navigation("References");
-
-                    b.Navigation("Steps")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("rbkApiModules.Identity.Core.Claim", b =>

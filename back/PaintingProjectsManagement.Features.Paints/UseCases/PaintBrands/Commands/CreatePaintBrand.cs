@@ -33,7 +33,7 @@ public class CreatePaintBrand : IEndpoint
             // Check for unique name constraint (this is handled by database unique index, but we can add a custom message)
             RuleFor(x => x.Name)
                 .MustAsync(async (name, cancellationToken) => 
-                    !await Context.Set<PaintBrand>().AnyAsync(b => b.Name == name, cancellationToken))
+                    !await Context.Set<PaintBrand>().AnyAsync(x => x.Name == name, cancellationToken))
                 .WithMessage("A brand with this name already exists.");
         }
     }

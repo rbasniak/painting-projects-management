@@ -10,7 +10,7 @@ public static class ServicesCollectionExtensions
     {
         foreach (var assembly in assemblies)
         {
-            var classTypes = assembly.ExportedTypes.Select(t => t.GetTypeInfo()).Where(t => t.IsClass && !t.IsAbstract);
+            var classTypes = assembly.ExportedTypes.Select(x => x.GetTypeInfo()).Where(x => x.IsClass && !x.IsAbstract);
 
             foreach (var type in classTypes.Where(x => !x.IsNested))
             {

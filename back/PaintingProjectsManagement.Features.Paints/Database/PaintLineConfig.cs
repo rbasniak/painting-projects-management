@@ -8,18 +8,18 @@ public class PaintLineConfig : IEntityTypeConfiguration<PaintLine>
     {
         builder.ToTable("PaintLines");
 
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
         
-        builder.Property(e => e.Name)
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
         
-        builder.Property(e => e.BrandId)
+        builder.Property(x => x.BrandId)
             .IsRequired();
             
-        builder.HasOne(e => e.Brand)
+        builder.HasOne(x => x.Brand)
             .WithMany()
-            .HasForeignKey(e => e.BrandId)
+            .HasForeignKey(x => x.BrandId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(e => new { e.BrandId, e.Name })

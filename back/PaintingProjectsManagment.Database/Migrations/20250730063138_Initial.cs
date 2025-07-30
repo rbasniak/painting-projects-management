@@ -131,6 +131,10 @@ namespace PaintingProjectsManagment.Database.Migrations
                     PictureUrl = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
                     StartDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     EndDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Steps_Planning = table.Column<string>(type: "TEXT", nullable: false),
+                    Steps_Supporting = table.Column<string>(type: "TEXT", nullable: false),
+                    Steps_Preparation = table.Column<string>(type: "TEXT", nullable: false),
+                    Steps_Painting = table.Column<string>(type: "TEXT", nullable: false),
                     TenantId = table.Column<string>(type: "TEXT", maxLength: 32, nullable: true)
                 },
                 constraints: table =>
@@ -237,8 +241,8 @@ namespace PaintingProjectsManagment.Database.Migrations
                     BaseSize = table.Column<int>(type: "INTEGER", nullable: false),
                     FigureSize = table.Column<int>(type: "INTEGER", nullable: false),
                     NumberOfFigures = table.Column<int>(type: "INTEGER", nullable: false),
-                    Priority = table.Column<int>(type: "INTEGER", nullable: false),
                     SizeInMb = table.Column<int>(type: "INTEGER", nullable: false),
+                    MustHave = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false),
                     TenantId = table.Column<string>(type: "TEXT", maxLength: 32, nullable: true)
                 },
                 constraints: table =>
@@ -327,36 +331,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                     table.PrimaryKey("PK_ProjectReferences", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ProjectReferences_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProjectSteps",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Planning_Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Planning_Duration = table.Column<double>(type: "REAL", nullable: false),
-                    Planning_Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Painting_Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Painting_Duration = table.Column<double>(type: "REAL", nullable: false),
-                    Painting_Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Preparation_Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Preparation_Duration = table.Column<double>(type: "REAL", nullable: false),
-                    Preparation_Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Supporting_Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Supporting_Duration = table.Column<double>(type: "REAL", nullable: false),
-                    Supporting_Id = table.Column<Guid>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProjectSteps", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProjectSteps_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
@@ -583,12 +557,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectSteps_ProjectId",
-                table: "ProjectSteps",
-                column: "ProjectId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Roles_TenantId",
                 table: "Roles",
                 column: "TenantId");
@@ -640,9 +608,6 @@ namespace PaintingProjectsManagment.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProjectReferences");
-
-            migrationBuilder.DropTable(
-                name: "ProjectSteps");
 
             migrationBuilder.DropTable(
                 name: "RolesToClaims");

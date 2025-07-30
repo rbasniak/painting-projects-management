@@ -2,22 +2,17 @@ namespace PaintingProjectsManagement.Features.Projects;
 
 public class ProjectStepsDetails
 {
-    public Guid Id { get; set; }
-    public ProjectStepDataDetails Planning { get; set; } = new();
-    public ProjectStepDataDetails Painting { get; set; } = new();
-    public ProjectStepDataDetails Preparation { get; set; } = new();
-    public ProjectStepDataDetails Supporting { get; set; } = new();
+    public ProjectStepDataDetails[] Planning { get; set; } = [];
+    public ProjectStepDataDetails[] Painting { get; set; } = [];
+    public ProjectStepDataDetails[] Preparation { get; set; } = [];
+    public ProjectStepDataDetails[] Supporting { get; set; } = [];
 
-    public static ProjectStepsDetails FromModel(ProjectSteps? steps)
+    public static ProjectStepsDetails FromModel(ProjectSteps steps)
     {
-        if (steps == null)
-        {
-            return new ProjectStepsDetails();
-        }
+        ArgumentNullException.ThrowIfNull(steps);   
 
         return new ProjectStepsDetails
         {
-            Id = steps.Id,
             Planning = ProjectStepDataDetails.FromModel(steps.Planning),
             Painting = ProjectStepDataDetails.FromModel(steps.Painting),
             Preparation = ProjectStepDataDetails.FromModel(steps.Preparation),
@@ -29,21 +24,20 @@ public class ProjectStepsDetails
 public class ProjectStepDataDetails
 {
     public Guid Id { get; set; }
-    public DateTime Date { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
     public double Duration { get; set; }
 
-    public static ProjectStepDataDetails FromModel(ProjectStepData? stepData)
+    public static ProjectStepDataDetails[] FromModel(ProjectStepData[] stepData)
     {
-        if (stepData == null)
-        {
-            return new ProjectStepDataDetails();
-        }
+        ArgumentNullException.ThrowIfNull(stepData);
 
-        return new ProjectStepDataDetails
+        return stepData.Select(x => new ProjectStepDataDetails
         {
-            Id = stepData.Id,
-            Date = stepData.Date,
-            Duration = stepData.Duration
-        };
+            Id = x.Id,
+            EndDate = x.EndDate,
+            StartDate = x.StartDate,
+            Duration = x.Duration
+        }).ToArray();
     }
 }

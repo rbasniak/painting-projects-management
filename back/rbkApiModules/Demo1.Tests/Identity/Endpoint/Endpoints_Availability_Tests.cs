@@ -11,6 +11,7 @@ public class Endpoints_Availability_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
+        await Task.CompletedTask;
     }
 
     [Test, NotInParallel(Order = 2)]

@@ -76,26 +76,26 @@ public static class Builder
 
         if (authenticationOptions._disablePasswordReset)
         {
-            endpoints.RemoveAll(e => e.Key is "RedefinePassword" or "RequestPasswordReset");
+            endpoints.RemoveAll(x => x.Key is "RedefinePassword" or "RequestPasswordReset");
         }
 
         if (authenticationOptions._disableEmailConfirmation)
         {
-            endpoints.RemoveAll(e => e.Key is "ConfirmUserEmail" or "ResendEmailConfirmation");
+            endpoints.RemoveAll(x => x.Key is "ConfirmUserEmail" or "ResendEmailConfirmation");
         }
 
         if (authenticationOptions._disableRefreshToken)
         {
-            endpoints.RemoveAll(e => e.Key == "RenewAccessToken");
+            endpoints.RemoveAll(x => x.Key == "RenewAccessToken");
         }
 
         if (authenticationOptions._allowAnonymousTenantAccess)
         {
-            endpoints.RemoveAll(e => e.Key == "GetAllTenants.Authenticated");  
+            endpoints.RemoveAll(x => x.Key == "GetAllTenants.Authenticated");  
         }
         else
         {
-            endpoints.RemoveAll(e => e.Key == "GetAllTenants.Anonymous");  
+            endpoints.RemoveAll(x => x.Key == "GetAllTenants.Anonymous");  
         }
 
         if (authenticationOptions._loginMode == LoginMode.WindowsAuthentication || authenticationOptions._loginMode == LoginMode.Custom)
@@ -113,17 +113,17 @@ public static class Builder
 
         if (authenticationOptions._loginMode == LoginMode.Credentials || authenticationOptions._loginMode == LoginMode.Custom)
         {
-            endpoints.RemoveAll(e => e.Key == "UserLogin.Ntlm");
+            endpoints.RemoveAll(x => x.Key == "UserLogin.Ntlm");
         }
 
         if (!authenticationOptions._allowTenantSwitching)
         {
-            endpoints.RemoveAll(e => e.Key == "SwitchTenant");
+            endpoints.RemoveAll(x => x.Key == "SwitchTenant");
         }
 
         if (!authenticationOptions._allowUserSelfRegistration)
         {
-            endpoints.RemoveAll(e => e.Key == "Register");
+            endpoints.RemoveAll(x => x.Key == "Register");
         }
         else if (authenticationOptions._loginMode is LoginMode.WindowsAuthentication or LoginMode.Custom)
         {
@@ -132,7 +132,7 @@ public static class Builder
 
         if (!authenticationOptions._allowUserCreationByAdmin)
         {
-            endpoints.RemoveAll(e => e.Key == "CreateUser");
+            endpoints.RemoveAll(x => x.Key == "CreateUser");
         }
 
         foreach (var (_, map) in endpoints)

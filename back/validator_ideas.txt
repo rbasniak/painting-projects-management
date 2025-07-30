@@ -1,0 +1,2 @@
+- If endpoint implements require authorization, ensure request inherits from AuthenticatedRequest.
+- Ensure all endpoints use WithTags and WithName

@@ -8,31 +8,31 @@ public class ColorSectionConfig : IEntityTypeConfiguration<ColorSection>
     {
         builder.ToTable("ProjectColorSections");
 
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
         
-        builder.Property(e => e.Id).ValueGeneratedOnAdd();
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
         
-        builder.Property(e => e.Color)
+        builder.Property(x => x.Color)
             .IsRequired()
             .HasMaxLength(7); // Hex color format
             
-        builder.Property(e => e.Zone)
+        builder.Property(x => x.Zone)
             .IsRequired();
             
-        builder.Property(e => e.ColorGroupId)
+        builder.Property(x => x.ColorGroupId)
             .IsRequired();
 
         // Store array of Guids as comma-separated string
-        builder.Property(e => e.SuggestedColorIds)
+        builder.Property(x => x.SuggestedColorIds)
             .HasConversion(
                 v => string.Join(',', v),
                 v => string.IsNullOrEmpty(v) ? Array.Empty<Guid>() : 
                     v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Guid.Parse).ToArray());
 
         // Relationship with ColorGroup
-        builder.HasOne(e => e.ColorGroup)
-            .WithMany(g => g.Sections)
-            .HasForeignKey(e => e.ColorGroupId)
+        builder.HasOne(x => x.ColorGroup)
+            .WithMany(x => x.Sections)
+            .HasForeignKey(x => x.ColorGroupId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 

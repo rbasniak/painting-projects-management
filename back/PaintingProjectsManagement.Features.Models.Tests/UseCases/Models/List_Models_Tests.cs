@@ -125,10 +125,10 @@ public class List_Models_Tests
         models.Count.ShouldBe(3);
 
         // Verify all returned models belong to tenant 1
-        models.ShouldAllBe(m => m.Id == _tenant1Model1Id || m.Id == _tenant1Model2Id || m.Id == _tenant1Model3Id);
+        models.ShouldAllBe(x => x.Id == _tenant1Model1Id || x.Id == _tenant1Model2Id || x.Id == _tenant1Model3Id);
         
         // Verify tenant 2's model is not included
-        models.ShouldNotContain(m => m.Id == _tenant2ModelId);
+        models.ShouldNotContain(x => x.Id == _tenant2ModelId);
     }
 
     [Test, NotInParallel(Order = 4)]
@@ -146,7 +146,7 @@ public class List_Models_Tests
         // Verify ordering: Category A (alphabetically first) models should come before Category B models
         // Within Category A, models should be ordered by name
         var expectedOrder = new[] { _tenant1Model1Id, _tenant1Model2Id, _tenant1Model3Id };
-        var actualOrder = models.Select(m => m.Id).ToArray();
+        var actualOrder = models.Select(x => x.Id).ToArray();
         actualOrder.ShouldBe(expectedOrder);
     }
 
@@ -162,7 +162,7 @@ public class List_Models_Tests
         models.ShouldNotBeNull();
 
         // Find the first model to verify mapping
-        var model = models.FirstOrDefault(m => m.Id == _tenant1Model1Id);
+        var model = models.FirstOrDefault(x => x.Id == _tenant1Model1Id);
         model.ShouldNotBeNull();
         
         // Verify all properties are correctly mapped

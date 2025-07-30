@@ -8,13 +8,13 @@ public class PaintBrandConfig : IEntityTypeConfiguration<PaintBrand>
     {
         builder.ToTable("PaintBrands");
 
-        builder.HasKey(e => e.Id);
+        builder.HasKey(x => x.Id);
         
-        builder.Property(e => e.Name)
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
 
-        builder.HasIndex(e => e.Name)
+        builder.HasIndex(x => x.Name)
            .IsUnique();
     }
 }

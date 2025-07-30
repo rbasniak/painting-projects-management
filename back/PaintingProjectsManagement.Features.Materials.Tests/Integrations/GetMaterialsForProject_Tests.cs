@@ -88,7 +88,7 @@ public class GetMaterialsForProject_Tests
         response.Data.Count.ShouldBe(2);
 
         // Verify the materials belong to the correct user
-        var materialNames = response.Data.Select(m => m.Name).ToList();
+        var materialNames = response.Data.Select(x => x.Name).ToList();
         materialNames.ShouldContain("Rodrigo Material 1");
         materialNames.ShouldContain("Rodrigo Material 2");
     }
@@ -135,7 +135,7 @@ public class GetMaterialsForProject_Tests
         response.Data.Count.ShouldBe(2); // Only rodrigo's materials
 
         // Verify only rodrigo's materials are returned
-        var materialNames = response.Data.Select(m => m.Name).ToList();
+        var materialNames = response.Data.Select(x => x.Name).ToList();
         materialNames.ShouldContain("Rodrigo Material 1");
         materialNames.ShouldContain("Rodrigo Material 2");
         materialNames.ShouldNotContain("Ricardo Material 1");
@@ -204,12 +204,12 @@ public class GetMaterialsForProject_Tests
         response.Data.Count.ShouldBe(2);
 
         // Verify material properties are correctly mapped
-        var material1 = response.Data.FirstOrDefault(m => m.Name == "Rodrigo Material 1");
+        var material1 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Material 1");
         material1.ShouldNotBeNull();
         material1.Unit.ShouldBe(MaterialUnit.Unit);
         material1.PricePerUnit.ShouldBe(10.0);
 
-        var material2 = response.Data.FirstOrDefault(m => m.Name == "Rodrigo Material 2");
+        var material2 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Material 2");
         material2.ShouldNotBeNull();
         material2.Unit.ShouldBe(MaterialUnit.Drops);
         material2.PricePerUnit.ShouldBe(5.0);

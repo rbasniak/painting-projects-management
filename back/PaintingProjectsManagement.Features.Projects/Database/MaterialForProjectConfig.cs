@@ -11,14 +11,14 @@ public class MaterialForProjectConfig : IEntityTypeConfiguration<MaterialForProj
         // Composite key
         builder.HasKey(e => new { e.ProjectId, e.MaterialId });
         
-        builder.Property(e => e.ProjectId)
+        builder.Property(x => x.ProjectId)
             .IsRequired();
             
-        builder.Property(e => e.MaterialId)
+        builder.Property(x => x.MaterialId)
             .IsRequired();
 
         // Indexes
-        builder.HasIndex(pm => pm.ProjectId);
-        builder.HasIndex(pm => pm.MaterialId);
+        builder.HasIndex(x => x.ProjectId);
+        builder.HasIndex(x => x.MaterialId);
     }
 }

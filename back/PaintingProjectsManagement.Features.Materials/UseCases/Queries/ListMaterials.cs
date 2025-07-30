@@ -31,7 +31,7 @@ public class ListMaterials : IEndpoint
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var materials = await _context.Set<Material>()
-                .Where(m => m.TenantId == request.Identity.Tenant)
+                .Where(x => x.TenantId == request.Identity.Tenant)
                 .ToListAsync(cancellationToken);
 
             var result = materials.Select(MaterialDetails.FromModel).AsReadOnly();

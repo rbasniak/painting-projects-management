@@ -44,8 +44,8 @@ public class RateModel : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var model = await _context.Set<Model>()
-                .Where(m => m.Category.TenantId == request.Identity.Tenant)
-                .Include(m => m.Category)
+                .Where(x => x.Category.TenantId == request.Identity.Tenant)
+                .Include(x => x.Category)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
             model.Rate(request.Score);
