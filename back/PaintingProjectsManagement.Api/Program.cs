@@ -11,6 +11,8 @@ using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Relational;
 using Scalar.AspNetCore;
 using System.Reflection;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.OpenApi.Models;
 
 namespace PaintingProjectsManagement.Api;
 
@@ -62,7 +64,15 @@ public class Program
 
         builder.Services.AddRbkUIDefinitions(Assembly.GetAssembly(typeof(Program)));
 
-        builder.Services.AddOpenApi();
+        // Configure OpenAPI with custom schema naming for nested classes
+        builder.Services.AddOpenApi(config =>
+        {
+            //
+            // with .NET 9 OpenApi, to support fully qualified type names for nested types in the schema, use the
+            // CustomSchemaIds extension method (but from our own extension method :) )
+            //
+            config.CustomSchemaIds(x => x.FullName?.Split('.').Last().Replace("+", ".", StringComparison.Ordinal));
+        });
 
         // Register file storage service
         builder.Services.AddSingleton<IFileStorage, LocalFileStorage>();

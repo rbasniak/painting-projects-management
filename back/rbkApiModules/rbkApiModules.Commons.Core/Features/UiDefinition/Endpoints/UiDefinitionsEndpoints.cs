@@ -11,6 +11,7 @@ public class UiDefinitionsEndpoints
     {
         app.MapGet("/api/ui-definitions", All)
             .AllowAnonymous()
+            .Produces(StatusCodes.Status200OK)
             .WithName("GetAllUiDefinitions")
             .WithTags("UI Definitions");
     }
