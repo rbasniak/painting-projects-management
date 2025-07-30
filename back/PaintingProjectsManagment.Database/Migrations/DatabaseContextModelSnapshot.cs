@@ -293,6 +293,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<Guid>("MaterialId")
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("Quantity")
+                        .HasColumnType("REAL");
+
                     b.HasKey("ProjectId", "MaterialId");
 
                     b.HasIndex("MaterialId");
@@ -658,10 +661,16 @@ namespace PaintingProjectsManagment.Database.Migrations
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.MaterialForProject", b =>
                 {
+                    b.HasOne("PaintingProjectsManagement.Features.Materials.Material", null)
+                        .WithMany()
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
                         .WithMany("Materials")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

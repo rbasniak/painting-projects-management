@@ -29,6 +29,12 @@ public class DatabaseContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ModelConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProjectConfig).Assembly);
 
+        modelBuilder.Entity<MaterialForProject>()
+            .HasOne<Material>()
+            .WithMany()
+            .HasForeignKey(x => x.MaterialId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         modelBuilder.AddJsonFields();
         modelBuilder.SetupTenants();
     }

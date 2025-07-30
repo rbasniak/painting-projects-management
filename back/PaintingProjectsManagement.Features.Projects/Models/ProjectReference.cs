@@ -5,6 +5,17 @@ namespace PaintingProjectsManagement.Features.Projects;
 /// </summary>
 public class ProjectReference : BaseEntity
 {
+    private ProjectReference()
+    {
+        // EF Core constructor, don't remove it
+    }
+
+    public ProjectReference(Guid projectId, string url)
+    {
+        ProjectId = projectId;
+        Url = url;
+    }
+
     public Guid ProjectId { get; private set; }
     public string Url { get; private set; } = string.Empty;
 }

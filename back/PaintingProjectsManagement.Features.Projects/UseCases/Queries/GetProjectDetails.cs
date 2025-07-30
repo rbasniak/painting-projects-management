@@ -2,7 +2,7 @@
 
 namespace PaintingProjectsManagement.Features.Projects;
 
-internal class GetProjectDetails : IEndpoint
+public class GetProjectDetails : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
@@ -46,12 +46,12 @@ internal class GetProjectDetails : IEndpoint
                 .Include(x => x.Materials)
                 .Include(x => x.Groups)
                     .ThenInclude(x => x.Sections)
-                .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+                .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
-            var materialIds = project.Materials.Select(x => x.MaterialId).ToArray();
-            
-            if (materialIds.Any())
+            if (project.Materials.Any())
             {
+                var materialIds = project.Materials.Select(x => x.MaterialId).ToArray();
+
                 var materialsRequest = new GetMaterialsForProject.Request
                 {
                     MaterialIds = materialIds
@@ -65,7 +65,11 @@ internal class GetProjectDetails : IEndpoint
                 }
 
                 var materialDetails = materialsResponse.Data
-                    .Select(MaterialDetails.FromReadOnlyMaterial)
+                    .Select(materialData =>
+                    {
+                        var projectMaterial = project.Materials.First(projectMaterial => projectMaterial.MaterialId == materialData.Id);
+                        return MaterialDetails.FromModel(materialData, projectMaterial);
+                    })
                     .ToArray();
 
                 return QueryResponse.Success(ProjectDetails.FromModel(project, materialDetails));

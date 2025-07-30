@@ -11,7 +11,7 @@ using PaintingProjectsManagment.Database;
 namespace PaintingProjectsManagment.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250730063138_Initial")]
+    [Migration("20250730094048_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -295,6 +295,9 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.Property<Guid>("MaterialId")
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("REAL");
 
                     b.HasKey("ProjectId", "MaterialId");
 
@@ -661,10 +664,16 @@ namespace PaintingProjectsManagment.Database.Migrations
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.MaterialForProject", b =>
                 {
+                    b.HasOne("PaintingProjectsManagement.Features.Materials.Material", null)
+                        .WithMany()
+                        .HasForeignKey("MaterialId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
                         .WithMany("Materials")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

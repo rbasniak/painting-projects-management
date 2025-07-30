@@ -37,7 +37,8 @@ public class Program
         }
 
         builder.Services.AddDbContext<DatabaseContext>((scope, options) =>
-                options.UseSqlite(connectionString));
+                options.UseSqlite(connectionString)
+                       .EnableSensitiveDataLogging());
 
         builder.Services.AddRbkApiCoreSetup(options => options
              .EnableBasicAuthenticationHandler()

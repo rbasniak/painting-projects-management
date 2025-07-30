@@ -33,13 +33,6 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
             steps.Property(x => x.Supporting).HasConversion(new JsonValueConverter<ProjectStepData[]>());
         });
 
-        // One-to-many relationships with collections
-        builder.HasMany(x => x.Materials)
-            .WithOne()
-            .HasForeignKey(x => x.ProjectId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
-            
         builder.HasMany(x => x.References)
             .WithOne()
             .HasForeignKey(x => x.ProjectId)

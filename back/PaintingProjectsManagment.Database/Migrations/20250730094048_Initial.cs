@@ -286,17 +286,24 @@ namespace PaintingProjectsManagment.Database.Migrations
                 columns: table => new
                 {
                     MaterialId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Quantity = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectMaterials", x => new { x.ProjectId, x.MaterialId });
                     table.ForeignKey(
+                        name: "FK_ProjectMaterials_Materials_MaterialId",
+                        column: x => x.MaterialId,
+                        principalTable: "Materials",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_ProjectMaterials_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -589,9 +596,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                 name: "__SeedHistory");
 
             migrationBuilder.DropTable(
-                name: "Materials");
-
-            migrationBuilder.DropTable(
                 name: "Models");
 
             migrationBuilder.DropTable(
@@ -626,6 +630,9 @@ namespace PaintingProjectsManagment.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProjectColorGroups");
+
+            migrationBuilder.DropTable(
+                name: "Materials");
 
             migrationBuilder.DropTable(
                 name: "Claims");
