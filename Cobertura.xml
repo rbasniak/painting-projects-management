@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage line-rate="0.8001369777722434" branch-rate="0.6790035587188612" lines-covered="12851" lines-valid="16061" branches-covered="2862" branches-valid="4215" complexity="6869" version="0" timestamp="1753869117">
+<coverage line-rate="0.8010846527864356" branch-rate="0.6793258960360788" lines-covered="12851" lines-valid="16042" branches-covered="2862" branches-valid="4213" complexity="6867" version="0" timestamp="1753872222">
   <sources />
   <packages>
     <package name="Demo1" line-rate="0.818955732122588" branch-rate="0.9536082474226805" complexity="336">
@@ -4434,56 +4434,8 @@
         </class>
       </classes>
     </package>
-    <package name="PaintingProjectsManagement.Api" line-rate="0.782608695652174" branch-rate="0.8125" complexity="16">
+    <package name="PaintingProjectsManagement.Api" line-rate="0.9863013698630136" branch-rate="0.9285714285714286" complexity="14">
       <classes>
-        <class name="PaintingProjectsManagement.Api.DatabaseContextFactory" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Api/Factory.cs" line-rate="0" branch-rate="0" complexity="2">
-          <methods>
-            <method name="CreateDbContext" signature="(string[])" line-rate="0" branch-rate="0" complexity="2">
-              <lines>
-                <line number="14" hits="0" branch="false" />
-                <line number="15" hits="0" branch="false" />
-                <line number="16" hits="0" branch="false" />
-                <line number="17" hits="0" branch="false" />
-                <line number="19" hits="0" branch="false" />
-                <line number="21" hits="0" branch="false" />
-                <line number="22" hits="0" branch="false" />
-                <line number="23" hits="0" branch="false" />
-                <line number="24" hits="0" branch="false" />
-                <line number="25" hits="0" branch="false" />
-                <line number="27" hits="0" branch="false" />
-                <line number="29" hits="0" branch="false" />
-                <line number="30" hits="0" branch="true" condition-coverage="0% (0/2)" />
-                <line number="32" hits="0" branch="false" />
-                <line number="35" hits="0" branch="false" />
-                <line number="37" hits="0" branch="false" />
-                <line number="39" hits="0" branch="false" />
-                <line number="40" hits="0" branch="false" />
-                <line number="42" hits="0" branch="false" />
-              </lines>
-            </method>
-          </methods>
-          <lines>
-            <line number="14" hits="0" branch="false" />
-            <line number="15" hits="0" branch="false" />
-            <line number="16" hits="0" branch="false" />
-            <line number="17" hits="0" branch="false" />
-            <line number="19" hits="0" branch="false" />
-            <line number="21" hits="0" branch="false" />
-            <line number="22" hits="0" branch="false" />
-            <line number="23" hits="0" branch="false" />
-            <line number="24" hits="0" branch="false" />
-            <line number="25" hits="0" branch="false" />
-            <line number="27" hits="0" branch="false" />
-            <line number="29" hits="0" branch="false" />
-            <line number="30" hits="0" branch="true" condition-coverage="0% (0/2)" />
-            <line number="32" hits="0" branch="false" />
-            <line number="35" hits="0" branch="false" />
-            <line number="37" hits="0" branch="false" />
-            <line number="39" hits="0" branch="false" />
-            <line number="40" hits="0" branch="false" />
-            <line number="42" hits="0" branch="false" />
-          </lines>
-        </class>
         <class name="PaintingProjectsManagement.Api.Program" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/PaintingProjectsManagement.Api/Program.cs" line-rate="0.9863013698630136" branch-rate="0.9285714285714286" complexity="14">
           <methods>
             <method name="Main" signature="(string[])" line-rate="0.9863013698630136" branch-rate="0.9285714285714286" complexity="14">
@@ -47284,7 +47236,7 @@
     </package>
     <package name="rbkApiModules.Testing.Core" line-rate="0.4156441717791411" branch-rate="0.7211703958691911" complexity="817">
       <classes>
-        <class name="&lt;AssemblyLoader_g&gt;F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader57b280910edf4994bfd23582ef5e2aa6" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.AssemblyLoaderGenerator/AssemblyLoader.g.cs" line-rate="0.005813953488372093" branch-rate="1" complexity="342">
+        <class name="&lt;AssemblyLoader_g&gt;F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoadera4353d749ccc4487bb1a735c59d0a9d7" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.AssemblyLoaderGenerator/AssemblyLoader.g.cs" line-rate="0.005813953488372093" branch-rate="1" complexity="342">
           <methods>
             <method name="Initialize" signature="()" line-rate="0.005813953488372093" branch-rate="1" complexity="342">
               <lines>
@@ -47638,7 +47590,7 @@
             <line number="179" hits="5" branch="false" />
           </lines>
         </class>
-        <class name="&lt;DisableReflectionScanner_g&gt;FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_32708f3afa6643eb825f0032147246b3" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.DisableReflectionScannerGenerator/DisableReflectionScanner.g.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="&lt;DisableReflectionScanner_g&gt;FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_78e81cd058fd43b09d7802da51dd41a2" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.DisableReflectionScannerGenerator/DisableReflectionScanner.g.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="Initialize" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>

@@ -242,7 +242,6 @@ var assemblies = [
   {
     "name": "PaintingProjectsManagement.Api",
     "classes": [
-      { "name": "PaintingProjectsManagement.Api.DatabaseContextFactory", "rp": "PaintingProjectsManagement.Api_DatabaseContextFactory.html", "cl": 0, "ucl": 19, "cal": 19, "tl": 43, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Api.Program", "rp": "PaintingProjectsManagement.Api_Program.html", "cl": 72, "ucl": 1, "cal": 73, "tl": 123, "cb": 13, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
@@ -727,8 +726,8 @@ var assemblies = [
   {
     "name": "rbkApiModules.Testing.Core",
     "classes": [
-      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader57b280910edf4994bfd23582ef5e2aa6", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader57b280910edf4994bfd23582ef5e2aa6.html", "cl": 1, "ucl": 171, "cal": 172, "tl": 180, "cb": 342, "tb": 342, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_32708f3afa6643eb825f0032147246b3", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_32708f3afa6643eb825f0032147246b3.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoadera4353d749ccc4487bb1a735c59d0a9d7", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoadera4353d749ccc4487bb1a735c59d0a9d7.html", "cl": 1, "ucl": 171, "cal": 172, "tl": 180, "cb": 342, "tb": 342, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_78e81cd058fd43b09d7802da51dd41a2", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_78e81cd058fd43b09d7802da51dd41a2.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions", "rp": "rbkApiModules.Testing.Core_AssertExtensions.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions<T>", "rp": "rbkApiModules.Testing.Core_AssertExtensions_T_.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.EntityAssertionOptions<T>", "rp": "rbkApiModules.Testing.Core_EntityAssertionOptions_T_.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 289, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -786,7 +785,7 @@ var riskHotspots = [
       { "value": 18, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader57b280910edf4994bfd23582ef5e2aa6", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader57b280910edf4994bfd23582ef5e2aa6.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 8,
+    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoadera4353d749ccc4487bb1a735c59d0a9d7", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoadera4353d749ccc4487bb1a735c59d0a9d7.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 8,
     "metrics": [
       { "value": 342, "exceeded": true },
       { "value": 342, "exceeded": true },
