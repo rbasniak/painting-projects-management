@@ -242,7 +242,8 @@ var assemblies = [
   {
     "name": "PaintingProjectsManagement.Api",
     "classes": [
-      { "name": "PaintingProjectsManagement.Api.Program", "rp": "PaintingProjectsManagement.Api_Program.html", "cl": 72, "ucl": 1, "cal": 73, "tl": 123, "cb": 13, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Api.OpenApiExtensions", "rp": "PaintingProjectsManagement.Api_OpenApiExtensions.html", "cl": 0, "ucl": 30, "cal": 30, "tl": 42, "cb": 0, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Api.Program", "rp": "PaintingProjectsManagement.Api_Program.html", "cl": 77, "ucl": 3, "cal": 80, "tl": 133, "cb": 15, "tb": 20, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "PaintingProjectsManagement.Features.Authorization",
@@ -466,7 +467,7 @@ var assemblies = [
       { "name": "AuthenticatedRequest", "rp": "rbkApiModules.Commons.Core_AuthenticatedRequest.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 60, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "AuthenticatedUser", "rp": "rbkApiModules.Commons.Core_AuthenticatedUser.html", "cl": 12, "ucl": 1, "cal": 13, "tl": 60, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "BaseEntity", "rp": "rbkApiModules.Commons.Core_BaseEntity.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core", "rp": "rbkApiModules.Commons.Core_Core.html", "cl": 1041, "ucl": 420, "cal": 1461, "tl": 3554, "cb": 442, "tb": 734, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core", "rp": "rbkApiModules.Commons.Core_Core.html", "cl": 1042, "ucl": 420, "cal": 1462, "tl": 3555, "cb": 442, "tb": 734, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EntityReference", "rp": "rbkApiModules.Commons.Core_EntityReference.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 5, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EntityReference<T>", "rp": "rbkApiModules.Commons.Core_EntityReference_T_.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 5, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EnumReference", "rp": "rbkApiModules.Commons.Core_EnumReference.html", "cl": 10, "ucl": 1, "cal": 11, "tl": 22, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -519,7 +520,7 @@ var assemblies = [
       { "name": "rbkApiModules.Commons.Core.UiDefinitions.FormGroup", "rp": "rbkApiModules.Commons.Core_FormGroup.html", "cl": 5, "ucl": 0, "cal": 5, "tl": 13, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.UiDefinitions.InputControl", "rp": "rbkApiModules.Commons.Core_InputControl.html", "cl": 83, "ucl": 37, "cal": 120, "tl": 232, "cb": 58, "tb": 100, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.UiDefinitions.UIDefinitionOptions", "rp": "rbkApiModules.Commons.Core_UIDefinitionOptions.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 13, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.UiDefinitions.UiDefinitionsEndpoints", "rp": "rbkApiModules.Commons.Core_UiDefinitionsEndpoints.html", "cl": 33, "ucl": 2, "cal": 35, "tl": 72, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.UiDefinitions.UiDefinitionsEndpoints", "rp": "rbkApiModules.Commons.Core_UiDefinitionsEndpoints.html", "cl": 34, "ucl": 2, "cal": 36, "tl": 73, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.UnexpectedInternalException", "rp": "rbkApiModules.Commons.Core_UnexpectedInternalException.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 39, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Relational.ArrayOfStringsConverter", "rp": "rbkApiModules.Commons.Core_ArrayOfStringsConverter.html", "cl": 0, "ucl": 10, "cal": 10, "tl": 35, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Relational.DatabaseMigrationException", "rp": "rbkApiModules.Commons.Core_DatabaseMigrationException.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -726,8 +727,8 @@ var assemblies = [
   {
     "name": "rbkApiModules.Testing.Core",
     "classes": [
-      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoadera4353d749ccc4487bb1a735c59d0a9d7", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoadera4353d749ccc4487bb1a735c59d0a9d7.html", "cl": 1, "ucl": 171, "cal": 172, "tl": 180, "cb": 342, "tb": 342, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_78e81cd058fd43b09d7802da51dd41a2", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_78e81cd058fd43b09d7802da51dd41a2.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoaderec59a5129c204c1d9810f1ca16c2e647", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoaderec59a5129c204c1d9810f1ca16c2e647.html", "cl": 1, "ucl": 171, "cal": 172, "tl": 180, "cb": 342, "tb": 342, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_ec7fd5e845874886a945689d1b9afd49", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_ec7fd5e845874886a945689d1b9afd49.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions", "rp": "rbkApiModules.Testing.Core_AssertExtensions.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions<T>", "rp": "rbkApiModules.Testing.Core_AssertExtensions_T_.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.EntityAssertionOptions<T>", "rp": "rbkApiModules.Testing.Core_EntityAssertionOptions_T_.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 289, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -785,7 +786,7 @@ var riskHotspots = [
       { "value": 18, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoadera4353d749ccc4487bb1a735c59d0a9d7", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoadera4353d749ccc4487bb1a735c59d0a9d7.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 8,
+    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoaderec59a5129c204c1d9810f1ca16c2e647", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoaderec59a5129c204c1d9810f1ca16c2e647.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 8,
     "metrics": [
       { "value": 342, "exceeded": true },
       { "value": 342, "exceeded": true },
@@ -1113,6 +1114,12 @@ var riskHotspots = [
     "metrics": [
       { "value": 18, "exceeded": false },
       { "value": 18, "exceeded": true },
+    ]},
+  {
+    "assembly": "PaintingProjectsManagement.Api", "class": "PaintingProjectsManagement.Api.Program", "reportPath": "PaintingProjectsManagement.Api_Program.html", "methodName": "Main(string[])", "methodShortName": "Main(...)", "fileIndex": 0, "line": 23,
+    "metrics": [
+      { "value": 16, "exceeded": false },
+      { "value": 16, "exceeded": true },
     ]},
   {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "UseRbkApiCoreSetup(Microsoft.AspNetCore.Builder.WebApplication)", "methodShortName": "UseRbkApiCoreSetup(...)", "fileIndex": 13, "line": 657,
