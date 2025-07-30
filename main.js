@@ -242,7 +242,7 @@ var assemblies = [
   {
     "name": "PaintingProjectsManagement.Api",
     "classes": [
-      { "name": "PaintingProjectsManagement.Api.DatabaseContextFactory", "rp": "PaintingProjectsManagement.Api_DatabaseContextFactory.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 26, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Api.DatabaseContextFactory", "rp": "PaintingProjectsManagement.Api_DatabaseContextFactory.html", "cl": 0, "ucl": 19, "cal": 19, "tl": 43, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Api.Program", "rp": "PaintingProjectsManagement.Api_Program.html", "cl": 71, "ucl": 1, "cal": 72, "tl": 122, "cb": 13, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
@@ -410,41 +410,40 @@ var assemblies = [
       { "name": "PaintingProjectsManagement.Features.Projects.ColorSection", "rp": "PaintingProjectsManagement.Features.Projects_ColorSection.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ColorSectionConfig", "rp": "PaintingProjectsManagement.Features.Projects_ColorSectionConfig.html", "cl": 23, "ucl": 0, "cal": 23, "tl": 43, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ColorSectionDetails", "rp": "PaintingProjectsManagement.Features.Projects_ColorSectionDetails.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 37, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject", "rp": "PaintingProjectsManagement.Features.Projects_CreateProject.html", "cl": 8, "ucl": 47, "cal": 55, "tl": 102, "cb": 2, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.html", "cl": 0, "ucl": 18, "cal": 18, "tl": 102, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 102, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.html", "cl": 0, "ucl": 23, "cal": 23, "tl": 102, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject", "rp": "PaintingProjectsManagement.Features.Projects_DeleteProject.html", "cl": 8, "ucl": 29, "cal": 37, "tl": 73, "cb": 2, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.2.html", "cl": 0, "ucl": 22, "cal": 22, "tl": 73, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.2.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 73, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.2.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 73, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject", "rp": "PaintingProjectsManagement.Features.Projects_CreateProject.html", "cl": 54, "ucl": 1, "cal": 55, "tl": 102, "cb": 7, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.html", "cl": 18, "ucl": 0, "cal": 18, "tl": 102, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 102, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.html", "cl": 22, "ucl": 1, "cal": 23, "tl": 102, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject", "rp": "PaintingProjectsManagement.Features.Projects_DeleteProject.html", "cl": 35, "ucl": 2, "cal": 37, "tl": 73, "cb": 5, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.2.html", "cl": 20, "ucl": 2, "cal": 22, "tl": 73, "cb": 3, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.2.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 73, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.2.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 73, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails", "rp": "PaintingProjectsManagement.Features.Projects_GetProjectDetails.html", "cl": 8, "ucl": 31, "cal": 39, "tl": 77, "cb": 2, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.3.html", "cl": 0, "ucl": 24, "cal": 24, "tl": 77, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.3.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 77, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.3.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 77, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ListProjects", "rp": "PaintingProjectsManagement.Features.Projects_ListProjects.html", "cl": 8, "ucl": 14, "cal": 22, "tl": 48, "cb": 2, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ListProjects.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.4.html", "cl": 0, "ucl": 8, "cal": 8, "tl": 48, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ListProjects.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.4.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 48, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ListProjects", "rp": "PaintingProjectsManagement.Features.Projects_ListProjects.html", "cl": 22, "ucl": 0, "cal": 22, "tl": 45, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ListProjects.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.4.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 45, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ListProjects.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.4.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 45, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.MaterialDetails", "rp": "PaintingProjectsManagement.Features.Projects_MaterialDetails.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 23, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.MaterialForProject", "rp": "PaintingProjectsManagement.Features.Projects_MaterialForProject.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 7, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.MaterialForProjectConfig", "rp": "PaintingProjectsManagement.Features.Projects_MaterialForProjectConfig.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 24, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.Project", "rp": "PaintingProjectsManagement.Features.Projects_Project.html", "cl": 0, "ucl": 26, "cal": 26, "tl": 43, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectConfig.html", "cl": 41, "ucl": 0, "cal": 41, "tl": 66, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.Project", "rp": "PaintingProjectsManagement.Features.Projects_Project.html", "cl": 26, "ucl": 0, "cal": 26, "tl": 43, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectConfig.html", "cl": 43, "ucl": 0, "cal": 43, "tl": 68, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectDetails.html", "cl": 0, "ucl": 34, "cal": 34, "tl": 51, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectHeader", "rp": "PaintingProjectsManagement.Features.Projects_ProjectHeader.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 23, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectHeader", "rp": "PaintingProjectsManagement.Features.Projects_ProjectHeader.html", "cl": 12, "ucl": 1, "cal": 13, "tl": 23, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectPicture", "rp": "PaintingProjectsManagement.Features.Projects_ProjectPicture.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectPictureConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectPictureConfig.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 25, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectReference", "rp": "PaintingProjectsManagement.Features.Projects_ProjectReference.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectReferenceConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectReferenceConfig.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 25, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepData", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepData.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepDataDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepDataDetails.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 49, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectSteps", "rp": "PaintingProjectsManagement.Features.Projects_ProjectSteps.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepsConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepsConfig.html", "cl": 35, "ucl": 0, "cal": 35, "tl": 54, "cb": 8, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepsDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepsDetails.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 49, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject", "rp": "PaintingProjectsManagement.Features.Projects_UpdateProject.html", "cl": 8, "ucl": 54, "cal": 62, "tl": 118, "cb": 2, "tb": 18, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.5.html", "cl": 0, "ucl": 23, "cal": 23, "tl": 118, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.4.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 118, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.5.html", "cl": 0, "ucl": 24, "cal": 24, "tl": 118, "cb": 0, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepData", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepData.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 29, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepDataDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepDataDetails.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 43, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectSteps", "rp": "PaintingProjectsManagement.Features.Projects_ProjectSteps.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepsDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepsDetails.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 43, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject", "rp": "PaintingProjectsManagement.Features.Projects_UpdateProject.html", "cl": 59, "ucl": 3, "cal": 62, "tl": 118, "cb": 17, "tb": 18, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.5.html", "cl": 23, "ucl": 0, "cal": 23, "tl": 118, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.4.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 118, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.5.html", "cl": 21, "ucl": 3, "cal": 24, "tl": 118, "cb": 11, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.UrlReference", "rp": "PaintingProjectsManagement.Features.Projects_UrlReference.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 51, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
@@ -459,18 +458,16 @@ var assemblies = [
       { "name": "PaintingProjectsManagement.Features.Models.ModelsSeeder", "rp": "PaintingProjectsManagment.Database_ModelsSeeder.html", "cl": 6, "ucl": 76, "cal": 82, "tl": 157, "cb": 1, "tb": 52, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagment.Database.DatabaseContext", "rp": "PaintingProjectsManagment.Database_DatabaseContext.html", "cl": 16, "ucl": 0, "cal": 16, "tl": 41, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagment.Database.DatabaseSeed", "rp": "PaintingProjectsManagment.Database_DatabaseSeed.html", "cl": 50, "ucl": 203, "cal": 253, "tl": 297, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.AddMustHaveToModel", "rp": "PaintingProjectsManagment.Database_AddMustHaveToModel.html", "cl": 909, "ucl": 4, "cal": 913, "tl": 997, "cb": 96, "tb": 96, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.DatabaseContextModelSnapshot", "rp": "PaintingProjectsManagment.Database_DatabaseContextModelSnapshot.html", "cl": 899, "ucl": 0, "cal": 899, "tl": 962, "cb": 96, "tb": 96, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.Initial", "rp": "PaintingProjectsManagment.Database_Initial.html", "cl": 1450, "ucl": 43, "cal": 1493, "tl": 1647, "cb": 180, "tb": 180, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.RemovePriorityFromModel", "rp": "PaintingProjectsManagment.Database_RemovePriorityFromModel.html", "cl": 903, "ucl": 7, "cal": 910, "tl": 994, "cb": 96, "tb": 96, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagment.Database.Migrations.DatabaseContextModelSnapshot", "rp": "PaintingProjectsManagment.Database_DatabaseContextModelSnapshot.html", "cl": 800, "ucl": 0, "cal": 800, "tl": 861, "cb": 86, "tb": 86, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagment.Database.Migrations.Initial", "rp": "PaintingProjectsManagment.Database_Initial.html", "cl": 1323, "ucl": 41, "cal": 1364, "tl": 1513, "cb": 166, "tb": 166, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "rbkApiModules.Commons.Core",
     "classes": [
       { "name": "AuthenticatedRequest", "rp": "rbkApiModules.Commons.Core_AuthenticatedRequest.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 60, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "AuthenticatedUser", "rp": "rbkApiModules.Commons.Core_AuthenticatedUser.html", "cl": 12, "ucl": 1, "cal": 13, "tl": 60, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "BaseEntity", "rp": "rbkApiModules.Commons.Core_BaseEntity.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 9, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core", "rp": "rbkApiModules.Commons.Core_Core.html", "cl": 987, "ucl": 474, "cal": 1461, "tl": 3554, "cb": 425, "tb": 734, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "BaseEntity", "rp": "rbkApiModules.Commons.Core_BaseEntity.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core", "rp": "rbkApiModules.Commons.Core_Core.html", "cl": 1034, "ucl": 427, "cal": 1461, "tl": 3554, "cb": 441, "tb": 734, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EntityReference", "rp": "rbkApiModules.Commons.Core_EntityReference.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 5, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EntityReference<T>", "rp": "rbkApiModules.Commons.Core_EntityReference_T_.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 5, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EnumReference", "rp": "rbkApiModules.Commons.Core_EnumReference.html", "cl": 10, "ucl": 1, "cal": 11, "tl": 22, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -486,9 +483,9 @@ var assemblies = [
       { "name": "rbkApiModules.Commons.Core.CommandResponseFactory", "rp": "rbkApiModules.Commons.Core_CommandResponseFactory.html", "cl": 10, "ucl": 2, "cal": 12, "tl": 242, "cb": 8, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.CommandResponseFactory<T>", "rp": "rbkApiModules.Commons.Core_CommandResponseFactory_T_.html", "cl": 10, "ucl": 2, "cal": 12, "tl": 242, "cb": 8, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.CommonsCoreBuilder", "rp": "rbkApiModules.Commons.Core_CommonsCoreBuilder.html", "cl": 77, "ucl": 32, "cal": 109, "tl": 818, "cb": 50, "tb": 84, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.Dispatcher", "rp": "rbkApiModules.Commons.Core_Dispatcher.html", "cl": 73, "ucl": 38, "cal": 111, "tl": 242, "cb": 38, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "rp": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "cl": 73, "ucl": 38, "cal": 111, "tl": 242, "cb": 38, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "rp": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "cl": 73, "ucl": 38, "cal": 111, "tl": 242, "cb": 38, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.Dispatcher", "rp": "rbkApiModules.Commons.Core_Dispatcher.html", "cl": 73, "ucl": 38, "cal": 111, "tl": 242, "cb": 40, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "rp": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "cl": 73, "ucl": 38, "cal": 111, "tl": 242, "cb": 40, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "rp": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "cl": 73, "ucl": 38, "cal": 111, "tl": 242, "cb": 40, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Email.EmailHandler", "rp": "rbkApiModules.Commons.Core_EmailHandler.html", "cl": 29, "ucl": 7, "cal": 36, "tl": 76, "cb": 6, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Email.InlineImage", "rp": "rbkApiModules.Commons.Core_InlineImage.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Email.MailAttachment", "rp": "rbkApiModules.Commons.Core_MailAttachment.html", "cl": 0, "ucl": 6, "cal": 6, "tl": 15, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -502,7 +499,7 @@ var assemblies = [
       { "name": "rbkApiModules.Commons.Core.InternalException", "rp": "rbkApiModules.Commons.Core_InternalException.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 39, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.InternalValidationException", "rp": "rbkApiModules.Commons.Core_InternalValidationException.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.LinqExtensions", "rp": "rbkApiModules.Commons.Core_LinqExtensions.html", "cl": 1, "ucl": 1, "cal": 2, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.LocalFileStorage", "rp": "rbkApiModules.Commons.Core_LocalFileStorage.html", "cl": 0, "ucl": 73, "cal": 73, "tl": 188, "cb": 0, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.LocalFileStorage", "rp": "rbkApiModules.Commons.Core_LocalFileStorage.html", "cl": 46, "ucl": 27, "cal": 73, "tl": 188, "cb": 17, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.LocalizationCache", "rp": "rbkApiModules.Commons.Core_LocalizationCache.html", "cl": 30, "ucl": 19, "cal": 49, "tl": 235, "cb": 23, "tb": 32, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.LocalizationService", "rp": "rbkApiModules.Commons.Core_LocalizationService.html", "cl": 21, "ucl": 7, "cal": 28, "tl": 235, "cb": 8, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.PasswordHasher", "rp": "rbkApiModules.Commons.Core_PasswordHasher.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 39, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -513,8 +510,8 @@ var assemblies = [
       { "name": "rbkApiModules.Commons.Core.ReflectionExtensions<T>", "rp": "rbkApiModules.Commons.Core_ReflectionExtensions_T_.html", "cl": 4, "ucl": 10, "cal": 14, "tl": 59, "cb": 3, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.ResultsMapper", "rp": "rbkApiModules.Commons.Core_ResultsMapper.html", "cl": 14, "ucl": 8, "cal": 22, "tl": 48, "cb": 7, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.ServicesCollectionExtensions", "rp": "rbkApiModules.Commons.Core_ServicesCollectionExtensions.html", "cl": 24, "ucl": 0, "cal": 24, "tl": 56, "cb": 25, "tb": 26, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.SmartValidator<TRequest, TModel>", "rp": "rbkApiModules.Commons.Core_SmartValidator_TRequest__TModel_.html", "cl": 209, "ucl": 5, "cal": 214, "tl": 517, "cb": 49, "tb": 56, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.SmartValidator<TRequest, TModel>", "rp": "rbkApiModules.Commons.Core_SmartValidator_TRequest__TModel_.html", "cl": 106, "ucl": 12, "cal": 118, "tl": 517, "cb": 58, "tb": 88, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.SmartValidator<TRequest, TModel>", "rp": "rbkApiModules.Commons.Core_SmartValidator_TRequest__TModel_.html", "cl": 210, "ucl": 4, "cal": 214, "tl": 517, "cb": 49, "tb": 56, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.SmartValidator<TRequest, TModel>", "rp": "rbkApiModules.Commons.Core_SmartValidator_TRequest__TModel_.html", "cl": 106, "ucl": 12, "cal": 118, "tl": 517, "cb": 55, "tb": 88, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.TenantEntity", "rp": "rbkApiModules.Commons.Core_TenantEntity.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 38, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.UiDefinitions.CoreUiDefinitionsBuilder", "rp": "rbkApiModules.Commons.Core_CoreUiDefinitionsBuilder.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 20, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.UiDefinitions.DialogDataAttribute", "rp": "rbkApiModules.Commons.Core_DialogDataAttribute.html", "cl": 26, "ucl": 3, "cal": 29, "tl": 60, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -730,8 +727,8 @@ var assemblies = [
   {
     "name": "rbkApiModules.Testing.Core",
     "classes": [
-      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoadercd380b8885a34772a50a2d5fa657328b", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoadercd380b8885a34772a50a2d5fa657328b.html", "cl": 1, "ucl": 171, "cal": 172, "tl": 180, "cb": 342, "tb": 342, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_ca777aaea8864b429536aeda12655de9", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_ca777aaea8864b429536aeda12655de9.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoadere0bb51b9960c4c5092464d908126950f", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoadere0bb51b9960c4c5092464d908126950f.html", "cl": 1, "ucl": 171, "cal": 172, "tl": 180, "cb": 342, "tb": 342, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_c8a8de0058b548a19a21d5db941d6de9", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_c8a8de0058b548a19a21d5db941d6de9.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions", "rp": "rbkApiModules.Testing.Core_AssertExtensions.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions<T>", "rp": "rbkApiModules.Testing.Core_AssertExtensions_T_.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.EntityAssertionOptions<T>", "rp": "rbkApiModules.Testing.Core_EntityAssertionOptions_T_.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 289, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -783,25 +780,13 @@ var riskHotspots = [
       { "value": 42, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "StoreFileFromBase64Async()", "methodShortName": "StoreFileFromBase64Async()", "fileIndex": 23, "line": 43,
-    "metrics": [
-      { "value": 342, "exceeded": true },
-      { "value": 18, "exceeded": true },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.LocalFileStorage", "reportPath": "rbkApiModules.Commons.Core_LocalFileStorage.html", "methodName": "StoreFileFromBase64Async()", "methodShortName": "StoreFileFromBase64Async()", "fileIndex": 0, "line": 43,
-    "metrics": [
-      { "value": 342, "exceeded": true },
-      { "value": 18, "exceeded": true },
-    ]},
-  {
     "assembly": "rbkApiModules.Identity.Core", "class": "rbkApiModules.Identity.Core.AutomaticUserCreator", "reportPath": "rbkApiModules.Identity.Core_AutomaticUserCreator.html", "methodName": "CreateIfAllowedAsync()", "methodShortName": "CreateIfAllowedAsync()", "fileIndex": 0, "line": 33,
     "metrics": [
       { "value": 342, "exceeded": true },
       { "value": 18, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoadercd380b8885a34772a50a2d5fa657328b", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoadercd380b8885a34772a50a2d5fa657328b.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 8,
+    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoadere0bb51b9960c4c5092464d908126950f", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoadere0bb51b9960c4c5092464d908126950f.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 8,
     "metrics": [
       { "value": 342, "exceeded": true },
       { "value": 342, "exceeded": true },
@@ -855,12 +840,6 @@ var riskHotspots = [
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetFileExtensionFromBase64(string)", "methodShortName": "GetFileExtensionFromBase64(...)", "fileIndex": 23, "line": 142,
-    "metrics": [
-      { "value": 156, "exceeded": true },
-      { "value": 12, "exceeded": false },
-    ]},
-  {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "MapFeatureEndpoints(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)", "methodShortName": "MapFeatureEndpoints(...)", "fileIndex": 27, "line": 10,
     "metrics": [
       { "value": 156, "exceeded": true },
@@ -885,12 +864,6 @@ var riskHotspots = [
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.LocalFileStorage", "reportPath": "rbkApiModules.Commons.Core_LocalFileStorage.html", "methodName": "GetFileExtensionFromBase64(string)", "methodShortName": "GetFileExtensionFromBase64(...)", "fileIndex": 0, "line": 142,
-    "metrics": [
-      { "value": 156, "exceeded": true },
-      { "value": 12, "exceeded": false },
-    ]},
-  {
     "assembly": "rbkApiModules.Testing.Core", "class": "Giants.Tests.Integration.AssertExtensions", "reportPath": "rbkApiModules.Testing.Core_AssertExtensions.html", "methodName": "CompareLists<T>(object, object, System.Action<Giants.Tests.Integration.EntityAssertionOptions<T>>, string)", "methodShortName": "CompareLists<T>(...)", "fileIndex": 0, "line": 212,
     "metrics": [
       { "value": 110, "exceeded": true },
@@ -903,34 +876,22 @@ var riskHotspots = [
       { "value": 10, "exceeded": false },
     ]},
   {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.AddMustHaveToModel", "reportPath": "PaintingProjectsManagment.Database_AddMustHaveToModel.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 86, "exceeded": true },
-      { "value": 86, "exceeded": true },
-    ]},
-  {
     "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.DatabaseContextModelSnapshot", "reportPath": "PaintingProjectsManagment.Database_DatabaseContextModelSnapshot.html", "methodName": "BuildModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildModel(...)", "fileIndex": 0, "line": 18,
     "metrics": [
-      { "value": 86, "exceeded": true },
-      { "value": 86, "exceeded": true },
+      { "value": 82, "exceeded": true },
+      { "value": 82, "exceeded": true },
     ]},
   {
     "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.Initial", "reportPath": "PaintingProjectsManagment.Database_Initial.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
     "metrics": [
-      { "value": 86, "exceeded": true },
-      { "value": 86, "exceeded": true },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.RemovePriorityFromModel", "reportPath": "PaintingProjectsManagment.Database_RemovePriorityFromModel.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
-    "metrics": [
-      { "value": 86, "exceeded": true },
-      { "value": 86, "exceeded": true },
+      { "value": 82, "exceeded": true },
+      { "value": 82, "exceeded": true },
     ]},
   {
     "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.Initial", "reportPath": "PaintingProjectsManagment.Database_Initial.html", "methodName": "Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)", "methodShortName": "Up(...)", "fileIndex": 0, "line": 14,
     "metrics": [
-      { "value": 84, "exceeded": true },
-      { "value": 84, "exceeded": true },
+      { "value": 80, "exceeded": true },
+      { "value": 80, "exceeded": true },
     ]},
   {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "LoadLocalizedValues()", "methodShortName": "LoadLocalizedValues()", "fileIndex": 14, "line": 34,
@@ -1041,61 +1002,13 @@ var riskHotspots = [
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.CreateProject", "reportPath": "PaintingProjectsManagement.Features.Projects_CreateProject.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 48,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.CreateProject.Validator", "reportPath": "PaintingProjectsManagement.Features.Projects_Validator.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 48,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.DeleteProject", "reportPath": "PaintingProjectsManagement.Features.Projects_DeleteProject.html", "methodName": "HandleAsync()", "methodShortName": "HandleAsync()", "fileIndex": 0, "line": 40,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.DeleteProject.Handler", "reportPath": "PaintingProjectsManagement.Features.Projects_Handler.2.html", "methodName": "HandleAsync()", "methodShortName": "HandleAsync()", "fileIndex": 0, "line": 40,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.UpdateProject", "reportPath": "PaintingProjectsManagement.Features.Projects_UpdateProject.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 51,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
-    "assembly": "PaintingProjectsManagement.Features.Projects", "class": "PaintingProjectsManagement.Features.Projects.UpdateProject.Validator", "reportPath": "PaintingProjectsManagement.Features.Projects_Validator.5.html", "methodName": "IsValidBase64Image(string)", "methodShortName": "IsValidBase64Image(...)", "fileIndex": 0, "line": 51,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ToBetterString(System.Exception, string)", "methodShortName": "ToBetterString(...)", "fileIndex": 8, "line": 9,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "DeleteFileAsync(string, System.Threading.CancellationToken)", "methodShortName": "DeleteFileAsync(...)", "fileIndex": 23, "line": 94,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.ExceptionExtensions", "reportPath": "rbkApiModules.Commons.Core_ExceptionExtensions.html", "methodName": "ToBetterString(System.Exception, string)", "methodShortName": "ToBetterString(...)", "fileIndex": 0, "line": 9,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.LocalFileStorage", "reportPath": "rbkApiModules.Commons.Core_LocalFileStorage.html", "methodName": "DeleteFileAsync(string, System.Threading.CancellationToken)", "methodShortName": "DeleteFileAsync(...)", "fileIndex": 0, "line": 94,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
@@ -1183,6 +1096,18 @@ var riskHotspots = [
     "metrics": [
       { "value": 20, "exceeded": false },
       { "value": 20, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "StoreFileFromBase64Async()", "methodShortName": "StoreFileFromBase64Async()", "fileIndex": 23, "line": 43,
+    "metrics": [
+      { "value": 20, "exceeded": false },
+      { "value": 18, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.LocalFileStorage", "reportPath": "rbkApiModules.Commons.Core_LocalFileStorage.html", "methodName": "StoreFileFromBase64Async()", "methodShortName": "StoreFileFromBase64Async()", "fileIndex": 0, "line": 43,
+    "metrics": [
+      { "value": 20, "exceeded": false },
+      { "value": 18, "exceeded": true },
     ]},
   {
     "assembly": "rbkApiModules.Identity.Core", "class": "rbkApiModules.Identity.Core.CreateUser", "reportPath": "rbkApiModules.Identity.Core_CreateUser.html", "methodName": "HandleAsync()", "methodShortName": "HandleAsync()", "fileIndex": 0, "line": 216,
