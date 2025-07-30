@@ -13,7 +13,7 @@ namespace rbkApiModules.Commons.Core;
 /// <typeparam name="TRequest">The request type to validate</typeparam>
 /// <typeparam name="TModel">The entity model type that has EF configuration</typeparam>
 public abstract class SmartValidator<TRequest, TModel> : AbstractValidator<TRequest>
-    where TModel : class
+    where TModel : class, IBaseEntity
 {
     protected readonly DbContext Context;
     protected readonly ILocalizationService? LocalizationService;

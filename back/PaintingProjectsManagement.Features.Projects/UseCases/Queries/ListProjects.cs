@@ -20,7 +20,7 @@ public class ListProjects : IEndpoint
     {
     }
 
-    public class Validator : SmartValidator<Project, Request>
+    public class Validator : SmartValidator<Request, Project>
     {
         public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
