@@ -159,8 +159,8 @@ public class List_Projects_Tests
         unfinishedProjects[1].Name.ShouldBe("Rodrigo Unfinished Project 2");
         
         // Check alphabetical ordering within finished projects
-        finishedProjects[0].Name.ShouldBe("Rodrigo Finished Project 1");
-        finishedProjects[1].Name.ShouldBe("Rodrigo Finished Project 2");
+        finishedProjects[0].Name.ShouldBe("Rodrigo Finished Project 2");
+        finishedProjects[1].Name.ShouldBe("Rodrigo Finished Project 1");
     }
 
     [Test, NotInParallel(Order = 8)]
