@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore.Design;
 using PaintingProjectsManagment.Database;
 using rbkApiModules.Commons.Core;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PaintingProjectsManagement.Api;
 
+[ExcludeFromCodeCoverage(Justification = "It is not called at runtime, just when creating migrations.")]
 public class DatabaseContextFactory : IDesignTimeDbContextFactory<DatabaseContext>
 {
     public DatabaseContext CreateDbContext(string[] args)
