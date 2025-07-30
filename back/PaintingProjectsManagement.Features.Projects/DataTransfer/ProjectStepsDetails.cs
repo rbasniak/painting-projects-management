@@ -13,10 +13,10 @@ public class ProjectStepsDetails
 
         return new ProjectStepsDetails
         {
-            //Planning = ProjectStepDataDetails.FromModel(steps.Planning),
-            //Painting = ProjectStepDataDetails.FromModel(steps.Painting),
-            //Preparation = ProjectStepDataDetails.FromModel(steps.Preparation),
-            //Supporting = ProjectStepDataDetails.FromModel(steps.Supporting)
+            Planning = ProjectStepDataDetails.FromModel(steps.Planning),
+            Painting = ProjectStepDataDetails.FromModel(steps.Painting),
+            Preparation = ProjectStepDataDetails.FromModel(steps.Preparation),
+            Supporting = ProjectStepDataDetails.FromModel(steps.Supporting)
         };
     }
 }

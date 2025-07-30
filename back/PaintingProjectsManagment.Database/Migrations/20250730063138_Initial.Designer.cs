@@ -11,7 +11,7 @@ using PaintingProjectsManagment.Database;
 namespace PaintingProjectsManagment.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250729120736_Initial")]
+    [Migration("20250730063138_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

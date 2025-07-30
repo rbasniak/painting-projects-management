@@ -36,7 +36,7 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<DatabaseContex
         }
 		catch (Exception ex)
 		{
-            File.WriteAllText("C:\\git\\Development\\Personal\\painting-projects-management\\back\\migration.log", ex.ToBetterString());
+            File.WriteAllText("migration.log", ex.ToBetterString());
 			throw;
 		}
     }
