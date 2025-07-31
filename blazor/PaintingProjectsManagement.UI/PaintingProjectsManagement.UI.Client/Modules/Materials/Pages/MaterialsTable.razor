@@ -1,0 +1,168 @@
+@page "/materials"
+@using PaintingProjectsManagement.UI.Client.Modules.Materials.Models
+@using PaintingProjectsManagement.UI.Client.Modules.Materials.Services
+@inject IMaterialsService MaterialsService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
+<PageTitle>Materials</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-4">
+    <MudPaper Class="pa-4">
+        <MudText Typo="Typo.h4" Class="mb-4">Materials Management</MudText>
+        
+        <MudButton Variant="Variant.Filled" 
+                   Color="Color.Primary" 
+                   StartIcon="@Icons.Material.Filled.Add"
+                   OnClick="OpenCreateDialog"
+                   Class="mb-4">
+            Add Material
+        </MudButton>
+
+        @if (materials == null)
+        {
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+        }
+        else
+        {
+            <MudTable Items="@materials" 
+                      Dense="false" 
+                      Hover="true" 
+                      Bordered="false" 
+                      Striped="true"
+                      Loading="@loading"
+                      Filter="new Func<MaterialDetails,bool>(FilterFunc)"
+                      @bind-SelectedItem="selectedItem"
+                      @bind-SelectedItems="selectedItems"
+                      MultiSelection="false"
+                      FixedHeader="true"
+                      FixedFooter="true"
+                      Height="400px"
+                      Breakpoint="Breakpoint.Sm"
+                      LoadingProgressColor="Color.Info">
+                <ToolBarContent>
+                    <MudTextField @bind-Value="searchString" 
+                                 Placeholder="Search" 
+                                 Adornment="Adornment.Start" 
+                                 AdornmentIcon="@Icons.Material.Filled.Search" 
+                                 IconSize="Size.Medium" 
+                                 Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh><MudTableSortLabel SortBy="new Func<MaterialDetails, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<MaterialDetails, object>(x=>x.Unit.Name)">Unit</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<MaterialDetails, object>(x=>x.PricePerUnit)">Price Per Unit</MudTableSortLabel></MudTh>
+                    <MudTh>Actions</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Unit">@context.Unit.Name</MudTd>
+                    <MudTd DataLabel="Price Per Unit">@context.PricePerUnit.ToString("C")</MudTd>
+                    <MudTd DataLabel="Actions">
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                     Color="Color.Primary" 
+                                     OnClick="@(() => OpenEditDialog(context))" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                     Color="Color.Error" 
+                                     OnClick="@(() => DeleteMaterial(context))" />
+                    </MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+        }
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private List<MaterialDetails>? materials;
+    private MaterialDetails? selectedItem;
+    private HashSet<MaterialDetails> selectedItems = new();
+    private bool loading = true;
+    private string searchString = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMaterials();
+    }
+
+    private async Task LoadMaterials()
+    {
+        try
+        {
+            loading = true;
+            var result = await MaterialsService.GetMaterialsAsync();
+            materials = result.ToList();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error loading materials: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private bool FilterFunc(MaterialDetails material)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+
+        return material.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+               material.Unit.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+               material.PricePerUnit.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task OpenCreateDialog()
+    {
+        var parameters = new DialogParameters();
+        var dialog = await DialogService.ShowAsync<CreateMaterialDialog>("Create Material", parameters);
+        var result = await dialog.Result;
+
+        if (result.Data != null)
+        {
+            await LoadMaterials();
+        }
+    }
+
+    private async Task OpenEditDialog(MaterialDetails material)
+    {
+        var parameters = new DialogParameters
+        {
+            ["Material"] = material
+        };
+        var dialog = await DialogService.ShowAsync<EditMaterialDialog>("Edit Material", parameters);
+        var result = await dialog.Result;
+
+        if (result.Data != null)
+        {
+            await LoadMaterials();
+        }
+    }
+
+    private async Task DeleteMaterial(MaterialDetails material)
+    {
+        var confirm = await DialogService.ShowMessageBox(
+            "Delete Material",
+            $"Are you sure you want to delete '{material.Name}'?",
+            yesText: "Delete",
+            noText: "Cancel");
+
+        if (confirm == true)
+        {
+            try
+            {
+                await MaterialsService.DeleteMaterialAsync(material.Id);
+                await LoadMaterials();
+                Snackbar.Add("Material deleted successfully", Severity.Success);
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Error deleting material: {ex.Message}", Severity.Error);
+            }
+        }
+    }
+} 

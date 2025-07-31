@@ -1,6 +1,8 @@
 using MudBlazor.Services;
 using PaintingProjectsManagement.UI.Client.Pages;
 using PaintingProjectsManagement.UI.Components;
+using PaintingProjectsManagement.UI.Client.Modules.Materials.Services;
+using PaintingProjectsManagement.UI.Client.Modules;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,13 @@ builder.Services.AddMudServices();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+// Add HTTP client for API communication
+builder.Services.AddHttpClient();
+
+// Register module services
+builder.Services.AddScoped<IMaterialsService, MaterialsService>();
+builder.Services.AddSingleton<ModuleRegistrationService>();
 
 var app = builder.Build();
 

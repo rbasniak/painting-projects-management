@@ -1,0 +1,10 @@
+@using PaintingProjectsManagement.UI.Client.Modules.Materials
+@inject ModuleRegistrationService ModuleService
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Register modules
+        ModuleService.RegisterModule(new MaterialsModule());
+    }
+} 
