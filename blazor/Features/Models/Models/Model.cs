@@ -1,4 +1,4 @@
-namespace PaintingProjectsManagement.Blazor.Models;
+namespace PaintingProjectsManagement.Blazor.Features.Models.Models;
 
 public class Model
 {

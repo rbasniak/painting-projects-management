@@ -1,7 +1,7 @@
 @page "/model-categories"
-@using PaintingProjectsManagement.Blazor.Models
-@using PaintingProjectsManagement.Blazor.Services
-@inject IApiService ApiService
+@using PaintingProjectsManagement.Blazor.Features.Models.Models
+@using PaintingProjectsManagement.Blazor.Features.Models.Services
+@inject IModelCategoriesApiService ModelCategoriesApiService
 
 <PageTitle>Model Categories - Painting Projects Management</PageTitle>
 
@@ -57,7 +57,7 @@
         _loading = true;
         try
         {
-            ModelCategoriesList = await ApiService.GetModelCategoriesAsync();
+            ModelCategoriesList = await ModelCategoriesApiService.GetModelCategoriesAsync();
         }
         catch (Exception ex)
         {

@@ -1,7 +1,7 @@
 @page "/models"
-@using PaintingProjectsManagement.Blazor.Models
-@using PaintingProjectsManagement.Blazor.Services
-@inject IApiService ApiService
+@using PaintingProjectsManagement.Blazor.Features.Models.Models
+@using PaintingProjectsManagement.Blazor.Features.Models.Services
+@inject IModelsApiService ModelsApiService
 
 <PageTitle>Models - Painting Projects Management</PageTitle>
 
@@ -70,7 +70,7 @@
         _loading = true;
         try
         {
-            ModelsList = await ApiService.GetModelsAsync();
+            ModelsList = await ModelsApiService.GetModelsAsync();
         }
         catch (Exception ex)
         {

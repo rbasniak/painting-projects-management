@@ -47,7 +47,7 @@ public class Program
              .UseDefaultCompression()
              .UseDefaultCors()
              .UseDefaultHsts(builder.Environment.IsDevelopment())
-             .UseDefaultHttpsRedirection()
+             // .UseDefaultHttpsRedirection()
              .UseDefaultMemoryCache()
              .UseDefaultHttpClient()
              // .UseDefaultSwagger("PoC for the new API libraries")
@@ -110,6 +110,8 @@ public class Program
         app.SeedDatabase<DatabaseSeed>();
 
         app.MapDefaultEndpoints();
+
+        // app.MapGet("/health", () => Results.Ok("Healthy"));
 
         // Configure the HTTP request pipeline. 
         app.MapOpenApi();

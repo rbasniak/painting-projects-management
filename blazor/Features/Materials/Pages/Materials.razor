@@ -1,7 +1,7 @@
 @page "/materials"
-@using PaintingProjectsManagement.Blazor.Models
-@using PaintingProjectsManagement.Blazor.Services
-@inject IApiService ApiService
+@using PaintingProjectsManagement.Blazor.Features.Materials.Models
+@using PaintingProjectsManagement.Blazor.Features.Materials.Services
+@inject IMaterialsApiService MaterialsApiService
 
 <PageTitle>Materials - Painting Projects Management</PageTitle>
 
@@ -61,7 +61,7 @@
         _loading = true;
         try
         {
-            MaterialsList = await ApiService.GetMaterialsAsync();
+            MaterialsList = await MaterialsApiService.GetMaterialsAsync();
         }
         catch (Exception ex)
         {
