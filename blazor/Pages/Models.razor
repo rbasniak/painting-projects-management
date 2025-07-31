@@ -1,0 +1,100 @@
+@page "/models"
+@using PaintingProjectsManagement.Blazor.Models
+@using PaintingProjectsManagement.Blazor.Services
+@inject IApiService ApiService
+
+<PageTitle>Models - Painting Projects Management</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudText Typo="Typo.h4" Class="mb-4">Models</MudText>
+    
+    <MudPaper Class="pa-4">
+        <MudToolBar>
+            <MudText Typo="Typo.h6">All Models</MudText>
+            <MudSpacer />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddDialog">
+                Add Model
+            </MudButton>
+        </MudToolBar>
+        
+        <MudTable Items="@FilteredModels" Dense="true" Hover="true" Striped="true" Loading="@_loading">
+            <ToolBarContent>
+                <MudTextField @bind-Value="_searchString" Placeholder="Search" 
+                             Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" 
+                             IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Category</MudTh>
+                <MudTh>Franchise</MudTh>
+                <MudTh>Artist</MudTh>
+                <MudTh>Score</MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Category">@context.Category.Name</MudTd>
+                <MudTd DataLabel="Franchise">@context.Franchise</MudTd>
+                <MudTd DataLabel="Artist">@(context.Artist ?? "Unknown")</MudTd>
+                <MudTd DataLabel="Score">
+                    <MudRating ReadOnly="true" Value="@context.Score" MaxValue="5" />
+                </MudTd>
+                <MudTd DataLabel="Actions">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => EditModel(context))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="@(() => DeleteModel(context))" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private List<Model> ModelsList { get; set; } = new();
+    private bool _loading = true;
+    private string _searchString = "";
+
+    private IEnumerable<Model> FilteredModels => ModelsList.Where(model =>
+        string.IsNullOrWhiteSpace(_searchString) ||
+        model.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
+        model.Category.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
+        model.Franchise.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
+        (model.Artist?.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ?? false));
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadModels();
+    }
+
+    private async Task LoadModels()
+    {
+        _loading = true;
+        try
+        {
+            ModelsList = await ApiService.GetModelsAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading models: {ex.Message}");
+        }
+        finally
+        {
+            _loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void OpenAddDialog()
+    {
+        // TODO: Implement add model dialog
+    }
+
+    private void EditModel(Model model)
+    {
+        // TODO: Implement edit model dialog
+    }
+
+    private void DeleteModel(Model model)
+    {
+        // TODO: Implement delete model confirmation
+    }
+} 

@@ -1,0 +1,102 @@
+@page "/projects"
+@using PaintingProjectsManagement.Blazor.Models
+@using PaintingProjectsManagement.Blazor.Services
+@inject IApiService ApiService
+
+<PageTitle>Projects - Painting Projects Management</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudText Typo="Typo.h4" Class="mb-4">Projects</MudText>
+    
+    <MudPaper Class="pa-4">
+        <MudToolBar>
+            <MudText Typo="Typo.h6">All Projects</MudText>
+            <MudSpacer />
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="OpenAddDialog">
+                Add Project
+            </MudButton>
+        </MudToolBar>
+        
+        <MudTable Items="@FilteredProjects" Dense="true" Hover="true" Striped="true" Loading="@_loading">
+            <ToolBarContent>
+                <MudTextField @bind-Value="_searchString" Placeholder="Search" 
+                             Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" 
+                             IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Status</MudTh>
+                <MudTh>End Date</MudTh>
+                <MudTh>Actions</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Status">
+                    <MudChip Color="@GetStatusColor(context.EndDate)" Size="Size.Small">
+                        @(context.EndDate.HasValue ? "Completed" : "In Progress")
+                    </MudChip>
+                </MudTd>
+                <MudTd DataLabel="End Date">
+                    @(context.EndDate?.ToShortDateString() ?? "Ongoing")
+                </MudTd>
+                <MudTd DataLabel="Actions">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => EditProject(context))" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" OnClick="@(() => DeleteProject(context))" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private List<Project> ProjectsList { get; set; } = new();
+    private bool _loading = true;
+    private string _searchString = "";
+
+    private IEnumerable<Project> FilteredProjects => ProjectsList.Where(project =>
+        string.IsNullOrWhiteSpace(_searchString) ||
+        project.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProjects();
+    }
+
+    private async Task LoadProjects()
+    {
+        _loading = true;
+        try
+        {
+            ProjectsList = await ApiService.GetProjectsAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading projects: {ex.Message}");
+        }
+        finally
+        {
+            _loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private Color GetStatusColor(DateTime? endDate)
+    {
+        return endDate.HasValue ? Color.Success : Color.Primary;
+    }
+
+    private void OpenAddDialog()
+    {
+        // TODO: Implement add project dialog
+    }
+
+    private void EditProject(Project project)
+    {
+        // TODO: Implement edit project dialog
+    }
+
+    private void DeleteProject(Project project)
+    {
+        // TODO: Implement delete project confirmation
+    }
+} 
