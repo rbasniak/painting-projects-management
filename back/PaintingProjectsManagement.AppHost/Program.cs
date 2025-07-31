@@ -9,4 +9,9 @@ var apiService = builder.AddProject<Projects.PaintingProjectsManagement_Api>("pp
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
     .WithEnvironment("DOTNET_ENVIRONMENT", "Development");
 
+//var blazorApp = builder.AddProject<Projects.PaintingProjectsManagement_Blazor>("ppm-blazor")
+//    .WithReference(apiService)
+//    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
+//    .WithEnvironment("DOTNET_ENVIRONMENT", "Development");
+
 builder.Build().Run();
