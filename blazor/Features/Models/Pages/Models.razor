@@ -37,7 +37,7 @@
                 <MudTd DataLabel="Franchise">@context.Franchise</MudTd>
                 <MudTd DataLabel="Artist">@(context.Artist ?? "Unknown")</MudTd>
                 <MudTd DataLabel="Score">
-                    <MudRating ReadOnly="true" Value="@context.Score" MaxValue="5" />
+                    <MudRating ReadOnly="true" SelectedValue="@context.Score" MaxValue="5" />
                 </MudTd>
                 <MudTd DataLabel="Actions">
                     <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => EditModel(context))" />

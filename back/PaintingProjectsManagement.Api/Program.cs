@@ -47,7 +47,7 @@ public class Program
              .UseDefaultCompression()
              .UseDefaultCors()
              .UseDefaultHsts(builder.Environment.IsDevelopment())
-             // .UseDefaultHttpsRedirection()
+             .UseDefaultHttpsRedirection()
              .UseDefaultMemoryCache()
              .UseDefaultHttpClient()
              // .UseDefaultSwagger("PoC for the new API libraries")

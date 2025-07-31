@@ -32,9 +32,7 @@
             <RowTemplate>
                 <MudTd DataLabel="Name">@context.Name</MudTd>
                 <MudTd DataLabel="Status">
-                    <MudChip Color="@GetStatusColor(context.EndDate)" Size="Size.Small">
-                        @(context.EndDate.HasValue ? "Completed" : "In Progress")
-                    </MudChip>
+                    <MudBadge Color="@GetStatusColor(context.EndDate)" Content="@(context.EndDate.HasValue ? "Completed" : "In Progress")" />
                 </MudTd>
                 <MudTd DataLabel="End Date">
                     @(context.EndDate?.ToShortDateString() ?? "Ongoing")
