@@ -26,10 +26,10 @@
         else
         {
             <MudTable Items="@materials" 
-                      Dense="false" 
+                      Dense="true" 
                       Hover="true" 
                       Bordered="false" 
-                      Striped="true"
+                      Striped="false"
                       Loading="@loading"
                       Filter="new Func<MaterialDetails,bool>(FilterFunc)"
                       @bind-SelectedItem="selectedItem"
@@ -37,7 +37,7 @@
                       MultiSelection="false"
                       FixedHeader="true"
                       FixedFooter="true"
-                      Height="400px"
+                      Height="450px"
                       Breakpoint="Breakpoint.Sm"
                       LoadingProgressColor="Color.Info">
                 <ToolBarContent>
@@ -50,13 +50,13 @@
                 </ToolBarContent>
                 <HeaderContent>
                     <MudTh><MudTableSortLabel SortBy="new Func<MaterialDetails, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
-                    <MudTh><MudTableSortLabel SortBy="new Func<MaterialDetails, object>(x=>x.Unit.Name)">Unit</MudTableSortLabel></MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<MaterialDetails, object>(x=>x.Unit.Value)">Unit Type</MudTableSortLabel></MudTh>
                     <MudTh><MudTableSortLabel SortBy="new Func<MaterialDetails, object>(x=>x.PricePerUnit)">Price Per Unit</MudTableSortLabel></MudTh>
                     <MudTh>Actions</MudTh>
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel="Name">@context.Name</MudTd>
-                    <MudTd DataLabel="Unit">@context.Unit.Name</MudTd>
+                    <MudTd DataLabel="Unit">@context.Unit.Value</MudTd>
                     <MudTd DataLabel="Price Per Unit">@context.PricePerUnit.ToString("C")</MudTd>
                     <MudTd DataLabel="Actions">
                         <MudIconButton Icon="@Icons.Material.Filled.Edit" 
@@ -81,13 +81,93 @@
     private HashSet<MaterialDetails> selectedItems = new();
     private bool loading = true;
     private string searchString = "";
+    private bool hasInitialized;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await LoadMaterials();
+        if (firstRender && !hasInitialized)
+        {
+            hasInitialized = true;
+
+            try
+            {
+                loading = true;
+                var result = await MaterialsService.GetMaterialsAsync();
+                materials = result.ToList();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Error loading materials: {ex.Message}", Severity.Error);
+            }
+            finally
+            {
+                loading = false;
+                StateHasChanged(); // trigger UI update
+            }
+        }
     }
 
-    private async Task LoadMaterials()
+    private bool FilterFunc(MaterialDetails material)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+
+        return material.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+               material.Unit.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+               material.PricePerUnit.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private async Task OpenCreateDialog()
+    {
+        var parameters = new DialogParameters();
+        var dialog = await DialogService.ShowAsync<CreateMaterialDialog>("Create Material", parameters);
+        var result = await dialog.Result;
+
+        if (result.Data != null)
+        {
+            await ReloadMaterials();
+        }
+    }
+
+    private async Task OpenEditDialog(MaterialDetails material)
+    {
+        var parameters = new DialogParameters
+        {
+            ["Material"] = material
+        };
+        var dialog = await DialogService.ShowAsync<EditMaterialDialog>("Edit Material", parameters);
+        var result = await dialog.Result;
+
+        if (result.Data != null)
+        {
+            await ReloadMaterials();
+        }
+    }
+
+    private async Task DeleteMaterial(MaterialDetails material)
+    {
+        var confirm = await DialogService.ShowMessageBox(
+            "Delete Material",
+            $"Are you sure you want to delete '{material.Name}'?",
+            yesText: "Delete",
+            noText: "Cancel");
+
+        if (confirm == true)
+        {
+            try
+            {
+                await MaterialsService.DeleteMaterialAsync(material.Id);
+                await ReloadMaterials();
+                Snackbar.Add("Material deleted successfully", Severity.Success);
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Error deleting material: {ex.Message}", Severity.Error);
+            }
+        }
+    }
+
+    private async Task ReloadMaterials()
     {
         try
         {
@@ -105,64 +185,4 @@
             StateHasChanged();
         }
     }
-
-    private bool FilterFunc(MaterialDetails material)
-    {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
-
-        return material.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-               material.Unit.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-               material.PricePerUnit.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private async Task OpenCreateDialog()
-    {
-        var parameters = new DialogParameters();
-        var dialog = await DialogService.ShowAsync<CreateMaterialDialog>("Create Material", parameters);
-        var result = await dialog.Result;
-
-        if (result.Data != null)
-        {
-            await LoadMaterials();
-        }
-    }
-
-    private async Task OpenEditDialog(MaterialDetails material)
-    {
-        var parameters = new DialogParameters
-        {
-            ["Material"] = material
-        };
-        var dialog = await DialogService.ShowAsync<EditMaterialDialog>("Edit Material", parameters);
-        var result = await dialog.Result;
-
-        if (result.Data != null)
-        {
-            await LoadMaterials();
-        }
-    }
-
-    private async Task DeleteMaterial(MaterialDetails material)
-    {
-        var confirm = await DialogService.ShowMessageBox(
-            "Delete Material",
-            $"Are you sure you want to delete '{material.Name}'?",
-            yesText: "Delete",
-            noText: "Cancel");
-
-        if (confirm == true)
-        {
-            try
-            {
-                await MaterialsService.DeleteMaterialAsync(material.Id);
-                await LoadMaterials();
-                Snackbar.Add("Material deleted successfully", Severity.Success);
-            }
-            catch (Exception ex)
-            {
-                Snackbar.Add($"Error deleting material: {ex.Message}", Severity.Error);
-            }
-        }
-    }
-} 
+}

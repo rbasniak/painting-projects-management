@@ -1,3 +1,5 @@
+using PaintingProjectsManagement.UI.Client.Models;
+
 namespace PaintingProjectsManagement.UI.Client.Modules.Materials.Models;
 
 public class UpdateMaterialRequest

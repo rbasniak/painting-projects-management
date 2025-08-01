@@ -1,3 +1,5 @@
+using PaintingProjectsManagement.UI.Client.Models;
+
 namespace PaintingProjectsManagement.UI.Client.Modules.Materials.Models;
 
 public class CreateMaterialRequest
@@ -7,9 +9,4 @@ public class CreateMaterialRequest
     public double PricePerUnit { get; set; }
 }
 
-public enum MaterialUnit
-{
-    Drops = 1,
-    Unit = 2,
-    Centimeters = 3,
-} 
+ 

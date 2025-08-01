@@ -1,5 +1,6 @@
 @using PaintingProjectsManagement.UI.Client.Modules.Materials.Models
 @using PaintingProjectsManagement.UI.Client.Modules.Materials.Services
+@using PaintingProjectsManagement.UI.Client.Models
 @using MudBlazor
 @using MudBlazor.Services
 @inject IMaterialsService MaterialsService
@@ -58,7 +59,7 @@
         {
             material.Id = Material.Id;
             material.Name = Material.Name;
-            material.Unit = (MaterialUnit)Material.Unit.Value;
+            material.Unit = (MaterialUnit)Material.Unit.Id;
             material.PricePerUnit = Material.PricePerUnit;
         }
     }

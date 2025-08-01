@@ -3,6 +3,7 @@ using PaintingProjectsManagement.UI.Client.Pages;
 using PaintingProjectsManagement.UI.Components;
 using PaintingProjectsManagement.UI.Client.Modules.Materials.Services;
 using PaintingProjectsManagement.UI.Client.Modules;
+using PaintingProjectsManagement.UI.Client.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,10 @@ builder.Services.AddHttpClient();
 // Register module services
 builder.Services.AddScoped<IMaterialsService, MaterialsService>();
 builder.Services.AddSingleton<ModuleRegistrationService>();
+
+// Register authentication services
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
 
 var app = builder.Build();
 
