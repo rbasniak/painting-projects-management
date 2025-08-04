@@ -1,0 +1,15 @@
+﻿
+@inject ModuleRegistrationService ModuleService
+
+<MudNavMenu>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
+    <MudNavLink Href="weather" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Weather</MudNavLink>
+    
+    @foreach (var module in ModuleService.GetOrderedModules())
+    {
+        <MudNavLink Href="@module.Route" Match="NavLinkMatch.Prefix" Icon="@module.Icon">@module.Name</MudNavLink>
+    }
+</MudNavMenu>
+
+

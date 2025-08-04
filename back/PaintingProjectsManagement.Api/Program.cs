@@ -111,6 +111,8 @@ public class Program
 
         app.MapDefaultEndpoints();
 
+        // app.MapGet("/health", () => Results.Ok("Healthy"));
+
         // Configure the HTTP request pipeline. 
         app.MapOpenApi();
         app.UseSwaggerUI(options =>
