@@ -20,15 +20,23 @@ public class LocalStorageService : ILocalStorageService
         {
             if (!_localStorageCache.TryGetValue(key, out var value))
             {
-                var valueStr = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", key);
-                value = JsonSerializer.Deserialize<T>(valueStr);
+                //var valueStr = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", key);
+                //if (valueStr != null)
+                //{
+                //    value = JsonSerializer.Deserialize<T>(valueStr);
+                //    _localStorageCache[key] = value!;
+                //}
+                //else
+                {
+                    return default;
+                }
             }
 
-            return (T)value;
+            return (T)value!;
         }
         catch (Exception ex)
         {
-            throw;
+            throw new InvalidOperationException($"Error retrieving item with key '{key}' from local storage.", ex);
         }
     }
 
@@ -37,21 +45,21 @@ public class LocalStorageService : ILocalStorageService
         try
         {
             var json = JsonSerializer.Serialize(value);
-            
+
             if (_localStorageCache.ContainsKey(key))
             {
-                _localStorageCache[key] = value;
+                _localStorageCache[key] = value!;
             }
             else
             {
-                _localStorageCache.Add(key, value);
+                _localStorageCache.Add(key, value!);
             }
 
-            await _jsRuntime.InvokeVoidAsync("localStorage.setItem", key, json);
+            //await _jsRuntime.InvokeVoidAsync("localStorage.setItem", key, json);
         }
         catch (Exception ex)
         {
-            throw;
+            throw new InvalidOperationException($"Error setting item with key '{key}' in local storage.", ex);
         }
     }
 
@@ -59,11 +67,16 @@ public class LocalStorageService : ILocalStorageService
     {
         try
         {
-            await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", key);
+            if (_localStorageCache.ContainsKey(key))
+            {
+                _localStorageCache.Remove(key);
+            }
+
+            //await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", key);
         }
         catch (Exception ex)
         {
-            throw;
+            throw new InvalidOperationException($"Error removing item with key '{key}' from local storage.", ex);
         }
     }
-} 
+}

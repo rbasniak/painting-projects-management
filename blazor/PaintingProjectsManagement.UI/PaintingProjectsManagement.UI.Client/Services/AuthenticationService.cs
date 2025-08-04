@@ -20,6 +20,8 @@ public class AuthenticationService : IAuthenticationService
     {
         try
         {
+            request.Tenant = request.Username;
+
             var response = await _httpClient.PostAsJsonAsync($"{_baseUrl}/api/authentication/login", request);
             
             if (response.IsSuccessStatusCode)
@@ -29,8 +31,6 @@ public class AuthenticationService : IAuthenticationService
                 {
                     await _localStorage.SetItemAsync("authToken", loginResponse.AccessToken);
                     await _localStorage.SetItemAsync("refreshToken", loginResponse.RefreshToken);
-                    await _localStorage.SetItemAsync("username", request.Username);
-                    await _localStorage.SetItemAsync("tenant", request.Tenant ?? "");
                 }
                 return loginResponse;
             }
@@ -47,8 +47,6 @@ public class AuthenticationService : IAuthenticationService
     {
         await _localStorage.RemoveItemAsync("authToken");
         await _localStorage.RemoveItemAsync("refreshToken");
-        await _localStorage.RemoveItemAsync("username");
-        await _localStorage.RemoveItemAsync("tenant");
     }
 
     public async Task<string?> GetTokenAsync()
