@@ -243,7 +243,7 @@ var assemblies = [
     "name": "PaintingProjectsManagement.Api",
     "classes": [
       { "name": "PaintingProjectsManagement.Api.OpenApiExtensions", "rp": "PaintingProjectsManagement.Api_OpenApiExtensions.html", "cl": 0, "ucl": 30, "cal": 30, "tl": 42, "cb": 0, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Api.Program", "rp": "PaintingProjectsManagement.Api_Program.html", "cl": 77, "ucl": 3, "cal": 80, "tl": 133, "cb": 15, "tb": 20, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Api.Program", "rp": "PaintingProjectsManagement.Api_Program.html", "cl": 77, "ucl": 3, "cal": 80, "tl": 135, "cb": 15, "tb": 20, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "PaintingProjectsManagement.Features.Authorization",
@@ -727,8 +727,8 @@ var assemblies = [
   {
     "name": "rbkApiModules.Testing.Core",
     "classes": [
-      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoaderec59a5129c204c1d9810f1ca16c2e647", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoaderec59a5129c204c1d9810f1ca16c2e647.html", "cl": 1, "ucl": 171, "cal": 172, "tl": 180, "cb": 342, "tb": 342, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_ec7fd5e845874886a945689d1b9afd49", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_ec7fd5e845874886a945689d1b9afd49.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader37b8cd2dad8d49f2bd9d400f8a4d4753", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader37b8cd2dad8d49f2bd9d400f8a4d4753.html", "cl": 1, "ucl": 172, "cal": 173, "tl": 181, "cb": 344, "tb": 344, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_6c6452e697e14345b69c5f5e96dff70e", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_6c6452e697e14345b69c5f5e96dff70e.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions", "rp": "rbkApiModules.Testing.Core_AssertExtensions.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions<T>", "rp": "rbkApiModules.Testing.Core_AssertExtensions_T_.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.EntityAssertionOptions<T>", "rp": "rbkApiModules.Testing.Core_EntityAssertionOptions_T_.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 289, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -780,16 +780,16 @@ var riskHotspots = [
       { "value": 42, "exceeded": true },
     ]},
   {
+    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader37b8cd2dad8d49f2bd9d400f8a4d4753", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader37b8cd2dad8d49f2bd9d400f8a4d4753.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 8,
+    "metrics": [
+      { "value": 344, "exceeded": true },
+      { "value": 344, "exceeded": true },
+    ]},
+  {
     "assembly": "rbkApiModules.Identity.Core", "class": "rbkApiModules.Identity.Core.AutomaticUserCreator", "reportPath": "rbkApiModules.Identity.Core_AutomaticUserCreator.html", "methodName": "CreateIfAllowedAsync()", "methodShortName": "CreateIfAllowedAsync()", "fileIndex": 0, "line": 33,
     "metrics": [
       { "value": 342, "exceeded": true },
       { "value": 18, "exceeded": true },
-    ]},
-  {
-    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoaderec59a5129c204c1d9810f1ca16c2e647", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoaderec59a5129c204c1d9810f1ca16c2e647.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 8,
-    "metrics": [
-      { "value": 342, "exceeded": true },
-      { "value": 342, "exceeded": true },
     ]},
   {
     "assembly": "rbkApiModules.Identity.Core", "class": "rbkApiModules.Identity.Core.WindowsAuthenticationMiddleware", "reportPath": "rbkApiModules.Identity.Core_WindowsAuthenticationMiddleware.html", "methodName": "InvokeAsync()", "methodShortName": "InvokeAsync()", "fileIndex": 0, "line": 16,

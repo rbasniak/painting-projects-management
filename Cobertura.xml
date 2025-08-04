@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage line-rate="0.7995771407250792" branch-rate="0.6769085322618766" lines-covered="12858" lines-valid="16081" branches-covered="2864" branches-valid="4231" complexity="6870" version="0" timestamp="1753878352">
+<coverage line-rate="0.7995274219624425" branch-rate="0.6770611859201512" lines-covered="12858" lines-valid="16082" branches-covered="2866" branches-valid="4233" complexity="6872" version="0" timestamp="1754307798">
   <sources />
   <packages>
     <package name="Demo1" line-rate="0.818955732122588" branch-rate="0.9536082474226805" complexity="336">
@@ -4574,22 +4574,22 @@
                 <line number="108" hits="4" branch="false" />
                 <line number="110" hits="4" branch="false" />
                 <line number="112" hits="4" branch="false" />
-                <line number="115" hits="4" branch="false" />
-                <line number="116" hits="4" branch="true" condition-coverage="100% (2/2)" />
                 <line number="117" hits="4" branch="false" />
-                <line number="118" hits="4" branch="false" />
+                <line number="118" hits="4" branch="true" condition-coverage="100% (2/2)" />
                 <line number="119" hits="4" branch="false" />
-                <line number="120" hits="4" branch="true" condition-coverage="100% (2/2)" />
+                <line number="120" hits="4" branch="false" />
                 <line number="121" hits="4" branch="false" />
-                <line number="122" hits="4" branch="false" />
+                <line number="122" hits="4" branch="true" condition-coverage="100% (2/2)" />
                 <line number="123" hits="4" branch="false" />
                 <line number="124" hits="4" branch="false" />
+                <line number="125" hits="4" branch="false" />
                 <line number="126" hits="4" branch="false" />
-                <line number="127" hits="4" branch="false" />
                 <line number="128" hits="4" branch="false" />
                 <line number="129" hits="4" branch="false" />
+                <line number="130" hits="4" branch="false" />
                 <line number="131" hits="4" branch="false" />
-                <line number="132" hits="4" branch="false" />
+                <line number="133" hits="4" branch="false" />
+                <line number="134" hits="4" branch="false" />
               </lines>
             </method>
           </methods>
@@ -4658,22 +4658,22 @@
             <line number="108" hits="4" branch="false" />
             <line number="110" hits="4" branch="false" />
             <line number="112" hits="4" branch="false" />
-            <line number="115" hits="4" branch="false" />
-            <line number="116" hits="4" branch="true" condition-coverage="100% (2/2)" />
             <line number="117" hits="4" branch="false" />
-            <line number="118" hits="4" branch="false" />
+            <line number="118" hits="4" branch="true" condition-coverage="100% (2/2)" />
             <line number="119" hits="4" branch="false" />
-            <line number="120" hits="4" branch="true" condition-coverage="100% (2/2)" />
+            <line number="120" hits="4" branch="false" />
             <line number="121" hits="4" branch="false" />
-            <line number="122" hits="4" branch="false" />
+            <line number="122" hits="4" branch="true" condition-coverage="100% (2/2)" />
             <line number="123" hits="4" branch="false" />
             <line number="124" hits="4" branch="false" />
+            <line number="125" hits="4" branch="false" />
             <line number="126" hits="4" branch="false" />
-            <line number="127" hits="4" branch="false" />
             <line number="128" hits="4" branch="false" />
             <line number="129" hits="4" branch="false" />
+            <line number="130" hits="4" branch="false" />
             <line number="131" hits="4" branch="false" />
-            <line number="132" hits="4" branch="false" />
+            <line number="133" hits="4" branch="false" />
+            <line number="134" hits="4" branch="false" />
           </lines>
         </class>
       </classes>
@@ -47322,11 +47322,11 @@
         </class>
       </classes>
     </package>
-    <package name="rbkApiModules.Testing.Core" line-rate="0.4156441717791411" branch-rate="0.7211703958691911" complexity="817">
+    <package name="rbkApiModules.Testing.Core" line-rate="0.4153256704980843" branch-rate="0.7221269296740995" complexity="819">
       <classes>
-        <class name="&lt;AssemblyLoader_g&gt;F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoaderec59a5129c204c1d9810f1ca16c2e647" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.AssemblyLoaderGenerator/AssemblyLoader.g.cs" line-rate="0.005813953488372093" branch-rate="1" complexity="342">
+        <class name="&lt;AssemblyLoader_g&gt;F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader37b8cd2dad8d49f2bd9d400f8a4d4753" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.AssemblyLoaderGenerator/AssemblyLoader.g.cs" line-rate="0.005780346820809248" branch-rate="1" complexity="344">
           <methods>
-            <method name="Initialize" signature="()" line-rate="0.005813953488372093" branch-rate="1" complexity="342">
+            <method name="Initialize" signature="()" line-rate="0.005780346820809248" branch-rate="1" complexity="344">
               <lines>
                 <line number="8" hits="0" branch="true" condition-coverage="100% (2/2)" />
                 <line number="9" hits="0" branch="true" condition-coverage="100% (2/2)" />
@@ -47499,7 +47499,8 @@
                 <line number="176" hits="0" branch="true" condition-coverage="100% (2/2)" />
                 <line number="177" hits="0" branch="true" condition-coverage="100% (2/2)" />
                 <line number="178" hits="0" branch="true" condition-coverage="100% (2/2)" />
-                <line number="179" hits="5" branch="false" />
+                <line number="179" hits="0" branch="true" condition-coverage="100% (2/2)" />
+                <line number="180" hits="5" branch="false" />
               </lines>
             </method>
           </methods>
@@ -47675,10 +47676,11 @@
             <line number="176" hits="0" branch="true" condition-coverage="100% (2/2)" />
             <line number="177" hits="0" branch="true" condition-coverage="100% (2/2)" />
             <line number="178" hits="0" branch="true" condition-coverage="100% (2/2)" />
-            <line number="179" hits="5" branch="false" />
+            <line number="179" hits="0" branch="true" condition-coverage="100% (2/2)" />
+            <line number="180" hits="5" branch="false" />
           </lines>
         </class>
-        <class name="&lt;DisableReflectionScanner_g&gt;FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_ec7fd5e845874886a945689d1b9afd49" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.DisableReflectionScannerGenerator/DisableReflectionScanner.g.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="&lt;DisableReflectionScanner_g&gt;FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_6c6452e697e14345b69c5f5e96dff70e" filename="/home/runner/work/painting-projects-management/painting-projects-management/back/rbkApiModules/rbkApiModules.Commons.Testing/obj/Release/net9.0/TUnit.Core.SourceGenerator/TUnit.Core.SourceGenerator.CodeGenerators.DisableReflectionScannerGenerator/DisableReflectionScanner.g.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="Initialize" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>

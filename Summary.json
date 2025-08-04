@@ -1,18 +1,18 @@
 {
   "summary": {
-    "generatedon": "2025-07-30T12:25:52Z",
+    "generatedon": "2025-08-04T11:43:18Z",
     "parser": "MultiReport (6x Cobertura)",
     "assemblies": 13,
     "classes": 487,
     "files": 262,
     "coveredlines": 12858,
-    "uncoveredlines": 3223,
-    "coverablelines": 16081,
-    "totallines": 21141,
+    "uncoveredlines": 3224,
+    "coverablelines": 16082,
+    "totallines": 21144,
     "linecoverage": 79.9,
-    "coveredbranches": 2864,
-    "totalbranches": 4231,
-    "branchcoverage": 67.6,
+    "coveredbranches": 2866,
+    "totalbranches": 4233,
+    "branchcoverage": 67.7,
     "coveredmethods": 2775,
     "fullcoveredmethods": 2616,
     "totalmethods": 3376,
@@ -47,9 +47,9 @@
         { "name": "Demo1.UseCases.Commands.UpdatePost.Handler", "coverage": 0, "coveredlines": 0, "coverablelines": 12, "totallines": 89, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 2 },
         { "name": "Demo1.UseCases.Commands.UpdatePost.Request", "coverage": 0, "coveredlines": 0, "coverablelines": 5, "totallines": 89, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 11 },
         { "name": "Demo1.UseCases.Commands.UpdatePost.Validator", "coverage": 0, "coveredlines": 0, "coverablelines": 32, "totallines": 89, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 5 } ] },
-      { "name": "PaintingProjectsManagement.Api", "classes": 2, "coverage": 70, "coveredlines": 77, "coverablelines": 110, "totallines": 175, "branchcoverage": 46.8, "coveredbranches": 15, "totalbranches": 32, "methodcoverage": 50, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 2, "classesinassembly": [
+      { "name": "PaintingProjectsManagement.Api", "classes": 2, "coverage": 70, "coveredlines": 77, "coverablelines": 110, "totallines": 177, "branchcoverage": 46.8, "coveredbranches": 15, "totalbranches": 32, "methodcoverage": 50, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 2, "classesinassembly": [
         { "name": "PaintingProjectsManagement.Api.OpenApiExtensions", "coverage": 0, "coveredlines": 0, "coverablelines": 30, "totallines": 42, "branchcoverage": 0, "coveredbranches": 0, "totalbranches": 12, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 1 },
-        { "name": "PaintingProjectsManagement.Api.Program", "coverage": 96.2, "coveredlines": 77, "coverablelines": 80, "totallines": 133, "branchcoverage": 75, "coveredbranches": 15, "totalbranches": 20, "methodcoverage": 100, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 1 } ] },
+        { "name": "PaintingProjectsManagement.Api.Program", "coverage": 96.2, "coveredlines": 77, "coverablelines": 80, "totallines": 135, "branchcoverage": 75, "coveredbranches": 15, "totalbranches": 20, "methodcoverage": 100, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 1 } ] },
       { "name": "PaintingProjectsManagement.Features.Authorization", "classes": 2, "coverage": 100, "coveredlines": 7, "coverablelines": 7, "totallines": 44, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 6, "fullcoveredmethods": 6, "totalmethods": 6, "classesinassembly": [
         { "name": "PaintingProjectsManagement.Features.ApplicationClaims", "coverage": 100, "coveredlines": 1, "coverablelines": 1, "totallines": 22, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 1, "fullcoveredmethods": 1, "totalmethods": 1 },
         { "name": "PaintingProjectsManagement.Features.ClaimValue", "coverage": 100, "coveredlines": 6, "coverablelines": 6, "totallines": 22, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 5, "fullcoveredmethods": 5, "totalmethods": 5 } ] },
@@ -499,9 +499,9 @@
         { "name": "RbkAuthorizationFilter", "coverage": 100, "coveredlines": 14, "coverablelines": 14, "totallines": 31, "branchcoverage": 90, "coveredbranches": 9, "totalbranches": 10, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 },
         { "name": "RolesValidators", "coverage": 100, "coveredlines": 23, "coverablelines": 23, "totallines": 32, "branchcoverage": 100, "coveredbranches": 4, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 },
         { "name": "RolesValidators\u003CT\u003E", "coverage": 100, "coveredlines": 23, "coverablelines": 23, "totallines": 32, "branchcoverage": 100, "coveredbranches": 4, "totalbranches": 4, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 2, "fullcoveredmethods": 2, "totalmethods": 2 } ] },
-      { "name": "rbkApiModules.Testing.Core", "classes": 21, "coverage": 41.5, "coveredlines": 542, "coverablelines": 1304, "totallines": 5506, "branchcoverage": 72.1, "coveredbranches": 419, "totalbranches": 581, "methodcoverage": 53, "fullmethodcoverage": 48, "coveredmethods": 146, "fullcoveredmethods": 132, "totalmethods": 275, "classesinassembly": [
-        { "name": "\u003CAssemblyLoader_g\u003EF9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoaderec59a5129c204c1d9810f1ca16c2e647", "coverage": 0.5, "coveredlines": 1, "coverablelines": 172, "totallines": 180, "branchcoverage": 100, "coveredbranches": 342, "totalbranches": 342, "methodcoverage": 100, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 1 },
-        { "name": "\u003CDisableReflectionScanner_g\u003EFAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_ec7fd5e845874886a945689d1b9afd49", "coverage": 100, "coveredlines": 2, "coverablelines": 2, "totallines": 10, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 1, "fullcoveredmethods": 1, "totalmethods": 1 },
+      { "name": "rbkApiModules.Testing.Core", "classes": 21, "coverage": 41.5, "coveredlines": 542, "coverablelines": 1305, "totallines": 5507, "branchcoverage": 72.2, "coveredbranches": 421, "totalbranches": 583, "methodcoverage": 53, "fullmethodcoverage": 48, "coveredmethods": 146, "fullcoveredmethods": 132, "totalmethods": 275, "classesinassembly": [
+        { "name": "\u003CAssemblyLoader_g\u003EF9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader37b8cd2dad8d49f2bd9d400f8a4d4753", "coverage": 0.5, "coveredlines": 1, "coverablelines": 173, "totallines": 181, "branchcoverage": 100, "coveredbranches": 344, "totalbranches": 344, "methodcoverage": 100, "fullmethodcoverage": 0, "coveredmethods": 1, "fullcoveredmethods": 0, "totalmethods": 1 },
+        { "name": "\u003CDisableReflectionScanner_g\u003EFAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_6c6452e697e14345b69c5f5e96dff70e", "coverage": 100, "coveredlines": 2, "coverablelines": 2, "totallines": 10, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 100, "fullmethodcoverage": 100, "coveredmethods": 1, "fullcoveredmethods": 1, "totalmethods": 1 },
         { "name": "Giants.Tests.Integration.AssertExtensions", "coverage": 0, "coveredlines": 0, "coverablelines": 102, "totallines": 289, "branchcoverage": 0, "coveredbranches": 0, "totalbranches": 58, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 15 },
         { "name": "Giants.Tests.Integration.AssertExtensions\u003CT\u003E", "coverage": 0, "coveredlines": 0, "coverablelines": 102, "totallines": 289, "branchcoverage": 0, "coveredbranches": 0, "totalbranches": 58, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 15 },
         { "name": "Giants.Tests.Integration.EntityAssertionOptions\u003CT\u003E", "coverage": 0, "coveredlines": 0, "coverablelines": 12, "totallines": 289, "branchcoverage": null, "coveredbranches": 0, "totalbranches": 0, "methodcoverage": 0, "fullmethodcoverage": 0, "coveredmethods": 0, "fullcoveredmethods": 0, "totalmethods": 7 },
