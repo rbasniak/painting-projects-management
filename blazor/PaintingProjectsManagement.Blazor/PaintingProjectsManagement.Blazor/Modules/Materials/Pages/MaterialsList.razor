@@ -17,7 +17,9 @@ else
     @foreach (var material in materials ?? Enumerable.Empty<MaterialDetails>())
     {
         <div class="material-item">
-            <h4>@material.Name</h4>
+            <ul>
+                <li>@material.Name</li>
+            </ul>
         </div>
     }
 }
