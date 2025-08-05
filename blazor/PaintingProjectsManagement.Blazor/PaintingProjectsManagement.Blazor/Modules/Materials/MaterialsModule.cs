@@ -16,9 +16,12 @@ public static class Builder
 {
     public static IServiceCollection AddMaterialsModule(this IServiceCollection services)
     {
+        services.AddScoped<CustomAdaptor>();
+
         services.AddScoped<IMaterialsService>(sp =>
         {
             var handler = sp.GetRequiredService<BearerDelegatingHandler>();
+
             // Assign the inner handler (required)
             handler.InnerHandler = new HttpClientHandler();
 
