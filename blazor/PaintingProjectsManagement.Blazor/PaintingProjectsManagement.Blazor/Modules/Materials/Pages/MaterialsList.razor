@@ -1,0 +1,56 @@
+﻿@page "/materials"
+@using PaintingProjectsManagement.Blazor.Modules.Materials;
+@inject IMaterialsService MaterialsService
+
+<h3>Materials List</h3>
+
+@if (loading)
+{
+    <p>Loading materials...</p>
+}
+else if (materials == null || !materials.Any())
+{
+    <p>No materials found.</p>
+}
+else
+{
+    @foreach (var material in materials ?? Enumerable.Empty<MaterialDetails>())
+    {
+        <div class="material-item">
+            <h4>@material.Name</h4>
+        </div>
+    }
+}
+
+@code {
+    private List<MaterialDetails>? materials;
+    private bool loading = true;
+    private bool hasInitialized;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !hasInitialized)
+        {
+            hasInitialized = true;
+
+            try
+            {
+                loading = true;
+
+                var result = await MaterialsService.GetMaterialsAsync(default);
+
+                materials = result.ToList();
+            }
+            catch (Exception ex)
+            {
+                // TODO: implement proper error handling
+            }
+            finally
+            {
+                loading = false;
+
+                StateHasChanged(); 
+            }
+        }
+    }
+}
