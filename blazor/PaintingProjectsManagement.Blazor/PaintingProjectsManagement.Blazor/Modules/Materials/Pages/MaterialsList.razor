@@ -7,8 +7,6 @@
 
 @page "/materials"
 
-@inject IMaterialsService MaterialsService
-
 <h3>Materials List</h3>
 
 @if (loading)
@@ -26,7 +24,7 @@ else
             <div class="row">
                 <SfGrid 
                     TValue="MaterialDetails" 
-                    AllowPaging="false" 
+                    AllowPaging="true" 
                     Toolbar="@(new string[] { "Add", "Edit", "Delete", "Update", "Cancel" })">
                     
                     <SfDataManager 
