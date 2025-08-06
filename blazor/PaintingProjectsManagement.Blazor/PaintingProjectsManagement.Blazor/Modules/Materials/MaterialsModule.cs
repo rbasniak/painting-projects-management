@@ -16,7 +16,7 @@ public static class Builder
 {
     public static IServiceCollection AddMaterialsModule(this IServiceCollection services)
     {
-        services.AddScoped<CustomAdaptor>();
+        services.AddScoped<MaterialsAdaptor>();
 
         services.AddScoped<IMaterialsService>(sp =>
         {

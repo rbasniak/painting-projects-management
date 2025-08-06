@@ -5,10 +5,10 @@ using System.Diagnostics;
 
 namespace PaintingProjectsManagement.Blazor.Modules.Materials;
 
-public class CustomAdaptor : DataAdaptor
+public class MaterialsAdaptor : DataAdaptor
 {
     private readonly IMaterialsService _materialsService;
-    public CustomAdaptor(IMaterialsService materialsService)
+    public MaterialsAdaptor(IMaterialsService materialsService)
     {
         _materialsService = materialsService;
     }
@@ -19,8 +19,7 @@ public class CustomAdaptor : DataAdaptor
     {
         var materials = await _materialsService.GetMaterialsAsync(default);
 
-        Console.WriteLine($"Loaded {materials.Count} materisl");
-        Debug.WriteLine($"Loaded {materials.Count} materisl");
+        Console.WriteLine($"Loaded {materials.Count} materials");
 
         Materials = materials.ToList();
 
@@ -55,25 +54,44 @@ public class CustomAdaptor : DataAdaptor
     }
     public override async Task<Object> InsertAsync(DataManager dataManager, object value, string key)
     {
-        Materials.Insert(0, value as MaterialDetails);
+        var newMaterialData = value as MaterialDetails;
+
+        var newMaterial = await _materialsService.CreateMaterialAsync(new CreateMaterialRequest
+        {
+            Name = newMaterialData.Name,
+            PricePerUnit = newMaterialData.PricePerUnit,
+            Unit = (MaterialUnit)newMaterialData.Unit.Id
+        }, default);
+
+        Materials.Insert(0, newMaterial);
         return value;
     }
     public override async Task<object> RemoveAsync(DataManager dataManager, object value, string keyField, string key)
     {
-        var data = (Guid)value;
-        Materials.Remove(Materials.Where(x => x.Id == data).FirstOrDefault());
+        var id = (Guid)value;
+
+        await _materialsService.DeleteMaterialAsync(id, default);
+
+        Materials.Remove(Materials.Where(x => x.Id == id).First());
+
         return value;
     }
     public override async Task<object> UpdateAsync(DataManager dataManager, object value, string keyField, string key)
     {
-        var val = (value as MaterialDetails);
-        var data = Materials.Where(x => x.Id == val.Id).FirstOrDefault();
-        if (data != null)
+        var updateData = (value as MaterialDetails);
+
+        var updatedMaterial = await _materialsService.UpdateMaterialAsync(new UpdateMaterialRequest
         {
-            data.Name = val.Name;
-            data.Unit = val.Unit;
-            data.PricePerUnit = val.PricePerUnit;
-        }
+            Id = updateData.Id,
+            Name = updateData.Name,
+            PricePerUnit = updateData.PricePerUnit,
+            Unit = (MaterialUnit)updateData.Unit.Id
+        }, default);
+
+        var index = Materials.FindIndex(x => x.Id == updateData.Id);
+
+        Materials[index] = updatedMaterial;
+
         return value;
     }
 }

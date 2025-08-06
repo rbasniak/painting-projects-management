@@ -1,5 +1,8 @@
 ﻿@using PaintingProjectsManagement.Blazor.Modules.Materials;
 @using PaintingProjectsManagement.Blazor.Modules.Shared
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Grids
 
 @page "/materials"
@@ -21,13 +24,57 @@ else
     <div class="col-lg-12 control-section">
         <div class="content-wrapper">
             <div class="row">
-                <SfGrid TValue="MaterialDetails" AllowPaging="false" Toolbar="@(new string[] { "Add", "Edit", "Delete", "Update", "Cancel" })">
-                    <SfDataManager AdaptorInstance="@typeof(CustomAdaptor)" Adaptor="Adaptors.CustomAdaptor"></SfDataManager>
-                    <GridEditSettings AllowAdding="true" AllowEditing="true" AllowDeleting="true" Mode="EditMode.Normal"></GridEditSettings>
+                <SfGrid 
+                    TValue="MaterialDetails" 
+                    AllowPaging="false" 
+                    Toolbar="@(new string[] { "Add", "Edit", "Delete", "Update", "Cancel" })">
+                    
+                    <SfDataManager 
+                        AdaptorInstance="@typeof(MaterialsAdaptor)" 
+                        Adaptor="Adaptors.CustomAdaptor"/>
+                    
+                    <GridEditSettings 
+                        AllowAdding="true" 
+                        AllowEditing="true" 
+                        AllowDeleting="true"
+                        NewRowPosition="NewRowPosition.Top"
+                        ShowDeleteConfirmDialog="true"
+                        Mode="EditMode.Normal">
+                    </GridEditSettings>
+                    
                     <GridColumns>
-                        <GridColumn Field=@nameof(MaterialDetails.Name) HeaderText="Name" ValidationRules="@(new ValidationRules { Required = true })"></GridColumn>
-                        <GridColumn Field=@nameof(MaterialDetails.Unit.Value) HeaderText="Unit Type" Width="150" EditType="EditType.DropDownEdit" EditorSettings="@UnitTypeValues"></GridColumn>
-                        <GridColumn Field=@nameof(MaterialDetails.PricePerUnit) HeaderText="Price per Unit" Format="C2" ValidationRules="@(new ValidationRules { Required = true, Number = true })" Type="ColumnType.Double" Width="130"></GridColumn>
+                        <GridColumn 
+                            Field=@nameof(MaterialDetails.Id) 
+                            IsPrimaryKey="true" 
+                            Visible="false" />
+                        <GridColumn 
+                            Field=@nameof(MaterialDetails.Name) HeaderText="Name" 
+                            ValidationRules="@(new ValidationRules { Required = true })"/>
+                        <GridColumn 
+                            Field=@nameof(MaterialDetails.Unit) 
+                            HeaderText="Unit Type" 
+                            Width="150" 
+                            EditType="EditType.DropDownEdit">
+                            <EditTemplate>
+                                <SfDropDownList 
+                                    ID="Unit" 
+                                    TItem="EnumReference" 
+                                    TValue="EnumReference" 
+                                    @bind-Value="@((context as MaterialDetails).Unit)" 
+                                    DataSource="@UnitTypes">
+                                    <DropDownListFieldSettings 
+                                        Value="Value" 
+                                        Text="Value"/>
+                                </SfDropDownList>
+                            </EditTemplate>
+                        </GridColumn>
+                        <GridColumn 
+                            Field=@nameof(MaterialDetails.PricePerUnit) 
+                            HeaderText="Price per Unit" 
+                            Format="C2" 
+                            ValidationRules="@(new ValidationRules { Required = true, Number = true })" 
+                            Type="ColumnType.Double" 
+                            Width="130"/>
                     </GridColumns>
                 </SfGrid>
             </div>
@@ -36,21 +83,14 @@ else
 }
 
 @code {
-    // private List<MaterialDetails>? GridData;
     private bool loading = true;
     private bool hasInitialized;
 
-    public IEditorSettings UnitTypeValues = new DropDownEditCellParams
+    public List<EnumReference> UnitTypes => new List<EnumReference>
     {
-        Params = new DropDownListModel<object, object>()
-        {
-            DataSource = new List<EnumReference>()
-            {
-                new EnumReference(MaterialUnit.Drops),
-                new EnumReference(MaterialUnit.Centimeters),
-                new EnumReference(MaterialUnit.Unit),
-            }
-        }
+        new EnumReference(MaterialUnit.Drops),
+        new EnumReference(MaterialUnit.Centimeters),
+        new EnumReference(MaterialUnit.Unit),
     };
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -62,10 +102,6 @@ else
             try
             {
                 loading = true;
-
-                // var result = await MaterialsService.GetMaterialsAsync(default);
-
-                // GridData = result.ToList();
             }
             catch (Exception ex)
             {
