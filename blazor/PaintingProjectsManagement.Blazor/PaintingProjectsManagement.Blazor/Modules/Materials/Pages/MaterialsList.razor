@@ -25,12 +25,23 @@ else
                 <SfGrid 
                     TValue="MaterialDetails" 
                     AllowPaging="true" 
+                    AllowFiltering="true" 
+                    AllowSorting="true"
+                    AllowSelection="true"
                     Toolbar="@(new string[] { "Add", "Edit", "Delete", "Update", "Cancel" })">
-                    
+
+                    <GridFilterSettings 
+                        Type="Syncfusion.Blazor.Grids.FilterType.CheckBox">
+                    </GridFilterSettings>
+
                     <SfDataManager 
                         AdaptorInstance="@typeof(MaterialsAdaptor)" 
                         Adaptor="Adaptors.CustomAdaptor"/>
-                    
+
+                    <GridPageSettings
+                        PageSize="15">
+                    </GridPageSettings>
+
                     <GridEditSettings 
                         AllowAdding="true" 
                         AllowEditing="true" 
@@ -51,6 +62,7 @@ else
                         <GridColumn 
                             Field=@nameof(MaterialDetails.Unit) 
                             HeaderText="Unit Type" 
+                            AllowFiltering="false"
                             Width="150" 
                             EditType="EditType.DropDownEdit">
                             <EditTemplate>
@@ -68,7 +80,8 @@ else
                         </GridColumn>
                         <GridColumn 
                             Field=@nameof(MaterialDetails.PricePerUnit) 
-                            HeaderText="Price per Unit" 
+                            HeaderText="Price per Unit"
+                            AllowFiltering="false"
                             Format="C2" 
                             ValidationRules="@(new ValidationRules { Required = true, Number = true })" 
                             Type="ColumnType.Double" 

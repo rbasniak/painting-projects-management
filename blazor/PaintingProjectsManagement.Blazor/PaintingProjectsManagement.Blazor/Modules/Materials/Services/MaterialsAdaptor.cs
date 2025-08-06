@@ -26,6 +26,10 @@ public class MaterialsAdaptor : DataAdaptor
         IEnumerable GridData = Materials;
         IEnumerable DataSource = Materials;
 
+        if (dataManagerRequest.Where != null && dataManagerRequest.Where.Count > 0)
+        {
+            GridData = DataOperations.PerformFiltering(GridData, dataManagerRequest.Where, dataManagerRequest.Where[0].Operator);
+        }
         if (dataManagerRequest.Sorted?.Count > 0) // perform Sorting
         {
             GridData = DataOperations.PerformSorting(GridData, dataManagerRequest.Sorted);
