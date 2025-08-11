@@ -221,21 +221,26 @@ var assemblies = [
       { "name": "Demo1.DatabaseSeed", "rp": "Demo1_DatabaseSeed.html", "cl": 82, "ucl": 2, "cal": 84, "tl": 125, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.LoginPolicyValidator1", "rp": "Demo1_LoginPolicyValidator1.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 26, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.LoginPolicyValidator2", "rp": "Demo1_LoginPolicyValidator2.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 25, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Demo1.Migrations.DatabaseContextModelSnapshot", "rp": "Demo1_DatabaseContextModelSnapshot.html", "cl": 462, "ucl": 0, "cal": 462, "tl": 507, "cb": 52, "tb": 52, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Demo1.Migrations.Initial", "rp": "Demo1_Initial.html", "cl": 746, "ucl": 25, "cal": 771, "tl": 870, "cb": 100, "tb": 100, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Demo1.Migrations.DatabaseContextModelSnapshot", "rp": "Demo1_DatabaseContextModelSnapshot.html", "cl": 501, "ucl": 0, "cal": 501, "tl": 548, "cb": 56, "tb": 56, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Demo1.Migrations.Initial", "rp": "Demo1_Initial.html", "cl": 814, "ucl": 27, "cal": 841, "tl": 946, "cb": 108, "tb": 108, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.Models.Author", "rp": "Demo1_Author.html", "cl": 0, "ucl": 9, "cal": 9, "tl": 24, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.Models.Blog", "rp": "Demo1_Blog.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 29, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.Models.Post", "rp": "Demo1_Post.html", "cl": 0, "ucl": 28, "cal": 28, "tl": 62, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Demo1.MySettings1", "rp": "Demo1_MySettings1.html", "cl": 1, "ucl": 3, "cal": 4, "tl": 27, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Demo1.MySettings2", "rp": "Demo1_MySettings2.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 16, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.PasswordPolicyValidator", "rp": "Demo1_PasswordPolicyValidator.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 31, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.Plant", "rp": "Demo1_Plant.html", "cl": 7, "ucl": 2, "cal": 9, "tl": 20, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.PostConfig", "rp": "Demo1_PostConfig.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 25, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Demo1.Program", "rp": "Demo1_Program.html", "cl": 61, "ucl": 1, "cal": 62, "tl": 104, "cb": 11, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Demo1.Program", "rp": "Demo1_Program.html", "cl": 65, "ucl": 2, "cal": 67, "tl": 112, "cb": 11, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Demo1.SubSettings", "rp": "Demo1_SubSettings.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 27, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.UseCases.Commands.CreatePost", "rp": "Demo1_CreatePost.html", "cl": 5, "ucl": 64, "cal": 69, "tl": 103, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.UseCases.Commands.CreatePost.Handler", "rp": "Demo1_Handler.html", "cl": 0, "ucl": 18, "cal": 18, "tl": 103, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.UseCases.Commands.CreatePost.Request", "rp": "Demo1_Request.html", "cl": 0, "ucl": 6, "cal": 6, "tl": 103, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.UseCases.Commands.CreatePost.Validator", "rp": "Demo1_Validator.html", "cl": 0, "ucl": 37, "cal": 37, "tl": 103, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Demo1.UseCases.Commands.GetSettings", "rp": "Demo1_GetSettings.html", "cl": 5, "ucl": 13, "cal": 18, "tl": 48, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Demo1.UseCases.Commands.GetSettings.Handler", "rp": "Demo1_Handler.2.html", "cl": 0, "ucl": 10, "cal": 10, "tl": 48, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.UseCases.Commands.UpdatePost", "rp": "Demo1_UpdatePost.html", "cl": 5, "ucl": 52, "cal": 57, "tl": 89, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Demo1.UseCases.Commands.UpdatePost.Handler", "rp": "Demo1_Handler.2.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 89, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Demo1.UseCases.Commands.UpdatePost.Handler", "rp": "Demo1_Handler.3.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 89, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.UseCases.Commands.UpdatePost.Request", "rp": "Demo1_Request.2.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 89, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Demo1.UseCases.Commands.UpdatePost.Validator", "rp": "Demo1_Validator.2.html", "cl": 0, "ucl": 32, "cal": 32, "tl": 89, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
@@ -243,7 +248,7 @@ var assemblies = [
     "name": "PaintingProjectsManagement.Api",
     "classes": [
       { "name": "PaintingProjectsManagement.Api.OpenApiExtensions", "rp": "PaintingProjectsManagement.Api_OpenApiExtensions.html", "cl": 0, "ucl": 30, "cal": 30, "tl": 42, "cb": 0, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Api.Program", "rp": "PaintingProjectsManagement.Api_Program.html", "cl": 77, "ucl": 3, "cal": 80, "tl": 135, "cb": 15, "tb": 20, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Api.Program", "rp": "PaintingProjectsManagement.Api_Program.html", "cl": 85, "ucl": 4, "cal": 89, "tl": 144, "cb": 19, "tb": 24, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "PaintingProjectsManagement.Features.Authorization",
@@ -265,8 +270,8 @@ var assemblies = [
       { "name": "PaintingProjectsManagement.Features.Materials.DeleteMaterial.Validator", "rp": "PaintingProjectsManagement.Features.Materials_Validator.2.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 53, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Materials.Integrations.GetMaterialsForProject.Handler", "rp": "PaintingProjectsManagement.Features.Materials_Handler.3.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 31, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Materials.Integrations.GetMaterialsForProject.Validator", "rp": "PaintingProjectsManagement.Features.Materials_Validator.3.html", "cl": 5, "ucl": 0, "cal": 5, "tl": 31, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Materials.ListMaterials", "rp": "PaintingProjectsManagement.Features.Materials_ListMaterials.html", "cl": 18, "ucl": 0, "cal": 18, "tl": 42, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Materials.ListMaterials.Handler", "rp": "PaintingProjectsManagement.Features.Materials_Handler.4.html", "cl": 7, "ucl": 0, "cal": 7, "tl": 42, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Materials.ListMaterials", "rp": "PaintingProjectsManagement.Features.Materials_ListMaterials.html", "cl": 19, "ucl": 0, "cal": 19, "tl": 43, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Materials.ListMaterials.Handler", "rp": "PaintingProjectsManagement.Features.Materials_Handler.4.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 43, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Materials.Material", "rp": "PaintingProjectsManagement.Features.Materials_Material.html", "cl": 14, "ucl": 0, "cal": 14, "tl": 26, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Materials.MaterialConfig", "rp": "PaintingProjectsManagement.Features.Materials_MaterialConfig.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 28, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Materials.MaterialDetails", "rp": "PaintingProjectsManagement.Features.Materials_MaterialDetails.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 21, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -410,12 +415,12 @@ var assemblies = [
       { "name": "PaintingProjectsManagement.Features.Projects.ColorSection", "rp": "PaintingProjectsManagement.Features.Projects_ColorSection.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ColorSectionConfig", "rp": "PaintingProjectsManagement.Features.Projects_ColorSectionConfig.html", "cl": 23, "ucl": 0, "cal": 23, "tl": 43, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ColorSectionDetails", "rp": "PaintingProjectsManagement.Features.Projects_ColorSectionDetails.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 37, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject", "rp": "PaintingProjectsManagement.Features.Projects_CreateProject.html", "cl": 54, "ucl": 1, "cal": 55, "tl": 102, "cb": 7, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.html", "cl": 18, "ucl": 0, "cal": 18, "tl": 102, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 102, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.html", "cl": 22, "ucl": 1, "cal": 23, "tl": 102, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject", "rp": "PaintingProjectsManagement.Features.Projects_DeleteProject.html", "cl": 35, "ucl": 2, "cal": 37, "tl": 73, "cb": 5, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.2.html", "cl": 20, "ucl": 2, "cal": 22, "tl": 73, "cb": 3, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject", "rp": "PaintingProjectsManagement.Features.Projects_CreateProject.html", "cl": 33, "ucl": 0, "cal": 33, "tl": 103, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 103, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 103, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.CreateProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 103, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject", "rp": "PaintingProjectsManagement.Features.Projects_DeleteProject.html", "cl": 34, "ucl": 3, "cal": 37, "tl": 73, "cb": 4, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.2.html", "cl": 19, "ucl": 3, "cal": 22, "tl": 73, "cb": 2, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.2.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 73, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.DeleteProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.2.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 73, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.GetProjectDetails", "rp": "PaintingProjectsManagement.Features.Projects_GetProjectDetails.html", "cl": 42, "ucl": 1, "cal": 43, "tl": 81, "cb": 7, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -426,25 +431,23 @@ var assemblies = [
       { "name": "PaintingProjectsManagement.Features.Projects.ListProjects.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.4.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 45, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ListProjects.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.4.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 45, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.MaterialDetails", "rp": "PaintingProjectsManagement.Features.Projects_MaterialDetails.html", "cl": 14, "ucl": 1, "cal": 15, "tl": 30, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.MaterialForProject", "rp": "PaintingProjectsManagement.Features.Projects_MaterialForProject.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 20, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.MaterialForProject", "rp": "PaintingProjectsManagement.Features.Projects_MaterialForProject.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 19, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.MaterialForProjectConfig", "rp": "PaintingProjectsManagement.Features.Projects_MaterialForProjectConfig.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 31, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.Project", "rp": "PaintingProjectsManagement.Features.Projects_Project.html", "cl": 26, "ucl": 0, "cal": 26, "tl": 43, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectConfig.html", "cl": 38, "ucl": 0, "cal": 38, "tl": 61, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectDetails.html", "cl": 34, "ucl": 0, "cal": 34, "tl": 51, "cb": 8, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.Project", "rp": "PaintingProjectsManagement.Features.Projects_Project.html", "cl": 35, "ucl": 8, "cal": 43, "tl": 75, "cb": 2, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectConfig.html", "cl": 40, "ucl": 0, "cal": 40, "tl": 64, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectDetails.html", "cl": 33, "ucl": 1, "cal": 34, "tl": 50, "cb": 10, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectHeader", "rp": "PaintingProjectsManagement.Features.Projects_ProjectHeader.html", "cl": 12, "ucl": 1, "cal": 13, "tl": 23, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectPicture", "rp": "PaintingProjectsManagement.Features.Projects_ProjectPicture.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 20, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectPictureConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectPictureConfig.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 25, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectReference", "rp": "PaintingProjectsManagement.Features.Projects_ProjectReference.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 21, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.ProjectReferenceConfig", "rp": "PaintingProjectsManagement.Features.Projects_ProjectReferenceConfig.html", "cl": 10, "ucl": 0, "cal": 10, "tl": 25, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepData", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepData.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 29, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepDataDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepDataDetails.html", "cl": 1, "ucl": 11, "cal": 12, "tl": 43, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectSteps", "rp": "PaintingProjectsManagement.Features.Projects_ProjectSteps.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepsDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepsDetails.html", "cl": 12, "ucl": 0, "cal": 12, "tl": 43, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepData", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepData.html", "cl": 0, "ucl": 19, "cal": 19, "tl": 31, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.ProjectStepDataDetails", "rp": "PaintingProjectsManagement.Features.Projects_ProjectStepDataDetails.html", "cl": 0, "ucl": 14, "cal": 14, "tl": 25, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject", "rp": "PaintingProjectsManagement.Features.Projects_UpdateProject.html", "cl": 59, "ucl": 3, "cal": 62, "tl": 118, "cb": 17, "tb": 18, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Handler", "rp": "PaintingProjectsManagement.Features.Projects_Handler.5.html", "cl": 23, "ucl": 0, "cal": 23, "tl": 118, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Request", "rp": "PaintingProjectsManagement.Features.Projects_Request.4.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 118, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Features.Projects.UpdateProject.Validator", "rp": "PaintingProjectsManagement.Features.Projects_Validator.5.html", "cl": 21, "ucl": 3, "cal": 24, "tl": 118, "cb": 11, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagement.Features.Projects.UrlReference", "rp": "PaintingProjectsManagement.Features.Projects_UrlReference.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 51, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagement.Features.Projects.UrlReference", "rp": "PaintingProjectsManagement.Features.Projects_UrlReference.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 50, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "PaintingProjectsManagement.ServiceDefaults",
@@ -457,9 +460,9 @@ var assemblies = [
     "classes": [
       { "name": "PaintingProjectsManagement.Features.Models.ModelsSeeder", "rp": "PaintingProjectsManagment.Database_ModelsSeeder.html", "cl": 6, "ucl": 76, "cal": 82, "tl": 157, "cb": 1, "tb": 52, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagment.Database.DatabaseContext", "rp": "PaintingProjectsManagment.Database_DatabaseContext.html", "cl": 21, "ucl": 0, "cal": 21, "tl": 47, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.DatabaseSeed", "rp": "PaintingProjectsManagment.Database_DatabaseSeed.html", "cl": 50, "ucl": 203, "cal": 253, "tl": 297, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.DatabaseContextModelSnapshot", "rp": "PaintingProjectsManagment.Database_DatabaseContextModelSnapshot.html", "cl": 809, "ucl": 0, "cal": 809, "tl": 870, "cb": 86, "tb": 86, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "PaintingProjectsManagment.Database.Migrations.Initial", "rp": "PaintingProjectsManagment.Database_Initial.html", "cl": 1339, "ucl": 41, "cal": 1380, "tl": 1529, "cb": 166, "tb": 166, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagment.Database.DatabaseSeed", "rp": "PaintingProjectsManagment.Database_DatabaseSeed.html", "cl": 52, "ucl": 203, "cal": 255, "tl": 344, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagment.Database.Migrations.DatabaseContextModelSnapshot", "rp": "PaintingProjectsManagment.Database_DatabaseContextModelSnapshot.html", "cl": 864, "ucl": 0, "cal": 864, "tl": 929, "cb": 92, "tb": 92, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "PaintingProjectsManagment.Database.Migrations.Initial", "rp": "PaintingProjectsManagment.Database_Initial.html", "cl": 1454, "ucl": 45, "cal": 1499, "tl": 1660, "cb": 180, "tb": 180, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "rbkApiModules.Commons.Core",
@@ -467,10 +470,14 @@ var assemblies = [
       { "name": "AuthenticatedRequest", "rp": "rbkApiModules.Commons.Core_AuthenticatedRequest.html", "cl": 9, "ucl": 0, "cal": 9, "tl": 60, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "AuthenticatedUser", "rp": "rbkApiModules.Commons.Core_AuthenticatedUser.html", "cl": 12, "ucl": 1, "cal": 13, "tl": 60, "cb": 5, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "BaseEntity", "rp": "rbkApiModules.Commons.Core_BaseEntity.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core", "rp": "rbkApiModules.Commons.Core_Core.html", "cl": 1042, "ucl": 420, "cal": 1462, "tl": 3555, "cb": 442, "tb": 734, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core", "rp": "rbkApiModules.Commons.Core_Core.html", "cl": 1142, "ucl": 532, "cal": 1674, "tl": 4040, "cb": 510, "tb": 968, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EntityReference", "rp": "rbkApiModules.Commons.Core_EntityReference.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 5, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EntityReference<T>", "rp": "rbkApiModules.Commons.Core_EntityReference_T_.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 5, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EnumReference", "rp": "rbkApiModules.Commons.Core_EnumReference.html", "cl": 10, "ucl": 1, "cal": 11, "tl": 22, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.ApplicationOptionsBuilder", "rp": "rbkApiModules.Commons.Core_ApplicationOptionsBuilder.html", "cl": 64, "ucl": 21, "cal": 85, "tl": 188, "cb": 58, "tb": 112, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.ApplicationOptionsManager", "rp": "rbkApiModules.Commons.Core_ApplicationOptionsManager.html", "cl": 0, "ucl": 98, "cal": 98, "tl": 213, "cb": 0, "tb": 116, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.ApplicationOptionsRegistration", "rp": "rbkApiModules.Commons.Core_ApplicationOptionsRegistration.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 37, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.ApplicationOptionsServiceCollectionExtensions", "rp": "rbkApiModules.Commons.Core_ApplicationOptionsServiceCollectionExtensions.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 37, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Authentication.AuthEmailOptions", "rp": "rbkApiModules.Commons.Core_AuthEmailOptions.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 41, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Authentication.EmailContentOptions", "rp": "rbkApiModules.Commons.Core_EmailContentOptions.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 41, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Authentication.SenderOptions", "rp": "rbkApiModules.Commons.Core_SenderOptions.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 41, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -482,7 +489,7 @@ var assemblies = [
       { "name": "rbkApiModules.Commons.Core.CommandResponse", "rp": "rbkApiModules.Commons.Core_CommandResponse.html", "cl": 18, "ucl": 0, "cal": 18, "tl": 162, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.CommandResponseFactory", "rp": "rbkApiModules.Commons.Core_CommandResponseFactory.html", "cl": 11, "ucl": 1, "cal": 12, "tl": 242, "cb": 9, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.CommandResponseFactory<T>", "rp": "rbkApiModules.Commons.Core_CommandResponseFactory_T_.html", "cl": 11, "ucl": 1, "cal": 12, "tl": 242, "cb": 9, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.CommonsCoreBuilder", "rp": "rbkApiModules.Commons.Core_CommonsCoreBuilder.html", "cl": 77, "ucl": 32, "cal": 109, "tl": 818, "cb": 50, "tb": 84, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.CommonsCoreBuilder", "rp": "rbkApiModules.Commons.Core_CommonsCoreBuilder.html", "cl": 92, "ucl": 21, "cal": 113, "tl": 832, "cb": 58, "tb": 88, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Dispatcher", "rp": "rbkApiModules.Commons.Core_Dispatcher.html", "cl": 73, "ucl": 38, "cal": 111, "tl": 242, "cb": 40, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "rp": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "cl": 73, "ucl": 38, "cal": 111, "tl": 242, "cb": 40, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "rp": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "cl": 73, "ucl": 38, "cal": 111, "tl": 242, "cb": 40, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -493,19 +500,20 @@ var assemblies = [
       { "name": "rbkApiModules.Commons.Core.ExceptionExtensions", "rp": "rbkApiModules.Commons.Core_ExceptionExtensions.html", "cl": 0, "ucl": 37, "cal": 37, "tl": 76, "cb": 0, "tb": 22, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.ExceptionHandlingMiddleware", "rp": "rbkApiModules.Commons.Core_ExceptionHandlingMiddleware.html", "cl": 7, "ucl": 45, "cal": 52, "tl": 92, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.ExpectedInternalException", "rp": "rbkApiModules.Commons.Core_ExpectedInternalException.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 39, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.Features.ApplicationOptions.ApplicationOption", "rp": "rbkApiModules.Commons.Core_ApplicationOption.html", "cl": 10, "ucl": 7, "cal": 17, "tl": 33, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Helpers.TestingEnvironmentChecker", "rp": "rbkApiModules.Commons.Core_TestingEnvironmentChecker.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 19, "cb": 6, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.HttpContextExtensions", "rp": "rbkApiModules.Commons.Core_HttpContextExtensions.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 18, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.IEnumerableExtensions", "rp": "rbkApiModules.Commons.Core_IEnumerableExtensions.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 14, "cb": 2, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.InternalException", "rp": "rbkApiModules.Commons.Core_InternalException.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 39, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.InternalValidationException", "rp": "rbkApiModules.Commons.Core_InternalValidationException.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.LinqExtensions", "rp": "rbkApiModules.Commons.Core_LinqExtensions.html", "cl": 1, "ucl": 1, "cal": 2, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.LocalFileStorage", "rp": "rbkApiModules.Commons.Core_LocalFileStorage.html", "cl": 46, "ucl": 27, "cal": 73, "tl": 188, "cb": 17, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.LocalFileStorage", "rp": "rbkApiModules.Commons.Core_LocalFileStorage.html", "cl": 44, "ucl": 29, "cal": 73, "tl": 188, "cb": 16, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.LocalizationCache", "rp": "rbkApiModules.Commons.Core_LocalizationCache.html", "cl": 30, "ucl": 19, "cal": 49, "tl": 235, "cb": 23, "tb": 32, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.LocalizationService", "rp": "rbkApiModules.Commons.Core_LocalizationService.html", "cl": 21, "ucl": 7, "cal": 28, "tl": 235, "cb": 8, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.PasswordHasher", "rp": "rbkApiModules.Commons.Core_PasswordHasher.html", "cl": 11, "ucl": 0, "cal": 11, "tl": 39, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.QueryResponse", "rp": "rbkApiModules.Commons.Core_QueryResponse.html", "cl": 14, "ucl": 4, "cal": 18, "tl": 162, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.QueryResponse<T>", "rp": "rbkApiModules.Commons.Core_QueryResponse_T_.html", "cl": 18, "ucl": 1, "cal": 19, "tl": 162, "cb": 1, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.RbkApiCoreOptions", "rp": "rbkApiModules.Commons.Core_RbkApiCoreOptions.html", "cl": 28, "ucl": 44, "cal": 72, "tl": 818, "cb": 0, "tb": 26, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.RbkApiCoreOptions", "rp": "rbkApiModules.Commons.Core_RbkApiCoreOptions.html", "cl": 33, "ucl": 39, "cal": 72, "tl": 832, "cb": 2, "tb": 26, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.ReflectionExtensions", "rp": "rbkApiModules.Commons.Core_ReflectionExtensions.html", "cl": 4, "ucl": 10, "cal": 14, "tl": 59, "cb": 3, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.ReflectionExtensions<T>", "rp": "rbkApiModules.Commons.Core_ReflectionExtensions_T_.html", "cl": 4, "ucl": 10, "cal": 14, "tl": 59, "cb": 3, "tb": 16, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.ResultsMapper", "rp": "rbkApiModules.Commons.Core_ResultsMapper.html", "cl": 14, "ucl": 8, "cal": 22, "tl": 48, "cb": 7, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -522,6 +530,7 @@ var assemblies = [
       { "name": "rbkApiModules.Commons.Core.UiDefinitions.UIDefinitionOptions", "rp": "rbkApiModules.Commons.Core_UIDefinitionOptions.html", "cl": 4, "ucl": 0, "cal": 4, "tl": 13, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.UiDefinitions.UiDefinitionsEndpoints", "rp": "rbkApiModules.Commons.Core_UiDefinitionsEndpoints.html", "cl": 34, "ucl": 2, "cal": 36, "tl": 73, "cb": 12, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.UnexpectedInternalException", "rp": "rbkApiModules.Commons.Core_UnexpectedInternalException.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 39, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Relational.ApplicationOptionConfig", "rp": "rbkApiModules.Commons.Core_ApplicationOptionConfig.html", "cl": 13, "ucl": 0, "cal": 13, "tl": 31, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Relational.ArrayOfStringsConverter", "rp": "rbkApiModules.Commons.Core_ArrayOfStringsConverter.html", "cl": 0, "ucl": 10, "cal": 10, "tl": 35, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Relational.DatabaseMigrationException", "rp": "rbkApiModules.Commons.Core_DatabaseMigrationException.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Relational.DatabaseSeedException", "rp": "rbkApiModules.Commons.Core_DatabaseSeedException.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -727,8 +736,8 @@ var assemblies = [
   {
     "name": "rbkApiModules.Testing.Core",
     "classes": [
-      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader37b8cd2dad8d49f2bd9d400f8a4d4753", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader37b8cd2dad8d49f2bd9d400f8a4d4753.html", "cl": 1, "ucl": 172, "cal": 173, "tl": 181, "cb": 344, "tb": 344, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_6c6452e697e14345b69c5f5e96dff70e", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_6c6452e697e14345b69c5f5e96dff70e.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader001cb3702caf4f1787a37f68dba8444b", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader001cb3702caf4f1787a37f68dba8444b.html", "cl": 1, "ucl": 171, "cal": 172, "tl": 182, "cb": 342, "tb": 342, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_b35c6e93eacb43dab4c51c6d836ad5fd", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_b35c6e93eacb43dab4c51c6d836ad5fd.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions", "rp": "rbkApiModules.Testing.Core_AssertExtensions.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions<T>", "rp": "rbkApiModules.Testing.Core_AssertExtensions_T_.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.EntityAssertionOptions<T>", "rp": "rbkApiModules.Testing.Core_EntityAssertionOptions_T_.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 289, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -742,12 +751,15 @@ var assemblies = [
       { "name": "rbkApiModules.Commons.Testing.JwtToken", "rp": "rbkApiModules.Testing.Core_JwtToken.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 3, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Testing.RbkTestingServer<TProgram, TClient, TImplementation>", "rp": "rbkApiModules.Testing.Core_RbkTestingServer_TProgram__TClient__TImplementation_.html", "cl": 126, "ucl": 99, "cal": 225, "tl": 789, "cb": 7, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Testing.RbkTestingServer<TProgram, TResponse>", "rp": "rbkApiModules.Testing.Core_RbkTestingServer_TProgram__TResponse_.html", "cl": 126, "ucl": 99, "cal": 225, "tl": 789, "cb": 7, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Testing.RbkTestingServer<TProgram>", "rp": "rbkApiModules.Testing.Core_RbkTestingServer_TProgram_.html", "cl": 126, "ucl": 99, "cal": 225, "tl": 789, "cb": 7, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Testing.RbkTestingServer<TProgram>", "rp": "rbkApiModules.Testing.Core_RbkTestingServer_TProgram_.html", "cl": 48, "ucl": 38, "cal": 86, "tl": 789, "cb": 21, "tb": 36, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Testing.RbkTestingServer<TProgram>", "rp": "rbkApiModules.Testing.Core_RbkTestingServer_TProgram_.html", "cl": 126, "ucl": 99, "cal": 225, "tl": 789, "cb": 7, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Testing.Core.EnumAssertionExtensions", "rp": "rbkApiModules.Testing.Core_EnumAssertionExtensions.html", "cl": 4, "ucl": 4, "cal": 8, "tl": 23, "cb": 2, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Testing.Core.HttpAssertionExtensions", "rp": "rbkApiModules.Testing.Core_HttpAssertionExtensions.html", "cl": 29, "ucl": 16, "cal": 45, "tl": 116, "cb": 10, "tb": 19, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Testing.Core.QueryResponseAssertions", "rp": "rbkApiModules.Testing.Core_QueryResponseAssertions.html", "cl": 14, "ucl": 0, "cal": 14, "tl": 33, "cb": 8, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Testing.Core.QueryResponseAssertions<T>", "rp": "rbkApiModules.Testing.Core_QueryResponseAssertions_T_.html", "cl": 14, "ucl": 0, "cal": 14, "tl": 33, "cb": 8, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "TUnit.Core.Helpers.ReflectionReplacements", "rp": "rbkApiModules.Testing.Core_ReflectionReplacements.html", "cl": 4, "ucl": 27, "cal": 31, "tl": 108, "cb": 0, "tb": 20, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "TUnit.Generated.AotReplacementRegistry", "rp": "rbkApiModules.Testing.Core_AotReplacementRegistry.html", "cl": 15, "ucl": 10, "cal": 25, "tl": 91, "cb": 4, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "TUnit.Generated.AotTypeResolver", "rp": "rbkApiModules.Testing.Core_AotTypeResolver.html", "cl": 0, "ucl": 14, "cal": 14, "tl": 47, "cb": 0, "tb": 12, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];
 
@@ -780,10 +792,52 @@ var riskHotspots = [
       { "value": 42, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader37b8cd2dad8d49f2bd9d400f8a4d4753", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader37b8cd2dad8d49f2bd9d400f8a4d4753.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 8,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ConvertFromString(string, System.Type)", "methodShortName": "ConvertFromString(...)", "fileIndex": 14, "line": 162,
     "metrics": [
-      { "value": 344, "exceeded": true },
-      { "value": 344, "exceeded": true },
+      { "value": 1190, "exceeded": true },
+      { "value": 34, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ConvertFromString(string, System.Type)", "methodShortName": "ConvertFromString(...)", "fileIndex": 17, "line": 188,
+    "metrics": [
+      { "value": 1190, "exceeded": true },
+      { "value": 34, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.ApplicationOptionsBuilder", "reportPath": "rbkApiModules.Commons.Core_ApplicationOptionsBuilder.html", "methodName": "ConvertFromString(string, System.Type)", "methodShortName": "ConvertFromString(...)", "fileIndex": 0, "line": 162,
+    "metrics": [
+      { "value": 1190, "exceeded": true },
+      { "value": 34, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.ApplicationOptionsManager", "reportPath": "rbkApiModules.Commons.Core_ApplicationOptionsManager.html", "methodName": "ConvertFromString(string, System.Type)", "methodShortName": "ConvertFromString(...)", "fileIndex": 0, "line": 188,
+    "metrics": [
+      { "value": 1190, "exceeded": true },
+      { "value": 34, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "TraverseAndApply(Microsoft.EntityFrameworkCore.DbSet<rbkApiModules.Commons.Core.Features.ApplicationOptions.ApplicationOption>, string, object, string, string, string)", "methodShortName": "TraverseAndApply(...)", "fileIndex": 17, "line": 99,
+    "metrics": [
+      { "value": 1056, "exceeded": true },
+      { "value": 32, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.ApplicationOptionsManager", "reportPath": "rbkApiModules.Commons.Core_ApplicationOptionsManager.html", "methodName": "TraverseAndApply(Microsoft.EntityFrameworkCore.DbSet<rbkApiModules.Commons.Core.Features.ApplicationOptions.ApplicationOption>, string, object, string, string, string)", "methodShortName": "TraverseAndApply(...)", "fileIndex": 0, "line": 99,
+    "metrics": [
+      { "value": 1056, "exceeded": true },
+      { "value": 32, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetOptions<TOptions>(string, string)", "methodShortName": "GetOptions<TOptions>(...)", "fileIndex": 17, "line": 31,
+    "metrics": [
+      { "value": 600, "exceeded": true },
+      { "value": 24, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.ApplicationOptionsManager", "reportPath": "rbkApiModules.Commons.Core_ApplicationOptionsManager.html", "methodName": "GetOptions<TOptions>(string, string)", "methodShortName": "GetOptions<TOptions>(...)", "fileIndex": 0, "line": 31,
+    "metrics": [
+      { "value": 600, "exceeded": true },
+      { "value": 24, "exceeded": true },
     ]},
   {
     "assembly": "rbkApiModules.Identity.Core", "class": "rbkApiModules.Identity.Core.AutomaticUserCreator", "reportPath": "rbkApiModules.Identity.Core_AutomaticUserCreator.html", "methodName": "CreateIfAllowedAsync()", "methodShortName": "CreateIfAllowedAsync()", "fileIndex": 0, "line": 33,
@@ -792,10 +846,28 @@ var riskHotspots = [
       { "value": 18, "exceeded": true },
     ]},
   {
+    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader001cb3702caf4f1787a37f68dba8444b", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader001cb3702caf4f1787a37f68dba8444b.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 10,
+    "metrics": [
+      { "value": 342, "exceeded": true },
+      { "value": 342, "exceeded": true },
+    ]},
+  {
     "assembly": "rbkApiModules.Identity.Core", "class": "rbkApiModules.Identity.Core.WindowsAuthenticationMiddleware", "reportPath": "rbkApiModules.Identity.Core_WindowsAuthenticationMiddleware.html", "methodName": "InvokeAsync()", "methodShortName": "InvokeAsync()", "fileIndex": 0, "line": 16,
     "metrics": [
       { "value": 272, "exceeded": true },
       { "value": 16, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "IsSimple(System.Type)", "methodShortName": "IsSimple(...)", "fileIndex": 17, "line": 176,
+    "metrics": [
+      { "value": 210, "exceeded": true },
+      { "value": 14, "exceeded": false },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.ApplicationOptionsManager", "reportPath": "rbkApiModules.Commons.Core_ApplicationOptionsManager.html", "methodName": "IsSimple(System.Type)", "methodShortName": "IsSimple(...)", "fileIndex": 0, "line": 176,
+    "metrics": [
+      { "value": 210, "exceeded": true },
+      { "value": 14, "exceeded": false },
     ]},
   {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "AddRbkApiCoreSetup(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<rbkApiModules.Commons.Core.RbkApiCoreOptions>)", "methodShortName": "AddRbkApiCoreSetup(...)", "fileIndex": 13, "line": 319,
@@ -810,7 +882,7 @@ var riskHotspots = [
       { "value": 66, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetControlType()", "methodShortName": "GetControlType()", "fileIndex": 20, "line": 138,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetControlType()", "methodShortName": "GetControlType()", "fileIndex": 24, "line": 138,
     "metrics": [
       { "value": 171, "exceeded": true },
       { "value": 58, "exceeded": true },
@@ -840,7 +912,7 @@ var riskHotspots = [
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "MapFeatureEndpoints(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)", "methodShortName": "MapFeatureEndpoints(...)", "fileIndex": 27, "line": 10,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "MapFeatureEndpoints(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)", "methodShortName": "MapFeatureEndpoints(...)", "fileIndex": 31, "line": 10,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
@@ -878,23 +950,23 @@ var riskHotspots = [
   {
     "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.DatabaseContextModelSnapshot", "reportPath": "PaintingProjectsManagment.Database_DatabaseContextModelSnapshot.html", "methodName": "BuildModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildModel(...)", "fileIndex": 0, "line": 18,
     "metrics": [
-      { "value": 82, "exceeded": true },
-      { "value": 82, "exceeded": true },
+      { "value": 90, "exceeded": true },
+      { "value": 90, "exceeded": true },
     ]},
   {
     "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.Initial", "reportPath": "PaintingProjectsManagment.Database_Initial.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
     "metrics": [
-      { "value": 82, "exceeded": true },
-      { "value": 82, "exceeded": true },
+      { "value": 90, "exceeded": true },
+      { "value": 90, "exceeded": true },
     ]},
   {
     "assembly": "PaintingProjectsManagment.Database", "class": "PaintingProjectsManagment.Database.Migrations.Initial", "reportPath": "PaintingProjectsManagment.Database_Initial.html", "methodName": "Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)", "methodShortName": "Up(...)", "fileIndex": 0, "line": 14,
     "metrics": [
-      { "value": 80, "exceeded": true },
-      { "value": 80, "exceeded": true },
+      { "value": 88, "exceeded": true },
+      { "value": 88, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "LoadLocalizedValues()", "methodShortName": "LoadLocalizedValues()", "fileIndex": 14, "line": 34,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "LoadLocalizedValues()", "methodShortName": "LoadLocalizedValues()", "fileIndex": 18, "line": 34,
     "metrics": [
       { "value": 73, "exceeded": true },
       { "value": 12, "exceeded": false },
@@ -912,13 +984,19 @@ var riskHotspots = [
       { "value": 11, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ResizeAndSaveImageAsync()", "methodShortName": "ResizeAndSaveImageAsync()", "fileIndex": 23, "line": 171,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ResizeAndSaveImageAsync()", "methodShortName": "ResizeAndSaveImageAsync()", "fileIndex": 27, "line": 171,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.LocalFileStorage", "reportPath": "rbkApiModules.Commons.Core_LocalFileStorage.html", "methodName": "ResizeAndSaveImageAsync()", "methodShortName": "ResizeAndSaveImageAsync()", "fileIndex": 0, "line": 171,
+    "metrics": [
+      { "value": 72, "exceeded": true },
+      { "value": 8, "exceeded": false },
+    ]},
+  {
+    "assembly": "rbkApiModules.Testing.Core", "class": "TUnit.Generated.AotTypeResolver", "reportPath": "rbkApiModules.Testing.Core_AotTypeResolver.html", "methodName": "MakeGenericType(System.Type, System.Type[])", "methodShortName": "MakeGenericType(...)", "fileIndex": 0, "line": 41,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
@@ -938,23 +1016,23 @@ var riskHotspots = [
   {
     "assembly": "Demo1", "class": "Demo1.Migrations.DatabaseContextModelSnapshot", "reportPath": "Demo1_DatabaseContextModelSnapshot.html", "methodName": "BuildModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildModel(...)", "fileIndex": 0, "line": 18,
     "metrics": [
-      { "value": 50, "exceeded": true },
-      { "value": 50, "exceeded": true },
+      { "value": 54, "exceeded": true },
+      { "value": 54, "exceeded": true },
     ]},
   {
     "assembly": "Demo1", "class": "Demo1.Migrations.Initial", "reportPath": "Demo1_Initial.html", "methodName": "BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)", "methodShortName": "BuildTargetModel(...)", "fileIndex": 1, "line": 21,
     "metrics": [
-      { "value": 50, "exceeded": true },
-      { "value": 50, "exceeded": true },
+      { "value": 54, "exceeded": true },
+      { "value": 54, "exceeded": true },
     ]},
   {
     "assembly": "Demo1", "class": "Demo1.Migrations.Initial", "reportPath": "Demo1_Initial.html", "methodName": "Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)", "methodShortName": "Up(...)", "fileIndex": 0, "line": 14,
     "metrics": [
-      { "value": 48, "exceeded": true },
-      { "value": 48, "exceeded": true },
+      { "value": 52, "exceeded": true },
+      { "value": 52, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": ".ctor(string, System.Type, System.ComponentModel.DataAnnotations.RequiredAttribute, System.ComponentModel.DataAnnotations.MinLengthAttribute, System.ComponentModel.DataAnnotations.MaxLengthAttribute, rbkApiModules.Commons.Core.UiDefinitions.DialogDataAttribute)", "methodShortName": ".ctor(...)", "fileIndex": 20, "line": 16,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": ".ctor(string, System.Type, System.ComponentModel.DataAnnotations.RequiredAttribute, System.ComponentModel.DataAnnotations.MinLengthAttribute, System.ComponentModel.DataAnnotations.MaxLengthAttribute, rbkApiModules.Commons.Core.UiDefinitions.DialogDataAttribute)", "methodShortName": ".ctor(...)", "fileIndex": 24, "line": 16,
     "metrics": [
       { "value": 45, "exceeded": true },
       { "value": 36, "exceeded": true },
@@ -985,6 +1063,18 @@ var riskHotspots = [
     ]},
   {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ToBetterString(System.Exception, string)", "methodShortName": "ToBetterString(...)", "fileIndex": 8, "line": 9,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "BuildKey(string, string)", "methodShortName": "BuildKey(...)", "fileIndex": 17, "line": 152,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.ApplicationOptionsManager", "reportPath": "rbkApiModules.Commons.Core_ApplicationOptionsManager.html", "methodName": "BuildKey(string, string)", "methodShortName": "BuildKey(...)", "fileIndex": 0, "line": 152,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
@@ -1026,7 +1116,7 @@ var riskHotspots = [
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "Invoke()", "methodShortName": "Invoke()", "fileIndex": 34, "line": 24,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "Invoke()", "methodShortName": "Invoke()", "fileIndex": 38, "line": 24,
     "metrics": [
       { "value": 36, "exceeded": true },
       { "value": 6, "exceeded": false },
@@ -1038,9 +1128,33 @@ var riskHotspots = [
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyForeignKeyConstraint()", "methodShortName": "<ApplyForeignKeyConstraint()", "fileIndex": 35, "line": 317,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "TraverseAndApply(Microsoft.EntityFrameworkCore.DbContext, string, object, string)", "methodShortName": "TraverseAndApply(...)", "fileIndex": 14, "line": 58,
+    "metrics": [
+      { "value": 29, "exceeded": false },
+      { "value": 28, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.ApplicationOptionsBuilder", "reportPath": "rbkApiModules.Commons.Core_ApplicationOptionsBuilder.html", "methodName": "TraverseAndApply(Microsoft.EntityFrameworkCore.DbContext, string, object, string)", "methodShortName": "TraverseAndApply(...)", "fileIndex": 0, "line": 58,
+    "metrics": [
+      { "value": 29, "exceeded": false },
+      { "value": 28, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ConvertToString(object, System.Type)", "methodShortName": "ConvertToString(...)", "fileIndex": 14, "line": 148,
+    "metrics": [
+      { "value": 24, "exceeded": false },
+      { "value": 24, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyForeignKeyConstraint()", "methodShortName": "<ApplyForeignKeyConstraint()", "fileIndex": 39, "line": 317,
     "metrics": [
       { "value": 25, "exceeded": false },
+      { "value": 24, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.ApplicationOptionsBuilder", "reportPath": "rbkApiModules.Commons.Core_ApplicationOptionsBuilder.html", "methodName": "ConvertToString(object, System.Type)", "methodShortName": "ConvertToString(...)", "fileIndex": 0, "line": 148,
+    "metrics": [
+      { "value": 24, "exceeded": false },
       { "value": 24, "exceeded": true },
     ]},
   {
@@ -1056,7 +1170,19 @@ var riskHotspots = [
       { "value": 20, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyPrimaryKeyConstraint()", "methodShortName": "<ApplyPrimaryKeyConstraint()", "fileIndex": 35, "line": 219,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "UseRbkApiCoreSetup(Microsoft.AspNetCore.Builder.WebApplication)", "methodShortName": "UseRbkApiCoreSetup(...)", "fileIndex": 13, "line": 657,
+    "metrics": [
+      { "value": 20, "exceeded": false },
+      { "value": 20, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyPrimaryKeyConstraint()", "methodShortName": "<ApplyPrimaryKeyConstraint()", "fileIndex": 39, "line": 219,
+    "metrics": [
+      { "value": 20, "exceeded": false },
+      { "value": 20, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.CommonsCoreBuilder", "reportPath": "rbkApiModules.Commons.Core_CommonsCoreBuilder.html", "methodName": "UseRbkApiCoreSetup(Microsoft.AspNetCore.Builder.WebApplication)", "methodShortName": "UseRbkApiCoreSetup(...)", "fileIndex": 0, "line": 657,
     "metrics": [
       { "value": 20, "exceeded": false },
       { "value": 20, "exceeded": true },
@@ -1080,7 +1206,7 @@ var riskHotspots = [
       { "value": 20, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "StoreFileFromBase64Async()", "methodShortName": "StoreFileFromBase64Async()", "fileIndex": 23, "line": 43,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "StoreFileFromBase64Async()", "methodShortName": "StoreFileFromBase64Async()", "fileIndex": 27, "line": 43,
     "metrics": [
       { "value": 20, "exceeded": false },
       { "value": 18, "exceeded": true },
@@ -1122,33 +1248,21 @@ var riskHotspots = [
       { "value": 16, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "UseRbkApiCoreSetup(Microsoft.AspNetCore.Builder.WebApplication)", "methodShortName": "UseRbkApiCoreSetup(...)", "fileIndex": 13, "line": 657,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "Build(System.Type, rbkApiModules.Commons.Core.UiDefinitions.OperationType)", "methodShortName": "Build(...)", "fileIndex": 26, "line": 11,
     "metrics": [
       { "value": 16, "exceeded": false },
       { "value": 16, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "Build(System.Type, rbkApiModules.Commons.Core.UiDefinitions.OperationType)", "methodShortName": "Build(...)", "fileIndex": 22, "line": 11,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<SendAsync()", "methodShortName": "<SendAsync()", "fileIndex": 35, "line": 73,
     "metrics": [
       { "value": 16, "exceeded": false },
       { "value": 16, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<SendAsync()", "methodShortName": "<SendAsync()", "fileIndex": 31, "line": 73,
-    "metrics": [
-      { "value": 16, "exceeded": false },
-      { "value": 16, "exceeded": true },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyForeignKeyConstraint()", "methodShortName": "<ApplyForeignKeyConstraint()", "fileIndex": 35, "line": 399,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyForeignKeyConstraint()", "methodShortName": "<ApplyForeignKeyConstraint()", "fileIndex": 39, "line": 399,
     "metrics": [
       { "value": 17, "exceeded": false },
-      { "value": 16, "exceeded": true },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.CommonsCoreBuilder", "reportPath": "rbkApiModules.Commons.Core_CommonsCoreBuilder.html", "methodName": "UseRbkApiCoreSetup(Microsoft.AspNetCore.Builder.WebApplication)", "methodShortName": "UseRbkApiCoreSetup(...)", "fileIndex": 0, "line": 657,
-    "metrics": [
-      { "value": 16, "exceeded": false },
       { "value": 16, "exceeded": true },
     ]},
   {
