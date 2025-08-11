@@ -2,7 +2,7 @@
 
 namespace rbkApiModules.Commons.Core;
 
-public abstract class TenantEntity : BaseEntity
+public abstract class TenantEntity : AggregateRoot
 {
     private string? _tenantId;
 

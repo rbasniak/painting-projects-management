@@ -10,6 +10,7 @@ public static class Builder
         CreateProject.MapEndpoint(app);
         UpdateProject.MapEndpoint(app);
         DeleteProject.MapEndpoint(app);
+        AddProjectMaterial.MapEndpoint(app);
 
         return app;
     }
