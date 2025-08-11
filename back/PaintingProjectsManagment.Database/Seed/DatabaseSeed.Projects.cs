@@ -22,7 +22,7 @@ public partial class DatabaseSeed
         var chromePaint = context.Set<Material>().First(x => x.Name == "Green Stuff World Chrome Paints");
         var paint = context.Set<Material>().First(x => x.Name == "Army Painter Warpaint Fanatics");
 
-        var archangelProject = new Project("Archangel", new DateTime(2025, 07, 15), model.Id);
+        var archangelProject = new Project("rodrigo.basniak", "Archangel", new DateTime(2025, 07, 15), model.Id);
         archangelProject.ConsumeMaterial(magnet10x5.Id, 2, MaterialUnit.Unit);
         archangelProject.ConsumeMaterial(magnet5x3.Id, 3, MaterialUnit.Unit);
         archangelProject.ConsumeMaterial(sunluStandardResin.Id, 160 + 120, MaterialUnit.Grams);

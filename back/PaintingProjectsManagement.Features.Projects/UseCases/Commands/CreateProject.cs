@@ -33,7 +33,7 @@ public class CreateProject : IEndpoint
                 .NotEmpty()
                 .MaximumLength(100)
                 .MustAsync(async (name, cancellationToken) =>
-                    !await context.Set<Project>().AnyAsync(p => p.Name == name, cancellationToken))
+                    !await Context.Set<Project>().AnyAsync(p => p.Name == name, cancellationToken))
                 .WithMessage("A project with this name already exists.");
 
             // TODO: move to its own use case

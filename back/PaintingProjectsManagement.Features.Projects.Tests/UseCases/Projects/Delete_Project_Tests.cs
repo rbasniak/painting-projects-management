@@ -11,8 +11,8 @@ public class Delete_Project_Tests
     public async Task Seed()
     {
         // Create test projects for different users
-        var existingProject = new Project("rodrigo.basniak", "Existing Project", "https://example.com/image.jpg", DateTime.UtcNow);
-        var anotherUserProject = new Project("ricardo.smarzaro", "Another User Project", "https://example.com/image2.jpg", DateTime.UtcNow);
+        var existingProject = new Project("rodrigo.basniak", "Existing Project", DateTime.UtcNow, null);
+        var anotherUserProject = new Project("ricardo.smarzaro", "Another User Project", DateTime.UtcNow, null);
 
         using (var context = TestingServer.CreateContext())
         {

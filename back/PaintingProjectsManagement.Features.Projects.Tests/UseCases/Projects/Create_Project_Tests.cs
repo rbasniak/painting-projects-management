@@ -9,7 +9,7 @@ public class Create_Project_Tests
     public async Task Seed()
     {
         // Create a test project for duplicate name validation tests
-        var existingProject = new Project("rodrigo.basniak", "Existing Project", "https://example.com/image.jpg", DateTime.UtcNow);
+        var existingProject = new Project("rodrigo.basniak", "Existing Project", DateTime.UtcNow, null);
 
         using (var context = TestingServer.CreateContext())
         {
@@ -36,7 +36,7 @@ public class Create_Project_Tests
         var request = new CreateProject.Request
         {
             Name = "Test Project",
-            Base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=",
+            // Base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=",
         };
 
         // Act
@@ -60,7 +60,6 @@ public class Create_Project_Tests
         var request = new CreateProject.Request
         {
             Name = name!,
-            Base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=",
         };
 
         // Act
@@ -81,7 +80,6 @@ public class Create_Project_Tests
         var request = new CreateProject.Request
         {
             Name = new string('A', 101), // Exceeds max length of 100
-            Base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=",
         };
 
         // Act
@@ -102,7 +100,6 @@ public class Create_Project_Tests
         var request = new CreateProject.Request
         {
             Name = "Existing Project", // This name was created by rodrigo.basniak in Seed test
-            Base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=",
         };
 
         // Act
@@ -116,90 +113,6 @@ public class Create_Project_Tests
         projects.Count.ShouldBe(1);
     }
 
-    [Test, NotInParallel(Order = 7)]
-    public async Task User_Cannot_Create_Project_When_Base64Image_Is_Empty()
-    {
-        // Prepare
-        var request = new CreateProject.Request
-        {
-            Name = "Test Project",
-            Base64Image = "",
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<ProjectHeader>("api/projects", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Base64 image content is required.");
-
-        // Assert the database
-        var projects = TestingServer.CreateContext().Set<Project>().Where(x => x.Name == "Test Project").ToList();
-        projects.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 8)]
-    public async Task User_Cannot_Create_Project_When_Base64Image_Is_Invalid()
-    {
-        // Prepare
-        var request = new CreateProject.Request
-        {
-            Name = "Test Project",
-            Base64Image = "invalid-base64-image",
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<ProjectHeader>("api/projects", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Invalid base64 image format. Must be a valid base64 encoded image with proper header.");
-
-        // Assert the database
-        var projects = TestingServer.CreateContext().Set<Project>().Where(x => x.Name == "Test Project").ToList();
-        projects.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 9)]
-    public async Task User_Cannot_Create_Project_When_Base64Image_Has_Invalid_Header()
-    {
-        // Prepare
-        var request = new CreateProject.Request
-        {
-            Name = "Test Project",
-            Base64Image = "data:text/plain;base64,SGVsbG8gV29ybGQ=", // Wrong MIME type
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<ProjectHeader>("api/projects", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Invalid base64 image format. Must be a valid base64 encoded image with proper header.");
-
-        // Assert the database
-        var projects = TestingServer.CreateContext().Set<Project>().Where(x => x.Name == "Test Project").ToList();
-        projects.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 10)]
-    public async Task User_Cannot_Create_Project_When_Base64Image_Has_Invalid_Content()
-    {
-        // Prepare
-        var request = new CreateProject.Request
-        {
-            Name = "Test Project",
-            Base64Image = "data:image/jpeg;base64,invalid-base64-content",
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<ProjectHeader>("api/projects", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Invalid base64 image format. Must be a valid base64 encoded image with proper header.");
-
-        // Assert the database
-        var projects = TestingServer.CreateContext().Set<Project>().Where(x => x.Name == "Test Project").ToList();
-        projects.ShouldBeEmpty();
-    }
-
     [Test, NotInParallel(Order = 11)]
     public async Task User_Can_Create_Project_With_Same_Name_As_Another_User()
     {
@@ -207,7 +120,6 @@ public class Create_Project_Tests
         var request = new CreateProject.Request
         {
             Name = "Existing Project", // This name was created by rodrigo.basniak in Seed test
-            Base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=",
         };
 
         // Act
@@ -238,7 +150,6 @@ public class Create_Project_Tests
         var request = new CreateProject.Request
         {
             Name = "Test Project",
-            Base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=",
         };
 
         // Act
@@ -258,7 +169,6 @@ public class Create_Project_Tests
         entity.Id.ShouldBe(result.Id);
         entity.Name.ShouldBe("Test Project");
         entity.PictureUrl.ShouldNotBeEmpty();
-        entity.StartDate.ShouldNotBeNull();
     }
 
     [Test, NotInParallel(Order = 99)]

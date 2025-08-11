@@ -8,6 +8,8 @@ public class Project : TenantEntity
     private HashSet<ProjectReference> _references = new();
     private HashSet<ProjectPicture> _pictures = new();
     private HashSet<ColorGroup> _groups = new();
+    private HashSet<ColorSection> _sections = new();
+    private HashSet<ProjectStepData> _steps = new();
 
     // EF Core constructor, don't remote it
     private Project()
@@ -15,8 +17,9 @@ public class Project : TenantEntity
         
     }
 
-    public Project(string name, DateTime startDate, Guid? modelId)
+    public Project(string tenant, string name, DateTime startDate, Guid? modelId)
     {
+        TenantId = tenant;
         Name = name;
         StartDate = startDate;
         ModelId = modelId ?? null;
@@ -26,6 +29,7 @@ public class Project : TenantEntity
         _pictures = new HashSet<ProjectPicture>();
         _sections = new HashSet<ColorSection>();
         _steps = new HashSet<ProjectStepData>();
+        _groups = new HashSet<ColorGroup>();
     }
 
     public string Name { get; private set; } = string.Empty;
@@ -45,7 +49,7 @@ public class Project : TenantEntity
     {
         Name = name;
         PictureUrl = pictureUrl;
-        StartDate = startDate;
+        StartDate = startDate != null ? startDate.Value : StartDate;    
         EndDate = endDate;
     }
 

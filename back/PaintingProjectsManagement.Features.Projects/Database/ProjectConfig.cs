@@ -52,7 +52,7 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
             
         builder.HasMany(x => x.Sections)
             .WithOne()
-            .HasForeignKey(x => x.ProjectId)
+            .HasForeignKey(x => x.ColorGroupId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
