@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 
 namespace rbkApiModules.Commons.Core;
 
@@ -65,6 +66,16 @@ public sealed class OutboxDispatcher : BackgroundService
 
                 foreach (var msg in batch)
                 {
+                    var sw = Stopwatch.StartNew();
+                    using var scopeLog = _logger.BeginScope(new Dictionary<string, object>
+                    {
+                        ["EventId"] = msg.Id,
+                        ["CorrelationId"] = msg.CorrelationId ?? string.Empty,
+                        ["Name"] = msg.Name,
+                        ["Version"] = msg.Version,
+                        ["TenantId"] = msg.TenantId
+                    });
+
                     try
                     {
                         if (!_registry.TryResolve(msg.Name, msg.Version, out var clrType))
@@ -86,6 +97,8 @@ public sealed class OutboxDispatcher : BackgroundService
                             var already = await inboxSet.FindAsync(new object[] { msg.Id, handlerName }, stoppingToken);
                             if (already is not null) continue;
 
+                            _logger.LogInformation("Dispatching event {Name} v{Version} to handler {Handler}", msg.Name, msg.Version, handlerName);
+
                             await InvokeHandler(handler, envelope, stoppingToken);
 
                             inboxSet.Add(new InboxMessage
@@ -100,11 +113,25 @@ public sealed class OutboxDispatcher : BackgroundService
 
                         msg.ProcessedUtc = DateTime.UtcNow;
                         await db.SaveChangesAsync(stoppingToken);
+
+                        sw.Stop();
+                        EventsMeters.OutboxMessagesProcessed.Add(1);
+                        EventsMeters.OutboxDispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
                     }
                     catch (Exception ex)
                     {
+                        sw.Stop();
+                        EventsMeters.OutboxMessagesFailed.Add(1);
+                        EventsMeters.OutboxDispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
+
                         _logger.LogError(ex, "Outbox dispatch failed for {Id}", msg.Id);
                         msg.Attempts++;
+
+                        // jittered exponential backoff based on attempts
+                        var backoffMs = ComputeBackoffMs(msg.Attempts, _options.PollIntervalMs);
+                        _logger.LogWarning("Scheduling retry for {Id} in ~{BackoffMs}ms (attempt {Attempts})", msg.Id, backoffMs, msg.Attempts);
+                        msg.CreatedUtc = DateTime.UtcNow.AddMilliseconds(backoffMs); // move to later by adjusting order key
+
                         await db.SaveChangesAsync(stoppingToken);
                     }
                 }
@@ -129,6 +156,15 @@ public sealed class OutboxDispatcher : BackgroundService
         }
 
         _logger.LogInformation("OutboxDispatcher stopped");
+    }
+
+    private static int ComputeBackoffMs(int attempts, int basePollMs)
+    {
+        var min = Math.Min(attempts, 10); // cap exponent
+        var exp = Math.Pow(2, min);
+        var jitter = Random.Shared.NextDouble() * 0.25 + 0.75; // 0.75x - 1.0x
+        var ms = (int)(basePollMs * exp * jitter);
+        return Math.Clamp(ms, basePollMs, 60_000);
     }
 
     private static IEnumerable<object> ResolveHandlers(IServiceProvider sp, Type clrType)
