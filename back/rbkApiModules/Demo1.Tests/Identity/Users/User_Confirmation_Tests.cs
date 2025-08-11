@@ -3,6 +3,7 @@ using rbkApiModules.Identity.Core;
 
 namespace rbkApiModules.Identity.Tests.Users;
 
+[NotInParallel(nameof(User_Confirmation_Tests))]
 public class User_Confirmation_Tests
 {
     [ClassDataSource<Demo1TestingServer>(Shared = SharedType.PerClass)]

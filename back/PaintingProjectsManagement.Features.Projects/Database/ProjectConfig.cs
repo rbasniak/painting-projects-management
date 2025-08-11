@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using rbkApiModules.Commons.Relational;
 
 namespace PaintingProjectsManagement.Features.Projects;
 
@@ -25,14 +24,20 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
             
         builder.Property(x => x.EndDate);
 
-        builder.OwnsOne(x => x.Steps, steps =>
-        {
-            steps.Property(x => x.Planning).HasConversion(new JsonValueConverter<ProjectStepData[]>());
-            steps.Property(x => x.Painting).HasConversion(new JsonValueConverter<ProjectStepData[]>());
-            steps.Property(x => x.Preparation).HasConversion(new JsonValueConverter<ProjectStepData[]>());
-            steps.Property(x => x.Supporting).HasConversion(new JsonValueConverter<ProjectStepData[]>());
-        });
+        // One-to-one relationship with ProjectSteps
+        builder.HasMany(x => x.Steps)
+            .WithOne()
+            .HasForeignKey(x => x.ProjectId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
 
+        // One-to-many relationships with collections
+        builder.HasMany(x => x.Materials)
+            .WithOne()
+            .HasForeignKey(x => x.ProjectId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+            
         builder.HasMany(x => x.References)
             .WithOne()
             .HasForeignKey(x => x.ProjectId)
@@ -45,17 +50,15 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
             
-        builder.HasMany(x => x.Groups)
+        builder.HasMany(x => x.Sections)
             .WithOne()
             .HasForeignKey(x => x.ProjectId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         // Indexes
-        builder.HasIndex(x => x.StartDate);
-        builder.HasIndex(x => x.EndDate);
-
-        builder.HasIndex(x => new { x.TenantId, x.Name })
-            .IsUnique();
+        builder.HasIndex(p => p.Name);
+        builder.HasIndex(p => p.StartDate);
+        builder.HasIndex(p => p.EndDate);
     }
 }

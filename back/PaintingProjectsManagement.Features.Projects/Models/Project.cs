@@ -1,4 +1,6 @@
-﻿namespace PaintingProjectsManagement.Features.Projects;
+﻿using PaintingProjectsManagement.Features.Materials;
+
+namespace PaintingProjectsManagement.Features.Projects;
 
 public class Project : TenantEntity
 {
@@ -13,25 +15,31 @@ public class Project : TenantEntity
         
     }
 
-    public Project(string tenant, string name, string pictureUrl, DateTime startDate)
+    public Project(string name, DateTime startDate, Guid? modelId)
     {
-        TenantId = tenant;
         Name = name;
-        PictureUrl = pictureUrl;
         StartDate = startDate;
+        ModelId = modelId ?? null;
+
+        _materials = new HashSet<MaterialForProject>();
+        _references = new HashSet<ProjectReference>();
+        _pictures = new HashSet<ProjectPicture>();
+        _sections = new HashSet<ColorSection>();
+        _steps = new HashSet<ProjectStepData>();
     }
 
     public string Name { get; private set; } = string.Empty;
-    public string PictureUrl { get; private set; } = string.Empty;
-    public DateTime? StartDate { get; private set; }
+    public string? PictureUrl { get; private set; } = string.Empty;
+    public DateTime StartDate { get; private set; }
     public DateTime? EndDate { get; private set; }
-
-    public ProjectSteps Steps { get; private set; } = new();
+    public Guid? ModelId { get; private set; }
 
     public IEnumerable<MaterialForProject> Materials => _materials.AsReadOnly();
     public IEnumerable<ProjectReference> References => _references.AsReadOnly();
     public IEnumerable<ProjectPicture> Pictures => _pictures.AsReadOnly();
     public IEnumerable<ColorGroup> Groups => _groups.AsReadOnly();
+    public IEnumerable<ColorSection> Sections => _sections.AsReadOnly();
+    public IEnumerable<ProjectStepData> Steps => _steps.AsReadOnly();
 
     public void UpdateDetails(string name, string pictureUrl, DateTime? startDate, DateTime? endDate)
     {
@@ -39,5 +47,25 @@ public class Project : TenantEntity
         PictureUrl = pictureUrl;
         StartDate = startDate;
         EndDate = endDate;
+    }
+
+    public void ConsumeMaterial(Guid materialId, double quantity, MaterialUnit unit)
+    {
+        _materials.Add(new MaterialForProject(Id, materialId, quantity, unit));
+    }
+
+    public void AddExecutionWindow(ProjectStepDefinition step, DateTime start, DateTime end)
+    {
+        _steps.Add(new ProjectStepData(Id, step, start, end));
+    }
+
+    public void AddExecutionWindow(ProjectStepDefinition step, DateTime start, double duration)
+    {
+        _steps.Add(new ProjectStepData(Id, step, start, duration));
+    }
+
+    public void SetTotalPrintingHeight(int v)
+    {
+        throw new NotImplementedException();
     }
 }

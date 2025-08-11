@@ -7,8 +7,7 @@ public class ProjectDetails
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
 
-    public ProjectStepsDetails Steps { get; set; } = new();
-
+    public ProjectStepDataDetails[] Steps { get; set; } = Array.Empty<ProjectStepDataDetails>();
     public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();
     public UrlReference[] References { get; set; } = Array.Empty<UrlReference>();
     public UrlReference[] Pictures { get; set; } = Array.Empty<UrlReference>();
@@ -25,7 +24,7 @@ public class ProjectDetails
             PictureUrl = project.PictureUrl,
             StartDate = project.StartDate,
             EndDate = project.EndDate,
-            Steps = ProjectStepsDetails.FromModel(project.Steps),
+            Steps = project.Steps.Select(x => ProjectStepDataDetails.FromModel(x)).ToArray(),
             Materials = materialDetails ?? Array.Empty<MaterialDetails>(),
             References = project.References.Select(r => new UrlReference
             {
