@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Demo1.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250725092334_Initial")]
+    [Migration("20250811133617_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
 
             modelBuilder.Entity("Demo1.Models.Author", b =>
                 {
@@ -136,6 +136,21 @@ namespace Demo1.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("Plants");
+                });
+
+            modelBuilder.Entity("rbkApiModules.Commons.Core.Features.ApplicationOptions.ApplicationOption", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasMaxLength(512)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("ApplicationOptions", (string)null);
                 });
 
             modelBuilder.Entity("rbkApiModules.Commons.Relational.SeedHistory", b =>

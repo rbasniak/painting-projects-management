@@ -24,6 +24,18 @@ namespace Demo1.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ApplicationOptions",
+                columns: table => new
+                {
+                    Key = table.Column<string>(type: "TEXT", maxLength: 512, nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicationOptions", x => x.Key);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Authors",
                 columns: table => new
                 {
@@ -322,6 +334,9 @@ namespace Demo1.Migrations
         {
             migrationBuilder.DropTable(
                 name: "__SeedHistory");
+
+            migrationBuilder.DropTable(
+                name: "ApplicationOptions");
 
             migrationBuilder.DropTable(
                 name: "Plants");
