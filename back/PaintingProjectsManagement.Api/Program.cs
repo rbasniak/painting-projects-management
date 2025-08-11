@@ -38,9 +38,12 @@ public class Program
             connectionString = "Data Source=app.db";
         }
 
+        builder.Services.AddScoped<OutboxSaveChangesInterceptor>();
+
         builder.Services.AddDbContext<DatabaseContext>((scope, options) =>
                 options.UseSqlite(connectionString)
-                       .EnableSensitiveDataLogging());
+                       .EnableSensitiveDataLogging()
+                       .AddInterceptors(scope.GetRequiredService<OutboxSaveChangesInterceptor>()));
 
         builder.Services.AddRbkApiCoreSetup(options => options
              .EnableBasicAuthenticationHandler()
