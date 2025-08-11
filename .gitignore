@@ -423,3 +423,6 @@ FodyWeavers.xsd
 /back/TestsResults/CoverageReport
 /back/TestsResults
 /to_decompile.7z
+/back/rbkApiModules/Demo1/demo1.Application.db
+/back/rbkApiModules/Demo1/demo1.Application.db-shm
+/back/rbkApiModules/Demo1/demo1.Application.db-wal
