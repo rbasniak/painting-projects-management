@@ -45,6 +45,19 @@ public class Program
                        .EnableSensitiveDataLogging()
                        .AddInterceptors(scope.GetRequiredService<OutboxSaveChangesInterceptor>()));
 
+        // Events infrastructure registrations
+        builder.Services.AddSingleton<IEventTypeRegistry>(sp => new ReflectionEventTypeRegistry(AppDomain.CurrentDomain.GetAssemblies()));
+        builder.Services.AddSingleton<IEventRouter, DiEventRouter>();
+        builder.Services.AddScoped<IEventPublisher, EventPublisher>();
+        builder.Services.Configure<OutboxOptions>(opts =>
+        {
+            opts.BatchSize = 50;
+            opts.PollIntervalMs = 1000;
+            opts.MaxAttempts = 10;
+            opts.ResolveDbContext = sp => sp.GetRequiredService<DatabaseContext>();
+        });
+        builder.Services.AddHostedService<OutboxDispatcher>();
+
         builder.Services.AddRbkApiCoreSetup(options => options
              .EnableBasicAuthenticationHandler()
              .UseDefaultCompression()
@@ -122,6 +135,24 @@ public class Program
         app.SeedDatabase<DatabaseSeed>();
 
         app.MapDefaultEndpoints();
+
+        // Optional health endpoint for outbox lag (age of oldest unprocessed message)
+        app.MapGet("/health/outbox", async (DatabaseContext db, CancellationToken ct) =>
+        {
+            var oldest = await db.Set<OutboxMessage>()
+                .Where(x => x.ProcessedUtc == null)
+                .OrderBy(x => x.CreatedUtc)
+                .Select(x => x.CreatedUtc)
+                .FirstOrDefaultAsync(ct);
+
+            if (oldest == default)
+            {
+                return Results.Ok(new { oldestUnprocessedSeconds = 0 });
+            }
+
+            var ageSeconds = (int)Math.Max(0, (DateTime.UtcNow - oldest).TotalSeconds);
+            return Results.Ok(new { oldestUnprocessedSeconds = ageSeconds });
+        });
 
         // app.MapGet("/health", () => Results.Ok("Healthy"));
 
