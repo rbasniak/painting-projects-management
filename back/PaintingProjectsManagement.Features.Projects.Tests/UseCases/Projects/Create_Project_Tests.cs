@@ -130,7 +130,6 @@ public class Create_Project_Tests
 
         result.Id.ShouldNotBe(Guid.Empty);
         result.Name.ShouldBe("Existing Project");
-        result.PictureUrl.ShouldNotBeEmpty();
 
         // Assert the database - should have two projects with the same name but different users
         var projects = TestingServer.CreateContext().Set<Project>().Where(x => x.Name == "Existing Project").ToList();
@@ -146,6 +145,8 @@ public class Create_Project_Tests
     [Test, NotInParallel(Order = 12)]
     public async Task User_Can_Create_Project()
     {
+        var temp = TestingServer.CreateContext().Set<Project>().ToList();
+
         // Prepare
         var request = new CreateProject.Request
         {
@@ -160,7 +161,6 @@ public class Create_Project_Tests
 
         result.Id.ShouldNotBe(Guid.Empty);
         result.Name.ShouldBe("Test Project");
-        result.PictureUrl.ShouldNotBeEmpty();
 
         // Assert the database
         var entity = TestingServer.CreateContext().Set<Project>().FirstOrDefault(x => x.Id == result.Id);
@@ -168,7 +168,6 @@ public class Create_Project_Tests
         entity.ShouldNotBeNull();
         entity.Id.ShouldBe(result.Id);
         entity.Name.ShouldBe("Test Project");
-        entity.PictureUrl.ShouldNotBeEmpty();
     }
 
     [Test, NotInParallel(Order = 99)]

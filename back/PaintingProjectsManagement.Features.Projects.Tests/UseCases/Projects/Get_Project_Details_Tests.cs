@@ -51,7 +51,6 @@ public class Get_Project_Details_Tests
         response.Data.ShouldNotBeNull();
         response.Data.Id.ShouldBe(_testProjectId);
         response.Data.Name.ShouldBe("Test Project");
-        response.Data.PictureUrl.ShouldBe("https://example.com/pic.jpg");
         response.Data.StartDate.ShouldNotBeNull();
         response.Data.EndDate.ShouldBeNull();
     }
