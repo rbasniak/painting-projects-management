@@ -5,6 +5,7 @@ using rbkApiModules.Commons.Core.Features.ApplicationOptions;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using Microsoft.AspNetCore.Http;
 
 namespace rbkApiModules.Commons.Core;
 
@@ -12,19 +13,50 @@ internal sealed class ApplicationOptionsManager : IApplicationOptionsManager
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IMemoryCache _cache;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
     private const string CacheKeyPrefix = "AppOptions:";
 
-    public ApplicationOptionsManager(IServiceScopeFactory scopeFactory, IMemoryCache cache)
+    public ApplicationOptionsManager(IServiceScopeFactory scopeFactory, IMemoryCache cache, IHttpContextAccessor httpContextAccessor)
     {
         _scopeFactory = scopeFactory;
         _cache = cache;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public TOptions GetOptions<TOptions>(string? tenantId = null, string? username = null)
         where TOptions : class, IApplicationOptions, new()
     {
+        // If inside HTTP request, derive from HttpContext when not explicitly provided
+        string? ctxTenant = null;
+        string? ctxUsername = null;
+
+        if (_httpContextAccessor?.HttpContext != null)
+        {
+            try { ctxTenant = _httpContextAccessor.GetTenant(); } catch { ctxTenant = null; }
+            try { ctxUsername = _httpContextAccessor.GetUsername(); } catch { ctxUsername = null; }
+        }
+
         var normalizedUsername = string.IsNullOrWhiteSpace(username) ? null : username.ToLower();
+
+        if (!string.IsNullOrWhiteSpace(ctxTenant) || !string.IsNullOrWhiteSpace(ctxUsername))
+        {
+            // Validate provided vs context to prevent cross-tenant/user access
+            if (!string.IsNullOrWhiteSpace(tenantId) && !string.Equals(ctxTenant, tenantId, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("Tenant from HttpContext does not match the provided tenant parameter.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(normalizedUsername) && !string.Equals(ctxUsername, normalizedUsername, StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException("Username from HttpContext does not match the provided username parameter.");
+            }
+
+            // Prefer context-derived when available
+            tenantId = ctxTenant ?? tenantId;
+            normalizedUsername = ctxUsername ?? normalizedUsername;
+        }
+
         var cacheKey = BuildCacheKey(typeof(TOptions), tenantId, normalizedUsername);
 
         if (_cache.TryGetValue(cacheKey, out TOptions cached))
