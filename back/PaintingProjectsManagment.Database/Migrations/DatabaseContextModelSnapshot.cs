@@ -15,7 +15,7 @@ namespace PaintingProjectsManagment.Database.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Materials.Material", b =>
                 {
@@ -296,6 +296,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<double>("Quantity")
                         .HasColumnType("REAL");
 
+                    b.Property<int>("Unit")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ProjectId", "MaterialId");
 
                     b.HasIndex("MaterialId");
@@ -314,13 +317,15 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("ModelId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PictureUrl")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
@@ -335,10 +340,11 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasIndex("EndDate");
 
+                    b.HasIndex("Name");
+
                     b.HasIndex("StartDate");
 
-                    b.HasIndex("TenantId", "Name")
-                        .IsUnique();
+                    b.HasIndex("TenantId");
 
                     b.ToTable("Projects", (string)null);
                 });
@@ -383,6 +389,64 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectReferences", (string)null);
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ProjectStepData", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("Duration")
+                        .HasColumnType("REAL");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Step")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectStepData");
+                });
+
+            modelBuilder.Entity("rbkApiModules.Commons.Core.Features.ApplicationOptions.ApplicationOption", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TenantId")
+                        .HasMaxLength(32)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("Key", "TenantId", "Username")
+                        .IsUnique();
+
+                    b.ToTable("ApplicationOptions", (string)null);
                 });
 
             modelBuilder.Entity("rbkApiModules.Commons.Relational.SeedHistory", b =>
@@ -656,6 +720,12 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
+                        .WithMany("Sections")
+                        .HasForeignKey("ColorGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ColorGroup");
                 });
 
@@ -670,7 +740,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
                         .WithMany("Materials")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -680,38 +750,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .WithMany()
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.OwnsOne("PaintingProjectsManagement.Features.Projects.ProjectSteps", "Steps", b1 =>
-                        {
-                            b1.Property<Guid>("ProjectId")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("Painting")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("Planning")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("Preparation")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("Supporting")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
-
-                            b1.HasKey("ProjectId");
-
-                            b1.ToTable("Projects");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProjectId");
-                        });
-
-                    b.Navigation("Steps")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ProjectPicture", b =>
@@ -730,6 +768,23 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ProjectStepData", b =>
+                {
+                    b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
+                        .WithMany("Steps")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("rbkApiModules.Commons.Core.Features.ApplicationOptions.ApplicationOption", b =>
+                {
+                    b.HasOne("rbkApiModules.Identity.Core.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("rbkApiModules.Identity.Core.Role", b =>
@@ -842,6 +897,10 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Navigation("Pictures");
 
                     b.Navigation("References");
+
+                    b.Navigation("Sections");
+
+                    b.Navigation("Steps");
                 });
 
             modelBuilder.Entity("rbkApiModules.Identity.Core.Claim", b =>

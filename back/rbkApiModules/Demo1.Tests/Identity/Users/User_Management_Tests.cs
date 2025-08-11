@@ -5,6 +5,7 @@ using rbkApiModules.Identity.Core.DataTransfer.Users;
 
 namespace rbkApiModules.Identity.Tests.Users;
 
+[NotInParallel(nameof(User_Management_Tests))]
 public class User_Management_Tests
 {
     [ClassDataSource<Demo1TestingServer>(Shared = SharedType.PerClass)]

@@ -673,6 +673,20 @@ public static class CommonsCoreBuilder
 
             #endregion
 
+            #region CORS
+
+            if (options._useDefaultCors)
+            {
+                app.UseCors();
+            }
+
+            if (options._userCorsOptions != null)
+            {
+                app.UseCors(options._defaultCorsPolicy);
+            }
+
+            #endregion
+
             #region HSTS
 
             if (options._useDefaultHsts || options._userHstsOptions != null)

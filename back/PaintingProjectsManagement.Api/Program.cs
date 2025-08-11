@@ -45,7 +45,16 @@ public class Program
         builder.Services.AddRbkApiCoreSetup(options => options
              .EnableBasicAuthenticationHandler()
              .UseDefaultCompression()
-             .UseDefaultCors()
+             .UseCustomCors("_defaultPolicy", options =>
+                 options.AddPolicy("_defaultPolicy", builder =>
+                 {
+                     builder
+                        .WithOrigins("https://localhost:7233")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                        .WithExposedHeaders("Content Disposition");
+                 }))
              .UseDefaultHsts(builder.Environment.IsDevelopment())
              .UseDefaultHttpsRedirection()
              .UseDefaultMemoryCache()

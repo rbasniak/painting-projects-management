@@ -1,29 +1,31 @@
-using System.Text.Json.Serialization;
-
 namespace PaintingProjectsManagement.Features.Projects;
 
-public class ProjectStepData 
+public class ProjectStepData
 {
-    [JsonConstructor]
-    private ProjectStepData(Guid id, DateTime startDate, DateTime? endDate)
+    private ProjectStepData()
     {
-        Id = id;
-        StartDate = startDate;
-        EndDate = endDate;
+        // EF Core constructor, don't remove it
     }
 
-    public ProjectStepData()
-    { 
+    public ProjectStepData(Guid projectId, ProjectStepDefinition step, DateTime date, double duration)
+    {
+        ProjectId = projectId;
+        Step = step;
+        Date = date;
+        Duration = duration;
     }
 
-    public ProjectStepData(DateTime startDate)
+    public ProjectStepData(Guid projectId, ProjectStepDefinition step, DateTime startDate, DateTime endDate)
     {
-        Id = Guid.NewGuid();
-        StartDate = startDate;
+        ProjectId = projectId;
+        Step = step;
+        Date = startDate;
+        Duration = (endDate - startDate).TotalHours;
     }
 
     public Guid Id { get; private set; }
-    public DateTime StartDate { get; private set; }
-    public DateTime? EndDate { get; private set; }
-    public double Duration => (EndDate - StartDate)?.TotalHours ?? 0;
+    public Guid ProjectId { get; private set; }
+    public ProjectStepDefinition Step { get; private set; }
+    public DateTime Date { get; private set; }
+    public double Duration { get; private set; }
 }

@@ -7,6 +7,7 @@ using rbkApiModules.Identity.Core.DataTransfer.Users;
 
 namespace rbkApiModules.Identity.Tests.Tenants;
 
+[NotInParallel(nameof(Tenant_Management_Tests))]
 public class Tenant_Management_Tests
 {
     [ClassDataSource<Demo1TestingServer>(Shared = SharedType.PerClass)]

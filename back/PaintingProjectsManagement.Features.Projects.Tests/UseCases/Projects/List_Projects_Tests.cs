@@ -9,14 +9,14 @@ public class List_Projects_Tests
     public async Task Seed()
     {
         // Create test projects for different users with various states
-        var rodrigoUnfinishedProject1 = new Project("rodrigo.basniak", "Rodrigo Unfinished Project 1", "https://example.com/pic1.jpg", DateTime.UtcNow.AddDays(-10));
-        var rodrigoUnfinishedProject2 = new Project("rodrigo.basniak", "Rodrigo Unfinished Project 2", "https://example.com/pic2.jpg", DateTime.UtcNow.AddDays(-5));
-        var rodrigoFinishedProject1 = new Project("rodrigo.basniak", "Rodrigo Finished Project 1", "https://example.com/pic3.jpg", DateTime.UtcNow.AddDays(-20));
-        var rodrigoFinishedProject2 = new Project("rodrigo.basniak", "Rodrigo Finished Project 2", "https://example.com/pic4.jpg", DateTime.UtcNow.AddDays(-15));
+        var rodrigoUnfinishedProject1 = new Project("rodrigo.basniak", "Rodrigo Unfinished Project 1", DateTime.UtcNow.AddDays(-10), null);
+        var rodrigoUnfinishedProject2 = new Project("rodrigo.basniak", "Rodrigo Unfinished Project 2", DateTime.UtcNow.AddDays(-5), null);
+        var rodrigoFinishedProject1 = new Project("rodrigo.basniak", "Rodrigo Finished Project 1", DateTime.UtcNow.AddDays(-20), null);
+        var rodrigoFinishedProject2 = new Project("rodrigo.basniak", "Rodrigo Finished Project 2", DateTime.UtcNow.AddDays(-15), null);
         
-        var ricardoUnfinishedProject1 = new Project("ricardo.smarzaro", "Ricardo Unfinished Project 1", "https://example.com/pic5.jpg", DateTime.UtcNow.AddDays(-8));
-        var ricardoFinishedProject1 = new Project("ricardo.smarzaro", "Ricardo Finished Project 1", "https://example.com/pic6.jpg", DateTime.UtcNow.AddDays(-25));
-        var ricardoFinishedProject2 = new Project("ricardo.smarzaro", "Ricardo Finished Project 2", "https://example.com/pic7.jpg", DateTime.UtcNow.AddDays(-30));
+        var ricardoUnfinishedProject1 = new Project("ricardo.smarzaro", "Ricardo Unfinished Project 1", DateTime.UtcNow.AddDays(-8), null);
+        var ricardoFinishedProject1 = new Project("ricardo.smarzaro", "Ricardo Finished Project 1", DateTime.UtcNow.AddDays(-25), null);
+        var ricardoFinishedProject2 = new Project("ricardo.smarzaro", "Ricardo Finished Project 2", DateTime.UtcNow.AddDays(-30), null);
 
         // Set end dates for finished projects
         rodrigoFinishedProject1.UpdateDetails(rodrigoFinishedProject1.Name, rodrigoFinishedProject1.PictureUrl, rodrigoFinishedProject1.StartDate, DateTime.UtcNow.AddDays(-5));
@@ -116,12 +116,10 @@ public class List_Projects_Tests
         // Verify project properties are correctly mapped
         var unfinishedProject1 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Unfinished Project 1");
         unfinishedProject1.ShouldNotBeNull();
-        unfinishedProject1.PictureUrl.ShouldBe("https://example.com/pic1.jpg");
         unfinishedProject1.EndDate.ShouldBeNull(); // Unfinished project
 
         var finishedProject1 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Finished Project 1");
         finishedProject1.ShouldNotBeNull();
-        finishedProject1.PictureUrl.ShouldBe("https://example.com/pic3.jpg");
         finishedProject1.EndDate.ShouldNotBeNull(); // Finished project
     }
 

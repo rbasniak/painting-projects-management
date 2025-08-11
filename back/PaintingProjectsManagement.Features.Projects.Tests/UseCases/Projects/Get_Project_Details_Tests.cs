@@ -13,7 +13,7 @@ public class Get_Project_Details_Tests
     public async Task Seed()
     {
         // Create test project with all related data
-        var project = new Project("rodrigo.basniak", "Test Project", "https://example.com/pic.jpg", DateTime.UtcNow.AddDays(-10));
+        var project = new Project("rodrigo.basniak", "Test Project", DateTime.UtcNow.AddDays(-10), null);
         
         using (var context = TestingServer.CreateContext())
         {
@@ -51,7 +51,6 @@ public class Get_Project_Details_Tests
         response.Data.ShouldNotBeNull();
         response.Data.Id.ShouldBe(_testProjectId);
         response.Data.Name.ShouldBe("Test Project");
-        response.Data.PictureUrl.ShouldBe("https://example.com/pic.jpg");
         response.Data.StartDate.ShouldNotBeNull();
         response.Data.EndDate.ShouldBeNull();
     }
@@ -71,10 +70,6 @@ public class Get_Project_Details_Tests
         response.Data.References.ShouldBeEmpty();
         response.Data.Pictures.ShouldBeEmpty();
         response.Data.Groups.ShouldBeEmpty();
-        response.Data.Steps.Planning.ShouldBeEmpty();
-        response.Data.Steps.Painting.ShouldBeEmpty();
-        response.Data.Steps.Preparation.ShouldBeEmpty();
-        response.Data.Steps.Supporting.ShouldBeEmpty();
     }
 
     [Test, NotInParallel(Order = 5)]
@@ -93,7 +88,7 @@ public class Get_Project_Details_Tests
         // Arrange - Add materials to the project
         using (var context = TestingServer.CreateContext())
         {
-            var materialForProject = new MaterialForProject(_testProjectId, materialId, 7);
+            var materialForProject = new MaterialForProject(_testProjectId, materialId, 7, MaterialUnit.Unit);
             await context.AddAsync(materialForProject);
             await context.SaveChangesAsync();
         }
@@ -256,7 +251,7 @@ public class Get_Project_Details_Tests
     public async Task User_Cannot_Access_Project_From_Other_User()
     {
         // Arrange - Create a project for a different user
-        var otherUserProject = new Project("ricardo.smarzaro", "Other User Project", "https://example.com/other.jpg", DateTime.UtcNow.AddDays(-5));
+        var otherUserProject = new Project("ricardo.smarzaro", "Other User Project", DateTime.UtcNow.AddDays(-5), null);
 
         using (var context = TestingServer.CreateContext())
         {

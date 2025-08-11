@@ -6,6 +6,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using rbkApiModules.Commons.Core.Helpers;
 using Demo1.UseCases.Commands;
+using rbkApiModules.Commons.Core.Features.ApplicationOptions;
 
 namespace Demo1
 {
@@ -45,6 +46,10 @@ namespace Demo1
                  .UseStaticFiles()
                  .RegisterDbContext<DatabaseContext>()
              );
+
+            builder.Services.AddApplicationOptions<MySettings1>();
+            builder.Services.AddApplicationOptions<MySettings2>();
+            builder.Services.AddApplicationOptionsManager();
 
             builder.Services.AddRbkRelationalAuthentication(options => options
                 .UseSymetricEncryptationKey()
@@ -86,11 +91,14 @@ namespace Demo1
 
             app.SeedDatabase<DatabaseSeed>();
 
+            app.UseApplicationOptions();
+
             app.UseRbkUIDefinitions();
 
             // Register endpoints
             CreatePost.MapEndpoint(app);
             UpdatePost.MapEndpoint(app);
+            GetSettings.MapEndpoint(app);
 
             app.MapOpenApi();
             app.UseSwaggerUI(options =>

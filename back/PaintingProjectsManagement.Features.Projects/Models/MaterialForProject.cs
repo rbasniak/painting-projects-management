@@ -1,20 +1,19 @@
+using PaintingProjectsManagement.Features.Materials;
+
 namespace PaintingProjectsManagement.Features.Projects;
 
 public class MaterialForProject
 {
-    private MaterialForProject()
-    {
-        // EF Core constructor, don't remove it
-    }
-
-    public MaterialForProject(Guid projectId, Guid materialId, double quantity)
+    public MaterialForProject(Guid projectId, Guid materialId, double quantity, MaterialUnit unit)
     {
         MaterialId = materialId;
         ProjectId = projectId;
         Quantity = quantity;
+        Unit = unit;
     }
 
     public Guid MaterialId { get; private set; }
     public Guid ProjectId { get; private set; }
-    public double Quantity { get; private set; } = 0.0;
+    public double Quantity { get; private set; }
+    public MaterialUnit Unit { get; private set; }
 }

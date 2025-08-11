@@ -3,6 +3,7 @@ using rbkApiModules.Identity.Core;
 
 namespace rbkApiModules.Identity.Tests.Claims;
 
+[NotInParallel(nameof(Global_Claim_Management_Tests))]
 public class Global_Claim_Management_Tests
 {
     [ClassDataSource<Demo1TestingServer>(Shared = SharedType.PerClass)]

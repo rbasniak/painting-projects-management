@@ -4,6 +4,7 @@ using rbkApiModules.Identity.Core;
 
 namespace rbkApiModules.Identity.Tests.Login;
 
+[NotInParallel(nameof(Local_User_Login_Tests))]
 public class Local_User_Login_Tests
 {
     [ClassDataSource<Demo1TestingServer>(Shared = SharedType.PerClass)]
