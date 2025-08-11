@@ -11,7 +11,7 @@ using PaintingProjectsManagment.Database;
 namespace PaintingProjectsManagment.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250811203932_Initial")]
+    [Migration("20250811213408_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -452,6 +452,82 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.ToTable("ApplicationOptions", (string)null);
                 });
 
+            modelBuilder.Entity("rbkApiModules.Commons.Core.InboxMessage", b =>
+                {
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("HandlerName")
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ProcessedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("EventId", "HandlerName");
+
+                    b.HasIndex("ProcessedUtc");
+
+                    b.ToTable("InboxMessages", (string)null);
+                });
+
+            modelBuilder.Entity("rbkApiModules.Commons.Core.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CausationId")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("OccurredUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ProcessedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedUtc");
+
+                    b.HasIndex("ProcessedUtc");
+
+                    b.HasIndex("TenantId", "Name", "Version");
+
+                    b.ToTable("OutboxMessages", (string)null);
+                });
+
             modelBuilder.Entity("rbkApiModules.Commons.Relational.SeedHistory", b =>
                 {
                     b.Property<string>("Id")
@@ -788,6 +864,15 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .WithMany()
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("rbkApiModules.Commons.Core.OutboxMessage", b =>
+                {
+                    b.HasOne("rbkApiModules.Identity.Core.Tenant", null)
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("rbkApiModules.Identity.Core.Role", b =>

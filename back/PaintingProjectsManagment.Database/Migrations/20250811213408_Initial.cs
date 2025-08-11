@@ -39,6 +39,20 @@ namespace PaintingProjectsManagment.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "InboxMessages",
+                columns: table => new
+                {
+                    EventId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    HandlerName = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
+                    ProcessedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Attempts = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InboxMessages", x => new { x.EventId, x.HandlerName });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PaintBrands",
                 columns: table => new
                 {
@@ -137,6 +151,33 @@ namespace PaintingProjectsManagment.Database.Migrations
                     table.PrimaryKey("PK_ModelCategories", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ModelCategories_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Alias",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OutboxMessages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Version = table.Column<int>(type: "INTEGER", nullable: false),
+                    TenantId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    OccurredUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CorrelationId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    CausationId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    Payload = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ProcessedUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Attempts = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutboxMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OutboxMessages_Tenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "Tenants",
                         principalColumn: "Alias",
@@ -496,6 +537,11 @@ namespace PaintingProjectsManagment.Database.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_InboxMessages_ProcessedUtc",
+                table: "InboxMessages",
+                column: "ProcessedUtc");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Materials_Name",
                 table: "Materials",
                 column: "Name");
@@ -527,6 +573,21 @@ namespace PaintingProjectsManagment.Database.Migrations
                 table: "Models",
                 columns: new[] { "TenantId", "Name" },
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OutboxMessages_CreatedUtc",
+                table: "OutboxMessages",
+                column: "CreatedUtc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OutboxMessages_ProcessedUtc",
+                table: "OutboxMessages",
+                column: "ProcessedUtc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OutboxMessages_TenantId_Name_Version",
+                table: "OutboxMessages",
+                columns: new[] { "TenantId", "Name", "Version" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaintBrands_Name",
@@ -665,7 +726,13 @@ namespace PaintingProjectsManagment.Database.Migrations
                 name: "ApplicationOptions");
 
             migrationBuilder.DropTable(
+                name: "InboxMessages");
+
+            migrationBuilder.DropTable(
                 name: "Models");
+
+            migrationBuilder.DropTable(
+                name: "OutboxMessages");
 
             migrationBuilder.DropTable(
                 name: "Paints");
