@@ -47,8 +47,9 @@ namespace Demo1
                  .RegisterDbContext<DatabaseContext>()
              );
 
-            builder.Services.AddSingleton<IApplicationOptions, MySettings1>();
-            builder.Services.AddSingleton<IApplicationOptions, MySettings2>();
+            builder.Services.AddApplicationOptions<MySettings1>();
+            builder.Services.AddApplicationOptions<MySettings2>();
+            builder.Services.AddApplicationOptionsManager();
 
             builder.Services.AddRbkRelationalAuthentication(options => options
                 .UseSymetricEncryptationKey()

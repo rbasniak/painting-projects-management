@@ -1,63 +1,70 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.DependencyInjection;
+using rbkApiModules.Commons.Core.Features.ApplicationOptions;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using rbkApiModules.Commons.Core.Features.ApplicationOptions;
-using rbkApiModules.Commons.Core.Helpers;
-using rbkApiModules.Commons.Relational;
 
 namespace rbkApiModules.Commons.Core;
 
-public static class ApplicationOptionsBuilder
+internal sealed class ApplicationOptionsManager : IApplicationOptionsManager
 {
-    private const string SectionSeparator = ": ";
-    private const string KeySeparator = "::";
+    private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IMemoryCache _cache;
 
-    public static IApplicationBuilder UseApplicationOptions(this IApplicationBuilder app)
+    private const string CacheKeyPrefix = "AppOptions:";
+
+    public ApplicationOptionsManager(IServiceScopeFactory scopeFactory, IMemoryCache cache)
     {
-        // Block startup until options are loaded
-        var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+        _scopeFactory = scopeFactory;
+        _cache = cache;
+    }
 
-        using (var scope = scopeFactory.CreateScope())
+    public TOptions GetOptions<TOptions>(string? tenantId = null, string? username = null)
+        where TOptions : class, IApplicationOptions, new()
+    {
+        var normalizedUsername = string.IsNullOrWhiteSpace(username) ? null : username.ToLower();
+        var cacheKey = BuildCacheKey(typeof(TOptions), tenantId, normalizedUsername);
+
+        if (_cache.TryGetValue(cacheKey, out TOptions cached))
         {
-            var dbContext = scope.ServiceProvider.GetService<DbContext>();
-            if (dbContext == null)
-            {
-                throw new InvalidOperationException("No DbContext registered. Register your application's DbContext and also call RegisterDbContext<TDbContext>() in AddRbkApiCoreSetup so it is available at startup.");
-            }
-
-            // Ensure table exists (in testing we often recreate DB)
-            // Do not call Migrate here (handled by SetupDatabase). We just ensure the model is known.
-
-            // Load or create global options for every registered options type (no tenant/user)
-            var registrations = scope.ServiceProvider.GetServices<IApplicationOptionsRegistration>();
-
-            foreach (var registration in registrations)
-            {
-                var options = Activator.CreateInstance(registration.OptionsType)!;
-                PopulateOptionsFromDatabase(dbContext, options);
-            }
-
-            dbContext.SaveChanges();
+            return cached;
         }
 
-        return app;
+        using var scope = _scopeFactory.CreateScope();
+
+        var dbContext = scope.ServiceProvider.GetRequiredService<DbContext>();
+
+        var options = new TOptions();
+
+        PopulateFromDatabase(dbContext, options, tenantId, normalizedUsername);
+
+        // Cache with sensible eviction; tenant/user overrides can change, allow short sliding expiration
+        _cache.Set(cacheKey, options, new MemoryCacheEntryOptions
+        {
+            SlidingExpiration = TimeSpan.FromMinutes(5),
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
+        });
+
+        return options;
     }
 
-    private static void PopulateOptionsFromDatabase(DbContext dbContext, object optionsRoot)
+    private static string BuildCacheKey(Type type, string? tenantId, string? username)
     {
-        // Traverse properties recursively, prefixing with the settings class name
-        var rootName = optionsRoot.GetType().Name;
-        TraverseAndApply(dbContext, rootName, optionsRoot, parentKey: rootName);
+        return $"{CacheKeyPrefix}{type.FullName}:{tenantId ?? "_"}:{username ?? "_"}";
     }
 
-    private static void TraverseAndApply(DbContext context, string rootName, object currentObject, string parentKey)
+    private static void PopulateFromDatabase(DbContext dbContext, object optionsRoot, string? tenantId, string? username)
+    {
+        var set = dbContext.Set<ApplicationOption>();
+
+        TraverseAndApply(set, optionsRoot.GetType().Name, optionsRoot, parentKey: optionsRoot.GetType().Name, tenantId, username);
+    }
+
+    private static void TraverseAndApply(DbSet<ApplicationOption> set, string rootName, object currentObject, string parentKey, string? tenantId, string? username)
     {
         if (currentObject == null) return;
-
-        var set = context.Set<ApplicationOption>();
 
         var type = currentObject.GetType();
 
@@ -67,9 +74,6 @@ public static class ApplicationOptionsBuilder
 
             var propertyType = property.PropertyType;
 
-            var displayName = property.GetCustomAttribute<DisplayAttribute>()?.Name
-                              ?? property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
-
             var defaultValueAttribute = property.GetCustomAttribute<DefaultValueAttribute>();
             var defaultValue = defaultValueAttribute?.Value;
 
@@ -77,18 +81,25 @@ public static class ApplicationOptionsBuilder
 
             if (IsSimple(propertyType))
             {
-                // Ensure exists in DB at global scope only during seeding
-                var option = set.AsNoTracking().SingleOrDefault(x => x.Key == key && x.TenantId == null && x.Username == null);
-                if (option == null)
+                // Resolve value priority: User -> Tenant -> Global
+                var userValue = set.AsNoTracking().SingleOrDefault(x => x.Key == key && x.Username == username && x.TenantId == tenantId)?.Value;
+                var tenantValue = set.AsNoTracking().SingleOrDefault(x => x.Key == key && x.Username == null && x.TenantId == tenantId)?.Value;
+                var globalValue = set.AsNoTracking().SingleOrDefault(x => x.Key == key && x.Username == null && x.TenantId == null)?.Value;
+
+                string? selected = userValue ?? tenantValue ?? globalValue;
+
+                if (!string.IsNullOrWhiteSpace(selected))
                 {
-                    var stringValue = defaultValue != null ? ConvertToString(defaultValue, propertyType) : string.Empty;
-                    set.Add(new ApplicationOption(key, tenantId: null, username: null, stringValue));
+                    var typedValue = ConvertFromString(selected, propertyType);
+                    property.SetValue(currentObject, typedValue);
                 }
-                // Do not set values into the instance here; that is done by the manager on per-user/tenant retrieval
+                else if (defaultValue != null)
+                {
+                    property.SetValue(currentObject, defaultValue);
+                }
             }
             else if (!propertyType.IsArray && !typeof(System.Collections.IEnumerable).IsAssignableFrom(propertyType))
             {
-                // Complex object: instantiate if null and go deeper
                 var nested = property.GetValue(currentObject);
                 if (nested == null)
                 {
@@ -96,20 +107,17 @@ public static class ApplicationOptionsBuilder
                     property.SetValue(currentObject, nested);
                 }
 
-                TraverseAndApply(context, rootName, nested, BuildSection(parentKey, property.Name));
-            }
-            else
-            {
-                // Collections are not supported for now; skip
-                continue;
+                TraverseAndApply(set, rootName, nested, BuildSection(parentKey, property.Name), tenantId, username);
             }
         }
     }
 
+    private const string SectionSeparator = ": ";
+    private const string KeySeparator = "::";
+
     private static string BuildKey(string parentKey, string name)
     {
         if (string.IsNullOrWhiteSpace(parentKey)) return name;
-        // For leafs, join with KeySeparator between last section and leaf
         var lastSectionSplit = parentKey.Split(SectionSeparator);
         if (lastSectionSplit.Length > 1)
         {
@@ -143,20 +151,6 @@ public static class ApplicationOptionsBuilder
             || type == typeof(TimeSpan);
     }
 
-    private static string ConvertToString(object value, Type targetType)
-    {
-        if (value == null) return string.Empty;
-        var type = Nullable.GetUnderlyingType(targetType) ?? targetType;
-        if (type.IsEnum) return Enum.GetName(type, value) ?? value.ToString();
-        if (type == typeof(DateTime)) return ((DateTime)value).ToString("o");
-        if (type == typeof(TimeSpan)) return ((TimeSpan)value).ToString();
-        if (type == typeof(bool)) return ((bool)value) ? "true" : "false";
-        if (type == typeof(decimal)) return ((decimal)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
-        if (type == typeof(double)) return ((double)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
-        if (type == typeof(float)) return ((float)value).ToString(System.Globalization.CultureInfo.InvariantCulture);
-        return Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture) ?? string.Empty;
-    }
-
     private static object ConvertFromString(string value, Type targetType)
     {
         var type = Nullable.GetUnderlyingType(targetType) ?? targetType;
@@ -175,7 +169,6 @@ public static class ApplicationOptionsBuilder
         if (type == typeof(double)) return double.Parse(value, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture);
         if (type == typeof(float)) return float.Parse(value, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture);
 
-        // Fallback to TypeConverter
         var converter = TypeDescriptor.GetConverter(type);
         if (converter != null && converter.CanConvertFrom(typeof(string)))
         {

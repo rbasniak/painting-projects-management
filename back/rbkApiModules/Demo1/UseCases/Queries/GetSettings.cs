@@ -1,6 +1,7 @@
 using Demo1.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using rbkApiModules.Commons.Core.Features.ApplicationOptions;
 
 namespace Demo1.UseCases.Commands;
@@ -9,9 +10,9 @@ public class GetSettings : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/options", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/options", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.SendAsync(request, cancellationToken);
+            var result = await dispatcher.SendAsync(new Request(), cancellationToken);
             return Results.Ok(result.Data);
         })
         .WithName("Get Application Options")
@@ -24,21 +25,22 @@ public class GetSettings : IEndpoint
 
     public class Handler : ICommandHandler<Request>
     {
-        private readonly IEnumerable<IApplicationOptions> _applicationOptions;
+        private readonly IApplicationOptionsManager _optionsManager;
 
-        public Handler(IEnumerable<IApplicationOptions> options)
+        public Handler(IApplicationOptionsManager optionsManager)
         {
-            _applicationOptions = options;
+            _optionsManager = optionsManager;
         }
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
+            var _settings1 = _optionsManager.GetOptions<MySettings1>("rodrigo.basniak");
+            var _settings2 = _optionsManager.GetOptions<MySettings2>("rodrigo.basniak");
+
             var dictionary = new Dictionary<string, object>();
 
-            foreach (var option in _applicationOptions)
-            {
-                dictionary.Add(option.GetType().Name, option);
-            }
+            dictionary.Add(_settings1.GetType().Name, _settings1);
+            dictionary.Add(_settings2.GetType().Name, _settings2);
 
             return CommandResponse.Success(dictionary);
         }
