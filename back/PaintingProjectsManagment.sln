@@ -95,6 +95,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.UI", "..\blazor\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj", "{82D445C4-8530-2F07-F8AB-2D04C4D86344}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Projects.Abstractions", "PaintingProjectsManagement.Features.Projects.Abstractions\PaintingProjectsManagement.Features.Projects.Abstractions.csproj", "{21010993-786F-DB15-7AEA-1A1F2858729F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -209,6 +211,10 @@ Global
 		{82D445C4-8530-2F07-F8AB-2D04C4D86344}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82D445C4-8530-2F07-F8AB-2D04C4D86344}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82D445C4-8530-2F07-F8AB-2D04C4D86344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21010993-786F-DB15-7AEA-1A1F2858729F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21010993-786F-DB15-7AEA-1A1F2858729F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21010993-786F-DB15-7AEA-1A1F2858729F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21010993-786F-DB15-7AEA-1A1F2858729F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -249,6 +255,7 @@ Global
 		{776B33BE-EE51-0201-FA32-45A0B5F5B13F} = {6373AE65-E43B-4944-9C8E-863515734D0C}
 		{49EFBF12-CC8F-493D-9F26-73806AADCD0D} = {945C31FD-D6F8-4151-B6AF-CC2CE597DF36}
 		{82D445C4-8530-2F07-F8AB-2D04C4D86344} = {6373AE65-E43B-4944-9C8E-863515734D0C}
+		{21010993-786F-DB15-7AEA-1A1F2858729F} = {6398C842-1E51-4272-9993-0055BB2E71E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D9D84DD-C876-47C0-8479-5AA1E9881CFA}
