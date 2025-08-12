@@ -47,7 +47,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("Name", "TenantId")
                         .IsUnique();
 
-                    b.ToTable("Materials", (string)null);
+                    b.ToTable("materials.materials", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Models.Model", b =>
@@ -119,7 +119,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("TenantId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Models", (string)null);
+                    b.ToTable("models.models", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Models.ModelCategory", b =>
@@ -142,7 +142,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("TenantId", "Name")
                         .IsUnique();
 
-                    b.ToTable("ModelCategories", (string)null);
+                    b.ToTable("models.categories", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Paints.PaintBrand", b =>
@@ -161,7 +161,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("PaintBrands", (string)null);
+                    b.ToTable("paints_catalog.brands", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Paints.PaintColor", b =>
@@ -207,7 +207,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("LineId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Paints", (string)null);
+                    b.ToTable("paints_catalog.colors", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Paints.PaintLine", b =>
@@ -229,7 +229,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("BrandId", "Name")
                         .IsUnique();
 
-                    b.ToTable("PaintLines", (string)null);
+                    b.ToTable("paints_catalog.lines", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorGroup", b =>
@@ -253,7 +253,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("ProjectId", "Name")
                         .IsUnique();
 
-                    b.ToTable("ProjectColorGroups", (string)null);
+                    b.ToTable("projects.project_color_groups", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorSection", b =>
@@ -282,7 +282,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("ColorGroupId", "Zone")
                         .IsUnique();
 
-                    b.ToTable("ProjectColorSections", (string)null);
+                    b.ToTable("project.project_color_sections", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.MaterialForProject", b =>
@@ -305,7 +305,7 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectMaterials", (string)null);
+                    b.ToTable("projects.project_materials", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.Project", b =>
@@ -346,7 +346,7 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("projects.projects", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ProjectPicture", b =>
@@ -367,7 +367,7 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectPictures", (string)null);
+                    b.ToTable("projects.pictures", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ProjectReference", b =>
@@ -388,7 +388,7 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectReferences", (string)null);
+                    b.ToTable("projects.picture_references", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ProjectStepData", b =>

@@ -6,7 +6,7 @@ public class PaintLineConfig : IEntityTypeConfiguration<PaintLine>
 {
     public void Configure(EntityTypeBuilder<PaintLine> builder)
     {
-        builder.ToTable("PaintLines");
+        builder.ToTable("paints_catalog.lines"); 
 
         builder.HasKey(x => x.Id);
         

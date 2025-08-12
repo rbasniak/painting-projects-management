@@ -53,7 +53,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaintBrands",
+                name: "paints_catalog.brands",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -61,7 +61,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaintBrands", x => x.Id);
+                    table.PrimaryKey("PK_paints_catalog.brands", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,7 +78,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PaintLines",
+                name: "paints_catalog.lines",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -87,11 +87,11 @@ namespace PaintingProjectsManagment.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PaintLines", x => x.Id);
+                    table.PrimaryKey("PK_paints_catalog.lines", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PaintLines_PaintBrands_BrandId",
+                        name: "FK_paints_catalog.lines_paints_catalog.brands_BrandId",
                         column: x => x.BrandId,
-                        principalTable: "PaintBrands",
+                        principalTable: "paints_catalog.brands",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -118,7 +118,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Materials",
+                name: "materials.materials",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -129,9 +129,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Materials", x => x.Id);
+                    table.PrimaryKey("PK_materials.materials", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Materials_Tenants_TenantId",
+                        name: "FK_materials.materials_Tenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "Tenants",
                         principalColumn: "Alias",
@@ -139,7 +139,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ModelCategories",
+                name: "models.categories",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -148,9 +148,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ModelCategories", x => x.Id);
+                    table.PrimaryKey("PK_models.categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ModelCategories_Tenants_TenantId",
+                        name: "FK_models.categories_Tenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "Tenants",
                         principalColumn: "Alias",
@@ -187,7 +187,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Projects",
+                name: "projects.projects",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -200,9 +200,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.PrimaryKey("PK_projects.projects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Projects_Tenants_TenantId",
+                        name: "FK_projects.projects_Tenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "Tenants",
                         principalColumn: "Alias",
@@ -263,7 +263,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Paints",
+                name: "paints_catalog.colors",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -276,17 +276,17 @@ namespace PaintingProjectsManagment.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Paints", x => x.Id);
+                    table.PrimaryKey("PK_paints_catalog.colors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Paints_PaintLines_LineId",
+                        name: "FK_paints_catalog.colors_paints_catalog.lines_LineId",
                         column: x => x.LineId,
-                        principalTable: "PaintLines",
+                        principalTable: "paints_catalog.lines",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Models",
+                name: "models.models",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -308,23 +308,61 @@ namespace PaintingProjectsManagment.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Models", x => x.Id);
+                    table.PrimaryKey("PK_models.models", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Models_ModelCategories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "ModelCategories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Models_Tenants_TenantId",
+                        name: "FK_models.models_Tenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "Tenants",
                         principalColumn: "Alias",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_models.models_models.categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "models.categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProjectColorGroups",
+                name: "projects.picture_references",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Url = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_projects.picture_references", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_projects.picture_references_projects.projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "projects.projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "projects.pictures",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Url = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_projects.pictures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_projects.pictures_projects.projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "projects.projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "projects.project_color_groups",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -333,17 +371,17 @@ namespace PaintingProjectsManagment.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectColorGroups", x => x.Id);
+                    table.PrimaryKey("PK_projects.project_color_groups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProjectColorGroups_Projects_ProjectId",
+                        name: "FK_projects.project_color_groups_projects.projects_ProjectId",
                         column: x => x.ProjectId,
-                        principalTable: "Projects",
+                        principalTable: "projects.projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProjectMaterials",
+                name: "projects.project_materials",
                 columns: table => new
                 {
                     MaterialId = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -353,55 +391,17 @@ namespace PaintingProjectsManagment.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectMaterials", x => new { x.ProjectId, x.MaterialId });
+                    table.PrimaryKey("PK_projects.project_materials", x => new { x.ProjectId, x.MaterialId });
                     table.ForeignKey(
-                        name: "FK_ProjectMaterials_Materials_MaterialId",
+                        name: "FK_projects.project_materials_materials.materials_MaterialId",
                         column: x => x.MaterialId,
-                        principalTable: "Materials",
+                        principalTable: "materials.materials",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ProjectMaterials_Projects_ProjectId",
+                        name: "FK_projects.project_materials_projects.projects_ProjectId",
                         column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProjectPictures",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Url = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProjectPictures", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProjectPictures_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProjectReferences",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Url = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProjectReferences", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProjectReferences_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
+                        principalTable: "projects.projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -420,9 +420,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                 {
                     table.PrimaryKey("PK_ProjectStepData", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProjectStepData_Projects_ProjectId",
+                        name: "FK_ProjectStepData_projects.projects_ProjectId",
                         column: x => x.ProjectId,
-                        principalTable: "Projects",
+                        principalTable: "projects.projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -501,7 +501,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProjectColorSections",
+                name: "project.project_color_sections",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -512,17 +512,17 @@ namespace PaintingProjectsManagment.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProjectColorSections", x => x.Id);
+                    table.PrimaryKey("PK_project.project_color_sections", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProjectColorSections_ProjectColorGroups_ColorGroupId",
+                        name: "FK_project.project_color_sections_projects.project_color_groups_ColorGroupId",
                         column: x => x.ColorGroupId,
-                        principalTable: "ProjectColorGroups",
+                        principalTable: "projects.project_color_groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProjectColorSections_Projects_ColorGroupId",
+                        name: "FK_project.project_color_sections_projects.projects_ColorGroupId",
                         column: x => x.ColorGroupId,
-                        principalTable: "Projects",
+                        principalTable: "projects.projects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -544,35 +544,35 @@ namespace PaintingProjectsManagment.Database.Migrations
                 column: "ProcessedUtc");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Materials_Name",
-                table: "Materials",
+                name: "IX_materials.materials_Name",
+                table: "materials.materials",
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Materials_Name_TenantId",
-                table: "Materials",
+                name: "IX_materials.materials_Name_TenantId",
+                table: "materials.materials",
                 columns: new[] { "Name", "TenantId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Materials_TenantId",
-                table: "Materials",
+                name: "IX_materials.materials_TenantId",
+                table: "materials.materials",
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ModelCategories_TenantId_Name",
-                table: "ModelCategories",
+                name: "IX_models.categories_TenantId_Name",
+                table: "models.categories",
                 columns: new[] { "TenantId", "Name" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Models_CategoryId",
-                table: "Models",
+                name: "IX_models.models_CategoryId",
+                table: "models.models",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Models_TenantId_Name",
-                table: "Models",
+                name: "IX_models.models_TenantId_Name",
+                table: "models.models",
                 columns: new[] { "TenantId", "Name" },
                 unique: true);
 
@@ -597,99 +597,99 @@ namespace PaintingProjectsManagment.Database.Migrations
                 columns: new[] { "TenantId", "Name", "Version" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaintBrands_Name",
-                table: "PaintBrands",
+                name: "IX_paints_catalog.brands_Name",
+                table: "paints_catalog.brands",
                 column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaintLines_BrandId_Name",
-                table: "PaintLines",
-                columns: new[] { "BrandId", "Name" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Paints_LineId",
-                table: "Paints",
+                name: "IX_paints_catalog.colors_LineId",
+                table: "paints_catalog.colors",
                 column: "LineId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Paints_LineId_HexColor",
-                table: "Paints",
+                name: "IX_paints_catalog.colors_LineId_HexColor",
+                table: "paints_catalog.colors",
                 columns: new[] { "LineId", "HexColor" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Paints_LineId_Name",
-                table: "Paints",
+                name: "IX_paints_catalog.colors_LineId_Name",
+                table: "paints_catalog.colors",
                 columns: new[] { "LineId", "Name" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Paints_Name",
-                table: "Paints",
+                name: "IX_paints_catalog.colors_Name",
+                table: "paints_catalog.colors",
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Paints_Type",
-                table: "Paints",
+                name: "IX_paints_catalog.colors_Type",
+                table: "paints_catalog.colors",
                 column: "Type");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectColorGroups_ProjectId",
-                table: "ProjectColorGroups",
-                column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectColorGroups_ProjectId_Name",
-                table: "ProjectColorGroups",
-                columns: new[] { "ProjectId", "Name" },
+                name: "IX_paints_catalog.lines_BrandId_Name",
+                table: "paints_catalog.lines",
+                columns: new[] { "BrandId", "Name" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectColorSections_ColorGroupId_Zone",
-                table: "ProjectColorSections",
+                name: "IX_project.project_color_sections_ColorGroupId_Zone",
+                table: "project.project_color_sections",
                 columns: new[] { "ColorGroupId", "Zone" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectMaterials_MaterialId",
-                table: "ProjectMaterials",
+                name: "IX_projects.picture_references_ProjectId",
+                table: "projects.picture_references",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_projects.pictures_ProjectId",
+                table: "projects.pictures",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_projects.project_color_groups_ProjectId",
+                table: "projects.project_color_groups",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_projects.project_color_groups_ProjectId_Name",
+                table: "projects.project_color_groups",
+                columns: new[] { "ProjectId", "Name" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_projects.project_materials_MaterialId",
+                table: "projects.project_materials",
                 column: "MaterialId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectMaterials_ProjectId",
-                table: "ProjectMaterials",
+                name: "IX_projects.project_materials_ProjectId",
+                table: "projects.project_materials",
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectPictures_ProjectId",
-                table: "ProjectPictures",
-                column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectReferences_ProjectId",
-                table: "ProjectReferences",
-                column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Projects_EndDate",
-                table: "Projects",
+                name: "IX_projects.projects_EndDate",
+                table: "projects.projects",
                 column: "EndDate");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_Name",
-                table: "Projects",
+                name: "IX_projects.projects_Name",
+                table: "projects.projects",
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_StartDate",
-                table: "Projects",
+                name: "IX_projects.projects_StartDate",
+                table: "projects.projects",
                 column: "StartDate");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_TenantId",
-                table: "Projects",
+                name: "IX_projects.projects_TenantId",
+                table: "projects.projects",
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
@@ -736,25 +736,25 @@ namespace PaintingProjectsManagment.Database.Migrations
                 name: "InboxMessages");
 
             migrationBuilder.DropTable(
-                name: "Models");
+                name: "models.models");
 
             migrationBuilder.DropTable(
                 name: "OutboxMessages");
 
             migrationBuilder.DropTable(
-                name: "Paints");
+                name: "paints_catalog.colors");
 
             migrationBuilder.DropTable(
-                name: "ProjectColorSections");
+                name: "project.project_color_sections");
 
             migrationBuilder.DropTable(
-                name: "ProjectMaterials");
+                name: "projects.picture_references");
 
             migrationBuilder.DropTable(
-                name: "ProjectPictures");
+                name: "projects.pictures");
 
             migrationBuilder.DropTable(
-                name: "ProjectReferences");
+                name: "projects.project_materials");
 
             migrationBuilder.DropTable(
                 name: "ProjectStepData");
@@ -769,16 +769,16 @@ namespace PaintingProjectsManagment.Database.Migrations
                 name: "UsersToRoles");
 
             migrationBuilder.DropTable(
-                name: "ModelCategories");
+                name: "models.categories");
 
             migrationBuilder.DropTable(
-                name: "PaintLines");
+                name: "paints_catalog.lines");
 
             migrationBuilder.DropTable(
-                name: "ProjectColorGroups");
+                name: "projects.project_color_groups");
 
             migrationBuilder.DropTable(
-                name: "Materials");
+                name: "materials.materials");
 
             migrationBuilder.DropTable(
                 name: "Claims");
@@ -790,10 +790,10 @@ namespace PaintingProjectsManagment.Database.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "PaintBrands");
+                name: "paints_catalog.brands");
 
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "projects.projects");
 
             migrationBuilder.DropTable(
                 name: "Tenants");

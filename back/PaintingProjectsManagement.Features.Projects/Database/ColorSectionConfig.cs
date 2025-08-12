@@ -6,7 +6,7 @@ public class ColorSectionConfig : IEntityTypeConfiguration<ColorSection>
 {
     public void Configure(EntityTypeBuilder<ColorSection> builder)
     {
-        builder.ToTable("ProjectColorSections");
+        builder.ToTable("project.project_color_sections");
 
         builder.HasKey(x => x.Id);
         
