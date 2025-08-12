@@ -40,7 +40,7 @@ public class AddProjectMaterial : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context, DomainEventPublisher _events) : ICommandHandler<Request>
+    public class Handler(DbContext _context) : ICommandHandler<Request>
     {
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {

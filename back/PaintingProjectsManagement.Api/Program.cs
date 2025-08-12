@@ -48,7 +48,6 @@ public class Program
         // Events infrastructure registrations
         builder.Services.AddSingleton<IEventTypeRegistry>(sp => new ReflectionEventTypeRegistry(AppDomain.CurrentDomain.GetAssemblies()));
         builder.Services.AddSingleton<IEventRouter, DiEventRouter>();
-        builder.Services.AddScoped<IEventPublisher, EventPublisher>();
         builder.Services.Configure<OutboxOptions>(opts =>
         {
             opts.BatchSize = 50;
