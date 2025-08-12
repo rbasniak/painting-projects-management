@@ -13,6 +13,7 @@ using Scalar.AspNetCore;
 using System.Reflection;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
+using PaintingProjectsManagement.Api.Diagnostics;
 
 namespace PaintingProjectsManagement.Api;
 
@@ -134,23 +135,8 @@ public class Program
 
         app.MapDefaultEndpoints();
 
-        // Optional health endpoint for outbox lag (age of oldest unprocessed message)
-        app.MapGet("/health/outbox", async (DatabaseContext db, CancellationToken ct) =>
-        {
-            var oldest = await db.Set<OutboxMessage>()
-                .Where(x => x.ProcessedUtc == null)
-                .OrderBy(x => x.CreatedUtc)
-                .Select(x => x.CreatedUtc)
-                .FirstOrDefaultAsync(ct);
-
-            return Results.Ok(new { OldestUnprocessedAgeSeconds = oldest == default ? 0 : (DateTime.UtcNow - oldest).TotalSeconds });
-        })
-        .WithName("OutboxHealth")
-        .WithOpenApi(generatedOperation => new OpenApiOperation(generatedOperation)
-        {
-            Summary = "Outbox processing lag",
-            Description = "Returns the age of the oldest unprocessed outbox message, in seconds",
-        });
+        // Map outbox health endpoint
+        app.MapOutboxHealth();
 
         app.Run();
     }
