@@ -5,8 +5,8 @@ public class MaterialDetails
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
-    public EnumReference Unit { get; set; }
-    public double PricePerUnit { get; set; }
+    public EnumReference UnitPriceUnit { get; set; }
+    public double UnitPriceAmount { get; set; }
 
     public static MaterialDetails FromModel(Material material)
     {
@@ -14,8 +14,8 @@ public class MaterialDetails
         {
             Id = material.Id,
             Name = material.Name,
-            Unit = new (material.Unit),
-            PricePerUnit = material.PricePerUnit
+            UnitPriceUnit = new(material.UnitPriceUnit),
+            UnitPriceAmount = material.UnitPriceAmount
         };
     }
 }

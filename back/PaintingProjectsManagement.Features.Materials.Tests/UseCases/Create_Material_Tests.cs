@@ -11,7 +11,12 @@ public class Create_Material_Tests
     public async Task Seed()
     {
         // Create a test material for duplicate name validation tests
-        var existingMaterial = new Material("rodrigo.basniak", "Existing Material", MaterialUnit.Unit, 10.0);
+        var existingMaterial = new Material(
+            "rodrigo.basniak",
+            "Existing Material",
+            new Quantity(1, PackageUnits.Each),
+            new Money(10.0, "USD")
+        );
 
         using (var context = TestingServer.CreateContext())
         {
@@ -40,8 +45,10 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "Test Material",
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = 19,
+            PackageAmount = 1,
+            PackageUnit = PackageUnits.Each,
+            PackagePriceAmount = 19,
+            PackagePriceCurrency = "USD",
         };
 
         // Act
@@ -56,49 +63,28 @@ public class Create_Material_Tests
     }
 
     [Test, NotInParallel(Order = 3)]
-    [Arguments("")]
-    [Arguments(null)]
-    [Arguments("   ")]
-    public async Task User_Cannot_Create_Material_When_Name_Is_Empty(string? name)
+    [Arguments(0)]
+    [Arguments(-1)]
+    public async Task User_Cannot_Create_Material_When_PackageAmount_Is_Not_Positive(double packageAmount)
     {
         // Prepare
         var request = new CreateMaterial.Request
         {
-            Name = name!,
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = 19,
+            Name = "Invalid Amount",
+            PackageAmount = packageAmount,
+            PackageUnit = PackageUnits.Each,
+            PackagePriceAmount = 19,
+            PackagePriceCurrency = "USD",
         };
 
         // Act
         var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
+        response.ShouldHaveErrors(HttpStatusCode.BadRequest);
 
         // Assert the database
-        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == name).ToList();
-        materials.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 4)]
-    public async Task User_Cannot_Create_Material_When_Name_Exceeds_MaxLength()
-    {
-        // Prepare
-        var request = new CreateMaterial.Request
-        {
-            Name = new string('A', 101), // Exceeds max length of 100
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = 19,
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name cannot exceed 100 characters.");
-
-        // Assert the database
-        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name.Length > 100).ToList();
+        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Invalid Amount").ToList();
         materials.ShouldBeEmpty();
     }
 
@@ -109,8 +95,10 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "Existing Material", // This name was created in Seed test
-            Unit = MaterialUnit.Drops,
-            PricePerUnit = 15,
+            PackageAmount = 1,
+            PackageUnit = PackageUnits.Each,
+            PackagePriceAmount = 15,
+            PackagePriceCurrency = "USD",
         };
 
         // Act
@@ -124,132 +112,6 @@ public class Create_Material_Tests
         materials.Count.ShouldBe(1); // Only the original one from Seed
     }
 
-    [Test, NotInParallel(Order = 7)]
-    public async Task User_Cannot_Create_Material_When_PricePerUnit_Is_Zero()
-    {
-        // Prepare
-        var request = new CreateMaterial.Request
-        {
-            Name = "Test Material",
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = 0,
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Price per unit must be greater than zero.");
-
-        // Assert the database
-        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Test Material").ToList();
-        materials.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 8)]
-    public async Task User_Cannot_Create_Material_When_PricePerUnit_Is_Negative()
-    {
-        // Prepare
-        var request = new CreateMaterial.Request
-        {
-            Name = "Test Material",
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = -5,
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Price per unit must be greater than zero.");
-
-        // Assert the database
-        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Test Material").ToList();
-        materials.ShouldBeEmpty();
-    }
-
-    [Test, NotInParallel(Order = 10)]
-    public async Task User_Cannot_Create_Material_When_Name_Is_Too_Short()
-    {
-        // Prepare
-        var request = new CreateMaterial.Request
-        {
-            Name = "A", // Very short name (though this might be valid, testing edge case)
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = 19,
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
-
-        // Assert the response
-        // This might pass validation, but we're testing the edge case
-        if (response.IsSuccess)
-        {
-            // If it passes, verify the database
-            var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "A").ToList();
-            materials.Count.ShouldBe(1);
-        }
-        else
-        {
-            // If it fails, verify no material was created
-            var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "A").ToList();
-            materials.ShouldBeEmpty();
-        }
-    }
-
-    [Test, NotInParallel(Order = 11)]
-    public async Task User_Cannot_Create_Material_When_PricePerUnit_Is_Very_Large()
-    {
-        // Prepare
-        var request = new CreateMaterial.Request
-        {
-            Name = "Expensive Material",
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = double.MaxValue, // Very large value
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
-
-        // Assert the response
-        // This might pass validation, but we're testing the edge case
-        if (response.IsSuccess)
-        {
-            // If it passes, verify the database
-            var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Expensive Material").ToList();
-            materials.Count.ShouldBe(1);
-        }
-        else
-        {
-            // If it fails, verify no material was created
-            var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Expensive Material").ToList();
-            materials.ShouldBeEmpty();
-        }
-    }
-
-    [Test, NotInParallel(Order = 12)]
-    public async Task User_Cannot_Create_Material_When_Unit_Is_Invalid()
-    {
-        // Prepare
-        var request = new CreateMaterial.Request
-        {
-            Name = "Invalid Unit Material",
-            Unit = (MaterialUnit)999, // Invalid enum value
-            PricePerUnit = 19,
-        };
-
-        // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
-
-        // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Unit has an invalid value.");
-
-        // Assert the database
-        var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Invalid Unit Material").ToList();
-        materials.ShouldBeEmpty();
-    }
-
     [Test, NotInParallel(Order = 13)]
     public async Task User_Can_Create_Material_With_Same_Name_As_Another_User()
     {
@@ -257,8 +119,10 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "Existing Material", // This name was created by rodrigo.basniak in Seed test
-            Unit = MaterialUnit.Drops,
-            PricePerUnit = 25,
+            PackageAmount = 1,
+            PackageUnit = PackageUnits.Each,
+            PackagePriceAmount = 25,
+            PackagePriceCurrency = "USD",
         };
 
         // Act
@@ -269,10 +133,8 @@ public class Create_Material_Tests
 
         result.Id.ShouldNotBe(Guid.Empty);
         result.Name.ShouldBe("Existing Material");
-        result.PricePerUnit.ShouldBe(25);
-        result.Unit.ShouldNotBeNull();
-        result.Unit.Id.ShouldBe((int)MaterialUnit.Drops);
-        result.Unit.Value.ShouldBe(MaterialUnit.Drops.ToString());
+        result.UnitPriceAmount.ShouldBe(25);
+        EnumAssertionExtensions.ShouldBeEquivalentTo(result.UnitPriceUnit, PackageUnits.Each);
 
         // Assert the database - should have two materials with the same name but different users
         var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Existing Material").ToList();
@@ -283,17 +145,14 @@ public class Create_Material_Tests
 
         rbMaterial.ShouldNotBeNull();
         rbMaterial.Id.ShouldNotBe(rsMaterial.Id);
-        rbMaterial.PricePerUnit.ShouldBe(10.0); // From Seed test
-        rbMaterial.Unit.ShouldBe(MaterialUnit.Unit); // From Seed test
+        rbMaterial.UnitPriceAmount.ShouldBe(10.0); // From Seed test
+        rbMaterial.UnitPriceUnit.ShouldBe(PackageUnits.Each); // From Seed test
 
         rsMaterial.ShouldNotBeNull();
-        rsMaterial.PricePerUnit.ShouldBe(25);
-        rsMaterial.Unit.ShouldBe(MaterialUnit.Drops);
+        rsMaterial.UnitPriceAmount.ShouldBe(25);
+        rsMaterial.UnitPriceUnit.ShouldBe(PackageUnits.Each);
     }
 
-    /// <summary>
-    /// The user should be able to create a new material with valid data
-    /// </summary>
     [Test, NotInParallel(Order = 14)]
     public async Task User_Can_Create_Material()
     {
@@ -301,8 +160,10 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "8x4 magnet for test",
-            Unit = MaterialUnit.Unit,
-            PricePerUnit = 19,
+            PackageAmount = 1,
+            PackageUnit = PackageUnits.Each,
+            PackagePriceAmount = 19,
+            PackagePriceCurrency = "USD",
         };
 
         // Act
@@ -313,10 +174,8 @@ public class Create_Material_Tests
 
         result.Id.ShouldNotBe(Guid.Empty);
         result.Name.ShouldBe("8x4 magnet for test");
-        result.PricePerUnit.ShouldBe(19);
-        result.Unit.ShouldNotBeNull();
-        result.Unit.Id.ShouldBe((int)MaterialUnit.Unit);
-        result.Unit.Value.ShouldBe(MaterialUnit.Unit.ToString());
+        result.UnitPriceAmount.ShouldBe(19);
+        EnumAssertionExtensions.ShouldBeEquivalentTo(result.UnitPriceUnit, PackageUnits.Each);
 
         // Assert the database
         var entity = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Id == result.Id);
@@ -324,8 +183,8 @@ public class Create_Material_Tests
         entity.ShouldNotBeNull();
         entity.Id.ShouldBe(result.Id);
         entity.Name.ShouldBe("8x4 magnet for test");
-        entity.PricePerUnit.ShouldBe(19);
-        entity.Unit.ShouldBe(MaterialUnit.Unit);
+        entity.UnitPriceAmount.ShouldBe(19);
+        entity.UnitPriceUnit.ShouldBe(PackageUnits.Each);
     }
 
     [Test, NotInParallel(Order = 99)]

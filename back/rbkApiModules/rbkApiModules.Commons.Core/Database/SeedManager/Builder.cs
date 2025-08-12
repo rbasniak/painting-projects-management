@@ -23,7 +23,7 @@ public static class SeedBuilder
             {
                 context.Database.EnsureDeleted();
 
-                context.Database.Migrate();
+                context.Database.EnsureCreated();
             }
 
             if (options._migrateOnStartup)

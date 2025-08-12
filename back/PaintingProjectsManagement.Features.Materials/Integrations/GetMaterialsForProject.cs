@@ -17,7 +17,6 @@ public static partial class GetMaterialsForProject
     {
         public async Task<QueryResponse<IReadOnlyCollection<ReadOnlyMaterial>>> HandleAsync(Abstractions.GetMaterialsForProject.Request request, CancellationToken cancellationToken)
         {
-            var temp = await _context.Set<Material>().ToListAsync();
             var materials = await _context.Set<Material>()
                 .Where(x => x.TenantId == request.Identity.Tenant)
                 .Where(x => request.MaterialIds.Contains(x.Id))

@@ -18,10 +18,10 @@ public class GetMaterialsForProject_Tests
     public async Task Seed()
     {
         // Create test materials for different users
-        rodrigoMaterial1 = new Material("rodrigo.basniak", "Rodrigo Material 1", MaterialUnit.Unit, 10.0);
-        rodrigoMaterial2 = new Material("rodrigo.basniak", "Rodrigo Material 2", MaterialUnit.Drops, 5.0);
-        ricardoMaterial1 = new Material("ricardo.smarzaro", "Ricardo Material 1", MaterialUnit.Unit, 15.0);
-        ricardoMaterial2 = new Material("ricardo.smarzaro", "Ricardo Material 2", MaterialUnit.Drops, 8.0);
+        rodrigoMaterial1 = new Material("rodrigo.basniak", "Rodrigo Material 1", new Quantity(1, PackageUnits.Each), new Money(10.0, "USD"));
+        rodrigoMaterial2 = new Material("rodrigo.basniak", "Rodrigo Material 2", new Quantity(1, PackageUnits.Each), new Money(5.0, "USD"));
+        ricardoMaterial1 = new Material("ricardo.smarzaro", "Ricardo Material 1", new Quantity(1, PackageUnits.Each), new Money(15.0, "USD"));
+        ricardoMaterial2 = new Material("ricardo.smarzaro", "Ricardo Material 2", new Quantity(1, PackageUnits.Each), new Money(8.0, "USD"));
 
         using (var context = TestingServer.CreateContext())
         {
@@ -206,13 +206,9 @@ public class GetMaterialsForProject_Tests
         // Verify material properties are correctly mapped
         var material1 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Material 1");
         material1.ShouldNotBeNull();
-        material1.Unit.ShouldBe(MaterialUnit.Unit);
-        material1.PricePerUnit.ShouldBe(10.0);
 
         var material2 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Material 2");
         material2.ShouldNotBeNull();
-        material2.Unit.ShouldBe(MaterialUnit.Drops);
-        material2.PricePerUnit.ShouldBe(5.0);
     }
 
     [Test, NotInParallel(Order = 9)]

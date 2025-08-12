@@ -14,11 +14,26 @@ public class MaterialConfig : IEntityTypeConfiguration<Material>
             .IsRequired()
             .HasMaxLength(100);
         
-        builder.Property(x => x.Unit)
-            .IsRequired();
+        builder.OwnsOne(x => x.PackageContent, owned =>
+        {
+            owned.Property(p => p.Amount)
+                .HasColumnName("package_content_amount")
+                .IsRequired();
+            owned.Property(p => p.Unit)
+                .HasColumnName("package_content_unit")
+                .IsRequired();
+        });
         
-        builder.Property(x => x.PricePerUnit)
-            .IsRequired();
+        builder.OwnsOne(x => x.PackagePrice, owned =>
+        {
+            owned.Property(p => p.Amount)
+                .HasColumnName("package_price_amount")
+                .IsRequired();
+            owned.Property(p => p.CurrencyCode)
+                .HasColumnName("package_price_currency")
+                .HasMaxLength(3)
+                .IsRequired();
+        });
 
         // Indexes
         builder.HasIndex(x => x.Name);
