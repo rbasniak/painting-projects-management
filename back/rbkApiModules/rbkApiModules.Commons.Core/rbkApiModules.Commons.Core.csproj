@@ -6,6 +6,12 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Events\Events\Publishing\**" />
+	  <EmbeddedResource Remove="Events\Events\Publishing\**" />
+	  <None Remove="Events\Events\Publishing\**" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -26,7 +32,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Database\Commons\Validators\" />
-	  <Folder Include="Events\Events\Publishing\" />
 	  <Folder Include="Events\Persistence\Interceptors\" />
 	</ItemGroup>
 

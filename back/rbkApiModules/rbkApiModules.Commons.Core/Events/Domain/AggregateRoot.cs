@@ -6,7 +6,7 @@ public abstract class AggregateRoot : BaseEntity
 {
     private readonly List<IDomainEvent> _domainEvents = new();
 
-    public void RaiseDomainEvent(IDomainEvent domainEvent)
+    protected void RaiseDomainEvent(IDomainEvent domainEvent)
     {
         _domainEvents.Add(domainEvent);
     }

@@ -1,2 +1,6 @@
 - If endpoint implements require authorization, ensure request inherits from AuthenticatedRequest.
 - Ensure all endpoints use WithTags and WithName
+- CancellationToken should be passed to all async methods
+- If method is async, ensure it returns a Task or Task<T>
+- If method is async, it must have async suffix
+- CancellationToken parameters should be named cancellationToken

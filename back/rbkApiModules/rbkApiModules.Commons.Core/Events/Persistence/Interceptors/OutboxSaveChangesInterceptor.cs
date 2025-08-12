@@ -1,9 +1,4 @@
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace rbkApiModules.Commons.Core;
@@ -22,7 +17,17 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
         {
             return base.SavingChanges(eventData, result);
         }
-        
+
+        var aggregatesWithEvents = context.ChangeTracker.Entries()
+           .Where(e => e.Entity is AggregateRoot ar && ar.GetDomainEvents().Count > 0)
+           .Select(e => (AggregateRoot)e.Entity)
+           .ToList();
+
+        if (aggregatesWithEvents.Count == 0)
+        {
+            return base.SavingChanges(eventData, result);
+        }
+
         PersistDomainEventsToOutbox(context);
         
         return base.SavingChanges(eventData, result);
@@ -33,6 +38,16 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
         if (eventData.Context is not DbContext context)
         {
             return base.SavingChangesAsync(eventData, result, cancellationToken);
+        }
+
+        var aggregatesWithEvents = context.ChangeTracker.Entries()
+           .Where(e => e.Entity is AggregateRoot ar && ar.GetDomainEvents().Count > 0)
+           .Select(e => (AggregateRoot)e.Entity)
+           .ToList();
+
+        if (aggregatesWithEvents.Count == 0)
+        {
+            base.SavingChangesAsync(eventData, result, cancellationToken);
         }
 
         PersistDomainEventsToOutbox(context);

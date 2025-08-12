@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Concurrent;
 using System.Reflection;
 
 namespace rbkApiModules.Commons.Core;
 
 public static class EventEnvelopeFactory
 {
+    private static readonly ConcurrentDictionary<Type, EventNameAttribute> Cache = new();
+
     public static EventEnvelope<TEvent> Wrap<TEvent>(TEvent @event, string tenantId, string username, string? correlationId = null, string? causationId = null)
     {
         if (@event is null)
@@ -22,19 +25,32 @@ public static class EventEnvelopeFactory
             throw new ArgumentNullException(nameof(username));
         }
 
-        var attribute = typeof(TEvent).GetCustomAttribute<EventNameAttribute>() ?? throw new InvalidOperationException($"Missing [EventName] on {typeof(TEvent).FullName}");
+        var attr = GetEventNameAttribute(typeof(TEvent));
 
         return new EventEnvelope<TEvent>
         {
             EventId = Guid.NewGuid(),
-            Name = attribute.Name,
-            Version = attribute.Version,
+            Name = attr.Name,
+            Version = attr.Version,
             OccurredUtc = DateTime.UtcNow,
             TenantId = tenantId,
-            Username = username,
             CorrelationId = correlationId,
             CausationId = causationId,
-            Event = @event
+            Event = @event!
         };
+    }
+
+    private static EventNameAttribute GetEventNameAttribute(Type t)
+    {
+        return Cache.GetOrAdd(t, static type =>
+        {
+            var attr = type.GetCustomAttribute<EventNameAttribute>(inherit: false);
+            if (attr is null)
+            {
+                throw new InvalidOperationException($"Missing [EventName] on {type.FullName}");
+            }
+
+            return attr;
+        });
     }
 } 

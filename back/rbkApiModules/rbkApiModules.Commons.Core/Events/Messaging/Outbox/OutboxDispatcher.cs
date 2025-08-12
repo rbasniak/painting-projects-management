@@ -38,17 +38,20 @@ public sealed class OutboxDispatcher : BackgroundService
         }
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("OutboxDispatcher started");
 
-        while (!stoppingToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
         {
             try
             {
                 using var scope = _scopeFactory.CreateScope();
 
                 var db = _options.ResolveDbContext!(scope.ServiceProvider);
+
+                using var tx = await db.Database.BeginTransactionAsync(cancellationToken);
+
                 var outboxSet = db.Set<OutboxMessage>();
                 var inboxSet = db.Set<InboxMessage>();
 
@@ -56,11 +59,11 @@ public sealed class OutboxDispatcher : BackgroundService
                     .Where(x => x.ProcessedUtc == null && x.Attempts < _options.MaxAttempts)
                     .OrderBy(x => x.CreatedUtc)
                     .Take(_options.BatchSize)
-                    .ToListAsync(stoppingToken);
+                    .ToListAsync(cancellationToken);
 
                 if (batch.Count == 0)
                 {
-                    await Task.Delay(_options.PollIntervalMs, stoppingToken);
+                    await Task.Delay(_options.PollIntervalMs, cancellationToken);
                     continue;
                 }
 
@@ -82,24 +85,25 @@ public sealed class OutboxDispatcher : BackgroundService
                         {
                             _logger.LogWarning("No event type found for {Name} v{Version}", msg.Name, msg.Version);
                             msg.Attempts++;
-                            await db.SaveChangesAsync(stoppingToken);
+                            await db.SaveChangesAsync(cancellationToken);
                             continue;
                         }
 
                         var envelopeType = typeof(EventEnvelope<>).MakeGenericType(clrType);
-                        var envelope = JsonSerializer.Deserialize(msg.Payload, envelopeType, new JsonSerializerOptions(JsonSerializerDefaults.Web))!;
+
+                        var envelope = JsonEventSerializer.Deserialize(msg.Payload, envelopeType);
 
                         var handlers = ResolveHandlers(scope.ServiceProvider, clrType);
                         foreach (var handler in handlers)
                         {
                             var handlerName = handler.GetType().FullName!;
 
-                            var already = await inboxSet.FindAsync(new object[] { msg.Id, handlerName }, stoppingToken);
+                            var already = await inboxSet.FindAsync(new object[] { msg.Id, handlerName }, cancellationToken);
                             if (already is not null) continue;
 
                             _logger.LogInformation("Dispatching event {Name} v{Version} to handler {Handler}", msg.Name, msg.Version, handlerName);
 
-                            await InvokeHandler(handler, envelope, stoppingToken);
+                            await InvokeHandler(handler, envelope, cancellationToken);
 
                             inboxSet.Add(new InboxMessage
                             {
@@ -108,11 +112,13 @@ public sealed class OutboxDispatcher : BackgroundService
                                 ProcessedUtc = DateTime.UtcNow,
                                 Attempts = 1
                             });
-                            await db.SaveChangesAsync(stoppingToken);
+                            await db.SaveChangesAsync(cancellationToken);
                         }
 
                         msg.ProcessedUtc = DateTime.UtcNow;
-                        await db.SaveChangesAsync(stoppingToken);
+                        await db.SaveChangesAsync(cancellationToken);
+
+                        await tx.CommitAsync(cancellationToken);
 
                         sw.Stop();
                         EventsMeters.OutboxMessagesProcessed.Add(1);
@@ -132,7 +138,7 @@ public sealed class OutboxDispatcher : BackgroundService
                         _logger.LogWarning("Scheduling retry for {Id} in ~{BackoffMs}ms (attempt {Attempts})", msg.Id, backoffMs, msg.Attempts);
                         msg.CreatedUtc = DateTime.UtcNow.AddMilliseconds(backoffMs); // move to later by adjusting order key
 
-                        await db.SaveChangesAsync(stoppingToken);
+                        await db.SaveChangesAsync(cancellationToken);
                     }
                 }
             }
@@ -145,11 +151,11 @@ public sealed class OutboxDispatcher : BackgroundService
                 _logger.LogError(ex, "OutboxDispatcher loop error");
             }
 
-            if (!stoppingToken.IsCancellationRequested)
+            if (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
-                    await Task.Delay(_options.PollIntervalMs, stoppingToken);
+                    await Task.Delay(_options.PollIntervalMs, cancellationToken);
                 }
                 catch (OperationCanceledException) { }
             }
