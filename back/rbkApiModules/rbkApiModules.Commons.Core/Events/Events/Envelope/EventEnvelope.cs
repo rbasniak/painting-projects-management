@@ -9,6 +9,7 @@ public sealed class EventEnvelope<TEvent>
     public int Version { get; init; }
     public DateTime OccurredUtc { get; init; }
     public string TenantId { get; init; } = default!;
+    public string Username { get; init; } = default!;
     public string? CorrelationId { get; init; }
     public string? CausationId { get; init; }
     public TEvent Event { get; init; } = default!;

@@ -55,7 +55,11 @@ public class Project : TenantEntity
 
     public void ConsumeMaterial(Guid materialId, double quantity, MaterialUnit unit)
     {
+        // TODO: make it idempotent
+
         _materials.Add(new MaterialForProject(Id, materialId, quantity, unit));
+
+        RaiseDomainEvent(new ProjectMaterialAdded(Id, materialId, quantity));
     }
 
     public void AddExecutionWindow(ProjectStepDefinition step, DateTime start, DateTime end)

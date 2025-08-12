@@ -26,6 +26,8 @@
 
 	<ItemGroup>
 	  <Folder Include="Database\Commons\Validators\" />
+	  <Folder Include="Events\Events\Publishing\" />
+	  <Folder Include="Events\Persistence\Interceptors\" />
 	</ItemGroup>
 
 </Project>

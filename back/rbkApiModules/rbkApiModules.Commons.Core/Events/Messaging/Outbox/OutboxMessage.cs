@@ -15,4 +15,5 @@ public class OutboxMessage
     public DateTime CreatedUtc { get; set; }
     public DateTime? ProcessedUtc { get; set; }
     public int Attempts { get; set; }
+    public string Username { get; set; } = default!;
 } 

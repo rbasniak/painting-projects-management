@@ -10,23 +10,33 @@ namespace rbkApiModules.Commons.Core;
 
 public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public OutboxSaveChangesInterceptor(IHttpContextAccessor httpContextAccessor)
+    private readonly IRequestContext _requestContext;
+    public OutboxSaveChangesInterceptor(IRequestContext requestContext)
     {
-        _httpContextAccessor = httpContextAccessor;
+        _requestContext = requestContext;
     }
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {
-        if (eventData.Context is not DbContext context) return base.SavingChanges(eventData, result);
+        if (eventData.Context is not DbContext context)
+        {
+            return base.SavingChanges(eventData, result);
+        }
+        
         PersistDomainEventsToOutbox(context);
+        
         return base.SavingChanges(eventData, result);
     }
 
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
-        if (eventData.Context is not DbContext context) return base.SavingChangesAsync(eventData, result, cancellationToken);
+        if (eventData.Context is not DbContext context)
+        {
+            return base.SavingChangesAsync(eventData, result, cancellationToken);
+        }
+
         PersistDomainEventsToOutbox(context);
+        
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
@@ -39,8 +49,6 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
 
         if (aggregatesWithEvents.Count == 0) return;
 
-        // TODO: what will happen if running outside of HTTP context?
-        var tenantId = _httpContextAccessor.GetTenant();
         var now = DateTime.UtcNow;
 
         foreach (var aggregate in aggregatesWithEvents)
@@ -50,7 +58,7 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
 
             foreach (var domainEvent in domainEvents)
             {
-                var envelope = EventEnvelopeFactory.Wrap(domainEvent, tenantId);
+                var envelope = EventEnvelopeFactory.Wrap(domainEvent, _requestContext.TenantId, _requestContext.Username, _requestContext.CorrelationId, _requestContext.CausationId);
                 var payload = JsonEventSerializer.Serialize(envelope);
 
                 context.Set<OutboxMessage>().Add(new OutboxMessage
@@ -59,6 +67,7 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
                     Name = envelope.Name,
                     Version = envelope.Version,
                     TenantId = envelope.TenantId,
+                    Username = envelope.Username,
                     OccurredUtc = envelope.OccurredUtc,
                     CorrelationId = envelope.CorrelationId,
                     CausationId = envelope.CausationId,

@@ -286,3 +286,69 @@ This project is licensed under the MIT License - see the [LICENSE](../LICENSE) f
 ---
 
 **Need help?** Check our [main README](../README.md) for quick start information or browse the detailed documentation above. 
+
+
+
+
+
+------------------
+
+// TODO: outbox explanation
+
+sequenceDiagram
+    autonumber
+    participant UI as API / Command Handler
+    participant UoW as DbContext / UnitOfWork
+    participant AR as Aggregate Root (Project)
+    participant OI as Outbox Interceptor
+    participant DB as Database (Outbox)
+    participant DIS as Outbox Dispatcher (Background Service)
+    participant REG as EventTypeRegistry
+    participant IB as Inbox (Idempotency)
+    participant HND as Event Handler(s)
+
+    UI->>UoW: Load Project (by id)
+    UoW-->>UI: Project instance
+    UI->>AR: ConsumeMaterial(materialId, qty, unit)
+    activate AR
+    AR->>AR: Enforce invariants & mutate state
+    AR->>AR: RaiseDomainEvent(ProjectMaterialAdded)
+    deactivate AR
+
+    UI->>UoW: SaveChanges()
+    activate UoW
+    UoW->>OI: SavingChanges (interceptor hook)
+    activate OI
+    OI->>OI: Wrap event in Envelope<T>\n(+ TenantId, CorrelationId, etc.)
+    OI->>DB: INSERT OutboxMessages(payload = serialized envelope)
+    deactivate OI
+    UoW->>DB: Commit transaction (domain + outbox)
+    deactivate UoW
+    Note over UI,DB: Domain change and outbox row are committed atomically
+
+    loop Poll every N ms
+        DIS->>DB: SELECT unprocessed Outbox messages (FIFO, batch)
+        alt Found messages
+            DIS->>DIS: Deserialize JSON → Envelope<T>
+            DIS->>REG: Resolve Name+Version → CLR Type
+            REG-->>DIS: CLR Type
+
+            %% Idempotency per handler
+            DIS->>IB: Check (EventId, HandlerName)
+            alt Already processed
+                IB-->>DIS: Exists → skip handler
+            else Not processed
+                IB-->>DIS: Not found
+                DIS->>HND: Handle(envelope)
+                activate HND
+                HND-->>DIS: OK (side effects / projections)
+                deactivate HND
+                DIS->>IB: INSERT (EventId, HandlerName, ProcessedUtc)
+            end
+
+            DIS->>DB: Mark Outbox.ProcessedUtc
+        else None
+            DIS-->>DIS: Sleep until next poll
+        end
+    end
+  

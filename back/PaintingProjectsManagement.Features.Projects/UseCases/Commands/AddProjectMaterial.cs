@@ -48,8 +48,6 @@ public class AddProjectMaterial : IEndpoint
 
             project.ConsumeMaterial(request.MaterialId, request.Quantity, request.Unit);
 
-            _events.Raise(project, new ProjectMaterialAdded(request.ProjectId, request.MaterialId, request.Quantity));
-
             await _context.SaveChangesAsync(cancellationToken);
 
             return CommandResponse.Success();
