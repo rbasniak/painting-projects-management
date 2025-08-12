@@ -38,125 +38,134 @@ public sealed class OutboxDispatcher : BackgroundService
         }
     }
 
-    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken ct)
     {
         _logger.LogInformation("OutboxDispatcher started");
 
-        while (!cancellationToken.IsCancellationRequested)
+        while (!ct.IsCancellationRequested)
         {
             try
             {
-                using var scope = _scopeFactory.CreateScope();
-
-                var db = _options.ResolveDbContext!(scope.ServiceProvider);
-
-                using var tx = await db.Database.BeginTransactionAsync(cancellationToken);
-
-                var outboxSet = db.Set<OutboxMessage>();
-                var inboxSet = db.Set<InboxMessage>();
-
-                var batch = await outboxSet
-                    .Where(x => x.ProcessedUtc == null && x.Attempts < _options.MaxAttempts)
-                    .OrderBy(x => x.CreatedUtc)
-                    .Take(_options.BatchSize)
-                    .ToListAsync(cancellationToken);
-
-                if (batch.Count == 0)
+                // 1) Get a batch (short-lived scope, no tracking)
+                using (var scopeQ = _scopeFactory.CreateScope())
                 {
-                    await Task.Delay(_options.PollIntervalMs, cancellationToken);
-                    continue;
-                }
+                    var dbQ = _options.ResolveDbContext!(scopeQ.ServiceProvider);
+                    var now = DateTime.UtcNow;
 
-                foreach (var msg in batch)
-                {
-                    var sw = Stopwatch.StartNew();
-                    using var scopeLog = _logger.BeginScope(new Dictionary<string, object>
+                    var batch = await dbQ.Set<OutboxMessage>()
+                        .AsNoTracking()
+                        .Where(x => x.ProcessedUtc == null
+                                 && (x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now)
+                                 && x.Attempts < _options.MaxAttempts)
+                        .OrderBy(x => x.CreatedUtc)
+                        .Take(_options.BatchSize)
+                        .Select(x => x.Id) // get keys only
+                        .ToListAsync(ct);
+
+                    if (batch.Count == 0)
                     {
-                        ["EventId"] = msg.Id,
-                        ["CorrelationId"] = msg.CorrelationId ?? string.Empty,
-                        ["Name"] = msg.Name,
-                        ["Version"] = msg.Version,
-                        ["TenantId"] = msg.TenantId
-                    });
+                        await Task.Delay(_options.PollIntervalMs, ct);
+                        continue;
+                    }
 
-                    try
+                    // 2) Process each message in its own scope/transaction
+                    foreach (var msgId in batch)
                     {
-                        if (!_registry.TryResolve(msg.Name, msg.Version, out var clrType))
+                        using var scope = _scopeFactory.CreateScope();
+                        var db = _options.ResolveDbContext!(scope.ServiceProvider);
+
+                        // (re)load the message in this context
+                        var msg = await db.Set<OutboxMessage>().FirstOrDefaultAsync(x => x.Id == msgId, ct);
+                        if (msg is null) continue; // deleted / raced
+                        if (msg.ProcessedUtc != null) continue; // already done
+                        if (msg.DoNotProcessBeforeUtc.HasValue && msg.DoNotProcessBeforeUtc > DateTime.UtcNow) continue;
+
+                        using var tx = await db.Database.BeginTransactionAsync(ct);
+
+                        var sw = Stopwatch.StartNew();
+                        using var scopeLog = _logger.BeginScope(new Dictionary<string, object>
                         {
-                            _logger.LogWarning("No event type found for {Name} v{Version}", msg.Name, msg.Version);
-                            msg.Attempts++;
-                            await db.SaveChangesAsync(cancellationToken);
-                            continue;
-                        }
+                            ["EventId"] = msg.Id,
+                            ["CorrelationId"] = msg.CorrelationId ?? string.Empty,
+                            ["Name"] = msg.Name,
+                            ["Version"] = msg.Version,
+                            ["TenantId"] = msg.TenantId
+                        });
 
-                        var envelopeType = typeof(EventEnvelope<>).MakeGenericType(clrType);
-
-                        var envelope = JsonEventSerializer.Deserialize(msg.Payload, envelopeType);
-
-                        var handlers = ResolveHandlers(scope.ServiceProvider, clrType);
-                        foreach (var handler in handlers)
+                        try
                         {
-                            var handlerName = handler.GetType().FullName!;
-
-                            var already = await inboxSet.FindAsync(new object[] { msg.Id, handlerName }, cancellationToken);
-                            if (already is not null) continue;
-
-                            _logger.LogInformation("Dispatching event {Name} v{Version} to handler {Handler}", msg.Name, msg.Version, handlerName);
-
-                            await InvokeHandler(handler, envelope, cancellationToken);
-
-                            inboxSet.Add(new InboxMessage
+                            if (!_registry.TryResolve(msg.Name, msg.Version, out var clrType))
                             {
-                                EventId = msg.Id,
-                                HandlerName = handlerName,
-                                ProcessedUtc = DateTime.UtcNow,
-                                Attempts = 1
-                            });
-                            await db.SaveChangesAsync(cancellationToken);
+                                _logger.LogWarning("No event type found for {Name} v{Version}", msg.Name, msg.Version);
+                                msg.Attempts++;
+                                msg.DoNotProcessBeforeUtc = DateTime.UtcNow.Add(ComputeBackoff(msg.Attempts));
+                                await db.SaveChangesAsync(ct);
+                                await tx.CommitAsync(ct);
+                                continue;
+                            }
+
+                            var envelopeType = typeof(EventEnvelope<>).MakeGenericType(clrType);
+                            var envelope = JsonEventSerializer.Deserialize(msg.Payload, envelopeType);
+
+                            var inboxSet = db.Set<InboxMessage>();
+                            var handlers = ResolveHandlers(scope.ServiceProvider, clrType);
+
+                            foreach (var handler in handlers)
+                            {
+                                var handlerName = handler.GetType().FullName!;
+                                var already = await inboxSet.FindAsync(new object[] { msg.Id, handlerName }, ct);
+                                if (already is not null) continue;
+
+                                _logger.LogInformation("Dispatching {Name} v{Version} to {Handler}", msg.Name, msg.Version, handlerName);
+
+                                await InvokeHandler(handler, envelope, ct);
+
+                                inboxSet.Add(new InboxMessage
+                                {
+                                    EventId = msg.Id,
+                                    HandlerName = handlerName,
+                                    ProcessedUtc = DateTime.UtcNow,
+                                    Attempts = 1
+                                });
+                            }
+
+                            // mark processed after all handlers succeed
+                            msg.ProcessedUtc = DateTime.UtcNow;
+
+                            await db.SaveChangesAsync(ct);
+                            await tx.CommitAsync(ct);
+
+                            sw.Stop();
+                            EventsMeters.OutboxMessagesProcessed.Add(1);
+                            EventsMeters.OutboxDispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
                         }
+                        catch (Exception ex)
+                        {
+                            // rollback tx and backoff
+                            try { await tx.RollbackAsync(ct); } catch { /* ignore */ }
 
-                        msg.ProcessedUtc = DateTime.UtcNow;
-                        await db.SaveChangesAsync(cancellationToken);
+                            var attempts = msg.Attempts + 1;
+                            msg.Attempts = attempts;
+                            msg.DoNotProcessBeforeUtc = DateTime.UtcNow.Add(ComputeBackoff(attempts));
+                            await db.SaveChangesAsync(ct);
 
-                        await tx.CommitAsync(cancellationToken);
-
-                        sw.Stop();
-                        EventsMeters.OutboxMessagesProcessed.Add(1);
-                        EventsMeters.OutboxDispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
-                    }
-                    catch (Exception ex)
-                    {
-                        sw.Stop();
-                        EventsMeters.OutboxMessagesFailed.Add(1);
-                        EventsMeters.OutboxDispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
-
-                        _logger.LogError(ex, "Outbox dispatch failed for {Id}", msg.Id);
-                        msg.Attempts++;
-
-                        // jittered exponential backoff based on attempts
-                        var backoffMs = ComputeBackoffMs(msg.Attempts, _options.PollIntervalMs);
-                        _logger.LogWarning("Scheduling retry for {Id} in ~{BackoffMs}ms (attempt {Attempts})", msg.Id, backoffMs, msg.Attempts);
-                        msg.CreatedUtc = DateTime.UtcNow.AddMilliseconds(backoffMs); // move to later by adjusting order key
-
-                        await db.SaveChangesAsync(cancellationToken);
+                            sw.Stop();
+                            EventsMeters.OutboxMessagesFailed.Add(1);
+                            EventsMeters.OutboxDispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
+                            _logger.LogError(ex, "Outbox dispatch failed for {Id}", msg.Id);
+                        }
                     }
                 }
             }
-            catch (OperationCanceledException)
-            {
-                // graceful shutdown
-            }
+            catch (OperationCanceledException) { /* shutdown */ }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "OutboxDispatcher loop error");
             }
 
-            if (!cancellationToken.IsCancellationRequested)
+            if (!ct.IsCancellationRequested)
             {
-                try
-                {
-                    await Task.Delay(_options.PollIntervalMs, cancellationToken);
-                }
+                try { await Task.Delay(_options.PollIntervalMs, ct); }
                 catch (OperationCanceledException) { }
             }
         }
@@ -164,13 +173,11 @@ public sealed class OutboxDispatcher : BackgroundService
         _logger.LogInformation("OutboxDispatcher stopped");
     }
 
-    private static int ComputeBackoffMs(int attempts, int basePollMs)
+    private static TimeSpan ComputeBackoff(int attempts)
     {
-        var min = Math.Min(attempts, 10); // cap exponent
-        var exp = Math.Pow(2, min);
-        var jitter = Random.Shared.NextDouble() * 0.25 + 0.75; // 0.75x - 1.0x
-        var ms = (int)(basePollMs * exp * jitter);
-        return Math.Clamp(ms, basePollMs, 60_000);
+        var baseSeconds = Math.Min(300, (int)Math.Pow(2, Math.Min(10, attempts)));
+        var jitter = Random.Shared.Next(0, 1000);
+        return TimeSpan.FromSeconds(baseSeconds).Add(TimeSpan.FromMilliseconds(jitter));
     }
 
     private static IEnumerable<object> ResolveHandlers(IServiceProvider sp, Type clrType)

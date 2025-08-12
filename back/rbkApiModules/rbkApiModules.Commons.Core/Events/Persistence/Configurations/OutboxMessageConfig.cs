@@ -21,9 +21,11 @@ public class OutboxMessageConfig : IEntityTypeConfiguration<OutboxMessage>
         builder.Property(x => x.CreatedUtc).IsRequired();
         builder.Property(x => x.ProcessedUtc);
         builder.Property(x => x.Attempts).IsRequired();
+        builder.Property(x => x.DoNotProcessBeforeUtc);
 
         builder.HasIndex(x => new { x.TenantId, x.Name, x.Version });
         builder.HasIndex(x => x.ProcessedUtc);
         builder.HasIndex(x => x.CreatedUtc);
+        builder.HasIndex(x => x.DoNotProcessBeforeUtc);
     }
 } 

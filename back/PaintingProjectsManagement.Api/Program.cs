@@ -47,7 +47,6 @@ public class Program
 
         // Events infrastructure registrations
         builder.Services.AddSingleton<IEventTypeRegistry>(sp => new ReflectionEventTypeRegistry(AppDomain.CurrentDomain.GetAssemblies()));
-        builder.Services.AddSingleton<IEventRouter, DiEventRouter>();
         builder.Services.Configure<OutboxOptions>(opts =>
         {
             opts.BatchSize = 50;
@@ -144,33 +143,14 @@ public class Program
                 .Select(x => x.CreatedUtc)
                 .FirstOrDefaultAsync(ct);
 
-            if (oldest == default)
-            {
-                return Results.Ok(new { oldestUnprocessedSeconds = 0 });
-            }
-
-            var ageSeconds = (int)Math.Max(0, (DateTime.UtcNow - oldest).TotalSeconds);
-            return Results.Ok(new { oldestUnprocessedSeconds = ageSeconds });
-        });
-
-        // app.MapGet("/health", () => Results.Ok("Healthy"));
-
-        // Configure the HTTP request pipeline. 
-        app.MapOpenApi();
-        app.UseSwaggerUI(options =>
+            return Results.Ok(new { OldestUnprocessedAgeSeconds = oldest == default ? 0 : (DateTime.UtcNow - oldest).TotalSeconds });
+        })
+        .WithName("OutboxHealth")
+        .WithOpenApi(generatedOperation => new OpenApiOperation(generatedOperation)
         {
-            options.SwaggerEndpoint("/openapi/v1.json", "Painting Projects Management API v1");
+            Summary = "Outbox processing lag",
+            Description = "Returns the age of the oldest unprocessed outbox message, in seconds",
         });
-        app.UseReDoc(options =>
-        {
-            options.SpecUrl("/openapi/v1.json");
-        });
-        app.MapScalarApiReference();
-
-        app.MapMaterialsFeature();
-        app.MapPrintingModelsFeature();
-        app.MapPaintsFeature();
-        app.MapProjectsFeature();
 
         app.Run();
     }
