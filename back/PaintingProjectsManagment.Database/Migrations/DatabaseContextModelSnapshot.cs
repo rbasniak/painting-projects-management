@@ -525,7 +525,119 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasIndex("TenantId", "Name", "Version");
 
-                    b.ToTable("OutboxMessages", (string)null);
+                    b.ToTable("OutboxDomainMessages", (string)null);
+                });
+
+            modelBuilder.Entity("rbkApiModules.Commons.Core.OutboxIntegrationEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CausationId")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("OccurredUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ProcessedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedUtc");
+
+                    b.HasIndex("ProcessedUtc");
+
+                    b.HasIndex("TenantId", "Name", "Version");
+
+                    b.ToTable("OutboxIntegrationEvents", (string)null);
+                });
+
+            modelBuilder.Entity("rbkApiModules.Commons.Core.IntegrationDelivery", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ProcessedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Subscriber")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("ProcessedUtc");
+
+                    b.ToTable("IntegrationDeliveries", (string)null);
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.MaterialLocalCopy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("PricePerUnit")
+                        .HasColumnType("REAL");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("projects.materials_local_copy", (string)null);
                 });
 
             modelBuilder.Entity("rbkApiModules.Commons.Relational.SeedHistory", b =>

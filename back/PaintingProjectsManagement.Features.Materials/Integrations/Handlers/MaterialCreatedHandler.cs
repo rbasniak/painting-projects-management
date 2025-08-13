@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using PaintingProjectsManagement.Features.Materials.Abstractions;
 using rbkApiModules.Commons.Core;
 
@@ -7,13 +5,13 @@ namespace PaintingProjectsManagement.Features.Materials;
 
 public sealed class MaterialCreatedHandler : IEventHandler<MaterialCreated>
 {
-    private readonly IServiceScopeFactory _scopeFactory;
-    private readonly IOptions<OutboxOptions> _outboxOptions;
+    private readonly IIntegrationOutbox _outbox;
+    private readonly IIntegrationDeliveryScheduler _scheduler;
 
-    public MaterialCreatedHandler(IServiceScopeFactory scopeFactory, IOptions<OutboxOptions> outboxOptions)
+    public MaterialCreatedHandler(IIntegrationOutbox outbox, IIntegrationDeliveryScheduler scheduler)
     {
-        _scopeFactory = scopeFactory;
-        _outboxOptions = outboxOptions;
+        _outbox = outbox;
+        _scheduler = scheduler;
     }
 
     public async Task Handle(EventEnvelope<MaterialCreated> envelope, CancellationToken cancellationToken)
@@ -37,28 +35,8 @@ public sealed class MaterialCreatedHandler : IEventHandler<MaterialCreated>
             envelope.EventId.ToString()
         );
 
-        var payload = JsonEventSerializer.Serialize(integrationEnvelope);
-
-        using var scope = _scopeFactory.CreateScope();
-        var dbContext = _outboxOptions.Value.ResolveDbContext!(scope.ServiceProvider);
-
-        dbContext.Set<OutboxMessage>().Add(new OutboxMessage
-        {
-            Id = integrationEnvelope.EventId,
-            Name = integrationEnvelope.Name,
-            Version = integrationEnvelope.Version,
-            TenantId = integrationEnvelope.TenantId,
-            Username = integrationEnvelope.Username,
-            OccurredUtc = integrationEnvelope.OccurredUtc,
-            CorrelationId = integrationEnvelope.CorrelationId,
-            CausationId = integrationEnvelope.CausationId,
-            Payload = payload,
-            CreatedUtc = DateTime.UtcNow,
-            ProcessedUtc = null,
-            Attempts = 0
-        });
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        var eventId = _outbox.Enqueue(integrationEnvelope);
+        await _scheduler.SeedDeliveriesAsync(eventId, integrationEnvelope.Name, integrationEnvelope.Version, cancellationToken);
     }
 }
 

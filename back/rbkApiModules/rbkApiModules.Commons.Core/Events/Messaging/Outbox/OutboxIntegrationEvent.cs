@@ -2,7 +2,11 @@ using System;
 
 namespace rbkApiModules.Commons.Core;
 
-public class OutboxMessage
+/// <summary>
+/// Represents an event that is published to external subscribers via the
+/// integration outbox.
+/// </summary>
+public class OutboxIntegrationEvent
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = default!;
@@ -16,5 +20,4 @@ public class OutboxMessage
     public DateTime? ProcessedUtc { get; set; }
     public int Attempts { get; set; }
     public string Username { get; set; } = default!;
-    public DateTime? DoNotProcessBeforeUtc { get; set; }
-} 
+}

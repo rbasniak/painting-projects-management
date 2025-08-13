@@ -160,7 +160,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OutboxMessages",
+                name: "OutboxDomainMessages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -179,13 +179,77 @@ namespace PaintingProjectsManagment.Database.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OutboxMessages", x => x.Id);
+                    table.PrimaryKey("PK_OutboxDomainMessages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OutboxMessages_Tenants_TenantId",
+                        name: "FK_OutboxDomainMessages_Tenants_TenantId",
                         column: x => x.TenantId,
                         principalTable: "Tenants",
                         principalColumn: "Alias",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OutboxIntegrationEvents",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
+                    Version = table.Column<int>(type: "INTEGER", nullable: false),
+                    TenantId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    OccurredUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CorrelationId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    CausationId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    Payload = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ProcessedUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Attempts = table.Column<int>(type: "INTEGER", nullable: false),
+                    Username = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutboxIntegrationEvents", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_OutboxIntegrationEvents_Tenants_TenantId",
+                        column: x => x.TenantId,
+                        principalTable: "Tenants",
+                        principalColumn: "Alias",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IntegrationDeliveries",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    EventId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Subscriber = table.Column<string>(type: "TEXT", maxLength: 512, nullable: false),
+                    ProcessedUtc = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Attempts = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IntegrationDeliveries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_IntegrationDeliveries_OutboxIntegrationEvents_EventId",
+                        column: x => x.EventId,
+                        principalTable: "OutboxIntegrationEvents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "projects.materials_local_copy",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    PricePerUnit = table.Column<double>(type: "REAL", nullable: false),
+                    Unit = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    UpdatedUtc = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_projects.materials_local_copy", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -579,24 +643,49 @@ namespace PaintingProjectsManagment.Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_OutboxMessages_CreatedUtc",
-                table: "OutboxMessages",
+                name: "IX_OutboxDomainMessages_CreatedUtc",
+                table: "OutboxDomainMessages",
                 column: "CreatedUtc");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OutboxMessages_DoNotProcessBeforeUtc",
-                table: "OutboxMessages",
+                name: "IX_OutboxDomainMessages_DoNotProcessBeforeUtc",
+                table: "OutboxDomainMessages",
                 column: "DoNotProcessBeforeUtc");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OutboxMessages_ProcessedUtc",
-                table: "OutboxMessages",
+                name: "IX_OutboxDomainMessages_ProcessedUtc",
+                table: "OutboxDomainMessages",
                 column: "ProcessedUtc");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OutboxMessages_TenantId_Name_Version",
-                table: "OutboxMessages",
+                name: "IX_OutboxDomainMessages_TenantId_Name_Version",
+                table: "OutboxDomainMessages",
                 columns: new[] { "TenantId", "Name", "Version" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OutboxIntegrationEvents_CreatedUtc",
+                table: "OutboxIntegrationEvents",
+                column: "CreatedUtc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OutboxIntegrationEvents_ProcessedUtc",
+                table: "OutboxIntegrationEvents",
+                column: "ProcessedUtc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OutboxIntegrationEvents_TenantId_Name_Version",
+                table: "OutboxIntegrationEvents",
+                columns: new[] { "TenantId", "Name", "Version" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IntegrationDeliveries_EventId",
+                table: "IntegrationDeliveries",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IntegrationDeliveries_ProcessedUtc",
+                table: "IntegrationDeliveries",
+                column: "ProcessedUtc");
 
             migrationBuilder.CreateIndex(
                 name: "IX_paints_catalog.brands_Name",
@@ -741,7 +830,16 @@ namespace PaintingProjectsManagment.Database.Migrations
                 name: "models.models");
 
             migrationBuilder.DropTable(
-                name: "OutboxMessages");
+                name: "OutboxDomainMessages");
+
+            migrationBuilder.DropTable(
+                name: "IntegrationDeliveries");
+
+            migrationBuilder.DropTable(
+                name: "OutboxIntegrationEvents");
+
+            migrationBuilder.DropTable(
+                name: "projects.materials_local_copy");
 
             migrationBuilder.DropTable(
                 name: "paints_catalog.colors");

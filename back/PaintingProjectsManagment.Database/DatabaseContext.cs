@@ -23,6 +23,7 @@ public class DatabaseContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DatabaseContext).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SeedHistory).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OutboxDomainMessageConfig).Assembly);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(MaterialConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PaintColorConfig).Assembly);

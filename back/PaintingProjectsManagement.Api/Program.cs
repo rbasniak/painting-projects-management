@@ -50,6 +50,9 @@ public class Program
 
         // Events infrastructure registrations
         builder.Services.AddSingleton<IEventTypeRegistry>(sp => new ReflectionEventTypeRegistry(AppDomain.CurrentDomain.GetAssemblies()));
+        builder.Services.AddSingleton<IIntegrationSubscriberRegistry, IntegrationSubscriberRegistry>();
+        builder.Services.AddScoped<IIntegrationOutbox, IntegrationOutbox>();
+        builder.Services.AddScoped<IIntegrationDeliveryScheduler, IntegrationDeliveryScheduler>();
         builder.Services.Configure<OutboxOptions>(opts =>
         {
             opts.BatchSize = 50;
@@ -58,11 +61,12 @@ public class Program
             opts.ResolveDbContext = sp => sp.GetRequiredService<DatabaseContext>();
         });
 
-        // TODO: move to the library builder with the possibility to disable it with startup options
         builder.Services.AddHostedService<OutboxDispatcher>();
+        builder.Services.AddHostedService<IntegrationDispatcher>();
 
         // Register domain-to-integration event handlers for Materials
         builder.Services.AddMaterialsIntegrationHandlers();
+        builder.Services.AddProjectsIntegrationConsumers();
 
         builder.Services.AddRbkApiCoreSetup(options => options
              .EnableBasicAuthenticationHandler()
