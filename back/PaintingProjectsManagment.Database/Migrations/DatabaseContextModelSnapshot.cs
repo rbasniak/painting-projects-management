@@ -465,7 +465,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.ToTable("InboxMessages", (string)null);
                 });
 
-            modelBuilder.Entity("rbkApiModules.Commons.Core.OutboxMessage", b =>
+            modelBuilder.Entity("rbkApiModules.Commons.Core.OutboxDomainMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -525,7 +525,7 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasIndex("TenantId", "Name", "Version");
 
-                    b.ToTable("OutboxMessages", (string)null);
+                    b.ToTable("OutboxDomainMessages", (string)null);
                 });
 
             modelBuilder.Entity("rbkApiModules.Commons.Relational.SeedHistory", b =>
@@ -916,7 +916,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("rbkApiModules.Commons.Core.OutboxMessage", b =>
+            modelBuilder.Entity("rbkApiModules.Commons.Core.OutboxDomainMessage", b =>
                 {
                     b.HasOne("rbkApiModules.Identity.Core.Tenant", null)
                         .WithMany()

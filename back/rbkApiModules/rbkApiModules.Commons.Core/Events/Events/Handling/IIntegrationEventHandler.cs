@@ -1,0 +1,13 @@
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace rbkApiModules.Commons.Core;
+
+/// <summary>
+/// Contract implemented by services that handle integration events dispatched
+/// from the integration outbox.
+/// </summary>
+public interface IIntegrationEventHandler<TIntegrationEvent>
+{
+    Task Handle(EventEnvelope<TIntegrationEvent> envelope, CancellationToken cancellationToken);
+}

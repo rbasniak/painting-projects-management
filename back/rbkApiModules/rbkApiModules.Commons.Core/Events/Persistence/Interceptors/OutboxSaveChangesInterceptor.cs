@@ -58,7 +58,7 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
                 var envelope = EventEnvelopeFactory.Wrap(domainEvent, _requestContext.TenantId, _requestContext.Username, _requestContext.CorrelationId, _requestContext.CausationId);
                 var payload = JsonEventSerializer.Serialize(envelope);
 
-                context.Set<OutboxMessage>().Add(new OutboxMessage
+                context.Set<OutboxDomainMessage>().Add(new OutboxDomainMessage
                 {
                     Id = envelope.EventId,
                     Name = envelope.Name,

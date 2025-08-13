@@ -9,13 +9,13 @@ public sealed record MaterialCreatedV1(
     string PackageContentUnit,
     double PackagePriceAmount,
     string PackagePriceCurrency
-) : IDomainEvent;
+ ) : IIntegrationEvent;
 
 // Fired when a material is (soft-)deleted
 [EventName("Materials.Integration.MaterialDeleted.v1", 1)]
 public sealed record MaterialDeletedV1(
     Guid MaterialId
-) : IDomainEvent;
+ ) : IIntegrationEvent;
 
 // Fired when a material changes
 [EventName("Materials.Integration.MaterialUpdated.v1", 1)]
@@ -26,4 +26,4 @@ public sealed record MaterialPackageContentChanged(
     string PackageContentUnit,
     double PackagePriceAmount,
     string PackagePriceCurrency
-) : IDomainEvent;
+ ) : IIntegrationEvent;

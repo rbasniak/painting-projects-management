@@ -15,7 +15,7 @@ public class Create_Material_Tests
         var existingMaterial = new Material(
             "rodrigo.basniak",
             "Existing Material",
-            new Quantity(1, PackageUnit.Each),
+            new Quantity(1, PackageContentUnit.Each),
             new Money(10.0, "USD")
         );
 
@@ -46,8 +46,8 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "Test Material",
-            PackageAmount = 1,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = 1,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 19,
             PackagePriceCurrency = "USD",
         };
@@ -66,14 +66,14 @@ public class Create_Material_Tests
     [Test, NotInParallel(Order = 3)]
     [Arguments(0)]
     [Arguments(-1)]
-    public async Task User_Cannot_Create_Material_When_PackageAmount_Is_Not_Positive(double packageAmount)
+    public async Task User_Cannot_Create_Material_When_PackageContentAmount_Is_Not_Positive(double packageAmount)
     {
         // Prepare
         var request = new CreateMaterial.Request
         {
             Name = "Invalid Amount",
-            PackageAmount = packageAmount,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = packageAmount,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 19,
             PackagePriceCurrency = "USD",
         };
@@ -96,8 +96,8 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "Existing Material", // This name was created in Seed test
-            PackageAmount = 1,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = 1,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 15,
             PackagePriceCurrency = "USD",
         };
@@ -120,8 +120,8 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "Existing Material", // This name was created by rodrigo.basniak in Seed test
-            PackageAmount = 1,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = 1,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 25,
             PackagePriceCurrency = "USD",
         };
@@ -137,7 +137,7 @@ public class Create_Material_Tests
         result.PackagePrice.Amount.ShouldBe(25);
         result.PackagePrice.CurrencyCode.ShouldBe("USD");
         result.PackagetContent.Amount.ShouldBe(1);
-        EnumAssertionExtensions.ShouldBeEquivalentTo(result.PackagetContent.Unit, PackageUnit.Each);
+        EnumAssertionExtensions.ShouldBeEquivalentTo(result.PackagetContent.Unit, PackageContentUnit.Each);
 
         // Assert the database - should have two materials with the same name but different users
         var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Existing Material").ToList();
@@ -149,11 +149,11 @@ public class Create_Material_Tests
         rbMaterial.ShouldNotBeNull();
         rbMaterial.Id.ShouldNotBe(rsMaterial.Id);
         rbMaterial.UnitPriceAmount.ShouldBe(10.0); // From Seed test
-        rbMaterial.UnitPriceUnit.ShouldBe(PackageUnit.Each); // From Seed test
+        rbMaterial.UnitPriceUnit.ShouldBe(PackageContentUnit.Each); // From Seed test
 
         rsMaterial.ShouldNotBeNull();
         rsMaterial.UnitPriceAmount.ShouldBe(25);
-        rsMaterial.UnitPriceUnit.ShouldBe(PackageUnit.Each);
+        rsMaterial.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
     }
 
     [Test, NotInParallel(Order = 14)]
@@ -163,8 +163,8 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "8x4 magnet for test",
-            PackageAmount = 1,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = 1,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 19,
             PackagePriceCurrency = "USD",
         };
@@ -186,7 +186,7 @@ public class Create_Material_Tests
         entity.Id.ShouldBe(result.Id);
         entity.Name.ShouldBe("8x4 magnet for test");
         entity.UnitPriceAmount.ShouldBe(19);
-        entity.UnitPriceUnit.ShouldBe(PackageUnit.Each);
+        entity.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
     }
 
     [Test, NotInParallel(Order = 99)]

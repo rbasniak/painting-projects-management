@@ -47,7 +47,7 @@ public sealed class OutboxDispatcher : BackgroundService
                     var context = _options.ResolveDbContext!(scope.ServiceProvider);
                     var now = DateTime.UtcNow;
 
-                    batch = await context.Set<OutboxMessage>()
+                    batch = await context.Set<OutboxDomainMessage>()
                         .AsNoTracking()
                         .Where(x => x.ProcessedUtc == null
                                  && (x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now)
@@ -65,7 +65,7 @@ public sealed class OutboxDispatcher : BackgroundService
                     var context = _options.ResolveDbContext!(scope.ServiceProvider);
 
                     // (re)load the message in this context
-                    var message = await context.Set<OutboxMessage>().FirstOrDefaultAsync(x => x.Id == messageId, cancellationToken);
+                    var message = await context.Set<OutboxDomainMessage>().FirstOrDefaultAsync(x => x.Id == messageId, cancellationToken);
 
                     if (message is null)
                     {

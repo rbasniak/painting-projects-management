@@ -2,19 +2,11 @@ using System;
 
 namespace rbkApiModules.Commons.Core;
 
-public class OutboxMessage
+/// <summary>
+/// Legacy alias for <see cref="OutboxDomainMessage"/> to maintain backward compatibility
+/// with existing migrations and code. New code should use <see cref="OutboxDomainMessage"/>.
+/// </summary>
+[Obsolete("Use OutboxDomainMessage instead")] 
+public class OutboxMessage : OutboxDomainMessage
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; } = default!;
-    public int Version { get; set; }
-    public string TenantId { get; set; } = default!;
-    public DateTime OccurredUtc { get; set; }
-    public string? CorrelationId { get; set; }
-    public string? CausationId { get; set; }
-    public string Payload { get; set; } = default!;
-    public DateTime CreatedUtc { get; set; }
-    public DateTime? ProcessedUtc { get; set; }
-    public int Attempts { get; set; }
-    public string Username { get; set; } = default!;
-    public DateTime? DoNotProcessBeforeUtc { get; set; }
-} 
+}

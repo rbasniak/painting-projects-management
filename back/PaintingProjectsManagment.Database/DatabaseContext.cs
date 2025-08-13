@@ -6,6 +6,7 @@ using PaintingProjectsManagement.Features.Projects;
 using rbkApiModules.Authentication;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity;
+using rbkApiModules.Commons.Core;
 
 namespace PaintingProjectsManagment.Database;
 
@@ -28,6 +29,7 @@ public class DatabaseContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PaintColorConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ModelConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProjectConfig).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OutboxDomainMessageConfig).Assembly);
 
         modelBuilder.Entity<MaterialForProject>()
             .HasOne<Material>()
