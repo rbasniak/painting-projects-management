@@ -55,7 +55,7 @@ public class Update_Material_Tests
             Id = existingMaterial.Id,
             Name = "Updated Material",
             PackageContentAmount = 2,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 25.0,
             PackagePriceCurrency = "USD",
         };
@@ -82,7 +82,7 @@ public class Update_Material_Tests
             Id = nonExistentId,
             Name = "Updated Material",
             PackageContentAmount = 2,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 25.0,
             PackagePriceCurrency = "USD",
         };
@@ -111,7 +111,7 @@ public class Update_Material_Tests
             Id = anotherUserMaterial.Id,
             Name = "Hacked Material",
             PackageContentAmount = 2,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 100.0,
             PackagePriceCurrency = "USD",
         };
@@ -141,7 +141,7 @@ public class Update_Material_Tests
             Id = existingMaterial.Id,
             Name = "Duplicate Name Material", // This name already exists for the same user
             PackageContentAmount = 2,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 25.0,
             PackagePriceCurrency = "USD",
         };
@@ -170,7 +170,7 @@ public class Update_Material_Tests
             Id = duplicateNameMaterial.Id,
             Name = "Another User Material", // This name exists for another user (ricardo.smarzaro)
             PackageContentAmount = 2,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 30.0,
             PackagePriceCurrency = "USD",
         };
@@ -206,7 +206,7 @@ public class Update_Material_Tests
             Id = existingMaterial.Id,
             Name = "Existing Material", // Same name as itself
             PackageContentAmount = 2,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 50.0, // Change price
             PackagePriceCurrency = "USD",
         };
@@ -237,7 +237,7 @@ public class Update_Material_Tests
             Id = existingMaterial.Id,
             Name = "Updated Material Name",
             PackageContentAmount = 2,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 25.50,
             PackagePriceCurrency = "USD",
         };

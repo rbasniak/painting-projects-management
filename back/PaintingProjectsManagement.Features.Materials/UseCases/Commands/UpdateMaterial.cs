@@ -20,8 +20,8 @@ public class UpdateMaterial : IEndpoint
     {
         public Guid Id { get; set; } 
         public string Name { get; set; } = string.Empty;
-        public double PackageAmount { get; set; }
-        public PackageUnit PackageUnit { get; set; }
+        public double PackageContentAmount { get; set; }
+        public int PackageContentUnit { get; set; }
         public double PackagePriceAmount { get; set; }
         public string PackagePriceCurrency { get; set; } = "USD";
     }
@@ -41,7 +41,7 @@ public class UpdateMaterial : IEndpoint
                 })
                 .WithMessage("A material with this name already exists.");
 
-            RuleFor(x => x.PackageAmount)
+            RuleFor(x => x.PackageContentAmount)
                 .GreaterThan(0)
                 .WithMessage("Package amount must be greater than zero.");
 
@@ -67,7 +67,7 @@ public class UpdateMaterial : IEndpoint
 
             material.UpdateDetails(
                 request.Name,
-                new Quantity(request.PackageAmount, request.PackageUnit),
+                new Quantity(request.PackageContentAmount, (PackageContentUnit)request.PackageContentUnit),
                 new Money(request.PackagePriceAmount, request.PackagePriceCurrency)
             );
 

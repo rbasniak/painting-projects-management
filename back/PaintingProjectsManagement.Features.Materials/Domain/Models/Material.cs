@@ -31,7 +31,7 @@ public sealed class Material : TenantEntity
 
     public double UnitPriceAmount => PackagePrice.Amount / PackageContent.Amount;
 
-    public PackageUnit UnitPriceUnit => PackageContent.Unit;
+    public PackageContentUnit UnitPriceUnit => PackageContent.Unit;
 
     public void UpdateDetails(string name, Quantity packageContent, Money packagePrice)
     {

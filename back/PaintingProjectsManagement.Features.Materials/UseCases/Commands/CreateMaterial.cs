@@ -77,7 +77,7 @@ public class CreateMaterial : IEndpoint
             var material = new Material(
                 request.Identity.Tenant,
                 request.Name,
-                new Quantity(request.PackageContentAmount, (PackageUnit)request.PackageContentUnit),
+                new Quantity(request.PackageContentAmount, (PackageContentUnit)request.PackageContentUnit),
                 new Money(request.PackagePriceAmount, request.PackagePriceCurrency)
             );
 

@@ -47,7 +47,7 @@ public class Create_Material_Tests
         {
             Name = "Test Material",
             PackageContentAmount = 1,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 19,
             PackagePriceCurrency = "USD",
         };
@@ -73,7 +73,7 @@ public class Create_Material_Tests
         {
             Name = "Invalid Amount",
             PackageContentAmount = packageAmount,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 19,
             PackagePriceCurrency = "USD",
         };
@@ -97,7 +97,7 @@ public class Create_Material_Tests
         {
             Name = "Existing Material", // This name was created in Seed test
             PackageContentAmount = 1,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 15,
             PackagePriceCurrency = "USD",
         };
@@ -121,7 +121,7 @@ public class Create_Material_Tests
         {
             Name = "Existing Material", // This name was created by rodrigo.basniak in Seed test
             PackageContentAmount = 1,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 25,
             PackagePriceCurrency = "USD",
         };
@@ -164,7 +164,7 @@ public class Create_Material_Tests
         {
             Name = "8x4 magnet for test",
             PackageContentAmount = 1,
-            PackageContentUnit = PackageContentUnit.Each,
+            PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 19,
             PackagePriceCurrency = "USD",
         };
