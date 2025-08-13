@@ -16,5 +16,10 @@
 	<ItemGroup>
 		<Analyzer Include="..\rbkApiModules\rbkApiModules.Analysers\rbkApiModules.Analysers\bin\$(Configuration)\netstandard2.0\rbkApiModules.Analysers.dll" />
 	</ItemGroup>
+
+
+	<ItemGroup>
+	  <Folder Include="Events\" />
+	</ItemGroup>
 	
 </Project>

@@ -18,16 +18,6 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
             return base.SavingChanges(eventData, result);
         }
 
-        var aggregatesWithEvents = context.ChangeTracker.Entries()
-           .Where(e => e.Entity is AggregateRoot ar && ar.GetDomainEvents().Count > 0)
-           .Select(e => (AggregateRoot)e.Entity)
-           .ToList();
-
-        if (aggregatesWithEvents.Count == 0)
-        {
-            return base.SavingChanges(eventData, result);
-        }
-
         PersistDomainEventsToOutbox(context);
         
         return base.SavingChanges(eventData, result);
@@ -40,16 +30,6 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
             return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
 
-        var aggregatesWithEvents = context.ChangeTracker.Entries()
-           .Where(e => e.Entity is AggregateRoot ar && ar.GetDomainEvents().Count > 0)
-           .Select(e => (AggregateRoot)e.Entity)
-           .ToList();
-
-        if (aggregatesWithEvents.Count == 0)
-        {
-            base.SavingChangesAsync(eventData, result, cancellationToken);
-        }
-
         PersistDomainEventsToOutbox(context);
         
         return base.SavingChangesAsync(eventData, result, cancellationToken);
@@ -58,18 +38,20 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
     private void PersistDomainEventsToOutbox(DbContext context)
     {
         var aggregatesWithEvents = context.ChangeTracker.Entries()
-            .Where(e => e.Entity is AggregateRoot)
-            .Select(e => (AggregateRoot)e.Entity)
-            .ToList();
-
-        if (aggregatesWithEvents.Count == 0) return;
+           .Where(e => e.Entity is AggregateRoot aggregateRoot && aggregateRoot.GetDomainEvents().Count > 0)
+           .Select(e => (AggregateRoot)e.Entity)
+           .ToArray();
 
         var now = DateTime.UtcNow;
 
         foreach (var aggregate in aggregatesWithEvents)
         {
             var domainEvents = aggregate.GetDomainEvents();
-            if (domainEvents.Count == 0) continue;
+
+            if (domainEvents.Count == 0)
+            {
+                continue;
+            }
 
             foreach (var domainEvent in domainEvents)
             {

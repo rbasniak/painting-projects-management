@@ -4,3 +4,4 @@
 - If method is async, ensure it returns a Task or Task<T>
 - If method is async, it must have async suffix
 - CancellationToken parameters should be named cancellationToken
+- EventName must match class name

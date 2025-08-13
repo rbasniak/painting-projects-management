@@ -664,20 +664,6 @@ public static class CommonsCoreBuilder
 
             #endregion
 
-            app.Use(async (ctx, next) =>
-            {
-                var tenantId = ctx.GetTenant();
-                var username = ctx.GetUsername();
-                var rc = new RequestContext
-                {
-                    TenantId = tenantId,
-                    Username = username,
-                    CorrelationId = ctx.Request.Headers["X-Correlation-Id"].FirstOrDefault() ?? Guid.NewGuid().ToString(),
-                    CausationId = ctx.Request.Headers["X-Causation-Id"].FirstOrDefault() ?? Guid.NewGuid().ToString()
-                };
-                RequestContext.Set(rc);
-                await next();
-            });
 
             #region Response compression
 
@@ -840,6 +826,21 @@ public static class CommonsCoreBuilder
             }
 
             #endregion
+
+            // Must go after use authentication
+            app.Use(async (ctx, next) =>
+            {
+                var _ = await ctx.AuthenticateAsync();
+
+                var requestContext = ctx.RequestServices.GetRequiredService<IRequestContext>();
+
+                requestContext.TenantId = ctx.GetTenant();
+                requestContext.Username = ctx.GetUsername();
+                requestContext.CorrelationId = ctx.Request.Headers["X-Correlation-Id"].FirstOrDefault() ?? Guid.NewGuid().ToString();
+                requestContext.CausationId = ctx.Request.Headers["X-Causation-Id"].FirstOrDefault() ?? Guid.NewGuid().ToString();
+
+                await next();
+            });
         }
         return app;
     }
