@@ -4,11 +4,11 @@ using rbkApiModules.Commons.Core;
 
 namespace rbkApiModules.Commons.Core;
 
-public class OutboxMessageConfig : IEntityTypeConfiguration<OutboxMessage>
+public class OutboxDomainMessageConfig : IEntityTypeConfiguration<OutboxDomainMessage>
 {
-    public void Configure(EntityTypeBuilder<OutboxMessage> builder)
+    public void Configure(EntityTypeBuilder<OutboxDomainMessage> builder)
     {
-        builder.ToTable("OutboxMessages");
+        builder.ToTable("OutboxDomainMessages");
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Name).IsRequired().HasMaxLength(200);

@@ -11,9 +11,9 @@ public class Update_Material_Tests
     public async Task Seed()
     {
         // Create test materials for different users
-        var existingMaterial = new Material("rodrigo.basniak", "Existing Material", new Quantity(1, PackageUnit.Each), new Money(10.0, "USD"));
-        var anotherUserMaterial = new Material("ricardo.smarzaro", "Another User Material", new Quantity(1, PackageUnit.Each), new Money(5.0, "USD"));
-        var duplicateNameMaterial = new Material("rodrigo.basniak", "Duplicate Name Material", new Quantity(1, PackageUnit.Each), new Money(15.0, "USD"));
+        var existingMaterial = new Material("rodrigo.basniak", "Existing Material", new Quantity(1, PackageContentUnit.Each), new Money(10.0, "USD"));
+        var anotherUserMaterial = new Material("ricardo.smarzaro", "Another User Material", new Quantity(1, PackageContentUnit.Each), new Money(5.0, "USD"));
+        var duplicateNameMaterial = new Material("rodrigo.basniak", "Duplicate Name Material", new Quantity(1, PackageContentUnit.Each), new Money(15.0, "USD"));
 
         using (var context = TestingServer.CreateContext())
         {
@@ -54,8 +54,8 @@ public class Update_Material_Tests
         {
             Id = existingMaterial.Id,
             Name = "Updated Material",
-            PackageAmount = 2,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = 2,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 25.0,
             PackagePriceCurrency = "USD",
         };
@@ -81,8 +81,8 @@ public class Update_Material_Tests
         {
             Id = nonExistentId,
             Name = "Updated Material",
-            PackageAmount = 2,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = 2,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 25.0,
             PackagePriceCurrency = "USD",
         };
@@ -110,8 +110,8 @@ public class Update_Material_Tests
         {
             Id = anotherUserMaterial.Id,
             Name = "Hacked Material",
-            PackageAmount = 2,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = 2,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 100.0,
             PackagePriceCurrency = "USD",
         };
@@ -140,8 +140,8 @@ public class Update_Material_Tests
         {
             Id = existingMaterial.Id,
             Name = "Duplicate Name Material", // This name already exists for the same user
-            PackageAmount = 2,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = 2,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 25.0,
             PackagePriceCurrency = "USD",
         };
@@ -169,8 +169,8 @@ public class Update_Material_Tests
         {
             Id = duplicateNameMaterial.Id,
             Name = "Another User Material", // This name exists for another user (ricardo.smarzaro)
-            PackageAmount = 2,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = 2,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 30.0,
             PackagePriceCurrency = "USD",
         };
@@ -186,7 +186,7 @@ public class Update_Material_Tests
         updatedEntity.ShouldNotBeNull();
         updatedEntity.Name.ShouldBe("Another User Material");
         updatedEntity.UnitPriceAmount.ShouldBe(15.0); // 30/2 = 15
-        updatedEntity.UnitPriceUnit.ShouldBe(PackageUnit.Each);
+        updatedEntity.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
         updatedEntity.TenantId.ShouldBe("RODRIGO.BASNIAK"); // Should still belong to the original user
 
         // Verify the other user's material is unchanged
@@ -205,8 +205,8 @@ public class Update_Material_Tests
         {
             Id = existingMaterial.Id,
             Name = "Existing Material", // Same name as itself
-            PackageAmount = 2,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = 2,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 50.0, // Change price
             PackagePriceCurrency = "USD",
         };
@@ -222,7 +222,7 @@ public class Update_Material_Tests
         updatedEntity.ShouldNotBeNull();
         updatedEntity.Name.ShouldBe("Existing Material"); // Name remains the same
         updatedEntity.UnitPriceAmount.ShouldBe(25.0); // 50/2 = 25
-        updatedEntity.UnitPriceUnit.ShouldBe(PackageUnit.Each); // Unit was updated
+        updatedEntity.UnitPriceUnit.ShouldBe(PackageContentUnit.Each); // Unit was updated
     }
 
     [Test, NotInParallel(Order = 12)]
@@ -236,8 +236,8 @@ public class Update_Material_Tests
         {
             Id = existingMaterial.Id,
             Name = "Updated Material Name",
-            PackageAmount = 2,
-            PackageUnit = PackageUnit.Each,
+            PackageContentAmount = 2,
+            PackageContentUnit = PackageContentUnit.Each,
             PackagePriceAmount = 25.50,
             PackagePriceCurrency = "USD",
         };
@@ -254,7 +254,7 @@ public class Update_Material_Tests
         updatedEntity.Id.ShouldBe(existingMaterial.Id);
         updatedEntity.Name.ShouldBe("Updated Material Name");
         updatedEntity.UnitPriceAmount.ShouldBe(12.75); // 25.5/2
-        updatedEntity.UnitPriceUnit.ShouldBe(PackageUnit.Each);
+        updatedEntity.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
         updatedEntity.TenantId.ShouldBe("RODRIGO.BASNIAK"); // Should still belong to the same user
     }
 

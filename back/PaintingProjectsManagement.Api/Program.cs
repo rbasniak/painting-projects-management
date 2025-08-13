@@ -60,9 +60,15 @@ public class Program
 
         // TODO: move to the library builder with the possibility to disable it with startup options
         builder.Services.AddHostedService<OutboxDispatcher>();
+        builder.Services.AddHostedService<IntegrationDispatcher>();
 
-        // Register domain-to-integration event handlers for Materials
+        builder.Services.AddSingleton<IIntegrationSubscriberRegistry, IntegrationSubscriberRegistry>();
+        builder.Services.AddScoped<IIntegrationOutbox, IntegrationOutbox>();
+        builder.Services.AddScoped<IIntegrationDeliveryScheduler, IntegrationDeliveryScheduler>();
+
+        // Register domain-to-integration event handlers for Materials and integration consumers for Projects
         builder.Services.AddMaterialsIntegrationHandlers();
+        builder.Services.AddProjectsIntegrationHandlers();
 
         builder.Services.AddRbkApiCoreSetup(options => options
              .EnableBasicAuthenticationHandler()
