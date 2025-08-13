@@ -16,10 +16,10 @@ internal sealed class MaterialDeletedHandler : IEventHandler<MaterialDeleted>
 
     public async Task Handle(EventEnvelope<MaterialDeleted> envelope, CancellationToken cancellationToken)
     {
-        var integration = new MaterialDeletedV1(envelope.Event.MaterialId);
+        var integrationEvent = new MaterialDeletedV1(envelope.Event.MaterialId);
 
         var integrationEnvelope = EventEnvelopeFactory.Wrap(
-            integration,
+            integrationEvent,
             envelope.TenantId,
             envelope.Username,
             envelope.CorrelationId,
@@ -27,6 +27,7 @@ internal sealed class MaterialDeletedHandler : IEventHandler<MaterialDeleted>
         );
 
         var id = await _outbox.Enqueue(integrationEnvelope, cancellationToken);
+
         await _scheduler.SeedDeliveriesAsync(id, integrationEnvelope.Name, integrationEnvelope.Version, cancellationToken);
     }
 }

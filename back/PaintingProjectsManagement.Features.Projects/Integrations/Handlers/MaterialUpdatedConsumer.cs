@@ -6,7 +6,7 @@ using rbkApiModules.Commons.Core;
 
 namespace PaintingProjectsManagement.Features.Projects;
 
-public class MaterialUpdatedConsumer : IIntegrationEventHandler<MaterialPackageContentChanged>
+public class MaterialUpdatedConsumer : IIntegrationEventHandler<MaterialUpdatedV1>
 {
     private readonly DbContext _db;
 
@@ -15,7 +15,7 @@ public class MaterialUpdatedConsumer : IIntegrationEventHandler<MaterialPackageC
         _db = db;
     }
 
-    public async Task Handle(EventEnvelope<MaterialPackageContentChanged> envelope, CancellationToken cancellationToken)
+    public async Task Handle(EventEnvelope<MaterialUpdatedV1> envelope, CancellationToken cancellationToken)
     {
         var e = envelope.Event;
         var pricePerUnit = e.PackageContentAmount == 0 ? 0 : e.PackagePriceAmount / e.PackageContentAmount;

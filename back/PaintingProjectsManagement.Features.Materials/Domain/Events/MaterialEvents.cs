@@ -2,7 +2,7 @@
 
 // Fired once when a material is created
 [EventName("Materials.MaterialCreated", 1)]
-internal sealed record MaterialCreated(
+public sealed record MaterialCreated(
     Guid MaterialId,
     string Name,
     Quantity PackageContent,
@@ -11,13 +11,13 @@ internal sealed record MaterialCreated(
 
 // Fired when a material is (soft-)deleted
 [EventName("Materials.MaterialDeleted", 1)]
-internal sealed record MaterialDeleted(
+public sealed record MaterialDeleted(
     Guid MaterialId
 ) : IDomainEvent;
 
 // Fired when package content (amount/unit) changes
 [EventName("Materials.MaterialPackageContentChanged", 1)]
-internal sealed record MaterialPackageContentChanged(
+public sealed record MaterialPackageContentChanged(
     Guid MaterialId,
     Quantity OldContent,
     Quantity NewContent
@@ -25,7 +25,7 @@ internal sealed record MaterialPackageContentChanged(
 
 // Fired when package price changes
 [EventName("Materials.MaterialPackagePriceChanged", 1)]
-internal sealed record MaterialPackagePriceChanged(
+public sealed record MaterialPackagePriceChanged(
     Guid MaterialId,
     Money OldPrice,
     Money NewPrice
@@ -33,7 +33,7 @@ internal sealed record MaterialPackagePriceChanged(
 
 // Fired when material is renamed
 [EventName("Materials.MaterialNameChanged", 1)]
-internal sealed record MaterialNameChanged(
+public sealed record MaterialNameChanged(
     Guid MaterialId,
     string newName
 ) : IDomainEvent;

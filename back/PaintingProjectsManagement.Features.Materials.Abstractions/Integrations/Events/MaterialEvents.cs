@@ -19,7 +19,7 @@ public sealed record MaterialDeletedV1(
 
 // Fired when a material changes
 [EventName("Materials.Integration.MaterialUpdated.v1", 1)]
-public sealed record MaterialPackageContentChanged(
+public sealed record MaterialUpdatedV1(
     Guid MaterialId,
     string Name,
     double PackageContentAmount,

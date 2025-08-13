@@ -16,17 +16,17 @@ namespace rbkApiModules.Commons.Core;
 /// Background service responsible for delivering integration events to
 /// their subscribers using the IntegrationDeliveries table.
 /// </summary>
-public sealed class IntegrationDispatcher : BackgroundService
+public sealed class IntegrationOutboxDispatcher : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IEventTypeRegistry _eventTypeRegistry;
-    private readonly ILogger<IntegrationDispatcher> _logger;
+    private readonly ILogger<IntegrationOutboxDispatcher> _logger;
     private readonly OutboxOptions _options;
 
-    public IntegrationDispatcher(
+    public IntegrationOutboxDispatcher(
         IServiceScopeFactory scopeFactory,
         IEventTypeRegistry eventTypeRegistry,
-        ILogger<IntegrationDispatcher> logger,
+        ILogger<IntegrationOutboxDispatcher> logger,
         IOptions<OutboxOptions> options)
     {
         _scopeFactory = scopeFactory;

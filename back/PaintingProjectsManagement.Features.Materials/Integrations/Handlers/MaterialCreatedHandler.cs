@@ -16,19 +16,19 @@ internal sealed class MaterialCreatedHandler : IEventHandler<MaterialCreated>
 
     public async Task Handle(EventEnvelope<MaterialCreated> envelope, CancellationToken cancellationToken)
     {
-        var e = envelope.Event;
+        var domainEvent = envelope.Event;
 
-        var integration = new MaterialCreatedV1(
-            e.MaterialId,
-            e.Name,
-            e.PackageContent.Amount,
-            e.PackageContent.Unit.ToString(),
-            e.PackagePrice.Amount,
-            e.PackagePrice.CurrencyCode
+        var integrationEvent = new MaterialCreatedV1(
+            domainEvent.MaterialId,
+            domainEvent.Name,
+            domainEvent.PackageContent.Amount,
+            domainEvent.PackageContent.Unit.ToString(),
+            domainEvent.PackagePrice.Amount,
+            domainEvent.PackagePrice.CurrencyCode
         );
 
         var integrationEnvelope = EventEnvelopeFactory.Wrap(
-            integration,
+            integrationEvent,
             envelope.TenantId,
             envelope.Username,
             envelope.CorrelationId,
@@ -36,6 +36,7 @@ internal sealed class MaterialCreatedHandler : IEventHandler<MaterialCreated>
         );
 
         var id = await _outbox.Enqueue(integrationEnvelope, cancellationToken);
+
         await _scheduler.SeedDeliveriesAsync(id, integrationEnvelope.Name, integrationEnvelope.Version, cancellationToken);
     }
 }

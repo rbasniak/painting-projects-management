@@ -10,7 +10,11 @@ public static class JsonEventSerializer
     private static readonly JsonSerializerOptions Options = new(JsonSerializerDefaults.Web)
     {
         // add/adjust converters here (e.g., enums as strings)
-        Converters = { new JsonStringEnumConverter() },
+        Converters = 
+        { 
+            new JsonStringEnumConverter(),
+            new RuntimeTypeConverter<IDomainEvent>()
+        },
         WriteIndented = false
     };
 
@@ -25,4 +29,17 @@ public static class JsonEventSerializer
     // New: generic type overload for runtime Type
     public static object Deserialize(string json, Type targetType) =>
         JsonSerializer.Deserialize(json, targetType, Options)!;
-} 
+}
+
+public class RuntimeTypeConverter<TInterface> : JsonConverter<TInterface>
+{
+    public override TInterface? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        throw new NotSupportedException("Deserialization not supported in this converter.");
+    }
+
+    public override void Write(Utf8JsonWriter writer, TInterface value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, (object)value!, value!.GetType(), options);
+    }
+}

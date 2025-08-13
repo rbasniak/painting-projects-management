@@ -1,8 +1,10 @@
-﻿<MudThemeProvider />
+﻿@inherits LayoutComponentBase
 
+<MudThemeProvider />
+
+<MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
-<MudPopoverProvider />
 
 <MudLayout>
     <MudAppBar Elevation="1">
@@ -12,12 +14,13 @@
         <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        @*NavMenu*@
+        <NavMenu />
     </MudDrawer>
     <MudMainContent>
-        @*Body*@
+        @Body
     </MudMainContent>
 </MudLayout>
+
 @code {
     bool _drawerOpen = true;
 

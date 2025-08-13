@@ -46,7 +46,8 @@ public class Program
         builder.Services.AddDbContext<DatabaseContext>((scope, options) =>
                 options.UseSqlite(connectionString)
                        .EnableSensitiveDataLogging()
-                       .AddInterceptors(scope.GetRequiredService<OutboxSaveChangesInterceptor>()));
+                       .AddInterceptors(scope.GetRequiredService<OutboxSaveChangesInterceptor>())
+        );
 
         // Events infrastructure registrations
         builder.Services.AddSingleton<IEventTypeRegistry>(sp => new ReflectionEventTypeRegistry(AppDomain.CurrentDomain.GetAssemblies()));
@@ -59,15 +60,15 @@ public class Program
         });
 
         // TODO: move to the library builder with the possibility to disable it with startup options
-        builder.Services.AddHostedService<OutboxDispatcher>();
-        builder.Services.AddHostedService<IntegrationDispatcher>();
+        // builder.Services.AddHostedService<DomainOutboxDispatcher>();
+        // builder.Services.AddHostedService<IntegrationOutboxDispatcher>();
 
         builder.Services.AddSingleton<IIntegrationSubscriberRegistry, IntegrationSubscriberRegistry>();
         builder.Services.AddScoped<IIntegrationOutbox, IntegrationOutbox>();
         builder.Services.AddScoped<IIntegrationDeliveryScheduler, IntegrationDeliveryScheduler>();
 
         // Register domain-to-integration event handlers for Materials and integration consumers for Projects
-        builder.Services.AddMaterialsIntegrationHandlers();
+        
         builder.Services.AddProjectsIntegrationHandlers();
 
         builder.Services.AddRbkApiCoreSetup(options => options
@@ -77,7 +78,7 @@ public class Program
                  options.AddPolicy("_defaultPolicy", builder =>
                  {
                      builder
-                        .WithOrigins("https://localhost:7233")
+                        .WithOrigins("https://localhost:7233", "https://localhost:7114")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()
@@ -100,6 +101,9 @@ public class Program
         );
 
         builder.Services.AddRbkUIDefinitions(Assembly.GetAssembly(typeof(Program)));
+
+        // Application modules
+        builder.Services.AddMaterialsFeature();
 
         // Configure OpenAPI with custom schema naming for nested classes
         builder.Services.AddOpenApi(config =>
@@ -163,7 +167,7 @@ public class Program
         });
         app.MapScalarApiReference();
 
-        app.MapMaterialsFeature();
+        app.UseMaterialsFeature();
         app.MapPrintingModelsFeature();
         app.MapPaintsFeature();
         app.MapProjectsFeature();

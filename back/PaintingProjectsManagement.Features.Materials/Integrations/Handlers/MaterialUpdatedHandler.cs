@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using PaintingProjectsManagement.Features.Materials.Abstractions;
-using IntegrationMaterialUpdated = PaintingProjectsManagement.Features.Materials.Abstractions.MaterialPackageContentChanged;
-using rbkApiModules.Commons.Core;
 
 namespace PaintingProjectsManagement.Features.Materials;
 
@@ -36,10 +34,13 @@ internal sealed class MaterialUpdatedHandler :
 
     private async Task PublishUpdated<TEvent>(EventEnvelope<TEvent> envelope, CancellationToken cancellationToken)
     {
+        var domainEnvelope = envelope;
+
         using var scope = _scopeFactory.CreateScope();
+
         var dbContext = _outboxOptions.Value.ResolveDbContext!(scope.ServiceProvider);
 
-        var materialId = envelope.Event switch
+        var materialId = domainEnvelope.Event switch
         {
             MaterialPackageContentChanged e => e.MaterialId,
             MaterialPackagePriceChanged e => e.MaterialId,
@@ -53,10 +54,10 @@ internal sealed class MaterialUpdatedHandler :
 
         if (material == null)
         {
-            return;
+            throw new UnexpectedInternalException($"Could not find material id={materialId} when publishing event");
         }
 
-        var integration = new IntegrationMaterialUpdated(
+        var integrationEvent = new MaterialUpdatedV1(
             material.Id,
             material.Name,
             material.PackageContent.Amount,
@@ -66,14 +67,15 @@ internal sealed class MaterialUpdatedHandler :
         );
 
         var integrationEnvelope = EventEnvelopeFactory.Wrap(
-            integration,
-            envelope.TenantId,
-            envelope.Username,
-            envelope.CorrelationId,
-            envelope.EventId.ToString()
+            integrationEvent,
+            domainEnvelope.TenantId,
+            domainEnvelope.Username,
+            domainEnvelope.CorrelationId,
+            domainEnvelope.EventId.ToString()
         );
 
         var id = await _outbox.Enqueue(integrationEnvelope, cancellationToken);
+
         await _scheduler.SeedDeliveriesAsync(id, integrationEnvelope.Name, integrationEnvelope.Version, cancellationToken);
     }
 }

@@ -1,4 +1,5 @@
 ﻿@using PaintingProjectsManagement.UI.Modules.Materials;
+@using PaintingProjectsManagement.UI.Modules.Materials.Dialogs
 @using PaintingProjectsManagement.UI.Modules.Shared
 @using System.Net.Http.Json
 
@@ -103,9 +104,15 @@
         }
     }
 
-    private void AddItem()
+    private async Task AddItem()
     {
-        // Open dialog for adding material
+        var parameters = new DialogParameters { ["Material"] = new MaterialDetails() };
+        var dialog = DialogService.Show<MaterialsDialog>("Create Material", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            await LoadDataAsync();
+        }
     }
 
     private async Task RemoveItem(CellContext<MaterialDetails> context)
