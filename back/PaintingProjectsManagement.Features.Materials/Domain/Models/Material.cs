@@ -2,7 +2,10 @@
 
 public sealed class Material : TenantEntity
 {
-    private Material() { } // for EF
+    private Material() 
+    { 
+        // for EF
+    } 
 
     public Material(string tenantId, string name, Quantity packageContent, Money packagePrice)
     {

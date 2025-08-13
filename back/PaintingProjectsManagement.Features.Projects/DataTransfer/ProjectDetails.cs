@@ -8,12 +8,12 @@ public class ProjectDetails
     public DateTime? EndDate { get; set; }
 
     public ProjectStepDataDetails[] Steps { get; set; } = Array.Empty<ProjectStepDataDetails>();
-    public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();
+    // public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();
     public UrlReference[] References { get; set; } = Array.Empty<UrlReference>();
     public UrlReference[] Pictures { get; set; } = Array.Empty<UrlReference>();
     public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();
 
-    public static ProjectDetails FromModel(Project project, MaterialDetails[]? materialDetails = null)
+    public static ProjectDetails FromModel(Project project)
     {
         ArgumentNullException.ThrowIfNull(project);
 
@@ -25,7 +25,7 @@ public class ProjectDetails
             StartDate = project.StartDate,
             EndDate = project.EndDate,
             Steps = project.Steps.Select(x => ProjectStepDataDetails.FromModel(x)).ToArray(),
-            Materials = materialDetails ?? Array.Empty<MaterialDetails>(),
+            // Materials = materialDetails ?? Array.Empty<MaterialDetails>(),
             References = project.References.Select(r => new UrlReference
             {
                 Id = r.Id,

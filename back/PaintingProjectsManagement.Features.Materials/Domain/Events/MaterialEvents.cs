@@ -1,21 +1,32 @@
-﻿//namespace PaintingProjectsManagement.Features.Materials;
+﻿namespace PaintingProjectsManagement.Features.Materials;
 
-//internal static class Events
-//{
-//    internal const string DefaultNamespace = "Materials";
-//}
+// Fired once when a material is created
+[EventName("Materials.MaterialCreated", 1)]
+internal sealed record MaterialCreated(
+    Guid MaterialId,
+    string Name,
+    Quantity PackageContent,
+    Money PackagePrice
+) : IDomainEvent;
 
-//[EventName($"{Events.DefaultNamespace}.{nameof(MaterialCreated)}", 1)]
-//internal sealed record MaterialCreated(Guid MaterialId) : IDomainEvent;
+// Fired when a material is (soft-)deleted
+[EventName("Materials.MaterialDeleted", 1)]
+internal sealed record MaterialDeleted(
+    Guid MaterialId
+) : IDomainEvent;
 
+// Fired when package content (amount/unit) changes
+[EventName("Materials.MaterialPackageContentChanged", 1)]
+internal sealed record MaterialPackageContentChanged(
+    Guid MaterialId,
+    Quantity OldContent,
+    Quantity NewContent
+) : IDomainEvent;
 
-//[EventName($"{Events.DefaultNamespace}.{nameof(MaterialDeleted)}", 1)]
-//internal sealed record MaterialDeleted(Guid MaterialId) : IDomainEvent;
-
-
-//[EventName($"{Events.DefaultNamespace}.{nameof(MaterialPriceChanged)}", 1)]
-//internal sealed record MaterialPriceChanged(Guid MaterialId) : IDomainEvent;
-
-
-//[EventName($"{Events.DefaultNamespace}.{nameof(MaterialPriceChanged)}", 1)]
-//internal sealed record MaterialPriceChanged(Guid MaterialId) : IDomainEvent;
+// Fired when package price changes
+[EventName("Materials.MaterialPackagePriceChanged", 1)]
+internal sealed record MaterialPackagePriceChanged(
+    Guid MaterialId,
+    Money OldPrice,
+    Money NewPrice
+) : IDomainEvent;

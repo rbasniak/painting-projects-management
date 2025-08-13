@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Shouldly;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
@@ -133,8 +134,10 @@ public class Create_Material_Tests
 
         result.Id.ShouldNotBe(Guid.Empty);
         result.Name.ShouldBe("Existing Material");
-        result.UnitPriceAmount.ShouldBe(25);
-        EnumAssertionExtensions.ShouldBeEquivalentTo(result.UnitPriceUnit, PackageUnits.Each);
+        result.PackagePrice.Amount.ShouldBe(25);
+        result.PackagePrice.CurrencyCode.ShouldBe("USD");
+        result.PackagetContent.Amount.ShouldBe(1);
+        EnumAssertionExtensions.ShouldBeEquivalentTo(result.PackagetContent.Unit, PackageUnits.Each);
 
         // Assert the database - should have two materials with the same name but different users
         var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Existing Material").ToList();
@@ -174,8 +177,7 @@ public class Create_Material_Tests
 
         result.Id.ShouldNotBe(Guid.Empty);
         result.Name.ShouldBe("8x4 magnet for test");
-        result.UnitPriceAmount.ShouldBe(19);
-        EnumAssertionExtensions.ShouldBeEquivalentTo(result.UnitPriceUnit, PackageUnits.Each);
+        result.PackagePrice.Amount.ShouldBe(19);
 
         // Assert the database
         var entity = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Id == result.Id);

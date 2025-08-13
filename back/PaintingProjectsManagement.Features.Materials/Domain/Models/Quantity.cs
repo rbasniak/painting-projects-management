@@ -1,20 +1,21 @@
-namespace PaintingProjectsManagement.Features.Materials;
+using FluentValidation.Results;
 
-public enum PackageUnits
-{
-    Gram = 1,
-    Milliliter = 2,
-    Meter = 3,
-    Each = 4
-}
+namespace PaintingProjectsManagement.Features.Materials;
 
 public sealed class Quantity
 {
-    private Quantity() { } // for EF
+    private Quantity() 
+    {
+        // for EF
+    }
 
     public Quantity(double amount, PackageUnits unit)
     {
-        if (amount <= 0) throw new ArgumentOutOfRangeException(nameof(amount), "Amount must be positive.");
+        if (amount <= 0)
+        {
+            throw new ValidationException([new ValidationFailure(nameof(unit), "Amount must be positive.")]);
+        }
+
         Amount = amount;
         Unit = unit;
     }

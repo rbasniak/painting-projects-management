@@ -81,14 +81,11 @@ public class List_Materials_Tests
         // Verify material properties are correctly mapped
         var material1 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Material 1");
         material1.ShouldNotBeNull();
-        material1.UnitPriceUnit.ShouldNotBeNull();
-        EnumAssertionExtensions.ShouldBeEquivalentTo(material1.UnitPriceUnit, PackageUnits.Each);
-        material1.UnitPriceAmount.ShouldBe(10.0);
+        material1.PackagePrice.Amount.ShouldBe(10.0);
 
         var material2 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Material 2");
         material2.ShouldNotBeNull();
-        EnumAssertionExtensions.ShouldBeEquivalentTo(material2.UnitPriceUnit, PackageUnits.Each);
-        material2.UnitPriceAmount.ShouldBe(5.0);
+        material2.PackagePrice.Amount.ShouldBe(5.0);
     }
 
     [Test, NotInParallel(Order = 99)]

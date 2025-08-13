@@ -1,14 +1,28 @@
+using FluentValidation.Results;
+
 namespace PaintingProjectsManagement.Features.Materials;
 
 public sealed class Money
 {
-    private Money() { } // for EF
+    private Money()
+    {
+        // for EF
+    }
 
     public Money(double amount, string currencyCode)
     {
         ArgumentNullException.ThrowIfNull(currencyCode);
-        if (amount < 0) throw new ArgumentOutOfRangeException(nameof(amount), "Amount cannot be negative.");
-        if (currencyCode.Length != 3) throw new ArgumentException("ISO 4217 code, length 3.", nameof(currencyCode));
+
+        if (amount <= 0)
+        {
+            throw new ValidationException([new ValidationFailure(nameof(amount), "Amount must be positive.")]);
+        }
+
+        if (string.IsNullOrEmpty(currencyCode) || currencyCode.Length != 3)
+        {
+            throw new ValidationException([new ValidationFailure(nameof(currencyCode), "ISO 4217 code, length 3.")]);
+        }
+
         Amount = amount;
         CurrencyCode = currencyCode.ToUpperInvariant();
     }

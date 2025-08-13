@@ -17,20 +17,20 @@ public class MaterialConfig : IEntityTypeConfiguration<Material>
         builder.OwnsOne(x => x.PackageContent, owned =>
         {
             owned.Property(p => p.Amount)
-                .HasColumnName("package_content_amount")
+                .HasColumnName("PackageContent_Amount")
                 .IsRequired();
             owned.Property(p => p.Unit)
-                .HasColumnName("package_content_unit")
+                .HasColumnName("PackageContent_Unit")
                 .IsRequired();
         });
         
         builder.OwnsOne(x => x.PackagePrice, owned =>
         {
             owned.Property(p => p.Amount)
-                .HasColumnName("package_price_amount")
+                .HasColumnName("PackagePrice_Amount")
                 .IsRequired();
             owned.Property(p => p.CurrencyCode)
-                .HasColumnName("package_price_currency")
+                .HasColumnName("PackagePrice_Currency")
                 .HasMaxLength(3)
                 .IsRequired();
         });

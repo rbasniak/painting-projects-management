@@ -52,27 +52,27 @@ public class GetProjectDetails : IEndpoint
             {
                 var materialIds = project.Materials.Select(x => x.MaterialId).ToArray();
 
-                var materialsRequest = new GetMaterialsForProject.Request
-                {
-                    MaterialIds = materialIds
-                };
+                //var materialsRequest = new GetMaterialsForProject.Request
+                //{
+                //    MaterialIds = materialIds
+                //};
 
-                var materialsResponse = await _dispatcher.SendAsync(materialsRequest, cancellationToken);
+                //var materialsResponse = await _dispatcher.SendAsync(materialsRequest, cancellationToken);
                 
-                if (!materialsResponse.IsValid)
-                {
-                    return QueryResponse.Failure(materialsResponse.Error);
-                }
+                //if (!materialsResponse.IsValid)
+                //{
+                //    return QueryResponse.Failure(materialsResponse.Error);
+                //}
 
-                var materialDetails = materialsResponse.Data
-                    .Select(materialData =>
-                    {
-                        var projectMaterial = project.Materials.First(projectMaterial => projectMaterial.MaterialId == materialData.Id);
-                        return MaterialDetails.FromModel(materialData, projectMaterial);
-                    })
-                    .ToArray();
+                //var materialDetails = materialsResponse.Data
+                //    .Select(materialData =>
+                //    {
+                //        var projectMaterial = project.Materials.First(projectMaterial => projectMaterial.MaterialId == materialData.Id);
+                //        return MaterialDetails.FromModel(materialData, projectMaterial);
+                //    })
+                //    .ToArray();
 
-                return QueryResponse.Success(ProjectDetails.FromModel(project, materialDetails));
+                return QueryResponse.Success(ProjectDetails.FromModel(project));
             }
 
             return QueryResponse.Success(ProjectDetails.FromModel(project));

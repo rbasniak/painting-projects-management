@@ -8,3 +8,11 @@ public enum MaterialUnit
     Centimeters = 3,
     Grams = 4,
 }
+
+public enum PackageUnits
+{
+    Gram = 10,
+    Milliliter = 20,
+    Meter = 30,
+    Each = 40
+}
