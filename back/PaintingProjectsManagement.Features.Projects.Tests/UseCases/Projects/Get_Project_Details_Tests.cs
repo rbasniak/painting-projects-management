@@ -78,7 +78,7 @@ public class Get_Project_Details_Tests
         Guid materialId;
         using (var context = TestingServer.CreateContext())
         {
-            var newMaterial1 = new Material("rodrigo.basniak", "Test Material 1", new Quantity(9, PackageUnits.Gram), new Money(10.5, "BRL"));
+            var newMaterial1 = new Material("rodrigo.basniak", "Test Material 1", new Quantity(9, PackageUnit.Gram), new Money(10.5, "BRL"));
             await context.AddAsync(newMaterial1);
             await context.SaveChangesAsync();
             materialId = newMaterial1.Id;
@@ -87,7 +87,7 @@ public class Get_Project_Details_Tests
         // Arrange - Add materials to the project
         using (var context = TestingServer.CreateContext())
         {
-            var materialForProject = new MaterialForProject(_testProjectId, materialId, 7, PackageUnits.Each);
+            var materialForProject = new MaterialForProject(_testProjectId, materialId, 7, PackageUnit.Each);
             await context.AddAsync(materialForProject);
             await context.SaveChangesAsync();
         }

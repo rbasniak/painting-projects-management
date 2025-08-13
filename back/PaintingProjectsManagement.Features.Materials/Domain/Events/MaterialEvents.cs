@@ -30,3 +30,10 @@ internal sealed record MaterialPackagePriceChanged(
     Money OldPrice,
     Money NewPrice
 ) : IDomainEvent;
+
+// Fired when material is renamed
+[EventName("Materials.MaterialNameChanged", 1)]
+internal sealed record MaterialNameChanged(
+    Guid MaterialId,
+    string newName
+) : IDomainEvent;

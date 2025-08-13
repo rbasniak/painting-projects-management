@@ -25,7 +25,7 @@ public static class EventEnvelopeFactory
             throw new ArgumentNullException(nameof(username));
         }
 
-        var attr = GetEventNameAttribute(typeof(TEvent));
+        var attr = GetEventNameAttribute(@event.GetType());
 
         return new EventEnvelope<TEvent>
         {
@@ -34,6 +34,7 @@ public static class EventEnvelopeFactory
             Version = attr.Version,
             OccurredUtc = DateTime.UtcNow,
             TenantId = tenantId,
+            Username = username,
             CorrelationId = correlationId,
             CausationId = causationId,
             Event = @event!

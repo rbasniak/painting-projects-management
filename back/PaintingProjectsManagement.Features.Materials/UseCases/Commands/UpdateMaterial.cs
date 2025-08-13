@@ -21,7 +21,7 @@ public class UpdateMaterial : IEndpoint
         public Guid Id { get; set; } 
         public string Name { get; set; } = string.Empty;
         public double PackageAmount { get; set; }
-        public PackageUnits PackageUnit { get; set; }
+        public PackageUnit PackageUnit { get; set; }
         public double PackagePriceAmount { get; set; }
         public string PackagePriceCurrency { get; set; } = "USD";
     }

@@ -39,6 +39,8 @@ public class Program
             connectionString = "Data Source=app.db";
         }
 
+        // TODO: move to the library builder
+        builder.Services.AddScoped<IRequestContext, RequestContext>();
         builder.Services.AddScoped<OutboxSaveChangesInterceptor>();
 
         builder.Services.AddDbContext<DatabaseContext>((scope, options) =>
@@ -55,7 +57,12 @@ public class Program
             opts.MaxAttempts = 10;
             opts.ResolveDbContext = sp => sp.GetRequiredService<DatabaseContext>();
         });
+
+        // TODO: move to the library builder with the possibility to disable it with startup options
         builder.Services.AddHostedService<OutboxDispatcher>();
+
+        // Register domain-to-integration event handlers for Materials
+        builder.Services.AddMaterialsIntegrationHandlers();
 
         builder.Services.AddRbkApiCoreSetup(options => options
              .EnableBasicAuthenticationHandler()
@@ -137,6 +144,23 @@ public class Program
 
         // Map outbox health endpoint
         app.MapOutboxHealth();
+
+        // Configure the HTTP request pipeline. 
+        app.MapOpenApi();
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/openapi/v1.json", "Painting Projects Management API v1");
+        });
+        app.UseReDoc(options =>
+        {
+            options.SpecUrl("/openapi/v1.json");
+        });
+        app.MapScalarApiReference();
+
+        app.MapMaterialsFeature();
+        app.MapPrintingModelsFeature();
+        app.MapPaintsFeature();
+        app.MapProjectsFeature();
 
         app.Run();
     }

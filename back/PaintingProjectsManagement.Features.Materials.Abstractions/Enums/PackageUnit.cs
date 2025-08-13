@@ -9,7 +9,7 @@ public enum MaterialUnit
     Grams = 4,
 }
 
-public enum PackageUnits
+public enum PackageUnit
 {
     Gram = 10,
     Milliliter = 20,

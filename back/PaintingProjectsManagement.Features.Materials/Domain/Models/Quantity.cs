@@ -9,7 +9,7 @@ public sealed class Quantity
         // for EF
     }
 
-    public Quantity(double amount, PackageUnits unit)
+    public Quantity(double amount, PackageUnit unit)
     {
         if (amount <= 0)
         {
@@ -22,7 +22,7 @@ public sealed class Quantity
 
     public double Amount { get; private set; }
 
-    public PackageUnits Unit { get; private set; }
+    public PackageUnit Unit { get; private set; }
 
     public override string ToString() => $"{Amount} {Unit}";
 } 

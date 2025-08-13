@@ -11,8 +11,8 @@ public class Delete_Material_Tests
     public async Task Seed()
     {
         // Create test materials for different users
-        var existingMaterial = new Material("rodrigo.basniak", "Existing Material", new Quantity(1, PackageUnits.Each), new Money(10.0, "USD"));
-        var anotherUserMaterial = new Material("ricardo.smarzaro", "Another User Material", new Quantity(1, PackageUnits.Each), new Money(5.0, "USD"));
+        var existingMaterial = new Material("rodrigo.basniak", "Existing Material", new Quantity(1, PackageUnit.Each), new Money(10.0, "USD"));
+        var anotherUserMaterial = new Material("ricardo.smarzaro", "Another User Material", new Quantity(1, PackageUnit.Each), new Money(5.0, "USD"));
 
         using (var context = TestingServer.CreateContext())
         {
