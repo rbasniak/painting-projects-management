@@ -51,11 +51,26 @@ public class Program
 
         // TODO: move to the library builder with the possibility to disable it with startup options
         // builder.Services.AddHostedService<DomainOutboxDispatcher>();
-        // builder.Services.AddHostedService<IntegrationOutboxDispatcher>();
 
+        var brokerConnection = builder.Configuration.GetConnectionString("ppm-rabbit") ?? "amqp://guest:guest@localhost:5672";
+        builder.Services.Configure<BrokerOptions>(opts =>
+        {
+            var uri = new Uri(brokerConnection);
+            opts.HostName = uri.Host;
+            opts.Port = uri.Port;
+            if (!string.IsNullOrEmpty(uri.UserInfo))
+            {
+                var parts = uri.UserInfo.Split(':');
+                opts.UserName = parts[0];
+                if (parts.Length > 1) opts.Password = parts[1];
+            }
+            opts.Exchange = "ppm-events";
+        });
+        builder.Services.AddSingleton<IBrokerPublisher, RabbitMqPublisher>();
+        builder.Services.AddSingleton<IBrokerSubscriber, RabbitMqSubscriber>();
+        builder.Services.AddHostedService<IntegrationOutboxRelay>();
         builder.Services.AddSingleton<IIntegrationSubscriberRegistry, IntegrationSubscriberRegistry>();
         builder.Services.AddScoped<IIntegrationOutbox, IntegrationOutbox>();
-        builder.Services.AddScoped<IIntegrationDeliveryScheduler, IntegrationDeliveryScheduler>();
 
         // Register domain-to-integration event handlers for Materials and integration consumers for Projects
         

@@ -27,8 +27,5 @@ public class OutboxIntegrationEventConfig : IEntityTypeConfiguration<OutboxInteg
         builder.HasIndex(x => x.CreatedUtc);
         builder.HasIndex(x => x.DoNotProcessBeforeUtc);
 
-        builder.HasMany(x => x.Deliveries)
-               .WithOne(x => x.Event)
-               .HasForeignKey(x => x.EventId);
     }
 }
