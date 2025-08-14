@@ -19,10 +19,10 @@ public class MaterialUpdatedConsumer : IIntegrationEventHandler<MaterialUpdatedV
     {
         var e = envelope.Event;
         var pricePerUnit = e.PackageContentAmount == 0 ? 0 : e.PackagePriceAmount / e.PackageContentAmount;
-        var entity = await _db.Set<MaterialCopy>().FindAsync(new object[] { e.MaterialId }, cancellationToken);
+        var entity = await _db.Set<ReadOnlyMaterial>().FindAsync(new object[] { envelope.TenantId, e.MaterialId }, cancellationToken);
         if (entity == null)
         {
-            entity = new MaterialCopy { Id = e.MaterialId };
+            entity = new ReadOnlyMaterial { Tenant = envelope.TenantId, Id = e.MaterialId };
             _db.Add(entity);
         }
         entity.Name = e.Name;

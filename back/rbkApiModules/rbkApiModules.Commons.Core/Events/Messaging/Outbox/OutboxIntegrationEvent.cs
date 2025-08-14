@@ -4,7 +4,6 @@ namespace rbkApiModules.Commons.Core;
 
 /// <summary>
 /// Represents an integration event stored in the integration outbox.
-/// Each event will have deliveries for its subscribers.
 /// </summary>
 public class OutboxIntegrationEvent
 {
@@ -21,5 +20,4 @@ public class OutboxIntegrationEvent
     public int Attempts { get; set; }
     public string Username { get; set; } = default!;
     public DateTime? DoNotProcessBeforeUtc { get; set; }
-    public ICollection<IntegrationDelivery> Deliveries { get; set; } = new List<IntegrationDelivery>();
 }

@@ -6,12 +6,10 @@ namespace PaintingProjectsManagement.Features.Materials;
 internal sealed class MaterialDeletedHandler : IEventHandler<MaterialDeleted>
 {
     private readonly IIntegrationOutbox _outbox;
-    private readonly IIntegrationDeliveryScheduler _scheduler;
 
-    public MaterialDeletedHandler(IIntegrationOutbox outbox, IIntegrationDeliveryScheduler scheduler)
+    public MaterialDeletedHandler(IIntegrationOutbox outbox)
     {
         _outbox = outbox;
-        _scheduler = scheduler;
     }
 
     public async Task Handle(EventEnvelope<MaterialDeleted> envelope, CancellationToken cancellationToken)
@@ -26,9 +24,7 @@ internal sealed class MaterialDeletedHandler : IEventHandler<MaterialDeleted>
             envelope.EventId.ToString()
         );
 
-        var id = await _outbox.Enqueue(integrationEnvelope, cancellationToken);
-
-        await _scheduler.SeedDeliveriesAsync(id, integrationEnvelope.Name, integrationEnvelope.Version, cancellationToken);
+        await _outbox.Enqueue(integrationEnvelope, cancellationToken);
     }
 }
 

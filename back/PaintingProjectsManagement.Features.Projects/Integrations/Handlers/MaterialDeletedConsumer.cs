@@ -17,7 +17,7 @@ public class MaterialDeletedConsumer : IIntegrationEventHandler<MaterialDeletedV
 
     public async Task Handle(EventEnvelope<MaterialDeletedV1> envelope, CancellationToken cancellationToken)
     {
-        var entity = await _db.Set<MaterialCopy>().FindAsync(new object[] { envelope.Event.MaterialId }, cancellationToken);
+        var entity = await _db.Set<ReadOnlyMaterial>().FindAsync(new object[] { envelope.TenantId, envelope.Event.MaterialId }, cancellationToken);
         if (entity != null)
         {
             _db.Remove(entity);

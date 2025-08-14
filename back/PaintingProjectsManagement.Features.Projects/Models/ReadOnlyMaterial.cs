@@ -1,7 +1,8 @@
 namespace PaintingProjectsManagement.Features.Projects;
 
-public class MaterialCopy
+public class ReadOnlyMaterial
 {
+    public string Tenant { get; set; } = default!;
     public Guid Id { get; set; }
     public string Name { get; set; } = default!;
     public double PricePerUnit { get; set; }

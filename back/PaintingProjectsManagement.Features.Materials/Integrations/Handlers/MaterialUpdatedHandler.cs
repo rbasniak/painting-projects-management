@@ -13,14 +13,12 @@ internal sealed class MaterialUpdatedHandler :
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IOptions<OutboxOptions> _outboxOptions;
     private readonly IIntegrationOutbox _outbox;
-    private readonly IIntegrationDeliveryScheduler _scheduler;
 
-    public MaterialUpdatedHandler(IServiceScopeFactory scopeFactory, IOptions<OutboxOptions> outboxOptions, IIntegrationOutbox outbox, IIntegrationDeliveryScheduler scheduler)
+    public MaterialUpdatedHandler(IServiceScopeFactory scopeFactory, IOptions<OutboxOptions> outboxOptions, IIntegrationOutbox outbox)
     {
         _scopeFactory = scopeFactory;
         _outboxOptions = outboxOptions;
         _outbox = outbox;
-        _scheduler = scheduler;
     }
 
     public Task Handle(EventEnvelope<MaterialPackageContentChanged> envelope, CancellationToken cancellationToken)
@@ -74,9 +72,7 @@ internal sealed class MaterialUpdatedHandler :
             domainEnvelope.EventId.ToString()
         );
 
-        var id = await _outbox.Enqueue(integrationEnvelope, cancellationToken);
-
-        await _scheduler.SeedDeliveriesAsync(id, integrationEnvelope.Name, integrationEnvelope.Version, cancellationToken);
+        await _outbox.Enqueue(integrationEnvelope, cancellationToken);
     }
 }
 

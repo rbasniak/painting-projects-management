@@ -3,9 +3,11 @@ using PaintingProjectsManagement.AppHost;
 var builder = DistributedApplication.CreateBuilder(args);
 
 var database = builder.AddPostgres("ppm-db");
+var broker = builder.AddRabbitMQ("ppm-rabbit");
 
 var apiService = builder.AddProject<Projects.PaintingProjectsManagement_Api>("ppm-api")
     .WithReference(database)
+    .WithReference(broker)
     .WithScalarUI()
     .WithSwaggerUI()
     .WithReDoc()

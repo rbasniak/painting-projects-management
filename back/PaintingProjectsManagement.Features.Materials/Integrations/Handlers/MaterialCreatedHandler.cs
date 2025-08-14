@@ -6,12 +6,10 @@ namespace PaintingProjectsManagement.Features.Materials;
 internal sealed class MaterialCreatedHandler : IEventHandler<MaterialCreated>
 {
     private readonly IIntegrationOutbox _outbox;
-    private readonly IIntegrationDeliveryScheduler _scheduler;
 
-    public MaterialCreatedHandler(IIntegrationOutbox outbox, IIntegrationDeliveryScheduler scheduler)
+    public MaterialCreatedHandler(IIntegrationOutbox outbox)
     {
         _outbox = outbox;
-        _scheduler = scheduler;
     }
 
     public async Task Handle(EventEnvelope<MaterialCreated> envelope, CancellationToken cancellationToken)
@@ -35,9 +33,7 @@ internal sealed class MaterialCreatedHandler : IEventHandler<MaterialCreated>
             envelope.EventId.ToString()
         );
 
-        var id = await _outbox.Enqueue(integrationEnvelope, cancellationToken);
-
-        await _scheduler.SeedDeliveriesAsync(id, integrationEnvelope.Name, integrationEnvelope.Version, cancellationToken);
+        await _outbox.Enqueue(integrationEnvelope, cancellationToken);
     }
 }
 
