@@ -634,7 +634,7 @@ public class Validator : AbstractValidator<Request>
 ### Prerequisites
 
 - .NET 9.0 SDK
-- SQLite (for development)
+- PostgreSQL (for development)
 - Visual Studio 2022 or VS Code
 
 ### Running the Application
@@ -657,10 +657,11 @@ public class Validator : AbstractValidator<Request>
 
 4. **Run the application**:
    ```bash
-   dotnet run --project PaintingProjectsManagement.Api
+   dotnet run --project PaintingProjectsManagement.AppHost
    ```
+   This uses .NET Aspire to start the API, PostgreSQL database and Blazor UI together.
 
-5. **Access the API**:
+5. **Access the services**:
    - API: `https://localhost:7001`
    - Swagger UI: `https://localhost:7001/swagger`
    - ReDoc: `https://localhost:7001/redoc`
