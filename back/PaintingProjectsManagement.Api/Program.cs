@@ -26,8 +26,12 @@ public class Program
         // Add services to the container.
         builder.Services.AddAuthorization();
 
-        var connectionString = builder.Configuration.GetConnectionString("ppm-db")
-            ?? "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=ppm";
+        var connectionString = builder.Configuration.GetConnectionString("ppm-database");
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidDataException($"Could not read Postgres connection string from configuration");
+        }
 
         // TODO: move to the library builder
         builder.Services.AddScoped<IRequestContext, RequestContext>();
@@ -50,9 +54,15 @@ public class Program
         });
 
         // TODO: move to the library builder with the possibility to disable it with startup options
-        // builder.Services.AddHostedService<DomainOutboxDispatcher>();
+        builder.Services.AddHostedService<DomainOutboxDispatcher>();
 
-        var brokerConnection = builder.Configuration.GetConnectionString("ppm-rabbit") ?? "amqp://guest:guest@localhost:5672";
+        var brokerConnection = builder.Configuration.GetConnectionString("ppm-rabbitmq");
+
+        if (string.IsNullOrEmpty(brokerConnection))
+        {
+            throw new InvalidDataException($"Could not read RabbitMQ connection string from configuration");
+        }
+
         builder.Services.Configure<BrokerOptions>(opts =>
         {
             var uri = new Uri(brokerConnection);
