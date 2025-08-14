@@ -13,16 +13,11 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<DatabaseContex
     {
 		try
 		{
-            var config = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false)
-            .Build();
-
-            var connectionString = "Data Source=c:\\temp\\database.db";
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=ppm";
 
             var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
             optionsBuilder
-                .UseSqlite(connectionString)
+                .UseNpgsql(connectionString)
                 .EnableDetailedErrors()
                 .EnableSensitiveDataLogging();
 

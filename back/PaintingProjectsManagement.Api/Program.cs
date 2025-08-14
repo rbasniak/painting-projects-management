@@ -5,7 +5,6 @@ using PaintingProjectsManagement.Features.Paints;
 using PaintingProjectsManagement.Features.Projects;
 using PaintingProjectsManagment.Database;
 using rbkApiModules.Commons.Core;
-using rbkApiModules.Commons.Core.Helpers;
 using rbkApiModules.Commons.Core.UiDefinitions;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Relational;
@@ -27,24 +26,15 @@ public class Program
         // Add services to the container.
         builder.Services.AddAuthorization();
 
-        string connectionString;
-        if (TestingEnvironmentChecker.IsTestingEnvironment)
-        {
-            var testDbPath = Path.Combine(AppContext.BaseDirectory, "wwwroot", "testing", $"testingdb_{Guid.NewGuid():N}.db");
-            Directory.CreateDirectory(Path.GetDirectoryName(testDbPath)!);
-            connectionString = $"Data Source={testDbPath}";
-        }
-        else
-        {
-            connectionString = "Data Source=app.db";
-        }
+        var connectionString = builder.Configuration.GetConnectionString("ppm-db")
+            ?? "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=ppm";
 
         // TODO: move to the library builder
         builder.Services.AddScoped<IRequestContext, RequestContext>();
         builder.Services.AddScoped<OutboxSaveChangesInterceptor>();
 
         builder.Services.AddDbContext<DatabaseContext>((scope, options) =>
-                options.UseSqlite(connectionString)
+                options.UseNpgsql(connectionString)
                        .EnableSensitiveDataLogging()
                        .AddInterceptors(scope.GetRequiredService<OutboxSaveChangesInterceptor>())
         );
