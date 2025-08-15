@@ -6,9 +6,10 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\PaintingProjectsManagement.FeatureDependencies\PaintingProjectsManagement.FeatureDependencies.csproj" />
-		<ProjectReference Include="..\rbkApiModules\rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+                <ProjectReference Include="..\PaintingProjectsManagement.FeatureDependencies\PaintingProjectsManagement.FeatureDependencies.csproj" />
+                <ProjectReference Include="..\rbkApiModules\rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj" />
+                <ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
+  </ItemGroup>
 
 </Project>
