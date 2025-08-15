@@ -36,16 +36,16 @@
 <div class="card">
 <div class="card-header">Line coverage</div>
 <div class="card-body">
-<div class="large cardpercentagebar cardpercentagebar78">22%</div>
+<div class="large cardpercentagebar cardpercentagebar100">0%</div>
 <div class="table">
 <table>
 <tr>
 <th>Covered lines:</th>
-<td class="limit-width right" title="10">10</td>
+<td class="limit-width right" title="0">0</td>
 </tr>
 <tr>
 <th>Uncovered lines:</th>
-<td class="limit-width right" title="35">35</td>
+<td class="limit-width right" title="45">45</td>
 </tr>
 <tr>
 <th>Coverable lines:</th>
@@ -57,7 +57,7 @@
 </tr>
 <tr>
 <th>Line coverage:</th>
-<td class="limit-width right" title="10 of 45">22.2%</td>
+<td class="limit-width right" title="0 of 45">0%</td>
 </tr>
 </table>
 </div>
@@ -66,12 +66,12 @@
 <div class="card">
 <div class="card-header">Branch coverage</div>
 <div class="card-body">
-<div class="large cardpercentagebar cardpercentagebar95">5%</div>
+<div class="large cardpercentagebar cardpercentagebar100">0%</div>
 <div class="table">
 <table>
 <tr>
 <th>Covered branches:</th>
-<td class="limit-width right" title="1">1</td>
+<td class="limit-width right" title="0">0</td>
 </tr>
 <tr>
 <th>Total branches:</th>
@@ -79,7 +79,7 @@
 </tr>
 <tr>
 <th>Branch coverage:</th>
-<td class="limit-width right" title="1 of 20">5%</td>
+<td class="limit-width right" title="0 of 20">0%</td>
 </tr>
 </table>
 </div>
@@ -107,7 +107,7 @@
 </colgroup>
 <thead><tr><th>Method</th><th>Branch coverage <a href="https://en.wikipedia.org/wiki/Code_coverage" target="_blank"><i class="icon-info-circled"></i></a></th><th>Crap Score <a href="https://googletesting.blogspot.de/2011/02/this-code-is-crap.html" target="_blank"><i class="icon-info-circled"></i></a></th><th>Cyclomatic complexity <a href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" target="_blank"><i class="icon-info-circled"></i></a></th><th>Line coverage <a href="https://en.wikipedia.org/wiki/Code_coverage" target="_blank"><i class="icon-info-circled"></i></a></th></tr></thead>
 <tbody>
-<tr><td title=".ctor(rbkApiModules.Identity.Core.IAuthService, rbkApiModules.Identity.Core.RbkAuthenticationOptions, System.Collections.Generic.IEnumerable&lt;rbkApiModules.Identity.Core.ICustomUserPostProcessor&gt;, rbkApiModules.Identity.Core.IRolesService, rbkApiModules.Commons.Core.ILocalizationService, Microsoft.Extensions.Logging.ILogger&lt;rbkApiModules.Identity.Core.AutomaticUserCreator&gt;)"><a href="#file0_line19" class="navigatetohash">.ctor(...)</a></td><td>50%</td><td>2</td><td>2</td><td>100%</td></tr>
+<tr><td title=".ctor(rbkApiModules.Identity.Core.IAuthService, rbkApiModules.Identity.Core.RbkAuthenticationOptions, System.Collections.Generic.IEnumerable&lt;rbkApiModules.Identity.Core.ICustomUserPostProcessor&gt;, rbkApiModules.Identity.Core.IRolesService, rbkApiModules.Commons.Core.ILocalizationService, Microsoft.Extensions.Logging.ILogger&lt;rbkApiModules.Identity.Core.AutomaticUserCreator&gt;)"><a href="#file0_line19" class="navigatetohash">.ctor(...)</a></td><td>0%</td><td>6</td><td>2</td><td>0%</td></tr>
 <tr><td title="CreateIfAllowedAsync()"><a href="#file0_line33" class="navigatetohash">CreateIfAllowedAsync()</a></td><td>0%</td><td>342</td><td>18</td><td>0%</td></tr>
 </tbody>
 </table>
@@ -136,17 +136,17 @@
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line16"></a><code>16</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;readonly&nbsp;ICustomUserPostProcessor&nbsp;_customUserPostProcessor;</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line17"></a><code>17</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;readonly&nbsp;ILogger&lt;AutomaticUserCreator&gt;&nbsp;_logger;</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line18"></a><code>18</code></td><td></td><td class="lightgray"><code></code></td></tr>
-<tr class="coverableline" title="Covered (5 visits)" data-coverage="{'AllTestMethods': {'VC': '5', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">5</td><td class="rightmargin right"><a id="file0_line19"></a><code>19</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;AutomaticUserCreator(IAuthService&nbsp;authService,&nbsp;RbkAuthenticationOptions&nbsp;authOptions,</code></td></tr>
-<tr class="coverableline" title="Covered (5 visits)" data-coverage="{'AllTestMethods': {'VC': '5', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">5</td><td class="rightmargin right"><a id="file0_line20"></a><code>20</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IEnumerable&lt;ICustomUserPostProcessor&gt;&nbsp;customUserPostProcessors,&nbsp;IRolesService&nbsp;rolesService,</code></td></tr>
-<tr class="coverableline" title="Covered (5 visits)" data-coverage="{'AllTestMethods': {'VC': '5', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">5</td><td class="rightmargin right"><a id="file0_line21"></a><code>21</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ILocalizationService&nbsp;localizationService,&nbsp;ILogger&lt;AutomaticUserCreator&gt;&nbsp;logger)</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line19"></a><code>19</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;AutomaticUserCreator(IAuthService&nbsp;authService,&nbsp;RbkAuthenticationOptions&nbsp;authOptions,</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line20"></a><code>20</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IEnumerable&lt;ICustomUserPostProcessor&gt;&nbsp;customUserPostProcessors,&nbsp;IRolesService&nbsp;rolesService,</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line21"></a><code>21</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ILocalizationService&nbsp;localizationService,&nbsp;ILogger&lt;AutomaticUserCreator&gt;&nbsp;logger)</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line22"></a><code>22</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
-<tr class="coverableline" title="Covered (5 visits)" data-coverage="{'AllTestMethods': {'VC': '5', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">5</td><td class="rightmargin right"><a id="file0_line23"></a><code>23</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_authOptions&nbsp;=&nbsp;authOptions;</code></td></tr>
-<tr class="coverableline" title="Covered (5 visits)" data-coverage="{'AllTestMethods': {'VC': '5', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">5</td><td class="rightmargin right"><a id="file0_line24"></a><code>24</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_authService&nbsp;=&nbsp;authService;</code></td></tr>
-<tr class="coverableline" title="Covered (5 visits)" data-coverage="{'AllTestMethods': {'VC': '5', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">5</td><td class="rightmargin right"><a id="file0_line25"></a><code>25</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_rolesService&nbsp;=&nbsp;rolesService;</code></td></tr>
-<tr class="coverableline" title="Covered (5 visits)" data-coverage="{'AllTestMethods': {'VC': '5', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">5</td><td class="rightmargin right"><a id="file0_line26"></a><code>26</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_localizationService&nbsp;=&nbsp;localizationService;</code></td></tr>
-<tr class="coverableline" title="Partially covered (5 visits, 1 of 2 branches are covered)" data-coverage="{'AllTestMethods': {'VC': '5', 'LVS': 'orange'}}"><td class="orange">&nbsp;</td><td class="leftmargin rightmargin right">5</td><td class="rightmargin right"><a id="file0_line27"></a><code>27</code></td><td class="percentagebar percentagebar50"><i class="icon-fork"></i></td><td class="lightorange"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_customUserPostProcessor&nbsp;=&nbsp;customUserPostProcessors.Count()&nbsp;&gt;&nbsp;0&nbsp;?&nbsp;customUserPostProcessors.First()&nbsp;:&nbsp;null;</code></td></tr>
-<tr class="coverableline" title="Covered (5 visits)" data-coverage="{'AllTestMethods': {'VC': '5', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">5</td><td class="rightmargin right"><a id="file0_line28"></a><code>28</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_logger&nbsp;=&nbsp;logger;</code></td></tr>
-<tr class="coverableline" title="Covered (5 visits)" data-coverage="{'AllTestMethods': {'VC': '5', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">5</td><td class="rightmargin right"><a id="file0_line29"></a><code>29</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line23"></a><code>23</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_authOptions&nbsp;=&nbsp;authOptions;</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line24"></a><code>24</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_authService&nbsp;=&nbsp;authService;</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line25"></a><code>25</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_rolesService&nbsp;=&nbsp;rolesService;</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line26"></a><code>26</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_localizationService&nbsp;=&nbsp;localizationService;</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits, 0 of 2 branches are covered)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line27"></a><code>27</code></td><td class="percentagebar percentagebar0"><i class="icon-fork"></i></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_customUserPostProcessor&nbsp;=&nbsp;customUserPostProcessors.Count()&nbsp;&gt;&nbsp;0&nbsp;?&nbsp;customUserPostProcessors.First()&nbsp;:&nbsp;null;</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line28"></a><code>28</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_logger&nbsp;=&nbsp;logger;</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line29"></a><code>29</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line30"></a><code>30</code></td><td></td><td class="lightgray"><code></code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line31"></a><code>31</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;async&nbsp;Task&lt;User&gt;&nbsp;CreateIfAllowedAsync(string&nbsp;username,&nbsp;string&nbsp;tenant,&nbsp;CancellationToken&nbsp;cancellationToken)</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line32"></a><code>32</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
@@ -211,11 +211,11 @@
 </tbody>
 </table>
 </div>
-<div class="footer">Generated by: ReportGenerator 5.4.12.0<br />08/11/2025 - 20:57:35<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="https://reportgenerator.io">reportgenerator.io</a></div></div>
+<div class="footer">Generated by: ReportGenerator 5.4.12.0<br />08/15/2025 - 08:01:13<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="https://reportgenerator.io">reportgenerator.io</a></div></div>
 <div class="containerright">
 <div class="containerrightfixed">
 <h1>Methods/Properties</h1>
-<a href="#file0_line19" class="navigatetohash percentagebar percentagebar100" title="Line coverage: 100% - .ctor(rbkApiModules.Identity.Core.IAuthService, rbkApiModules.Identity.Core.RbkAuthenticationOptions, System.Collections.Generic.IEnumerable&lt;rbkApiModules.Identity.Core.ICustomUserPostProcessor&gt;, rbkApiModules.Identity.Core.IRolesService, rbkApiModules.Commons.Core.ILocalizationService, Microsoft.Extensions.Logging.ILogger&lt;rbkApiModules.Identity.Core.AutomaticUserCreator&gt;)"><i class="icon-cube"></i>.ctor(rbkApiModules.Identity.Core.IAuthService, rbkApiModules.Identity.Core.RbkAuthenticationOptions, System.Collections.Generic.IEnumerable&lt;rbkApiModules.Identity.Core.ICustomUserPostProcessor&gt;, rbkApiModules.Identity.Core.IRolesService, rbkApiModules.Commons.Core.ILocalizationService, Microsoft.Extensions.Logging.ILogger&lt;rbkApiModules.Identity.Core.AutomaticUserCreator&gt;)</a><br />
+<a href="#file0_line19" class="navigatetohash percentagebar percentagebar0" title="Line coverage: 0% - .ctor(rbkApiModules.Identity.Core.IAuthService, rbkApiModules.Identity.Core.RbkAuthenticationOptions, System.Collections.Generic.IEnumerable&lt;rbkApiModules.Identity.Core.ICustomUserPostProcessor&gt;, rbkApiModules.Identity.Core.IRolesService, rbkApiModules.Commons.Core.ILocalizationService, Microsoft.Extensions.Logging.ILogger&lt;rbkApiModules.Identity.Core.AutomaticUserCreator&gt;)"><i class="icon-cube"></i>.ctor(rbkApiModules.Identity.Core.IAuthService, rbkApiModules.Identity.Core.RbkAuthenticationOptions, System.Collections.Generic.IEnumerable&lt;rbkApiModules.Identity.Core.ICustomUserPostProcessor&gt;, rbkApiModules.Identity.Core.IRolesService, rbkApiModules.Commons.Core.ILocalizationService, Microsoft.Extensions.Logging.ILogger&lt;rbkApiModules.Identity.Core.AutomaticUserCreator&gt;)</a><br />
 <a href="#file0_line33" class="navigatetohash percentagebar percentagebar0" title="Line coverage: 0% - CreateIfAllowedAsync()"><i class="icon-cube"></i>CreateIfAllowedAsync()</a><br />
 <br/></div>
 </div></div>
