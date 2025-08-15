@@ -79,6 +79,7 @@ public class UpdateProject : IEndpoint
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var project = await _context.Set<Project>()
+                .Where(x => x.TenantId == request.Identity.Tenant)
                 .Include(x => x.Steps)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
 

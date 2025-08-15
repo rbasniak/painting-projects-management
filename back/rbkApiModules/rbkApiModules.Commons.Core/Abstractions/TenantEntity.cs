@@ -2,7 +2,7 @@
 
 namespace rbkApiModules.Commons.Core;
 
-public abstract class TenantEntity : BaseEntity
+public abstract class TenantEntity : AggregateRoot
 {
     private string? _tenantId;
 
@@ -12,7 +12,7 @@ public abstract class TenantEntity : BaseEntity
     }
 
     // TODO: Estava dando problema no SetupTenant quando o tenantId nao era nulavel. Tem que descobrir e corrigir isso
-    [MaxLength(32)]
+    [MaxLength(255)]
     public string? TenantId
     {
         get

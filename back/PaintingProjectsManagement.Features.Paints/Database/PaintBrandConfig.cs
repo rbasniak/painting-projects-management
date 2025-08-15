@@ -6,7 +6,7 @@ public class PaintBrandConfig : IEntityTypeConfiguration<PaintBrand>
 {
     public void Configure(EntityTypeBuilder<PaintBrand> builder)
     {
-        builder.ToTable("PaintBrands");
+        builder.ToTable("paints_catalog.brands");
 
         builder.HasKey(x => x.Id);
         

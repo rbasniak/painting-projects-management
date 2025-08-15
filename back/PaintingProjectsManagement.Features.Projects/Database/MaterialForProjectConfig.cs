@@ -7,7 +7,7 @@ public class MaterialForProjectConfig : IEntityTypeConfiguration<MaterialForProj
 {
     public void Configure(EntityTypeBuilder<MaterialForProject> builder)
     {
-        builder.ToTable("ProjectMaterials");
+        builder.ToTable("projects.project_materials");
 
         // Composite key
         builder.HasKey(e => new { e.ProjectId, e.MaterialId });

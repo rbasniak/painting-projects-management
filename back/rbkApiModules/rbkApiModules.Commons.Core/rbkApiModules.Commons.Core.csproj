@@ -6,10 +6,9 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-
-	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
+        <ItemGroup>
+                <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.ApiExplorer" Version="2.3.0" />
@@ -21,11 +20,13 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.8" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.8" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.3" />
-	</ItemGroup>
+                <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.3" />
+                <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+        </ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Database\Commons\Validators\" />
+	  <Folder Include="Events\Persistence\Interceptors\" />
 	</ItemGroup>
 
 </Project>

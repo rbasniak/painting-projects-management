@@ -6,7 +6,7 @@ public class ProjectPictureConfig : IEntityTypeConfiguration<ProjectPicture>
 {
     public void Configure(EntityTypeBuilder<ProjectPicture> builder)
     {
-        builder.ToTable("ProjectPictures");
+        builder.ToTable("projects.pictures");
 
         builder.HasKey(x => x.Id);
         

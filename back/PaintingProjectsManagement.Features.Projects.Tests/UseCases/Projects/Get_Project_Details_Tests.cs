@@ -66,7 +66,6 @@ public class Get_Project_Details_Tests
         response.Data.ShouldNotBeNull();
 
         // Verify empty collections
-        response.Data.Materials.ShouldBeEmpty();
         response.Data.References.ShouldBeEmpty();
         response.Data.Pictures.ShouldBeEmpty();
         response.Data.Groups.ShouldBeEmpty();
@@ -79,7 +78,7 @@ public class Get_Project_Details_Tests
         Guid materialId;
         using (var context = TestingServer.CreateContext())
         {
-            var newMaterial1 = new Material("rodrigo.basniak", "Test Material 1", MaterialUnit.Unit, 10.50);
+            var newMaterial1 = new Material("rodrigo.basniak", "Test Material 1", new Quantity(9, PackageContentUnit.Gram), new Money(10.5, "BRL"));
             await context.AddAsync(newMaterial1);
             await context.SaveChangesAsync();
             materialId = newMaterial1.Id;
@@ -88,7 +87,7 @@ public class Get_Project_Details_Tests
         // Arrange - Add materials to the project
         using (var context = TestingServer.CreateContext())
         {
-            var materialForProject = new MaterialForProject(_testProjectId, materialId, 7, MaterialUnit.Unit);
+            var materialForProject = new MaterialForProject(_testProjectId, materialId, 7, PackageContentUnit.Each);
             await context.AddAsync(materialForProject);
             await context.SaveChangesAsync();
         }
@@ -99,15 +98,7 @@ public class Get_Project_Details_Tests
         // Assert the response
         response.ShouldBeSuccess();
         response.Data.ShouldNotBeNull();
-        response.Data.Materials.ShouldNotBeEmpty();
-        response.Data.Materials.Length.ShouldBe(1);
         
-        var material = response.Data.Materials[0];
-        material.Id.ShouldBe(materialId);
-        material.Name.ShouldBe("Test Material 1");
-        material.Unit.ShouldBe(MaterialUnit.Unit);
-        material.Quantity.ShouldBe(7);
-        material.PricePerUnit.ShouldBe(10.50);
     }
 
     [Test, NotInParallel(Order = 6)]

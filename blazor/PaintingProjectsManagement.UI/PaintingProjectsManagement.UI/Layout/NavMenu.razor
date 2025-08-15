@@ -1,0 +1,73 @@
+﻿<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
+        Home
+    </MudNavLink>
+
+    <MudNavGroup Title="Materials" Expanded="true">
+        <MudNavLink Href="/materials/library"
+                    Icon="@Icons.Material.Filled.MenuBook"
+                    Match="NavLinkMatch.Prefix">
+            Library
+        </MudNavLink>
+    </MudNavGroup>
+
+    <MudNavGroup Title="3D Models" Expanded="false">
+        <MudNavLink Href="/3d-models/library"
+                    Icon="@Icons.Material.Filled.ViewInAr"
+                    Match="NavLinkMatch.Prefix">
+            Library
+        </MudNavLink>
+
+        <MudNavLink Href="/3d-models/gallery"
+                    Icon="@Icons.Material.Filled.PhotoLibrary"
+                    Match="NavLinkMatch.Prefix">
+            Gallery
+        </MudNavLink>
+
+        <MudNavLink Href="/3d-models/rate"
+                    Icon="@Icons.Material.Filled.StarRate"
+                    Match="NavLinkMatch.Prefix">
+            Rate
+        </MudNavLink>
+    </MudNavGroup>
+
+    <MudNavGroup Title="Paints" Expanded="false">
+        <MudNavLink Href="/paints/inventory"
+                    Icon="@Icons.Material.Filled.Inventory2"
+                    Match="NavLinkMatch.Prefix">
+            Inventory
+        </MudNavLink>
+
+        <MudNavLink Href="/paints/library"
+                    Icon="@Icons.Material.Filled.Palette"
+                    Match="NavLinkMatch.Prefix">
+            Library
+        </MudNavLink>
+
+        <MudNavLink Href="/paints/mixes"
+                    Icon="@Icons.Material.Filled.BlurCircular"
+                    Match="NavLinkMatch.Prefix">
+            Mixes
+        </MudNavLink>
+    </MudNavGroup>
+
+    <MudNavGroup Title="Projects" Expanded="false">
+        <MudNavLink Href="/projects/library"
+                    Icon="@Icons.Material.Filled.Inventory"
+                    Match="NavLinkMatch.Prefix">
+            Inventory
+        </MudNavLink>
+
+        <MudNavLink Href="/projects/gallery"
+                    Icon="@Icons.Material.Filled.Collections"
+                    Match="NavLinkMatch.Prefix">
+            Gallery
+        </MudNavLink>
+    </MudNavGroup>
+
+    <MudNavLink Href="/about"
+                Icon="@Icons.Material.Filled.Info"
+                Match="NavLinkMatch.Prefix">
+        About
+    </MudNavLink>
+</MudNavMenu>

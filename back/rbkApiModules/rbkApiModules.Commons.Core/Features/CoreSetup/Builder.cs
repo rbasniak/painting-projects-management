@@ -664,6 +664,7 @@ public static class CommonsCoreBuilder
 
             #endregion
 
+
             #region Response compression
 
             if (options._useDefaultCompression || options._userCompressionOptions != null)
@@ -825,6 +826,21 @@ public static class CommonsCoreBuilder
             }
 
             #endregion
+
+            // Must go after use authentication
+            app.Use(async (ctx, next) =>
+            {
+                var _ = await ctx.AuthenticateAsync();
+
+                var requestContext = ctx.RequestServices.GetRequiredService<IRequestContext>();
+
+                requestContext.TenantId = ctx.GetTenant();
+                requestContext.Username = ctx.GetUsername();
+                requestContext.CorrelationId = ctx.Request.Headers["X-Correlation-Id"].FirstOrDefault() ?? Guid.NewGuid().ToString();
+                requestContext.CausationId = ctx.Request.Headers["X-Causation-Id"].FirstOrDefault() ?? Guid.NewGuid().ToString();
+
+                await next();
+            });
         }
         return app;
     }

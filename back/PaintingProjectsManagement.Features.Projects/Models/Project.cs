@@ -53,9 +53,13 @@ public class Project : TenantEntity
         EndDate = endDate;
     }
 
-    public void ConsumeMaterial(Guid materialId, double quantity, MaterialUnit unit)
+    public void ConsumeMaterial(Guid materialId, double quantity, PackageContentUnit unit)
     {
+        // TODO: make it idempotent
+
         _materials.Add(new MaterialForProject(Id, materialId, quantity, unit));
+
+        RaiseDomainEvent(new ProjectMaterialAdded(Id, materialId, quantity));
     }
 
     public void AddExecutionWindow(ProjectStepDefinition step, DateTime start, DateTime end)

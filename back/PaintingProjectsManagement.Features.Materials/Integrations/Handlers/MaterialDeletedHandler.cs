@@ -1,0 +1,30 @@
+using PaintingProjectsManagement.Features.Materials.Abstractions;
+using rbkApiModules.Commons.Core;
+
+namespace PaintingProjectsManagement.Features.Materials;
+
+internal sealed class MaterialDeletedHandler : IEventHandler<MaterialDeleted>
+{
+    private readonly IIntegrationOutbox _outbox;
+
+    public MaterialDeletedHandler(IIntegrationOutbox outbox)
+    {
+        _outbox = outbox;
+    }
+
+    public async Task Handle(EventEnvelope<MaterialDeleted> envelope, CancellationToken cancellationToken)
+    {
+        var integrationEvent = new MaterialDeletedV1(envelope.Event.MaterialId);
+
+        var integrationEnvelope = EventEnvelopeFactory.Wrap(
+            integrationEvent,
+            envelope.TenantId,
+            envelope.Username,
+            envelope.CorrelationId,
+            envelope.EventId.ToString()
+        );
+
+        await _outbox.Enqueue(integrationEnvelope, cancellationToken);
+    }
+}
+

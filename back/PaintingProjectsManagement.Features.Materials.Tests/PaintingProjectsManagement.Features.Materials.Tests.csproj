@@ -31,4 +31,8 @@
 		<ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Integrations\" />
+	</ItemGroup>
+
 </Project>

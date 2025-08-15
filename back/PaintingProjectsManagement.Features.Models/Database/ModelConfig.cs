@@ -7,7 +7,7 @@ public class ModelConfig : IEntityTypeConfiguration<Model>
 {
     public void Configure(EntityTypeBuilder<Model> builder)
     {
-        builder.ToTable("Models");
+        builder.ToTable("models.models");
 
         builder.HasKey(x => x.Id);
         

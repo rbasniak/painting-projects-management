@@ -4,7 +4,7 @@ namespace PaintingProjectsManagement.Features.Projects;
 
 public class MaterialForProject
 {
-    public MaterialForProject(Guid projectId, Guid materialId, double quantity, MaterialUnit unit)
+    public MaterialForProject(Guid projectId, Guid materialId, double quantity, PackageContentUnit unit)
     {
         MaterialId = materialId;
         ProjectId = projectId;
@@ -15,5 +15,5 @@ public class MaterialForProject
     public Guid MaterialId { get; private set; }
     public Guid ProjectId { get; private set; }
     public double Quantity { get; private set; }
-    public MaterialUnit Unit { get; private set; }
+    public PackageContentUnit Unit { get; private set; }
 }

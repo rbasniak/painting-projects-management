@@ -19,4 +19,5 @@ public record EnumReference
 
     public int Id { get; init; }
     public string Value { get; init; }
+    public static EnumReference Empty => new EnumReference(-1, string.Empty);
 }

@@ -1,0 +1,16 @@
+using System;
+
+namespace rbkApiModules.Commons.Core;
+
+public sealed class EventEnvelope<TEvent>
+{
+    public Guid EventId { get; init; }
+    public string Name { get; init; } = default!;
+    public int Version { get; init; }
+    public DateTime OccurredUtc { get; init; }
+    public string TenantId { get; init; } = default!;
+    public string Username { get; init; } = default!;
+    public string? CorrelationId { get; init; }
+    public string? CausationId { get; init; }
+    public TEvent Event { get; init; } = default!;
+} 

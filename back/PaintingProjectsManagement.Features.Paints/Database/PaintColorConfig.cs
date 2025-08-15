@@ -6,7 +6,7 @@ public class PaintColorConfig : IEntityTypeConfiguration<PaintColor>
 {
     public void Configure(EntityTypeBuilder<PaintColor> builder)
     {
-        builder.ToTable("Paints");
+        builder.ToTable("paints_catalog.colors");
 
         builder.HasKey(x => x.Id);
         

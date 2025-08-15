@@ -6,7 +6,7 @@ public class ColorGroupConfig : IEntityTypeConfiguration<ColorGroup>
 {
     public void Configure(EntityTypeBuilder<ColorGroup> builder)
     {
-        builder.ToTable("ProjectColorGroups");
+        builder.ToTable("projects.project_color_groups");
 
         builder.HasKey(x => x.Id);
         

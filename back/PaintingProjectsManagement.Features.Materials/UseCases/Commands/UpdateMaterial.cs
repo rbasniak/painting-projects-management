@@ -20,8 +20,10 @@ public class UpdateMaterial : IEndpoint
     {
         public Guid Id { get; set; } 
         public string Name { get; set; } = string.Empty;
-        public MaterialUnit Unit { get; set; }
-        public double PricePerUnit { get; set; }
+        public double PackageContentAmount { get; set; }
+        public int PackageContentUnit { get; set; }
+        public double PackagePriceAmount { get; set; }
+        public string PackagePriceCurrency { get; set; } = "USD";
     }
 
     public class Validator : SmartValidator<Request, Material>
@@ -39,9 +41,18 @@ public class UpdateMaterial : IEndpoint
                 })
                 .WithMessage("A material with this name already exists.");
 
-            RuleFor(x => x.PricePerUnit)
+            RuleFor(x => x.PackageContentAmount)
                 .GreaterThan(0)
-                .WithMessage("Price per unit must be greater than zero.");
+                .WithMessage("Package amount must be greater than zero.");
+
+            RuleFor(x => x.PackagePriceAmount)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Package price cannot be negative.");
+
+            RuleFor(x => x.PackagePriceCurrency)
+                .NotEmpty()
+                .Length(3)
+                .WithMessage("Currency must be a 3-letter ISO code.");
         }
     }
 
@@ -54,7 +65,11 @@ public class UpdateMaterial : IEndpoint
                 .Where(x => x.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
-            material.UpdateDetails(request.Name, request.Unit, request.PricePerUnit);
+            material.UpdateDetails(
+                request.Name,
+                new Quantity(request.PackageContentAmount, (PackageContentUnit)request.PackageContentUnit),
+                new Money(request.PackagePriceAmount, request.PackagePriceCurrency)
+            );
 
             await _context.SaveChangesAsync(cancellationToken);
 

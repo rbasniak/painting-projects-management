@@ -54,8 +54,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
 		Add-Migration.txt = Add-Migration.txt
+		lessons_learned.txt = lessons_learned.txt
 		..\README.md = ..\README.md
+		rbkApiModules\docs\README.md = rbkApiModules\docs\README.md
 		requirements.txt = requirements.txt
+		validator_ideas.txt = validator_ideas.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Materials.Abstractions", "PaintingProjectsManagement.Features.Materials.Abstractions\PaintingProjectsManagement.Features.Materials.Abstractions.csproj", "{14DC397B-CCB8-452B-A435-EA7F32A62AE8}"
@@ -92,6 +95,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Blazor", "..\blazor\PaintingProjectsManagement.Blazor\PaintingProjectsManagement.Blazor\PaintingProjectsManagement.Blazor.csproj", "{776B33BE-EE51-0201-FA32-45A0B5F5B13F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Core", "PaintingProjectsManagement.Features.Core\PaintingProjectsManagement.Features.Core.csproj", "{49EFBF12-CC8F-493D-9F26-73806AADCD0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.UI", "..\blazor\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj", "{82D445C4-8530-2F07-F8AB-2D04C4D86344}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Projects.Abstractions", "PaintingProjectsManagement.Features.Projects.Abstractions\PaintingProjectsManagement.Features.Projects.Abstractions.csproj", "{21010993-786F-DB15-7AEA-1A1F2858729F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -203,6 +210,14 @@ Global
 		{49EFBF12-CC8F-493D-9F26-73806AADCD0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49EFBF12-CC8F-493D-9F26-73806AADCD0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49EFBF12-CC8F-493D-9F26-73806AADCD0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82D445C4-8530-2F07-F8AB-2D04C4D86344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82D445C4-8530-2F07-F8AB-2D04C4D86344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82D445C4-8530-2F07-F8AB-2D04C4D86344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82D445C4-8530-2F07-F8AB-2D04C4D86344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21010993-786F-DB15-7AEA-1A1F2858729F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21010993-786F-DB15-7AEA-1A1F2858729F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21010993-786F-DB15-7AEA-1A1F2858729F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21010993-786F-DB15-7AEA-1A1F2858729F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -242,6 +257,8 @@ Global
 		{91A6FD4C-F4FD-4328-8BA4-78FD2B2F245E} = {945C31FD-D6F8-4151-B6AF-CC2CE597DF36}
 		{776B33BE-EE51-0201-FA32-45A0B5F5B13F} = {6373AE65-E43B-4944-9C8E-863515734D0C}
 		{49EFBF12-CC8F-493D-9F26-73806AADCD0D} = {945C31FD-D6F8-4151-B6AF-CC2CE597DF36}
+		{82D445C4-8530-2F07-F8AB-2D04C4D86344} = {6373AE65-E43B-4944-9C8E-863515734D0C}
+		{21010993-786F-DB15-7AEA-1A1F2858729F} = {6398C842-1E51-4272-9993-0055BB2E71E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D9D84DD-C876-47C0-8479-5AA1E9881CFA}

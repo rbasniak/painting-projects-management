@@ -1,0 +1,77 @@
+﻿@using PaintingProjectsManagement.Blazor.Modules.Authentication;
+
+@page "/login"
+
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@inject ITokenService TokenService
+
+<h3>Login</h3>
+
+@if (loading)
+{
+    <p>Loading...</p>
+}
+else if (loginFailed)
+{
+    <p>Login failed. Please try again.</p>
+} 
+else
+{
+    <form @onsubmit="HandleLogin">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" @bind="Request.Username" required />
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" @bind="Request.Password" required />
+        </div>
+        <button type="submit">Login</button>
+    </form>
+}
+
+@code {
+    private bool loading = true;
+    private bool loginFailed;
+    private bool hasInitialized;
+
+    public LoginRequest Request { get; set; } = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !hasInitialized)
+        {
+            hasInitialized = true;
+
+            loading = false;
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleLogin(EventArgs args)
+    {
+        try
+        {
+            loading = true;
+
+            var result = await AuthenticationService.LoginAsync(Request, default);
+
+            await TokenService.SetTokensAsync(result.AccessToken, result.RefreshToken, default);
+
+            NavigationManager.NavigateTo("/materials");
+        }
+        catch (Exception ex)
+        {
+            // TODO: implement proper error handling
+            loginFailed = true;
+        }
+        finally
+        {
+            loading = false;
+
+            StateHasChanged();
+        }
+    }
+}

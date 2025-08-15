@@ -5,7 +5,6 @@ using PaintingProjectsManagement.Features.Paints;
 using PaintingProjectsManagement.Features.Projects;
 using PaintingProjectsManagment.Database;
 using rbkApiModules.Commons.Core;
-using rbkApiModules.Commons.Core.Helpers;
 using rbkApiModules.Commons.Core.UiDefinitions;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Relational;
@@ -13,6 +12,7 @@ using Scalar.AspNetCore;
 using System.Reflection;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
+using PaintingProjectsManagement.Api.Diagnostics;
 
 namespace PaintingProjectsManagement.Api;
 
@@ -26,21 +26,65 @@ public class Program
         // Add services to the container.
         builder.Services.AddAuthorization();
 
-        string connectionString;
-        if (TestingEnvironmentChecker.IsTestingEnvironment)
+        var connectionString = builder.Configuration.GetConnectionString("ppm-database");
+
+        if (string.IsNullOrEmpty(connectionString))
         {
-            var testDbPath = Path.Combine(AppContext.BaseDirectory, "wwwroot", "testing", $"testingdb_{Guid.NewGuid():N}.db");
-            Directory.CreateDirectory(Path.GetDirectoryName(testDbPath)!);
-            connectionString = $"Data Source={testDbPath}";
-        }
-        else
-        {
-            connectionString = "Data Source=app.db";
+            throw new InvalidDataException($"Could not read Postgres connection string from configuration");
         }
 
+        // TODO: move to the library builder
+        builder.Services.AddScoped<IRequestContext, RequestContext>();
+        builder.Services.AddScoped<OutboxSaveChangesInterceptor>();
+
         builder.Services.AddDbContext<DatabaseContext>((scope, options) =>
-                options.UseSqlite(connectionString)
-                       .EnableSensitiveDataLogging());
+                options.UseNpgsql(connectionString)
+                       .EnableSensitiveDataLogging()
+                       .AddInterceptors(scope.GetRequiredService<OutboxSaveChangesInterceptor>())
+        );
+
+        // Events infrastructure registrations
+        builder.Services.AddSingleton<IEventTypeRegistry>(sp => new ReflectionEventTypeRegistry(AppDomain.CurrentDomain.GetAssemblies()));
+        builder.Services.Configure<OutboxOptions>(opts =>
+        {
+            opts.BatchSize = 50;
+            opts.PollIntervalMs = 1000;
+            opts.MaxAttempts = 10;
+            opts.ResolveDbContext = sp => sp.GetRequiredService<DatabaseContext>();
+        });
+
+        // TODO: move to the library builder with the possibility to disable it with startup options
+        builder.Services.AddHostedService<DomainOutboxDispatcher>();
+
+        var brokerConnection = builder.Configuration.GetConnectionString("ppm-rabbitmq");
+
+        if (string.IsNullOrEmpty(brokerConnection))
+        {
+            throw new InvalidDataException($"Could not read RabbitMQ connection string from configuration");
+        }
+
+        builder.Services.Configure<BrokerOptions>(opts =>
+        {
+            var uri = new Uri(brokerConnection);
+            opts.HostName = uri.Host;
+            opts.Port = uri.Port;
+            if (!string.IsNullOrEmpty(uri.UserInfo))
+            {
+                var parts = uri.UserInfo.Split(':');
+                opts.UserName = parts[0];
+                if (parts.Length > 1) opts.Password = parts[1];
+            }
+            opts.Exchange = "ppm-events";
+        });
+        builder.Services.AddSingleton<IBrokerPublisher, RabbitMqPublisher>();
+        builder.Services.AddSingleton<IBrokerSubscriber, RabbitMqSubscriber>();
+        builder.Services.AddHostedService<IntegrationOutboxRelay>();
+        builder.Services.AddSingleton<IIntegrationSubscriberRegistry, IntegrationSubscriberRegistry>();
+        builder.Services.AddScoped<IIntegrationOutbox, IntegrationOutbox>();
+
+        // Register domain-to-integration event handlers for Materials and integration consumers for Projects
+        
+        builder.Services.AddProjectsIntegrationHandlers();
 
         builder.Services.AddRbkApiCoreSetup(options => options
              .EnableBasicAuthenticationHandler()
@@ -49,7 +93,7 @@ public class Program
                  options.AddPolicy("_defaultPolicy", builder =>
                  {
                      builder
-                        .WithOrigins("https://localhost:7233")
+                        .WithOrigins("https://localhost:7233", "https://localhost:7114")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()
@@ -72,6 +116,9 @@ public class Program
         );
 
         builder.Services.AddRbkUIDefinitions(Assembly.GetAssembly(typeof(Program)));
+
+        // Application modules
+        builder.Services.AddMaterialsFeature();
 
         // Configure OpenAPI with custom schema naming for nested classes
         builder.Services.AddOpenApi(config =>
@@ -120,7 +167,8 @@ public class Program
 
         app.MapDefaultEndpoints();
 
-        // app.MapGet("/health", () => Results.Ok("Healthy"));
+        // Map outbox health endpoint
+        app.MapOutboxHealth();
 
         // Configure the HTTP request pipeline. 
         app.MapOpenApi();
@@ -134,7 +182,7 @@ public class Program
         });
         app.MapScalarApiReference();
 
-        app.MapMaterialsFeature();
+        app.UseMaterialsFeature();
         app.MapPrintingModelsFeature();
         app.MapPaintsFeature();
         app.MapProjectsFeature();
