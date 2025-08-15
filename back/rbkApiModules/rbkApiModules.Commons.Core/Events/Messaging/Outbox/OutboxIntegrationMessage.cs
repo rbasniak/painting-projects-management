@@ -5,7 +5,7 @@ namespace rbkApiModules.Commons.Core;
 /// <summary>
 /// Represents an integration event stored in the integration outbox.
 /// </summary>
-public class OutboxIntegrationEvent
+public class OutboxIntegrationMessage
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = default!;

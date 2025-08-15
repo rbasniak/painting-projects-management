@@ -26,7 +26,7 @@ public class IntegrationOutbox : IIntegrationOutbox
         using var scope = _scopeFactory.CreateScope();
         var db = _options.ResolveDbContext!(scope.ServiceProvider);
 
-        var message = new OutboxIntegrationEvent
+        var message = new OutboxIntegrationMessage
         {
             Id = envelope.EventId,
             Name = envelope.Name,
@@ -41,7 +41,7 @@ public class IntegrationOutbox : IIntegrationOutbox
             Attempts = 0
         };
 
-        db.Set<OutboxIntegrationEvent>().Add(message);
+        db.Set<OutboxIntegrationMessage>().Add(message);
         await db.SaveChangesAsync(ct);
         return message.Id;
     }

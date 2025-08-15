@@ -6,7 +6,7 @@ public class MaterialConfig : IEntityTypeConfiguration<Material>
 {
     public void Configure(EntityTypeBuilder<Material> builder)
     {
-        builder.ToTable("materials.materials");
+        builder.ToTable("Materials", "materials");
 
         builder.HasKey(x => x.Id);
         

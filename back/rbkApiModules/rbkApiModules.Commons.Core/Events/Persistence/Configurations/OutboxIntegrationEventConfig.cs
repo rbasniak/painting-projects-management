@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace rbkApiModules.Commons.Core;
 
-public class OutboxIntegrationEventConfig : IEntityTypeConfiguration<OutboxIntegrationEvent>
+public class OutboxIntegrationEventConfig : IEntityTypeConfiguration<OutboxIntegrationMessage>
 {
-    public void Configure(EntityTypeBuilder<OutboxIntegrationEvent> builder)
+    public void Configure(EntityTypeBuilder<OutboxIntegrationMessage> builder)
     {
         builder.ToTable("OutboxIntegrationEvents");
         builder.HasKey(x => x.Id);

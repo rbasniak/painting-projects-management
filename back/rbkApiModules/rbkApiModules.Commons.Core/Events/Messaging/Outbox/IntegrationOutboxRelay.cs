@@ -36,7 +36,7 @@ public class IntegrationOutboxRelay : BackgroundService
                 using var scope = _scopeFactory.CreateScope();
                 var db = _options.ResolveDbContext!(scope.ServiceProvider);
                 var sql = $@"SELECT * FROM ""OutboxIntegrationEvents"" WHERE ""ProcessedUtc"" IS NULL AND (""DoNotProcessBeforeUtc"" IS NULL OR ""DoNotProcessBeforeUtc"" <= NOW()) ORDER BY ""CreatedUtc"" LIMIT {_options.BatchSize} FOR UPDATE SKIP LOCKED";
-                var batch = await db.Set<OutboxIntegrationEvent>()
+                var batch = await db.Set<OutboxIntegrationMessage>()
                     .FromSqlRaw(sql)
                     .ToListAsync(stoppingToken);
 
