@@ -3,11 +3,9 @@ using System;
 namespace rbkApiModules.Commons.Core;
 
 /// <summary>
-/// Represents an outbox message that originated from a domain event. These
-/// messages are stored in the <c>OutboxDomainMessages</c> table and later
-/// dispatched by the outbox dispatcher.
+/// Represents an integration event stored in the integration outbox.
 /// </summary>
-public class OutboxDomainMessage
+public class OutboxIntegrationEvent
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = default!;
@@ -22,4 +20,8 @@ public class OutboxDomainMessage
     public int Attempts { get; set; }
     public string Username { get; set; } = default!;
     public DateTime? DoNotProcessBeforeUtc { get; set; }
-} 
+    public string? TraceId { get; set; }
+    public string? ParentSpanId { get; set; }
+    public int? TraceFlags { get; set; }
+    public string? TraceState { get; set; }
+}

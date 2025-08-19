@@ -23,8 +23,10 @@ public class IntegrationOutbox : IIntegrationOutbox
 
     public async Task<Guid> Enqueue<T>(EventEnvelope<T> envelope, CancellationToken ct = default)
     {
+        var activity = System.Diagnostics.Activity.Current?.Context ?? default;
+
         using var scope = _scopeFactory.CreateScope();
-        var db = _options.ResolveDbContext!(scope.ServiceProvider);
+        var db = _options.ResolveSilentDbContext!(scope.ServiceProvider);
 
         var message = new OutboxIntegrationEvent
         {
@@ -38,11 +40,16 @@ public class IntegrationOutbox : IIntegrationOutbox
             CausationId = envelope.CausationId,
             Payload = JsonEventSerializer.Serialize(envelope),
             CreatedUtc = DateTime.UtcNow,
-            Attempts = 0
+            Attempts = 0,
+            TraceId = activity.TraceId.ToString(),
+            ParentSpanId = activity.SpanId.ToString(),
+            TraceFlags = (int)activity.TraceFlags,
+            TraceState = activity.TraceState
         };
 
         db.Set<OutboxIntegrationEvent>().Add(message);
         await db.SaveChangesAsync(ct);
+        
         return message.Id;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace rbkApiModules.Commons.Core;
@@ -72,6 +73,7 @@ public static class Builder
                     var serviceType = GetValidatorInterface(validator);
                     if (serviceType != null)
                     {
+                        Debug.WriteLine($"Adding validator {validator.FullName} for {serviceType.FullName}");
                         services.AddScoped(serviceType, validator);
                     }
                 }

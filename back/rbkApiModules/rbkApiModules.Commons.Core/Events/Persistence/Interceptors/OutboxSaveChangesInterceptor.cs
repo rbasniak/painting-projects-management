@@ -42,6 +42,9 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
            .Select(e => (AggregateRoot)e.Entity)
            .ToArray();
 
+        var act = System.Diagnostics.Activity.Current;  
+        var ctx = act?.Context ?? default;
+
         var now = DateTime.UtcNow;
 
         foreach (var aggregate in aggregatesWithEvents)
@@ -58,7 +61,7 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
                 var envelope = EventEnvelopeFactory.Wrap(domainEvent, _requestContext.TenantId, _requestContext.Username, _requestContext.CorrelationId, _requestContext.CausationId);
                 var payload = JsonEventSerializer.Serialize(envelope);
 
-                context.Set<OutboxDomainMessage>().Add(new OutboxDomainMessage
+                var message = new OutboxDomainMessage
                 {
                     Id = envelope.EventId,
                     Name = envelope.Name,
@@ -71,8 +74,14 @@ public sealed class OutboxSaveChangesInterceptor : SaveChangesInterceptor
                     Payload = payload,
                     CreatedUtc = now,
                     ProcessedUtc = null,
-                    Attempts = 0
-                });
+                    Attempts = 0,
+                    TraceId = ctx.TraceId.ToString(),
+                    ParentSpanId = ctx.SpanId.ToString(),
+                    TraceFlags = (int)ctx.TraceFlags,
+                    TraceState = ctx.TraceState
+                };
+
+                context.Set<OutboxDomainMessage>().Add(message);
             }
 
             aggregate.ClearDomainEvents();

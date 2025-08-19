@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using rbkApiModules.Commons.Core.Helpers;
 using System.Data;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace rbkApiModules.Commons.Core;
 
@@ -20,26 +21,48 @@ public interface IDispatcher
 public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor httpContextAccessor)
     : IDispatcher
 {
-    public async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken) where TResponse : BaseResponse
+    public async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken)
+        where TResponse : BaseResponse
     {
         var commandType = request.GetType();
-        var logger = serviceProvider.GetService(typeof(ILogger<>).MakeGenericType(commandType)) as ILogger;
-
         var commandTypeName = commandType.FullName.Split(".").Last().Replace("+", ".");
+        var logger = serviceProvider.GetService(typeof(ILogger<>).MakeGenericType(commandType)) as ILogger;
 
         logger.LogInformation("Executing command {CommandType}", commandTypeName);
 
         var sw = Stopwatch.StartNew();
         BaseResponse? result = null;
-        using var activity = EventsTracing.ActivitySource.StartActivity("dispatcher.request", ActivityKind.Internal);
-        activity?.SetTag("dispatcher.request.type", commandTypeName);
+
+        using var root = EventsTracing.ActivitySource.StartActivity("dispatcher.request", ActivityKind.Internal);
+        root?.SetTag("dispatcher.request.type", commandTypeName);
 
         try
         {
-            PropagateAuthenticatedUser(ref request);
+            // ---- identity propagation span
+            using (var idAct = EventsTracing.ActivitySource.StartActivity("dispatcher.identity", ActivityKind.Internal))
+            {
+                var user = httpContextAccessor?.HttpContext?.User;
+                idAct?.SetTag("auth.present", user != null);
+                idAct?.SetTag("auth.is_authenticated", user?.Identity?.IsAuthenticated == true);
+                try
+                {
+                    PropagateAuthenticatedUser(ref request);
+                    idAct?.SetStatus(ActivityStatusCode.Ok);
+                }
+                catch (Exception ex)
+                {
+                    idAct?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                    idAct?.AddEvent(new ActivityEvent("exception",
+                        tags: new ActivityTagsCollection {
+                        { "exception.type", ex.GetType().FullName },
+                        { "exception.message", ex.Message }
+                        }));
+                    throw;
+                }
+            }
 
-            var validationResult = await ValidateAsync(logger, commandType, request, cancellationToken);
-
+            // ---- validation (has its own nested spans in ValidateAsync)
+            var validationResult = await ValidateAsync(logger, commandType, request!, cancellationToken);
             if (validationResult.Count > 0)
             {
                 result = CommandResponseFactory.CreateFailed(request, new ValidationProblemDetails
@@ -49,12 +72,45 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
                     Status = StatusCodes.Status400BadRequest,
                     Errors = validationResult
                 });
-
                 return (TResponse)result;
             }
 
+            // ---- reflection/DI resolution span
+            object? handler;
+            List<object> behaviors;
             var handlerType = typeof(IRequestHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
-            var handler = serviceProvider.GetService(handlerType);
+
+            using (var resolveAct = EventsTracing.ActivitySource.StartActivity("dispatcher.resolve", ActivityKind.Internal))
+            {
+                resolveAct?.SetTag("request.type", commandTypeName);
+                resolveAct?.SetTag("handler.contract", handlerType.FullName);
+
+                handler = serviceProvider.GetService(handlerType);
+                resolveAct?.SetTag("handler.found", handler is not null);
+
+                behaviors = serviceProvider.GetServices(typeof(IPipelineBehavior<,>)
+                                    .MakeGenericType(request.GetType(), typeof(TResponse)))
+                                    .Cast<object>()
+                                    .ToList();
+
+                resolveAct?.SetTag("behaviors.count", behaviors.Count);
+                if (behaviors.Count > 0)
+                {
+                    resolveAct?.AddEvent(new ActivityEvent("behaviors.list",
+                        tags: new ActivityTagsCollection {
+                        { "behaviors", string.Join(",", behaviors.Select(b => b.GetType().Name)) }
+                        }));
+                }
+                if (handler is null)
+                {
+                    resolveAct?.SetStatus(ActivityStatusCode.Error, "Handler not found");
+                }
+                else
+                {
+                    resolveAct?.SetStatus(ActivityStatusCode.Ok);
+                }
+            }
+
             if (handler == null)
             {
                 result = CommandResponseFactory.CreateFailed(request, new ProblemDetails
@@ -63,52 +119,84 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
                     Detail = $"No handler registered for request type {request.GetType().FullName}",
                     Status = StatusCodes.Status500InternalServerError
                 });
-
                 return (TResponse)result;
             }
 
-            var behaviors = serviceProvider.GetServices(typeof(IPipelineBehavior<,>)
-                .MakeGenericType(request.GetType(), typeof(TResponse)))
-                .Cast<object>().ToList();
-
+            // ---- handler delegate with span + reflection tags
             Func<Task<TResponse>> handle = async () =>
             {
-                using var handlerActivity = EventsTracing.ActivitySource.StartActivity("dispatcher.handler", ActivityKind.Internal);
-                handlerActivity?.SetTag("dispatcher.request.type", commandTypeName);
+                using var handlerAct = EventsTracing.ActivitySource.StartActivity("dispatcher.handler", ActivityKind.Internal);
+                handlerAct?.SetTag("dispatcher.request.type", commandTypeName);
 
-                var handleStopwatch = Stopwatch.StartNew();
+                var swHandle = Stopwatch.StartNew();
                 logger.LogDebug("Starting to handle command {CommandType}", commandTypeName);
 
-                dynamic handler = serviceProvider.GetRequiredService(handlerType);
+                dynamic dynHandler = serviceProvider.GetRequiredService(handlerType);
+                var implType = ((object)dynHandler).GetType();
+                handlerAct?.SetTag("handler.impl", implType.FullName);
+                var mi = implType.GetMethod("HandleAsync", BindingFlags.Public | BindingFlags.Instance);
+                handlerAct?.SetTag("handler.method", mi?.ToString());
 
-                var response = await handler.HandleAsync((dynamic)request, cancellationToken);
-
-                handleStopwatch.Stop();
-
-                logger.LogDebug("Command {CommandType} handled successfully in {ElapsedMilliseconds}ms", commandTypeName, handleStopwatch.ElapsedMilliseconds);
-
-                return response;
+                try
+                {
+                    var response = await dynHandler.HandleAsync((dynamic)request, cancellationToken);
+                    handlerAct?.SetStatus(ActivityStatusCode.Ok);
+                    return response;
+                }
+                catch (Exception ex)
+                {
+                    handlerAct?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                    handlerAct?.AddEvent(new ActivityEvent("exception",
+                        tags: new ActivityTagsCollection {
+                        { "exception.type", ex.GetType().FullName },
+                        { "exception.message", ex.Message }
+                        }));
+                    throw;
+                }
+                finally
+                {
+                    swHandle.Stop();
+                    handlerAct?.SetTag("handler.elapsed_ms", swHandle.ElapsedMilliseconds);
+                    logger.LogDebug("Command {CommandType} handled in {ElapsedMilliseconds}ms", commandTypeName, swHandle.ElapsedMilliseconds);
+                }
             };
 
-            // Pipeline behavior execution (in reverse order like MediatR)
+            // ---- pipeline behaviors, each wrapped with its own span
             foreach (var behavior in behaviors.Reverse<object>())
             {
                 var next = handle;
                 handle = async () =>
                 {
-                    logger.LogDebug("Starting pipeline behavior {Behavior}", behavior.GetType().Name);
+                    using var behAct = EventsTracing.ActivitySource.StartActivity("dispatcher.behavior.invoke", ActivityKind.Internal);
+                    var bt = behavior.GetType();
+                    behAct?.SetTag("behavior.type", bt.FullName);
 
-                    var behaviorStopwatch = Stopwatch.StartNew();
-                    using var behaviorActivity = EventsTracing.ActivitySource.StartActivity("dispatcher.behavior", ActivityKind.Internal);
-                    behaviorActivity?.SetTag("dispatcher.behavior.name", behavior.GetType().Name);
+                    var swB = Stopwatch.StartNew();
+                    try
+                    {
+                        var method = bt.GetMethod("Handle");
+                        behAct?.SetTag("behavior.method", method?.ToString());
 
-                    var method = behavior.GetType().GetMethod("Handle");
-                    var response = await (Task<TResponse>)method.Invoke(behavior, new object[] { request, cancellationToken, next });
-
-                    behaviorStopwatch.Stop();
-                    logger.LogDebug("Behavior {Behavior} finished in {duration}ms", behavior.GetType().Name, behaviorStopwatch.ElapsedMilliseconds);
-
-                    return response;
+                        var response = await (Task<TResponse>)method!.Invoke(behavior, new object[] { request!, cancellationToken, next })!;
+                        behAct?.SetStatus(ActivityStatusCode.Ok);
+                        return response;
+                    }
+                    catch (Exception ex)
+                    {
+                        behAct?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                        behAct?.AddEvent(new ActivityEvent("exception",
+                            tags: new ActivityTagsCollection {
+                            { "exception.type", ex.GetType().FullName },
+                            { "exception.message", ex.Message }
+                            }));
+                        throw;
+                    }
+                    finally
+                    {
+                        swB.Stop();
+                        behAct?.SetTag("behavior.elapsed_ms", swB.ElapsedMilliseconds);
+                        logger.LogDebug("Behavior {Behavior} finished in {duration}ms", bt.Name, swB.ElapsedMilliseconds);
+                    }
                 };
             }
 
@@ -126,7 +214,6 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
                 Detail = message,
                 Status = StatusCodes.Status500InternalServerError
             });
-
             return (TResponse)result;
         }
         finally
@@ -134,18 +221,11 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
             sw.Stop();
             if (result is not null)
             {
-                if (result.IsValid)
-                {
-                    EventsMeters.DispatcherRequestsProcessed.Add(1);
-                }
-                else
-                {
-                    EventsMeters.DispatcherRequestsFailed.Add(1);
-                }
+                if (result.IsValid) EventsMeters.DispatcherRequestsProcessed.Add(1);
+                else EventsMeters.DispatcherRequestsFailed.Add(1);
 
                 EventsMeters.DispatcherRequestDurationMs.Record(sw.Elapsed.TotalMilliseconds);
             }
-
             logger.LogInformation("Command {CommandType} execution completed in {ElapsedMilliseconds}ms", commandTypeName, sw.ElapsedMilliseconds);
         }
     }
@@ -164,53 +244,79 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
             using var handlerActivity = EventsTracing.ActivitySource.StartActivity("notification.handler", ActivityKind.Internal);
             handlerActivity?.SetTag("dispatcher.notification.handler", handler.GetType().FullName);
 
-            await (Task)handlerType.GetMethod("Handle").Invoke(handler, new object[] { notification, cancellationToken });
+            await (Task)handlerType.GetMethod("Handle")!.Invoke(handler, new object[] { notification!, cancellationToken })!;
         }
     }
 
     private async Task<Dictionary<string, string[]>> ValidateAsync(ILogger logger, Type commandType, object request, CancellationToken cancellationToken)
     {
-        var commandTypeName = commandType.FullName.Split(".").Last().Replace("+", ".");
+        var commandTypeName = commandType.FullName!.Split(".").Last().Replace("+", ".");
+        using var validationActivity = EventsTracing.ActivitySource.StartActivity("dispatcher.validation", ActivityKind.Internal);
+        validationActivity?.SetTag("dispatcher.request.type", commandTypeName);
 
-        var validatorBaseType = typeof(AbstractValidator<>).MakeGenericType(commandType);
-
-        var validator = serviceProvider.GetService(validatorBaseType);
+        // Prefer IValidator<T> (supports multiple validators)
+        var validatorInterface = typeof(AbstractValidator<>).MakeGenericType(commandType);
+        var validators = serviceProvider.GetServices(validatorInterface).Cast<IValidator>().ToList();
+        validationActivity?.SetTag("validation.validators.count", validators.Count);
 
         var errorSummary = new Dictionary<string, string[]>();
 
-        if (validator is IValidator concreteValidator)
+        if (validators.Count == 0)
+        {
+            logger.LogDebug("No validators found for {CommandType}", commandTypeName);
+            return errorSummary;
+        }
+
+        foreach (var validator in validators)
         {
             var sw = Stopwatch.StartNew();
+            var validatorName = validator.GetType().FullName!.Split(".").Last().Replace("+", ".");
 
-            var validatorType = validator.GetType().FullName.Split(".").Last().Replace("+", ".");
+            using var validatorSpan = EventsTracing.ActivitySource.StartActivity("dispatcher.validation.validator", ActivityKind.Internal);
+            validatorSpan?.SetTag("validator.name", validatorName);
 
-            logger.LogDebug("Validating command {CommandType} using {Validator}", commandTypeName, validatorType);
+            logger.LogDebug("Validating command {CommandType} using {Validator}", commandTypeName, validatorName);
 
             var context = new ValidationContext<object>(request);
-            var result = await concreteValidator.ValidateAsync(context, cancellationToken);
+            var result = await validator.ValidateAsync(context, cancellationToken);
+
+            sw.Stop();
+
+            validatorSpan?.SetTag("validation.elapsed_ms", sw.ElapsedMilliseconds);
+            validatorSpan?.SetTag("validation.is_valid", result.IsValid);
+
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors)
+                foreach (var err in result.Errors)
                 {
-                    if (error.ErrorMessage == "ignore me!")
-                    {
-                        continue;
-                    }
+                    if (err.ErrorMessage == "ignore me!") continue;
 
-                    if (!errorSummary.ContainsKey(error.PropertyName))
+                    if (!errorSummary.ContainsKey(err.PropertyName))
                     {
-                        errorSummary[error.PropertyName] = [error.ErrorMessage];
+                        errorSummary[err.PropertyName] = new[] { err.ErrorMessage };
                     }
                     else
                     {
-                        errorSummary[error.PropertyName] = errorSummary[error.PropertyName].Append(error.ErrorMessage).ToArray();
+                        errorSummary[err.PropertyName] = errorSummary[err.PropertyName].Append(err.ErrorMessage).ToArray();
                     }
-                } 
+
+                    // Emit a lightweight event per error (keeps spans small but debuggable)
+                    validatorSpan?.AddEvent(new ActivityEvent(
+                        "validation.error",
+                        tags: new ActivityTagsCollection
+                        {
+                            { "property", err.PropertyName },
+                            { "code", err.ErrorCode },
+                            { "message", err.ErrorMessage },
+                            { "attempted_value", err.AttemptedValue?.ToString() ?? string.Empty }
+                        }));
+                }
             }
 
-            logger.LogDebug("Validator {Validator} finished in {duration}ms", validatorType, sw.ElapsedMilliseconds);
+            logger.LogDebug("Validator {Validator} finished in {duration}ms", validatorName, sw.ElapsedMilliseconds);
         }
 
+        validationActivity?.SetTag("validation.error.count", errorSummary.Sum(kv => kv.Value.Length));
         return errorSummary;
     }
 
@@ -218,14 +324,12 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
     {
         if (request is IAuthenticatedRequest authenticatedRequest)
         {
-            if (httpContextAccessor == null || httpContextAccessor.HttpContext == null)
-            {
+            if (httpContextAccessor?.HttpContext == null)
                 return;
-            }
 
             var user = httpContextAccessor.HttpContext.User;
 
-            if (user.Identity.IsAuthenticated)
+            if (user.Identity?.IsAuthenticated == true)
             {
                 var claims = user.Claims
                     .Where(x => x.Type == JwtClaimIdentifiers.Roles)
@@ -237,7 +341,6 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
         }
     }
 }
-
 
 public class CommandResponseFactory
 {
@@ -257,14 +360,14 @@ public class CommandResponseFactory
             var requestType = request.GetType();
             var queryInterface = requestType.GetInterfaces()
                 .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IQuery<>));
-            
+
             if (queryInterface != null)
             {
                 var responseType = queryInterface.GetGenericArguments()[0];
                 var failureMethod = typeof(QueryResponse<>).MakeGenericType(responseType).GetMethod("Failure");
-                return (BaseResponse)failureMethod.Invoke(null, new object[] { problemDetails });
+                return (BaseResponse)failureMethod!.Invoke(null, new object[] { problemDetails })!;
             }
-            
+
             throw new NotSupportedException($"Request type {request.GetType().FullName} is not supported for command response creation.");
         }
     }

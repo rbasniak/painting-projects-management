@@ -1,4 +1,10 @@
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.OpenApi.Models;
+using Npgsql;
+using OpenTelemetry.Trace;
+using PaintingProjectsManagement.Api.Diagnostics;
 using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Paints;
@@ -10,9 +16,6 @@ using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Relational;
 using Scalar.AspNetCore;
 using System.Reflection;
-using Microsoft.AspNetCore.OpenApi;
-using Microsoft.OpenApi.Models;
-using PaintingProjectsManagement.Api.Diagnostics;
 
 namespace PaintingProjectsManagement.Api;
 
@@ -26,6 +29,37 @@ public class Program
         // Add services to the container.
         builder.Services.AddAuthorization();
 
+        builder.Services.AddOpenTelemetry()
+            .WithTracing(tracer =>
+            {
+                tracer
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+
+                    // EF Core spans (LINQ queries, SaveChanges, etc.)
+                    .AddEntityFrameworkCoreInstrumentation(options =>
+                    {
+                        // Optional: record SQL (beware of PII)
+                        options.SetDbStatementForText = true;
+                        options.SetDbStatementForStoredProcedure = true;
+
+                        // Optional filtering/enrichment
+                        // options.Filter = eventData => eventData.Command.CommandText?.Contains("Outbox") != true;
+                        options.EnrichWithIDbCommand = (activity, cmd) =>
+                        {
+                            activity.SetTag("db.name", cmd.Connection.Database);
+                            activity.SetTag("db.parameters", cmd.Parameters.Count);
+                        };
+                    })
+
+                    // ADO.NET provider spans
+                    .AddNpgsql() // or .AddSqlClientInstrumentation()
+
+                    // your custom ActivitySource(s)
+                    .AddSource("ppm-api")       // whatever you used in EventsTracing.ActivitySource
+                    .AddSource("rbk-events");
+            });
+
         var connectionString = builder.Configuration.GetConnectionString("ppm-database");
 
         if (string.IsNullOrEmpty(connectionString))
@@ -36,6 +70,27 @@ public class Program
         // TODO: move to the library builder
         builder.Services.AddScoped<IRequestContext, RequestContext>();
         builder.Services.AddScoped<OutboxSaveChangesInterceptor>();
+
+        builder.Services.AddDbContextFactory<MessagingDbContext>(x =>
+        {
+            x.UseNpgsql(connectionString);
+            // normal logging elsewhere
+        });
+
+        builder.Services.AddKeyedSingleton<ILoggerFactory>("EfSilent", (serviceProvider, loggerFactory) =>
+            LoggerFactory.Create(x => x.ClearProviders()));
+
+        builder.Services.AddKeyedSingleton<IDbContextFactory<MessagingDbContext>>("Silent", (serviceProvider, dbContextFactory) =>
+        {
+            var silentLogger = serviceProvider.GetRequiredKeyedService<ILoggerFactory>("EfSilent");
+            var options = new DbContextOptionsBuilder<MessagingDbContext>()
+                .UseNpgsql(connectionString)
+                .UseLoggerFactory(silentLogger)
+                .EnableSensitiveDataLogging(false)
+                .EnableDetailedErrors(false)
+                .Options;
+            return new PooledDbContextFactory<MessagingDbContext>(options);
+        });
 
         builder.Services.AddDbContext<DatabaseContext>((scope, options) =>
                 options.UseNpgsql(connectionString)
@@ -50,7 +105,15 @@ public class Program
             opts.BatchSize = 50;
             opts.PollIntervalMs = 1000;
             opts.MaxAttempts = 10;
-            opts.ResolveDbContext = sp => sp.GetRequiredService<DatabaseContext>();
+            opts.ResolveSilentDbContext = serviceProvider =>
+            {
+                var contextFactory = serviceProvider.GetRequiredKeyedService<IDbContextFactory<MessagingDbContext>>("Silent");
+                return contextFactory.CreateDbContext();    
+            };
+            opts.ResolveDbContext = serviceProvider =>
+            {
+                return serviceProvider.GetRequiredService<MessagingDbContext>();
+            };
         });
 
         // TODO: move to the library builder with the possibility to disable it with startup options
@@ -78,7 +141,7 @@ public class Program
         });
         builder.Services.AddSingleton<IBrokerPublisher, RabbitMqPublisher>();
         builder.Services.AddSingleton<IBrokerSubscriber, RabbitMqSubscriber>();
-        builder.Services.AddHostedService<IntegrationOutboxRelay>();
+        // builder.Services.AddHostedService<IntegrationOutboxRelay>();
         builder.Services.AddSingleton<IIntegrationSubscriberRegistry, IntegrationSubscriberRegistry>();
         builder.Services.AddScoped<IIntegrationOutbox, IntegrationOutbox>();
 
@@ -93,7 +156,7 @@ public class Program
                  options.AddPolicy("_defaultPolicy", builder =>
                  {
                      builder
-                        .WithOrigins("https://localhost:7233", "https://localhost:7114")
+                        .WithOrigins("https://localhost:7233", "https://localhost:7114", "http://localhost:5251", "http://localhost:*")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()

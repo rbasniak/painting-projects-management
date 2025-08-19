@@ -10,5 +10,6 @@ public sealed class OutboxOptions
     public int MaxAttempts { get; set; } = 5;
 
     // Required: provide a way to resolve the application's DbContext
-    public Func<IServiceProvider, DbContext>? ResolveDbContext { get; set; }
+    public Func<IServiceProvider, MessagingDbContext>? ResolveSilentDbContext { get; set; }
+    public Func<IServiceProvider, MessagingDbContext>? ResolveDbContext { get; set; }
 } 
