@@ -14,7 +14,7 @@ namespace PaintingProjectsManagement.Api.Diagnostics
     {
         public static IEndpointRouteBuilder MapOutboxHealth(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapGet("/health/outbox", async (DbContext db, CancellationToken ct) =>
+            endpoints.MapGet("/api/health/outbox", async (DbContext db, CancellationToken ct) =>
             {
                 var now = DateTime.UtcNow;
 

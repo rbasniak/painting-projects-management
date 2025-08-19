@@ -45,13 +45,14 @@ public static class EventEnvelopeFactory
     {
         return Cache.GetOrAdd(t, static type =>
         {
-            var attr = type.GetCustomAttribute<EventNameAttribute>(inherit: false);
-            if (attr is null)
+            var attribute = type.GetCustomAttribute<EventNameAttribute>(inherit: false);
+
+            if (attribute is null)
             {
                 throw new InvalidOperationException($"Missing [EventName] on {type.FullName}");
             }
 
-            return attr;
+            return attribute;
         });
     }
 } 

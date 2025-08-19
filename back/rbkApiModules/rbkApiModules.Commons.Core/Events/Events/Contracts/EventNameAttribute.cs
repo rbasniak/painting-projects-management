@@ -10,5 +10,6 @@ public sealed class EventNameAttribute : Attribute
     }
 
     public string Name { get; }
+
     public int Version { get; }
 } 

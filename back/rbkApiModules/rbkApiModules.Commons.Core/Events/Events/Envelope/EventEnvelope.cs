@@ -2,6 +2,7 @@ using System;
 
 namespace rbkApiModules.Commons.Core;
 
+// TODO: review classes to add required and remove default!
 public sealed class EventEnvelope<TEvent>
 {
     public Guid EventId { get; init; }
@@ -13,4 +14,4 @@ public sealed class EventEnvelope<TEvent>
     public string? CorrelationId { get; init; }
     public string? CausationId { get; init; }
     public TEvent Event { get; init; } = default!;
-} 
+}  
