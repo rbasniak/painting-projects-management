@@ -4,7 +4,7 @@ namespace rbkApiModules.Commons.Core;
 
 public sealed class ReflectionEventTypeRegistry : IEventTypeRegistry
 {
-    private readonly Dictionary<(string name, int version), Type> _map;
+    private readonly Dictionary<(string name, short version), Type> _map;
 
     public ReflectionEventTypeRegistry(IEnumerable<Assembly> assembliesToScan)
     {
@@ -22,7 +22,7 @@ public sealed class ReflectionEventTypeRegistry : IEventTypeRegistry
             .ToDictionary(g => g.Key, g => g.Select(x => x.t).First());
     }
 
-    public bool TryResolve(string name, int version, out Type type) => _map.TryGetValue((name, version), out type!);
+    public bool TryResolve(string name, short version, out Type type) => _map.TryGetValue((name, version), out type!);
 
     private static IEnumerable<Type> SafeGetTypes(Assembly assembly)
     {

@@ -10,17 +10,17 @@ using System.Text;
 
 namespace rbkApiModules.Commons.Core;
 
-public class IntegrationOutboxRelay : BackgroundService
+public class IntegrationEventPublisher : BackgroundService
 {
     private static readonly TextMapPropagator Propagator = Propagators.DefaultTextMapPropagator;
 
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IBrokerPublisher _publisher;
     private readonly IEventTypeRegistry _eventTypeRegistry;
-    private readonly ILogger<IntegrationOutboxRelay> _logger;
-    private readonly OutboxOptions _options;
+    private readonly ILogger<IntegrationEventPublisher> _logger;
+    private readonly DomainEventDispatcherOptions _options;
 
-    public IntegrationOutboxRelay(IServiceScopeFactory scopeFactory, IBrokerPublisher publisher, IEventTypeRegistry eventTypeRegistry, ILogger<IntegrationOutboxRelay> logger, IOptions<OutboxOptions> options)
+    public IntegrationEventPublisher(IServiceScopeFactory scopeFactory, IBrokerPublisher publisher, IEventTypeRegistry eventTypeRegistry, ILogger<IntegrationEventPublisher> logger, IOptions<DomainEventDispatcherOptions> options)
     {
         _scopeFactory = scopeFactory;
         _publisher = publisher;
@@ -53,7 +53,7 @@ public class IntegrationOutboxRelay : BackgroundService
                             LIMIT {_options.BatchSize}
                             FOR UPDATE SKIP LOCKED";
 
-                var batch = await db.Set<OutboxIntegrationEvent>().FromSqlRaw(sql).ToListAsync(stoppingToken);
+                var batch = await db.Set<IntegrationOutboxMessage>().FromSqlRaw(sql).ToListAsync(stoppingToken);
 
                 foreach (var row in batch)
                 {
@@ -160,7 +160,7 @@ public class IntegrationOutboxRelay : BackgroundService
         return r is not null;
     }
 
-    private static bool TryBuildParent(OutboxIntegrationEvent m, out ActivityContext parent)
+    private static bool TryBuildParent(IntegrationOutboxMessage m, out ActivityContext parent)
     {
         parent = default;
         if (string.IsNullOrWhiteSpace(m.TraceId) || string.IsNullOrWhiteSpace(m.ParentSpanId)) return false;

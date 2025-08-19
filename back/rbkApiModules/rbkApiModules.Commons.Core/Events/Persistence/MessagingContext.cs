@@ -14,16 +14,16 @@ public class MessagingDbContext : DbContext
 
     public MessagingDbContext(DbContextOptions<MessagingDbContext> options) : base(options) { }
 
-    public DbSet<OutboxDomainMessage> OutboxDomainMessages => Set<OutboxDomainMessage>();
-    public DbSet<OutboxIntegrationEvent> OutboxIntegrationEvents => Set<OutboxIntegrationEvent>();
+    public DbSet<DomainOutboxMessages> OutboxDomainMessages => Set<DomainOutboxMessages>();
+    public DbSet<IntegrationOutboxMessage> OutboxIntegrationEvents => Set<IntegrationOutboxMessage>();
     public DbSet<InboxMessage> InboxMessages => Set<InboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfiguration(new OutboxDomainMessageConfig());
-        modelBuilder.ApplyConfiguration(new OutboxIntegrationEventConfig());
+        modelBuilder.ApplyConfiguration(new DomainOutboxMessagesConfig());
+        modelBuilder.ApplyConfiguration(new IntegrationOutboxMessageConfig());
         modelBuilder.ApplyConfiguration(new InboxMessageConfig());
     }
 }

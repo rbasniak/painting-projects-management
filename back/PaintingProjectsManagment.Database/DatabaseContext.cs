@@ -29,7 +29,7 @@ public class DatabaseContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PaintColorConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ModelConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProjectConfig).Assembly);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OutboxDomainMessageConfig).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(DomainOutboxMessagesConfig).Assembly);
 
         modelBuilder.Entity<MaterialForProject>()
             .HasOne<Material>()

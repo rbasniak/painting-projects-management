@@ -100,7 +100,7 @@ public class Program
 
         // Events infrastructure registrations
         builder.Services.AddSingleton<IEventTypeRegistry>(sp => new ReflectionEventTypeRegistry(AppDomain.CurrentDomain.GetAssemblies()));
-        builder.Services.Configure<OutboxOptions>(opts =>
+        builder.Services.Configure<DomainEventDispatcherOptions>(opts =>
         {
             opts.BatchSize = 50;
             opts.PollIntervalMs = 1000;
@@ -117,7 +117,7 @@ public class Program
         });
 
         // TODO: move to the library builder with the possibility to disable it with startup options
-        builder.Services.AddHostedService<DomainOutboxDispatcher>();
+        builder.Services.AddHostedService<DomainEventDispatcher>();
 
         var brokerConnection = builder.Configuration.GetConnectionString("ppm-rabbitmq");
 

@@ -1,14 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using rbkApiModules.Commons.Core;
 
 namespace rbkApiModules.Commons.Core;
 
-public class OutboxDomainMessageConfig : IEntityTypeConfiguration<OutboxDomainMessage>
+public class IntegrationOutboxMessageConfig : IEntityTypeConfiguration<IntegrationOutboxMessage>
 {
-    public void Configure(EntityTypeBuilder<OutboxDomainMessage> builder)
+    public void Configure(EntityTypeBuilder<IntegrationOutboxMessage> builder)
     {
-        builder.ToTable("OutboxDomainMessages");
+        builder.ToTable("IntegrationOutboxMessages");
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Name).IsRequired().HasMaxLength(200);
@@ -27,5 +26,6 @@ public class OutboxDomainMessageConfig : IEntityTypeConfiguration<OutboxDomainMe
         builder.HasIndex(x => x.ProcessedUtc);
         builder.HasIndex(x => x.CreatedUtc);
         builder.HasIndex(x => x.DoNotProcessBeforeUtc);
+
     }
-} 
+}

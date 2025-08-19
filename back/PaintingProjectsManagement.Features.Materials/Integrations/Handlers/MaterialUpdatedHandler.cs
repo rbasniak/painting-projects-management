@@ -11,10 +11,10 @@ internal sealed class MaterialUpdatedHandler :
     IEventHandler<MaterialNameChanged>
 {
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly IOptions<OutboxOptions> _outboxOptions;
+    private readonly IOptions<DomainEventDispatcherOptions> _outboxOptions;
     private readonly IIntegrationOutbox _outbox;
 
-    public MaterialUpdatedHandler(IServiceScopeFactory scopeFactory, IOptions<OutboxOptions> outboxOptions, IIntegrationOutbox outbox)
+    public MaterialUpdatedHandler(IServiceScopeFactory scopeFactory, IOptions<DomainEventDispatcherOptions> outboxOptions, IIntegrationOutbox outbox)
     {
         _scopeFactory = scopeFactory;
         _outboxOptions = outboxOptions;

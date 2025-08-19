@@ -18,7 +18,7 @@ namespace PaintingProjectsManagement.Api.Diagnostics
             {
                 var now = DateTime.UtcNow;
 
-                var query = db.Set<OutboxDomainMessage>()
+                var query = db.Set<DomainOutboxMessages>()
                     .Where(x => x.ProcessedUtc == null && (x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now));
 
                 var count = await query.CountAsync(ct);

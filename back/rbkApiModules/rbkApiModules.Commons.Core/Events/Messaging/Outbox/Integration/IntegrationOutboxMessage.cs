@@ -5,11 +5,11 @@ namespace rbkApiModules.Commons.Core;
 /// <summary>
 /// Represents an integration event stored in the integration outbox.
 /// </summary>
-public class OutboxIntegrationEvent
+public class IntegrationOutboxMessage
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = default!;
-    public int Version { get; set; }
+    public short Version { get; set; }
     public string TenantId { get; set; } = default!;
     public DateTime OccurredUtc { get; set; }
     public string? CorrelationId { get; set; }

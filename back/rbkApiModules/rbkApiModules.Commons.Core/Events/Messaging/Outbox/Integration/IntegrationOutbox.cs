@@ -13,9 +13,9 @@ namespace rbkApiModules.Commons.Core;
 public class IntegrationOutbox : IIntegrationOutbox
 {
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly OutboxOptions _options;
+    private readonly DomainEventDispatcherOptions _options;
 
-    public IntegrationOutbox(IServiceScopeFactory scopeFactory, IOptions<OutboxOptions> options)
+    public IntegrationOutbox(IServiceScopeFactory scopeFactory, IOptions<DomainEventDispatcherOptions> options)
     {
         _scopeFactory = scopeFactory;
         _options = options.Value;
@@ -28,7 +28,7 @@ public class IntegrationOutbox : IIntegrationOutbox
         using var scope = _scopeFactory.CreateScope();
         var db = _options.ResolveSilentDbContext!(scope.ServiceProvider);
 
-        var message = new OutboxIntegrationEvent
+        var message = new IntegrationOutboxMessage
         {
             Id = envelope.EventId,
             Name = envelope.Name,
@@ -47,7 +47,7 @@ public class IntegrationOutbox : IIntegrationOutbox
             TraceState = activity.TraceState
         };
 
-        db.Set<OutboxIntegrationEvent>().Add(message);
+        db.Set<IntegrationOutboxMessage>().Add(message);
         await db.SaveChangesAsync(ct);
         
         return message.Id;
