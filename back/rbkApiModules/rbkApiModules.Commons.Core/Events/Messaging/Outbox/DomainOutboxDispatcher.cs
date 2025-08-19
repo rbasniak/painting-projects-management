@@ -84,6 +84,14 @@ public sealed class DomainOutboxDispatcher : BackgroundService
 
                     using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
 
+                    using var activity = EventsTracing.ActivitySource.StartActivity("outbox.dispatch", ActivityKind.Consumer);
+                    if (activity is not null)
+                    {
+                        activity.SetTag("messaging.event.id", message.Id);
+                        activity.SetTag("messaging.event.name", message.Name);
+                        activity.SetTag("messaging.event.version", message.Version);
+                    }
+
                     var sw = Stopwatch.StartNew();
                     using var scopeLog = _logger.BeginScope(new Dictionary<string, object>
                     {
@@ -130,6 +138,9 @@ public sealed class DomainOutboxDispatcher : BackgroundService
 
                             _logger.LogInformation("Dispatching {Name} v{Version} to {Handler}", message.Name, message.Version, handlerName);
 
+                            using var handlerActivity = EventsTracing.ActivitySource.StartActivity("event.handler", ActivityKind.Internal);
+                            handlerActivity?.SetTag("messaging.event.handler", handlerName);
+
                             await InvokeHandler(handler, envelope, cancellationToken);
 
                             context.Set<InboxMessage>().Add(new InboxMessage
@@ -139,6 +150,8 @@ public sealed class DomainOutboxDispatcher : BackgroundService
                                 ProcessedUtc = DateTime.UtcNow,
                                 Attempts = 1
                             });
+
+                            EventsMeters.InboxMessagesProcessed.Add(1);
                         }
 
                         // mark processed after all handlers succeed
@@ -166,7 +179,7 @@ public sealed class DomainOutboxDispatcher : BackgroundService
                             /* ignore */ 
                         }
 
-                        var attempts =  + 1;
+                        var attempts = message.Attempts + 1;
                         message.Attempts = attempts;
                         message.DoNotProcessBeforeUtc = DateTime.UtcNow.Add(ComputeBackoff(attempts));
 
