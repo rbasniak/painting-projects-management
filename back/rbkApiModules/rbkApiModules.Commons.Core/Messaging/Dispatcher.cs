@@ -29,7 +29,10 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
 
         logger.LogInformation("Executing command {CommandType}", commandTypeName);
 
-        var ounterStopwatch = Stopwatch.StartNew();
+        var sw = Stopwatch.StartNew();
+        BaseResponse? result = null;
+        using var activity = EventsTracing.ActivitySource.StartActivity("dispatcher.request", ActivityKind.Internal);
+        activity?.SetTag("dispatcher.request.type", commandTypeName);
 
         try
         {
@@ -39,7 +42,7 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
 
             if (validationResult.Count > 0)
             {
-                var errorResponse = CommandResponseFactory.CreateFailed(request, new ValidationProblemDetails
+                result = CommandResponseFactory.CreateFailed(request, new ValidationProblemDetails
                 {
                     Title = "Validation Failed",
                     Detail = "One or more validation errors occurred.",
@@ -47,21 +50,21 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
                     Errors = validationResult
                 });
 
-                return (TResponse)errorResponse;
+                return (TResponse)result;
             }
 
             var handlerType = typeof(IRequestHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
             var handler = serviceProvider.GetService(handlerType);
             if (handler == null)
             {
-                var errorResponse = CommandResponseFactory.CreateFailed(request, new ProblemDetails
+                result = CommandResponseFactory.CreateFailed(request, new ProblemDetails
                 {
                     Title = "Handler Not Found",
                     Detail = $"No handler registered for request type {request.GetType().FullName}",
                     Status = StatusCodes.Status500InternalServerError
                 });
 
-                return (TResponse)errorResponse;
+                return (TResponse)result;
             }
 
             var behaviors = serviceProvider.GetServices(typeof(IPipelineBehavior<,>)
@@ -70,6 +73,9 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
 
             Func<Task<TResponse>> handle = async () =>
             {
+                using var handlerActivity = EventsTracing.ActivitySource.StartActivity("dispatcher.handler", ActivityKind.Internal);
+                handlerActivity?.SetTag("dispatcher.request.type", commandTypeName);
+
                 var handleStopwatch = Stopwatch.StartNew();
                 logger.LogDebug("Starting to handle command {CommandType}", commandTypeName);
 
@@ -93,6 +99,8 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
                     logger.LogDebug("Starting pipeline behavior {Behavior}", behavior.GetType().Name);
 
                     var behaviorStopwatch = Stopwatch.StartNew();
+                    using var behaviorActivity = EventsTracing.ActivitySource.StartActivity("dispatcher.behavior", ActivityKind.Internal);
+                    behaviorActivity?.SetTag("dispatcher.behavior.name", behavior.GetType().Name);
 
                     var method = behavior.GetType().GetMethod("Handle");
                     var response = await (Task<TResponse>)method.Invoke(behavior, new object[] { request, cancellationToken, next });
@@ -104,26 +112,41 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
                 };
             }
 
-            return await handle();
+            result = await handle();
+            return (TResponse)result;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error executing command {CommandType}", commandTypeName);
-            
+
             var message = TestingEnvironmentChecker.IsTestingEnvironment ? ex.ToString() : ex.Message;
-            var errorResponse = CommandResponseFactory.CreateFailed(request, new ProblemDetails
+            result = CommandResponseFactory.CreateFailed(request, new ProblemDetails
             {
                 Title = "Command Execution Failed",
                 Detail = message,
                 Status = StatusCodes.Status500InternalServerError
             });
 
-            return (TResponse)errorResponse;
-        } 
+            return (TResponse)result;
+        }
         finally
         {
-            ounterStopwatch.Stop();
-            logger.LogInformation("Command {CommandType} execution completed in {ElapsedMilliseconds}ms", commandTypeName, ounterStopwatch.ElapsedMilliseconds);
+            sw.Stop();
+            if (result is not null)
+            {
+                if (result.IsValid)
+                {
+                    EventsMeters.DispatcherRequestsProcessed.Add(1);
+                }
+                else
+                {
+                    EventsMeters.DispatcherRequestsFailed.Add(1);
+                }
+
+                EventsMeters.DispatcherRequestDurationMs.Record(sw.Elapsed.TotalMilliseconds);
+            }
+
+            logger.LogInformation("Command {CommandType} execution completed in {ElapsedMilliseconds}ms", commandTypeName, sw.ElapsedMilliseconds);
         }
     }
 
@@ -133,8 +156,14 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
         var handlerType = typeof(INotificationHandler<>).MakeGenericType(typeof(TNotification));
         var handlers = serviceProvider.GetServices(handlerType).Cast<object>().ToList();
 
+        using var activity = EventsTracing.ActivitySource.StartActivity("dispatcher.publish", ActivityKind.Producer);
+        activity?.SetTag("dispatcher.notification.type", typeof(TNotification).FullName);
+
         foreach (var handler in handlers)
         {
+            using var handlerActivity = EventsTracing.ActivitySource.StartActivity("notification.handler", ActivityKind.Internal);
+            handlerActivity?.SetTag("dispatcher.notification.handler", handler.GetType().FullName);
+
             await (Task)handlerType.GetMethod("Handle").Invoke(handler, new object[] { notification, cancellationToken });
         }
     }

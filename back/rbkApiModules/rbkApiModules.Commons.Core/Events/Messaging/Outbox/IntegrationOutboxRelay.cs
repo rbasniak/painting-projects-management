@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -42,6 +43,15 @@ public class IntegrationOutboxRelay : BackgroundService
 
                 foreach (var row in batch)
                 {
+                    var sw = Stopwatch.StartNew();
+                    using var activity = EventsTracing.ActivitySource.StartActivity("integration.outbox.publish", ActivityKind.Producer);
+                    if (activity is not null)
+                    {
+                        activity.SetTag("messaging.event.id", row.Id);
+                        activity.SetTag("messaging.event.name", row.Name);
+                        activity.SetTag("messaging.event.version", row.Version);
+                    }
+
                     try
                     {
                         if (!_eventTypeRegistry.TryResolve(row.Name, row.Version, out var clrType))
@@ -59,9 +69,17 @@ public class IntegrationOutboxRelay : BackgroundService
                         await _publisher.PublishAsync(topic, Encoding.UTF8.GetBytes(row.Payload), stoppingToken);
                         row.ProcessedUtc = DateTime.UtcNow;
                         await db.SaveChangesAsync(stoppingToken);
+
+                        sw.Stop();
+                        EventsMeters.OutboxMessagesProcessed.Add(1);
+                        EventsMeters.OutboxDispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
                     }
                     catch (Exception ex)
                     {
+                        sw.Stop();
+                        EventsMeters.OutboxMessagesFailed.Add(1);
+                        EventsMeters.OutboxDispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
+
                         _logger.LogError(ex, "Failed to relay integration event {EventId}", row.Id);
                         row.Attempts++;
                         row.DoNotProcessBeforeUtc = DateTime.UtcNow.AddSeconds(30);
