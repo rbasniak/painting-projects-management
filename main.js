@@ -426,8 +426,8 @@ var assemblies = [
   {
     "name": "PaintingProjectsManagement.ServiceDefaults",
     "classes": [
-      { "name": "Microsoft.Extensions.Hosting.Extensions", "rp": "PaintingProjectsManagement.ServiceDefaults_Extensions.html", "cl": 37, "ucl": 12, "cal": 49, "tl": 118, "cb": 9, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Microsoft.Extensions.Hosting.Extensions<TBuilder>", "rp": "PaintingProjectsManagement.ServiceDefaults_Extensions_TBuilder_.html", "cl": 37, "ucl": 12, "cal": 49, "tl": 118, "cb": 9, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Microsoft.Extensions.Hosting.Extensions", "rp": "PaintingProjectsManagement.ServiceDefaults_Extensions.html", "cl": 39, "ucl": 12, "cal": 51, "tl": 121, "cb": 9, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Microsoft.Extensions.Hosting.Extensions<TBuilder>", "rp": "PaintingProjectsManagement.ServiceDefaults_Extensions_TBuilder_.html", "cl": 39, "ucl": 12, "cal": 51, "tl": 121, "cb": 9, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "PaintingProjectsManagment.Database",
@@ -443,7 +443,7 @@ var assemblies = [
       { "name": "AuthenticatedUser", "rp": "rbkApiModules.Commons.Core_AuthenticatedUser.html", "cl": 0, "ucl": 13, "cal": 13, "tl": 60, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "BaseEntity", "rp": "rbkApiModules.Commons.Core_BaseEntity.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 14, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "PaintingProjectsManagement.Api.Diagnostics.OutboxHealthEndpoints", "rp": "rbkApiModules.Commons.Core_OutboxHealthEndpoints.html", "cl": 0, "ucl": 25, "cal": 25, "tl": 45, "cb": 0, "tb": 4, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core", "rp": "rbkApiModules.Commons.Core_Core.html", "cl": 0, "ucl": 2173, "cal": 2173, "tl": 5076, "cb": 0, "tb": 1118, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core", "rp": "rbkApiModules.Commons.Core_Core.html", "cl": 9, "ucl": 2208, "cal": 2217, "tl": 5150, "cb": 0, "tb": 1138, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EntityReference", "rp": "rbkApiModules.Commons.Core_EntityReference.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 5, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EntityReference<T>", "rp": "rbkApiModules.Commons.Core_EntityReference_T_.html", "cl": 0, "ucl": 1, "cal": 1, "tl": 5, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Abstractions.EnumReference", "rp": "rbkApiModules.Commons.Core_EnumReference.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 23, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -462,13 +462,13 @@ var assemblies = [
       { "name": "rbkApiModules.Commons.Core.BrokerOptions", "rp": "rbkApiModules.Commons.Core_BrokerOptions.html", "cl": 0, "ucl": 5, "cal": 5, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Builder", "rp": "rbkApiModules.Commons.Core_Builder.html", "cl": 0, "ucl": 47, "cal": 47, "tl": 116, "cb": 0, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.CommandResponse", "rp": "rbkApiModules.Commons.Core_CommandResponse.html", "cl": 0, "ucl": 18, "cal": 18, "tl": 162, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.CommandResponseFactory", "rp": "rbkApiModules.Commons.Core_CommandResponseFactory.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 242, "cb": 0, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.CommandResponseFactory<T>", "rp": "rbkApiModules.Commons.Core_CommandResponseFactory_T_.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 242, "cb": 0, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.CommandResponseFactory", "rp": "rbkApiModules.Commons.Core_CommandResponseFactory.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 271, "cb": 0, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.CommandResponseFactory<T>", "rp": "rbkApiModules.Commons.Core_CommandResponseFactory_T_.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 271, "cb": 0, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.CommonsCoreBuilder", "rp": "rbkApiModules.Commons.Core_CommonsCoreBuilder.html", "cl": 0, "ucl": 126, "cal": 126, "tl": 848, "cb": 0, "tb": 94, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.Dispatcher", "rp": "rbkApiModules.Commons.Core_Dispatcher.html", "cl": 0, "ucl": 111, "cal": 111, "tl": 242, "cb": 0, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "rp": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "cl": 0, "ucl": 111, "cal": 111, "tl": 242, "cb": 0, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "rp": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "cl": 0, "ucl": 111, "cal": 111, "tl": 242, "cb": 0, "tb": 48, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.DomainOutboxDispatcher", "rp": "rbkApiModules.Commons.Core_DomainOutboxDispatcher.html", "cl": 0, "ucl": 115, "cal": 115, "tl": 229, "cb": 0, "tb": 32, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.Dispatcher", "rp": "rbkApiModules.Commons.Core_Dispatcher.html", "cl": 0, "ucl": 130, "cal": 130, "tl": 271, "cb": 0, "tb": 62, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "rp": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "cl": 0, "ucl": 130, "cal": 130, "tl": 271, "cb": 0, "tb": 62, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "rp": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "cl": 0, "ucl": 130, "cal": 130, "tl": 271, "cb": 0, "tb": 62, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.DomainOutboxDispatcher", "rp": "rbkApiModules.Commons.Core_DomainOutboxDispatcher.html", "cl": 0, "ucl": 123, "cal": 123, "tl": 242, "cb": 0, "tb": 36, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Email.EmailHandler", "rp": "rbkApiModules.Commons.Core_EmailHandler.html", "cl": 0, "ucl": 36, "cal": 36, "tl": 76, "cb": 0, "tb": 14, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Email.InlineImage", "rp": "rbkApiModules.Commons.Core_InlineImage.html", "cl": 0, "ucl": 8, "cal": 8, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.Email.MailAttachment", "rp": "rbkApiModules.Commons.Core_MailAttachment.html", "cl": 0, "ucl": 6, "cal": 6, "tl": 15, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -476,7 +476,8 @@ var assemblies = [
       { "name": "rbkApiModules.Commons.Core.EventEnvelope<TEvent>", "rp": "rbkApiModules.Commons.Core_EventEnvelope_TEvent_.html", "cl": 0, "ucl": 9, "cal": 9, "tl": 16, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.EventEnvelopeFactory", "rp": "rbkApiModules.Commons.Core_EventEnvelopeFactory.html", "cl": 0, "ucl": 30, "cal": 30, "tl": 57, "cb": 0, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.EventNameAttribute", "rp": "rbkApiModules.Commons.Core_EventNameAttribute.html", "cl": 0, "ucl": 6, "cal": 6, "tl": 14, "cb": 0, "tb": 2, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.EventsMeters", "rp": "rbkApiModules.Commons.Core_EventsMeters.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.EventsMeters", "rp": "rbkApiModules.Commons.Core_EventsMeters.html", "cl": 8, "ucl": 0, "cal": 8, "tl": 18, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.EventsTracing", "rp": "rbkApiModules.Commons.Core_EventsTracing.html", "cl": 1, "ucl": 0, "cal": 1, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.ExceptionExtensions", "rp": "rbkApiModules.Commons.Core_ExceptionExtensions.html", "cl": 0, "ucl": 37, "cal": 37, "tl": 76, "cb": 0, "tb": 22, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.ExceptionHandlingMiddleware", "rp": "rbkApiModules.Commons.Core_ExceptionHandlingMiddleware.html", "cl": 0, "ucl": 52, "cal": 52, "tl": 92, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.ExpectedInternalException", "rp": "rbkApiModules.Commons.Core_ExpectedInternalException.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 39, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -488,7 +489,7 @@ var assemblies = [
       { "name": "rbkApiModules.Commons.Core.InboxMessageConfig", "rp": "rbkApiModules.Commons.Core_InboxMessageConfig.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 20, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.IntegrationOutbox", "rp": "rbkApiModules.Commons.Core_IntegrationOutbox.html", "cl": 0, "ucl": 24, "cal": 24, "tl": 48, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.IntegrationOutbox<T>", "rp": "rbkApiModules.Commons.Core_IntegrationOutbox_T_.html", "cl": 0, "ucl": 24, "cal": 24, "tl": 48, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "rbkApiModules.Commons.Core.IntegrationOutboxRelay", "rp": "rbkApiModules.Commons.Core_IntegrationOutboxRelay.html", "cl": 0, "ucl": 41, "cal": 41, "tl": 84, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "rbkApiModules.Commons.Core.IntegrationOutboxRelay", "rp": "rbkApiModules.Commons.Core_IntegrationOutboxRelay.html", "cl": 0, "ucl": 53, "cal": 53, "tl": 102, "cb": 0, "tb": 8, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.IntegrationSubscriberRegistry", "rp": "rbkApiModules.Commons.Core_IntegrationSubscriberRegistry.html", "cl": 0, "ucl": 25, "cal": 25, "tl": 54, "cb": 0, "tb": 24, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.InternalException", "rp": "rbkApiModules.Commons.Core_InternalException.html", "cl": 0, "ucl": 7, "cal": 7, "tl": 39, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "rbkApiModules.Commons.Core.InternalValidationException", "rp": "rbkApiModules.Commons.Core_InternalValidationException.html", "cl": 0, "ucl": 4, "cal": 4, "tl": 11, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -734,8 +735,8 @@ var assemblies = [
   {
     "name": "rbkApiModules.Testing.Core",
     "classes": [
-      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader2b73dcc3a8034a7683d1cf17832eac92", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader2b73dcc3a8034a7683d1cf17832eac92.html", "cl": 1, "ucl": 172, "cal": 173, "tl": 183, "cb": 344, "tb": 344, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_e2b1d3867d8e4933ae3713421208a67c", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_e2b1d3867d8e4933ae3713421208a67c.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader3b00308b5206426586b12953ede954ce", "rp": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader3b00308b5206426586b12953ede954ce.html", "cl": 1, "ucl": 172, "cal": 173, "tl": 183, "cb": 344, "tb": 344, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "<DisableReflectionScanner_g>FAFB042DDEF5AE860DECD6780C128E5D2D9DD3CCCD1777C6681A54FAC745CE4AC__DisableReflectionScanner_79000c7052f64c78a6a58340005d4862", "rp": "rbkApiModules.Testing.Core__DisableReflectionScannScanner_79000c7052f64c78a6a58340005d4862.html", "cl": 2, "ucl": 0, "cal": 2, "tl": 12, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions", "rp": "rbkApiModules.Testing.Core_AssertExtensions.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.AssertExtensions<T>", "rp": "rbkApiModules.Testing.Core_AssertExtensions_T_.html", "cl": 0, "ucl": 102, "cal": 102, "tl": 289, "cb": 0, "tb": 58, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "Giants.Tests.Integration.EntityAssertionOptions<T>", "rp": "rbkApiModules.Testing.Core_EntityAssertionOptions_T_.html", "cl": 0, "ucl": 12, "cal": 12, "tl": 289, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
@@ -778,7 +779,7 @@ var riskHotspots = [
       { "value": 110, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "AddRbkApiCoreSetup(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<rbkApiModules.Commons.Core.RbkApiCoreOptions>)", "methodShortName": "AddRbkApiCoreSetup(...)", "fileIndex": 36, "line": 319,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "AddRbkApiCoreSetup(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Action<rbkApiModules.Commons.Core.RbkApiCoreOptions>)", "methodShortName": "AddRbkApiCoreSetup(...)", "fileIndex": 37, "line": 319,
     "metrics": [
       { "value": 4422, "exceeded": true },
       { "value": 66, "exceeded": true },
@@ -796,7 +797,7 @@ var riskHotspots = [
       { "value": 66, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetControlType()", "methodShortName": "GetControlType()", "fileIndex": 47, "line": 138,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetControlType()", "methodShortName": "GetControlType()", "fileIndex": 48, "line": 138,
     "metrics": [
       { "value": 3422, "exceeded": true },
       { "value": 58, "exceeded": true },
@@ -832,7 +833,7 @@ var riskHotspots = [
       { "value": 42, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": ".ctor(string, System.Type, System.ComponentModel.DataAnnotations.RequiredAttribute, System.ComponentModel.DataAnnotations.MinLengthAttribute, System.ComponentModel.DataAnnotations.MaxLengthAttribute, rbkApiModules.Commons.Core.UiDefinitions.DialogDataAttribute)", "methodShortName": ".ctor(...)", "fileIndex": 47, "line": 16,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": ".ctor(string, System.Type, System.ComponentModel.DataAnnotations.RequiredAttribute, System.ComponentModel.DataAnnotations.MinLengthAttribute, System.ComponentModel.DataAnnotations.MaxLengthAttribute, rbkApiModules.Commons.Core.UiDefinitions.DialogDataAttribute)", "methodShortName": ".ctor(...)", "fileIndex": 48, "line": 16,
     "metrics": [
       { "value": 1332, "exceeded": true },
       { "value": 36, "exceeded": true },
@@ -844,13 +845,13 @@ var riskHotspots = [
       { "value": 36, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ConvertFromString(string, System.Type)", "methodShortName": "ConvertFromString(...)", "fileIndex": 37, "line": 162,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ConvertFromString(string, System.Type)", "methodShortName": "ConvertFromString(...)", "fileIndex": 38, "line": 162,
     "metrics": [
       { "value": 1190, "exceeded": true },
       { "value": 34, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ConvertFromString(string, System.Type)", "methodShortName": "ConvertFromString(...)", "fileIndex": 40, "line": 188,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ConvertFromString(string, System.Type)", "methodShortName": "ConvertFromString(...)", "fileIndex": 41, "line": 188,
     "metrics": [
       { "value": 1190, "exceeded": true },
       { "value": 34, "exceeded": true },
@@ -868,7 +869,7 @@ var riskHotspots = [
       { "value": 34, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "TraverseAndApply(Microsoft.EntityFrameworkCore.DbSet<rbkApiModules.Commons.Core.Features.ApplicationOptions.ApplicationOption>, string, object, string, string, string)", "methodShortName": "TraverseAndApply(...)", "fileIndex": 40, "line": 99,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "TraverseAndApply(Microsoft.EntityFrameworkCore.DbSet<rbkApiModules.Commons.Core.Features.ApplicationOptions.ApplicationOption>, string, object, string, string, string)", "methodShortName": "TraverseAndApply(...)", "fileIndex": 41, "line": 99,
     "metrics": [
       { "value": 1056, "exceeded": true },
       { "value": 32, "exceeded": true },
@@ -880,7 +881,19 @@ var riskHotspots = [
       { "value": 32, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "TraverseAndApply(Microsoft.EntityFrameworkCore.DbContext, string, object, string)", "methodShortName": "TraverseAndApply(...)", "fileIndex": 37, "line": 58,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ExecuteAsync()", "methodShortName": "ExecuteAsync()", "fileIndex": 18, "line": 37,
+    "metrics": [
+      { "value": 930, "exceeded": true },
+      { "value": 30, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.DomainOutboxDispatcher", "reportPath": "rbkApiModules.Commons.Core_DomainOutboxDispatcher.html", "methodName": "ExecuteAsync()", "methodShortName": "ExecuteAsync()", "fileIndex": 0, "line": 37,
+    "metrics": [
+      { "value": 930, "exceeded": true },
+      { "value": 30, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "TraverseAndApply(Microsoft.EntityFrameworkCore.DbContext, string, object, string)", "methodShortName": "TraverseAndApply(...)", "fileIndex": 38, "line": 58,
     "metrics": [
       { "value": 812, "exceeded": true },
       { "value": 28, "exceeded": true },
@@ -898,31 +911,19 @@ var riskHotspots = [
       { "value": 28, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ExecuteAsync()", "methodShortName": "ExecuteAsync()", "fileIndex": 18, "line": 37,
-    "metrics": [
-      { "value": 702, "exceeded": true },
-      { "value": 26, "exceeded": true },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.DomainOutboxDispatcher", "reportPath": "rbkApiModules.Commons.Core_DomainOutboxDispatcher.html", "methodName": "ExecuteAsync()", "methodShortName": "ExecuteAsync()", "fileIndex": 0, "line": 37,
-    "metrics": [
-      { "value": 702, "exceeded": true },
-      { "value": 26, "exceeded": true },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ConvertToString(object, System.Type)", "methodShortName": "ConvertToString(...)", "fileIndex": 37, "line": 148,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ConvertToString(object, System.Type)", "methodShortName": "ConvertToString(...)", "fileIndex": 38, "line": 148,
     "metrics": [
       { "value": 600, "exceeded": true },
       { "value": 24, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetOptions<TOptions>(string, string)", "methodShortName": "GetOptions<TOptions>(...)", "fileIndex": 40, "line": 31,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetOptions<TOptions>(string, string)", "methodShortName": "GetOptions<TOptions>(...)", "fileIndex": 41, "line": 31,
     "metrics": [
       { "value": 600, "exceeded": true },
       { "value": 24, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyForeignKeyConstraint()", "methodShortName": "<ApplyForeignKeyConstraint()", "fileIndex": 62, "line": 317,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyForeignKeyConstraint()", "methodShortName": "<ApplyForeignKeyConstraint()", "fileIndex": 63, "line": 317,
     "metrics": [
       { "value": 600, "exceeded": true },
       { "value": 24, "exceeded": true },
@@ -946,7 +947,7 @@ var riskHotspots = [
       { "value": 24, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "UseRbkApiCoreSetup(Microsoft.AspNetCore.Builder.WebApplication)", "methodShortName": "UseRbkApiCoreSetup(...)", "fileIndex": 36, "line": 657,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "UseRbkApiCoreSetup(Microsoft.AspNetCore.Builder.WebApplication)", "methodShortName": "UseRbkApiCoreSetup(...)", "fileIndex": 37, "line": 657,
     "metrics": [
       { "value": 506, "exceeded": true },
       { "value": 22, "exceeded": true },
@@ -958,13 +959,13 @@ var riskHotspots = [
       { "value": 22, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "RegisterApplicationServices(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Reflection.Assembly[])", "methodShortName": "RegisterApplicationServices(...)", "fileIndex": 33, "line": 11,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "RegisterApplicationServices(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Reflection.Assembly[])", "methodShortName": "RegisterApplicationServices(...)", "fileIndex": 34, "line": 11,
     "metrics": [
       { "value": 420, "exceeded": true },
       { "value": 20, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyPrimaryKeyConstraint()", "methodShortName": "<ApplyPrimaryKeyConstraint()", "fileIndex": 62, "line": 219,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyPrimaryKeyConstraint()", "methodShortName": "<ApplyPrimaryKeyConstraint()", "fileIndex": 63, "line": 219,
     "metrics": [
       { "value": 420, "exceeded": true },
       { "value": 20, "exceeded": true },
@@ -994,7 +995,7 @@ var riskHotspots = [
       { "value": 22, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader2b73dcc3a8034a7683d1cf17832eac92", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader2b73dcc3a8034a7683d1cf17832eac92.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 10,
+    "assembly": "rbkApiModules.Testing.Core", "class": "<AssemblyLoader_g>F9265C07C5401BECD438898DDA0B5ECE18804B298CB4A89F0CA83B479FC7C70F0__AssemblyLoader3b00308b5206426586b12953ede954ce", "reportPath": "rbkApiModules.Testing.Core__AssemblyLoader_g_F9265lyLoader3b00308b5206426586b12953ede954ce.html", "methodName": "Initialize()", "methodShortName": "Initialize()", "fileIndex": 0, "line": 10,
     "metrics": [
       { "value": 344, "exceeded": true },
       { "value": 344, "exceeded": true },
@@ -1006,7 +1007,31 @@ var riskHotspots = [
       { "value": 18, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "StoreFileFromBase64Async()", "methodShortName": "StoreFileFromBase64Async()", "fileIndex": 50, "line": 43,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "StoreFileFromBase64Async()", "methodShortName": "StoreFileFromBase64Async()", "fileIndex": 51, "line": 43,
+    "metrics": [
+      { "value": 342, "exceeded": true },
+      { "value": 18, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<SendAsync()", "methodShortName": "<SendAsync()", "fileIndex": 59, "line": 76,
+    "metrics": [
+      { "value": 342, "exceeded": true },
+      { "value": 18, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher", "reportPath": "rbkApiModules.Commons.Core_Dispatcher.html", "methodName": "<SendAsync()", "methodShortName": "<SendAsync()", "fileIndex": 0, "line": 76,
+    "metrics": [
+      { "value": 342, "exceeded": true },
+      { "value": 18, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "methodName": "<SendAsync()", "methodShortName": "<SendAsync()", "fileIndex": 0, "line": 76,
+    "metrics": [
+      { "value": 342, "exceeded": true },
+      { "value": 18, "exceeded": true },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "methodName": "<SendAsync()", "methodShortName": "<SendAsync()", "fileIndex": 0, "line": 76,
     "metrics": [
       { "value": 342, "exceeded": true },
       { "value": 18, "exceeded": true },
@@ -1066,37 +1091,13 @@ var riskHotspots = [
       { "value": 16, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "Build(System.Type, rbkApiModules.Commons.Core.UiDefinitions.OperationType)", "methodShortName": "Build(...)", "fileIndex": 49, "line": 11,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "Build(System.Type, rbkApiModules.Commons.Core.UiDefinitions.OperationType)", "methodShortName": "Build(...)", "fileIndex": 50, "line": 11,
     "metrics": [
       { "value": 272, "exceeded": true },
       { "value": 16, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<SendAsync()", "methodShortName": "<SendAsync()", "fileIndex": 58, "line": 73,
-    "metrics": [
-      { "value": 272, "exceeded": true },
-      { "value": 16, "exceeded": true },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyForeignKeyConstraint()", "methodShortName": "<ApplyForeignKeyConstraint()", "fileIndex": 62, "line": 399,
-    "metrics": [
-      { "value": 272, "exceeded": true },
-      { "value": 16, "exceeded": true },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher", "reportPath": "rbkApiModules.Commons.Core_Dispatcher.html", "methodName": "<SendAsync()", "methodShortName": "<SendAsync()", "fileIndex": 0, "line": 73,
-    "metrics": [
-      { "value": 272, "exceeded": true },
-      { "value": 16, "exceeded": true },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "methodName": "<SendAsync()", "methodShortName": "<SendAsync()", "fileIndex": 0, "line": 73,
-    "metrics": [
-      { "value": 272, "exceeded": true },
-      { "value": 16, "exceeded": true },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "methodName": "<SendAsync()", "methodShortName": "<SendAsync()", "fileIndex": 0, "line": 73,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyForeignKeyConstraint()", "methodShortName": "<ApplyForeignKeyConstraint()", "fileIndex": 63, "line": 399,
     "metrics": [
       { "value": 272, "exceeded": true },
       { "value": 16, "exceeded": true },
@@ -1144,31 +1145,37 @@ var riskHotspots = [
       { "value": 16, "exceeded": true },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "IsSimple(System.Type)", "methodShortName": "IsSimple(...)", "fileIndex": 37, "line": 136,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "IsSimple(System.Type)", "methodShortName": "IsSimple(...)", "fileIndex": 38, "line": 136,
     "metrics": [
       { "value": 210, "exceeded": true },
       { "value": 14, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "IsSimple(System.Type)", "methodShortName": "IsSimple(...)", "fileIndex": 40, "line": 176,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "IsSimple(System.Type)", "methodShortName": "IsSimple(...)", "fileIndex": 41, "line": 176,
     "metrics": [
       { "value": 210, "exceeded": true },
       { "value": 14, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "SendEmail(string, bool, int, System.Net.Mail.MailAddress, System.Net.Mail.MailAddress, string, string, string, rbkApiModules.Commons.Core.Email.InlineImage[], rbkApiModules.Commons.Core.Email.MailAttachment[], System.Net.NetworkCredential, System.Net.Mail.SmtpDeliveryMethod, string)", "methodShortName": "SendEmail(...)", "fileIndex": 52, "line": 24,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "SendEmail(string, bool, int, System.Net.Mail.MailAddress, System.Net.Mail.MailAddress, string, string, string, rbkApiModules.Commons.Core.Email.InlineImage[], rbkApiModules.Commons.Core.Email.MailAttachment[], System.Net.NetworkCredential, System.Net.Mail.SmtpDeliveryMethod, string)", "methodShortName": "SendEmail(...)", "fileIndex": 53, "line": 24,
     "metrics": [
       { "value": 210, "exceeded": true },
       { "value": 14, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "RegisterValidators(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Reflection.Assembly[])", "methodShortName": "RegisterValidators(...)", "fileIndex": 57, "line": 59,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "RegisterValidators(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Reflection.Assembly[])", "methodShortName": "RegisterValidators(...)", "fileIndex": 58, "line": 59,
     "metrics": [
       { "value": 210, "exceeded": true },
       { "value": 14, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyPrimaryKeyConstraint()", "methodShortName": "<ApplyPrimaryKeyConstraint()", "fileIndex": 62, "line": 271,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "SendAsync()", "methodShortName": "SendAsync()", "fileIndex": 59, "line": 25,
+    "metrics": [
+      { "value": 210, "exceeded": true },
+      { "value": 14, "exceeded": false },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "<ApplyPrimaryKeyConstraint()", "methodShortName": "<ApplyPrimaryKeyConstraint()", "fileIndex": 63, "line": 271,
     "metrics": [
       { "value": 210, "exceeded": true },
       { "value": 14, "exceeded": false },
@@ -1187,6 +1194,24 @@ var riskHotspots = [
     ]},
   {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Builder", "reportPath": "rbkApiModules.Commons.Core_Builder.html", "methodName": "RegisterValidators(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Reflection.Assembly[])", "methodShortName": "RegisterValidators(...)", "fileIndex": 0, "line": 59,
+    "metrics": [
+      { "value": 210, "exceeded": true },
+      { "value": 14, "exceeded": false },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher", "reportPath": "rbkApiModules.Commons.Core_Dispatcher.html", "methodName": "SendAsync()", "methodShortName": "SendAsync()", "fileIndex": 0, "line": 25,
+    "metrics": [
+      { "value": 210, "exceeded": true },
+      { "value": 14, "exceeded": false },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "methodName": "SendAsync()", "methodShortName": "SendAsync()", "fileIndex": 0, "line": 25,
+    "metrics": [
+      { "value": 210, "exceeded": true },
+      { "value": 14, "exceeded": false },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "methodName": "SendAsync()", "methodShortName": "SendAsync()", "fileIndex": 0, "line": 25,
     "metrics": [
       { "value": 210, "exceeded": true },
       { "value": 14, "exceeded": false },
@@ -1216,49 +1241,49 @@ var riskHotspots = [
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetOtherExceptionProperties(System.Exception, string)", "methodShortName": "GetOtherExceptionProperties(...)", "fileIndex": 31, "line": 45,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetOtherExceptionProperties(System.Exception, string)", "methodShortName": "GetOtherExceptionProperties(...)", "fileIndex": 32, "line": 45,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "LoadLocalizedValues()", "methodShortName": "LoadLocalizedValues()", "fileIndex": 41, "line": 34,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "LoadLocalizedValues()", "methodShortName": "LoadLocalizedValues()", "fileIndex": 42, "line": 34,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "LoadDefaultValues()", "methodShortName": "LoadDefaultValues()", "fileIndex": 41, "line": 91,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "LoadDefaultValues()", "methodShortName": "LoadDefaultValues()", "fileIndex": 42, "line": 91,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "All(rbkApiModules.Commons.Core.UiDefinitions.UIDefinitionOptions)", "methodShortName": "All(...)", "fileIndex": 43, "line": 23,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "All(rbkApiModules.Commons.Core.UiDefinitions.UIDefinitionOptions)", "methodShortName": "All(...)", "fileIndex": 44, "line": 23,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetFileExtensionFromBase64(string)", "methodShortName": "GetFileExtensionFromBase64(...)", "fileIndex": 50, "line": 142,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetFileExtensionFromBase64(string)", "methodShortName": "GetFileExtensionFromBase64(...)", "fileIndex": 51, "line": 142,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "MapFeatureEndpoints(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)", "methodShortName": "MapFeatureEndpoints(...)", "fileIndex": 54, "line": 10,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "MapFeatureEndpoints(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)", "methodShortName": "MapFeatureEndpoints(...)", "fileIndex": 55, "line": 10,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "PropagateAuthenticatedUser<TResponse>(ref rbkApiModules.Commons.Core.IRequest<TResponse>)", "methodShortName": "PropagateAuthenticatedUser<TResponse>(...)", "fileIndex": 58, "line": 190,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "PropagateAuthenticatedUser<TResponse>(ref rbkApiModules.Commons.Core.IRequest<TResponse>)", "methodShortName": "PropagateAuthenticatedUser<TResponse>(...)", "fileIndex": 59, "line": 219,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ApplyPropertyConstraints(Microsoft.EntityFrameworkCore.Metadata.IProperty, System.Reflection.PropertyInfo)", "methodShortName": "ApplyPropertyConstraints(...)", "fileIndex": 62, "line": 121,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ApplyPropertyConstraints(Microsoft.EntityFrameworkCore.Metadata.IProperty, System.Reflection.PropertyInfo)", "methodShortName": "ApplyPropertyConstraints(...)", "fileIndex": 63, "line": 121,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
@@ -1270,19 +1295,19 @@ var riskHotspots = [
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher", "reportPath": "rbkApiModules.Commons.Core_Dispatcher.html", "methodName": "PropagateAuthenticatedUser<TResponse>(ref rbkApiModules.Commons.Core.IRequest<TResponse>)", "methodShortName": "PropagateAuthenticatedUser<TResponse>(...)", "fileIndex": 0, "line": 190,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher", "reportPath": "rbkApiModules.Commons.Core_Dispatcher.html", "methodName": "PropagateAuthenticatedUser<TResponse>(ref rbkApiModules.Commons.Core.IRequest<TResponse>)", "methodShortName": "PropagateAuthenticatedUser<TResponse>(...)", "fileIndex": 0, "line": 219,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "methodName": "PropagateAuthenticatedUser<TResponse>(ref rbkApiModules.Commons.Core.IRequest<TResponse>)", "methodShortName": "PropagateAuthenticatedUser<TResponse>(...)", "fileIndex": 0, "line": 190,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "methodName": "PropagateAuthenticatedUser<TResponse>(ref rbkApiModules.Commons.Core.IRequest<TResponse>)", "methodShortName": "PropagateAuthenticatedUser<TResponse>(...)", "fileIndex": 0, "line": 219,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "methodName": "PropagateAuthenticatedUser<TResponse>(ref rbkApiModules.Commons.Core.IRequest<TResponse>)", "methodShortName": "PropagateAuthenticatedUser<TResponse>(...)", "fileIndex": 0, "line": 190,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "methodName": "PropagateAuthenticatedUser<TResponse>(ref rbkApiModules.Commons.Core.IRequest<TResponse>)", "methodShortName": "PropagateAuthenticatedUser<TResponse>(...)", "fileIndex": 0, "line": 219,
     "metrics": [
       { "value": 156, "exceeded": true },
       { "value": 12, "exceeded": false },
@@ -1366,31 +1391,31 @@ var riskHotspots = [
       { "value": 11, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "PersistDomainEventsToOutbox(Microsoft.EntityFrameworkCore.DbContext)", "methodShortName": "PersistDomainEventsToOutbox(...)", "fileIndex": 28, "line": 40,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "PersistDomainEventsToOutbox(Microsoft.EntityFrameworkCore.DbContext)", "methodShortName": "PersistDomainEventsToOutbox(...)", "fileIndex": 29, "line": 40,
     "metrics": [
       { "value": 110, "exceeded": true },
       { "value": 10, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "RegisterHandlers(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Type, System.Reflection.Assembly[])", "methodShortName": "RegisterHandlers(...)", "fileIndex": 57, "line": 28,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "RegisterHandlers(Microsoft.Extensions.DependencyInjection.IServiceCollection, System.Type, System.Reflection.Assembly[])", "methodShortName": "RegisterHandlers(...)", "fileIndex": 58, "line": 28,
     "metrics": [
       { "value": 110, "exceeded": true },
       { "value": 10, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ValidateAsync()", "methodShortName": "ValidateAsync()", "fileIndex": 58, "line": 144,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ValidateAsync()", "methodShortName": "ValidateAsync()", "fileIndex": 59, "line": 173,
     "metrics": [
       { "value": 110, "exceeded": true },
       { "value": 10, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "FromResponse(rbkApiModules.Commons.Core.BaseResponse)", "methodShortName": "FromResponse(...)", "fileIndex": 60, "line": 10,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "FromResponse(rbkApiModules.Commons.Core.BaseResponse)", "methodShortName": "FromResponse(...)", "fileIndex": 61, "line": 10,
     "metrics": [
       { "value": 110, "exceeded": true },
       { "value": 10, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetLocalizedMessage(string, string, object)", "methodShortName": "GetLocalizedMessage(...)", "fileIndex": 62, "line": 469,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetLocalizedMessage(string, string, object)", "methodShortName": "GetLocalizedMessage(...)", "fileIndex": 63, "line": 469,
     "metrics": [
       { "value": 110, "exceeded": true },
       { "value": 10, "exceeded": false },
@@ -1402,19 +1427,19 @@ var riskHotspots = [
       { "value": 10, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher", "reportPath": "rbkApiModules.Commons.Core_Dispatcher.html", "methodName": "ValidateAsync()", "methodShortName": "ValidateAsync()", "fileIndex": 0, "line": 144,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher", "reportPath": "rbkApiModules.Commons.Core_Dispatcher.html", "methodName": "ValidateAsync()", "methodShortName": "ValidateAsync()", "fileIndex": 0, "line": 173,
     "metrics": [
       { "value": 110, "exceeded": true },
       { "value": 10, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "methodName": "ValidateAsync()", "methodShortName": "ValidateAsync()", "fileIndex": 0, "line": 144,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "methodName": "ValidateAsync()", "methodShortName": "ValidateAsync()", "fileIndex": 0, "line": 173,
     "metrics": [
       { "value": 110, "exceeded": true },
       { "value": 10, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "methodName": "ValidateAsync()", "methodShortName": "ValidateAsync()", "fileIndex": 0, "line": 144,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "methodName": "ValidateAsync()", "methodShortName": "ValidateAsync()", "fileIndex": 0, "line": 173,
     "metrics": [
       { "value": 110, "exceeded": true },
       { "value": 10, "exceeded": false },
@@ -1576,49 +1601,49 @@ var riskHotspots = [
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": ".ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor, rbkApiModules.Commons.Core.RbkApiCoreOptions, rbkApiModules.Commons.Core.LocalizationCache, Microsoft.Extensions.Logging.ILogger<rbkApiModules.Commons.Core.LocalizationService>)", "methodShortName": ".ctor(...)", "fileIndex": 41, "line": 125,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ExecuteAsync()", "methodShortName": "ExecuteAsync()", "fileIndex": 20, "line": 33,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ResizeAndSaveImageAsync()", "methodShortName": "ResizeAndSaveImageAsync()", "fileIndex": 50, "line": 171,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": ".ctor(Microsoft.AspNetCore.Http.IHttpContextAccessor, rbkApiModules.Commons.Core.RbkApiCoreOptions, rbkApiModules.Commons.Core.LocalizationCache, Microsoft.Extensions.Logging.ILogger<rbkApiModules.Commons.Core.LocalizationService>)", "methodShortName": ".ctor(...)", "fileIndex": 42, "line": 125,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "InheritsFromAbstractValidator(System.Type)", "methodShortName": "InheritsFromAbstractValidator(...)", "fileIndex": 57, "line": 88,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ResizeAndSaveImageAsync()", "methodShortName": "ResizeAndSaveImageAsync()", "fileIndex": 51, "line": 171,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetValidatorInterface(System.Type)", "methodShortName": "GetValidatorInterface(...)", "fileIndex": 57, "line": 102,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "InheritsFromAbstractValidator(System.Type)", "methodShortName": "InheritsFromAbstractValidator(...)", "fileIndex": 58, "line": 88,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "CreateFailed<T>(T, Microsoft.AspNetCore.Mvc.ProblemDetails)", "methodShortName": "CreateFailed<T>(...)", "fileIndex": 58, "line": 217,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetValidatorInterface(System.Type)", "methodShortName": "GetValidatorInterface(...)", "fileIndex": 58, "line": 102,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "SendAsync()", "methodShortName": "SendAsync()", "fileIndex": 58, "line": 25,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "CreateFailed<T>(T, Microsoft.AspNetCore.Mvc.ProblemDetails)", "methodShortName": "CreateFailed<T>(...)", "fileIndex": 59, "line": 246,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ApplyDatabaseConstraints()", "methodShortName": "ApplyDatabaseConstraints()", "fileIndex": 62, "line": 76,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ApplyDatabaseConstraints()", "methodShortName": "ApplyDatabaseConstraints()", "fileIndex": 63, "line": 76,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ApplyRequiredConstraint(System.Reflection.PropertyInfo)", "methodShortName": "ApplyRequiredConstraint(...)", "fileIndex": 62, "line": 154,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ApplyRequiredConstraint(System.Reflection.PropertyInfo)", "methodShortName": "ApplyRequiredConstraint(...)", "fileIndex": 63, "line": 154,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
@@ -1636,31 +1661,19 @@ var riskHotspots = [
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.CommandResponseFactory", "reportPath": "rbkApiModules.Commons.Core_CommandResponseFactory.html", "methodName": "CreateFailed<T>(T, Microsoft.AspNetCore.Mvc.ProblemDetails)", "methodShortName": "CreateFailed<T>(...)", "fileIndex": 0, "line": 217,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.CommandResponseFactory", "reportPath": "rbkApiModules.Commons.Core_CommandResponseFactory.html", "methodName": "CreateFailed<T>(T, Microsoft.AspNetCore.Mvc.ProblemDetails)", "methodShortName": "CreateFailed<T>(...)", "fileIndex": 0, "line": 246,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.CommandResponseFactory<T>", "reportPath": "rbkApiModules.Commons.Core_CommandResponseFactory_T_.html", "methodName": "CreateFailed<T>(T, Microsoft.AspNetCore.Mvc.ProblemDetails)", "methodShortName": "CreateFailed<T>(...)", "fileIndex": 0, "line": 217,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.CommandResponseFactory<T>", "reportPath": "rbkApiModules.Commons.Core_CommandResponseFactory_T_.html", "methodName": "CreateFailed<T>(T, Microsoft.AspNetCore.Mvc.ProblemDetails)", "methodShortName": "CreateFailed<T>(...)", "fileIndex": 0, "line": 246,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher", "reportPath": "rbkApiModules.Commons.Core_Dispatcher.html", "methodName": "SendAsync()", "methodShortName": "SendAsync()", "fileIndex": 0, "line": 25,
-    "metrics": [
-      { "value": 72, "exceeded": true },
-      { "value": 8, "exceeded": false },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "methodName": "SendAsync()", "methodShortName": "SendAsync()", "fileIndex": 0, "line": 25,
-    "metrics": [
-      { "value": 72, "exceeded": true },
-      { "value": 8, "exceeded": false },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "methodName": "SendAsync()", "methodShortName": "SendAsync()", "fileIndex": 0, "line": 25,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.IntegrationOutboxRelay", "reportPath": "rbkApiModules.Commons.Core_IntegrationOutboxRelay.html", "methodName": "ExecuteAsync()", "methodShortName": "ExecuteAsync()", "fileIndex": 0, "line": 33,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
@@ -1840,55 +1853,55 @@ var riskHotspots = [
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ExecuteAsync()", "methodShortName": "ExecuteAsync()", "fileIndex": 20, "line": 32,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ToBetterString(System.Exception, string)", "methodShortName": "ToBetterString(...)", "fileIndex": 32, "line": 9,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ToBetterString(System.Exception, string)", "methodShortName": "ToBetterString(...)", "fileIndex": 31, "line": 9,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "BuildKey(string, string)", "methodShortName": "BuildKey(...)", "fileIndex": 38, "line": 111,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "BuildKey(string, string)", "methodShortName": "BuildKey(...)", "fileIndex": 37, "line": 111,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "BuildKey(string, string)", "methodShortName": "BuildKey(...)", "fileIndex": 41, "line": 152,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "BuildKey(string, string)", "methodShortName": "BuildKey(...)", "fileIndex": 40, "line": 152,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetEnumDescription(System.Enum)", "methodShortName": "GetEnumDescription(...)", "fileIndex": 42, "line": 218,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "GetEnumDescription(System.Enum)", "methodShortName": "GetEnumDescription(...)", "fileIndex": 41, "line": 218,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "DeleteFileAsync(string, System.Threading.CancellationToken)", "methodShortName": "DeleteFileAsync(...)", "fileIndex": 51, "line": 94,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "DeleteFileAsync(string, System.Threading.CancellationToken)", "methodShortName": "DeleteFileAsync(...)", "fileIndex": 50, "line": 94,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "get_IsTestingEnvironment()", "methodShortName": "get_IsTestingEnvironment()", "fileIndex": 57, "line": 11,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "get_IsTestingEnvironment()", "methodShortName": "get_IsTestingEnvironment()", "fileIndex": 56, "line": 11,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "PublishAsync()", "methodShortName": "PublishAsync()", "fileIndex": 59, "line": 156,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "Invoke()", "methodShortName": "Invoke()", "fileIndex": 61, "line": 24,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "Invoke()", "methodShortName": "Invoke()", "fileIndex": 62, "line": 24,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
     ]},
   {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ApplyForeignKeyConstraint(Microsoft.EntityFrameworkCore.Metadata.IForeignKey, System.Reflection.PropertyInfo)", "methodShortName": "ApplyForeignKeyConstraint(...)", "fileIndex": 62, "line": 303,
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core", "reportPath": "rbkApiModules.Commons.Core_Core.html", "methodName": "ApplyForeignKeyConstraint(Microsoft.EntityFrameworkCore.Metadata.IForeignKey, System.Reflection.PropertyInfo)", "methodShortName": "ApplyForeignKeyConstraint(...)", "fileIndex": 63, "line": 303,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
@@ -1901,6 +1914,24 @@ var riskHotspots = [
     ]},
   {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.ApplicationOptionsManager", "reportPath": "rbkApiModules.Commons.Core_ApplicationOptionsManager.html", "methodName": "BuildKey(string, string)", "methodShortName": "BuildKey(...)", "fileIndex": 0, "line": 152,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher", "reportPath": "rbkApiModules.Commons.Core_Dispatcher.html", "methodName": "PublishAsync()", "methodShortName": "PublishAsync()", "fileIndex": 0, "line": 156,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TNotification>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TNotification_.html", "methodName": "PublishAsync()", "methodShortName": "PublishAsync()", "fileIndex": 0, "line": 156,
+    "metrics": [
+      { "value": 42, "exceeded": true },
+      { "value": 6, "exceeded": false },
+    ]},
+  {
+    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Dispatcher<TResponse>", "reportPath": "rbkApiModules.Commons.Core_Dispatcher_TResponse_.html", "methodName": "PublishAsync()", "methodShortName": "PublishAsync()", "fileIndex": 0, "line": 156,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
@@ -1925,12 +1956,6 @@ var riskHotspots = [
     ]},
   {
     "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.Helpers.TestingEnvironmentChecker", "reportPath": "rbkApiModules.Commons.Core_TestingEnvironmentChecker.html", "methodName": "get_IsTestingEnvironment()", "methodShortName": "get_IsTestingEnvironment()", "fileIndex": 0, "line": 11,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
-    "assembly": "rbkApiModules.Commons.Core", "class": "rbkApiModules.Commons.Core.IntegrationOutboxRelay", "reportPath": "rbkApiModules.Commons.Core_IntegrationOutboxRelay.html", "methodName": "ExecuteAsync()", "methodShortName": "ExecuteAsync()", "fileIndex": 0, "line": 32,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },
