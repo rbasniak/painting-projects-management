@@ -4,7 +4,10 @@ namespace rbkApiModules.Commons.Core;
 
 public static class EventsMeters
 {
-    public static readonly Meter Meter = new("PaintingProjects.Events", "1.0.0");
+    public const string InstrumentationName = "PaintingProjects.Events";
+    public const string Version = "1.0.0";
+
+    public static readonly Meter Meter = new(InstrumentationName, Version);
 
     public static readonly Counter<long> OutboxMessagesProcessed = Meter.CreateCounter<long>("outbox_messages_processed");
     public static readonly Counter<long> OutboxMessagesFailed = Meter.CreateCounter<long>("outbox_messages_failed");

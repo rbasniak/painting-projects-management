@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,6 +43,12 @@ public class IntegrationOutboxRelay : BackgroundService
 
                 foreach (var row in batch)
                 {
+                    using var activity = EventsActivities.Source.StartActivity("relay_integration_event", ActivityKind.Producer);
+                    activity?.SetTag("event.id", row.Id);
+                    activity?.SetTag("event.name", row.Name);
+                    activity?.SetTag("event.version", row.Version);
+                    activity?.SetTag("tenant", row.TenantId ?? string.Empty);
+
                     try
                     {
                         if (!_eventTypeRegistry.TryResolve(row.Name, row.Version, out var clrType))
