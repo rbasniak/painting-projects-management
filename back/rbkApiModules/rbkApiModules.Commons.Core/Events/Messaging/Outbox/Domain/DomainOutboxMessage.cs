@@ -26,8 +26,9 @@ public class DomainOutboxMessage : ITelemetryPropagationDataCarrier
     public DateTime? ProcessedUtc { get; private set; }
     public short Attempts { get; private set; } = 0;
     public DateTime? DoNotProcessBeforeUtc { get; private set; }
-    public DateTimeOffset? ClaimedUntil { get; internal set; }
+    public DateTime? ClaimedUntil { get; internal set; }
     public Guid? ClaimedBy { get; internal set; }
+    public bool IsPoisoned { get; private set; }
 
     internal void Backoff()
     {
@@ -40,6 +41,13 @@ public class DomainOutboxMessage : ITelemetryPropagationDataCarrier
     internal void MarAsProcessed()
     {
         ProcessedUtc = DateTime.UtcNow;
+        ClaimedUntil = null;
+        ClaimedBy = null;
+    }
+
+    internal void MarkAsPoisoned()
+    {
+        IsPoisoned = true;
         ClaimedUntil = null;
         ClaimedBy = null;
     }

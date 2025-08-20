@@ -54,12 +54,12 @@ public sealed class IntegrationEventPublisher : BackgroundService
 
                 using (var scope = _scopeFactory.CreateScope())
                 {
-                    var messagingDbContext = _options.ResolveDbContext!(scope.ServiceProvider);
+                    var messagingDbContext = _options.ResolveDbContext(scope.ServiceProvider);
 
                     // QUIET "is there anything to do?" check (no logs, no telemetry)
                     if (!await HasDueIntegrationAsync(messagingDbContext, cancellationToken))
                     {
-                        await Task.Delay(_options.PollIntervalMs, cancellationToken);
+                        await Task.Delay(AddJitter(TimeSpan.FromMilliseconds(_options.PollIntervalMs)), cancellationToken);
                         continue;
                     }
 
@@ -72,7 +72,7 @@ public sealed class IntegrationEventPublisher : BackgroundService
                     var now = DateTime.UtcNow;
                     var claimTimeToLive = TimeSpan.FromMinutes(_options.ClaimDurationMin);
 
-                    // Fetching candidate messages that are not processed yet, not claimed by another instance, and not due for processing
+                    // Fetching candidate messages that are not processed yet, not claimed by another instance, and due for processing
                     var candidateIds = await messagingDbContext.IntegrationOutboxMessage
                         .Due(now, _options.MaxAttempts)
                         .OrderBy(x => x.CreatedUtc)
@@ -84,7 +84,7 @@ public sealed class IntegrationEventPublisher : BackgroundService
                     // will avoid the next update state in the database
                     if (candidateIds.Count == 0)
                     {
-                        await Task.Delay(_options.PollIntervalMs, cancellationToken);
+                        await Task.Delay(AddJitter(TimeSpan.FromMilliseconds(_options.PollIntervalMs)), cancellationToken);
                         continue;
                     }
 
@@ -112,13 +112,13 @@ public sealed class IntegrationEventPublisher : BackgroundService
 
                 foreach (var messageId in batch)
                 {
-                    _logger.LogInformation("Processing message {Id}", messageId);
+                    _logger.LogDebug("Processing message {Id}", messageId);
 
                     var messageStopwatch = Stopwatch.StartNew();
 
                     using var processingScope = _scopeFactory.CreateScope();
 
-                    var processingDbContext = _options.ResolveSilentDbContext!(processingScope.ServiceProvider);
+                    var processingDbContext = _options.ResolveSilentDbContext(processingScope.ServiceProvider);
 
                     var message = await processingDbContext.IntegrationOutboxMessage
                         .Where(x => x.Id == messageId)
@@ -156,11 +156,11 @@ public sealed class IntegrationEventPublisher : BackgroundService
 
                     if (publisherActivity is not null)
                     {
-                        publisherActivity?.SetTag("messaging.system", "rabbitmq");
-                        publisherActivity?.SetTag("messaging.destination_kind", "topic");
-                        publisherActivity?.SetTag("messaging.message_id", message.Id);
-                        publisherActivity?.SetTag("messaging.event.name", message.Name);
-                        publisherActivity?.SetTag("messaging.event.version", message.Version);
+                        publisherActivity.SetTag("messaging.system", "rabbitmq");
+                        publisherActivity.SetTag("messaging.destination_kind", "topic");
+                        publisherActivity.SetTag("messaging.message_id", message.Id);
+                        publisherActivity.SetTag("messaging.event.name", message.Name);
+                        publisherActivity.SetTag("messaging.event.version", message.Version);
 
                         // For UI's that don't support showing the linked activities, we need to manually
                         // query the other spans when debugging or investigating issues
@@ -190,11 +190,13 @@ public sealed class IntegrationEventPublisher : BackgroundService
                     {
                         if (!_eventTypeRegistry.TryResolve(message.Name, message.Version, out var integrationEventType))
                         {
-                            _logger.LogWarning("Unknown integration event type {Name} v{Version}. Applying backoff for message {MessageId}.", message.Name, message.Version, message.Id);
+                            _logger.LogWarning("Unknown integration event type {Name} v{Version}. Marking message {MessageId} as poisoned.", message.Name, message.Version, message.Id);
 
-                            message.Backoff();
+                            message.MarkAsPoisoned();
 
                             await processingDbContext.SaveChangesAsync(cancellationToken);
+
+                            EventsMeters.IntegrationOutbox_MessagesPoisoned.Add(1);
 
                             continue;
                         }
@@ -213,11 +215,14 @@ public sealed class IntegrationEventPublisher : BackgroundService
                         }
                         catch (System.Text.Json.JsonException jsonException)
                         {
-                            _logger.LogError(jsonException, "Invalid payload for integration event {EventId} ({Name} v{Version}). Applying backoff.", message.Id, message.Name, message.Version);
+                            _logger.LogError(jsonException, "Invalid payload for integration event {EventId} ({Name} v{Version}). Marking message as poisoned.", message.Id, message.Name, message.Version);
 
-                            message.Backoff();
+                            message.MarkAsPoisoned();
 
                             await processingDbContext.SaveChangesAsync(cancellationToken);
+
+                            EventsMeters.IntegrationOutbox_MessagesPoisoned.Add(1);
+
                             continue;
                         }
 
@@ -234,21 +239,19 @@ public sealed class IntegrationEventPublisher : BackgroundService
                                 static (headers, key, value) => headers[key] = Encoding.UTF8.GetBytes(value));
                         }
 
+                        // TODO: check if message-id e correlation-id are present (for RabbitMQ)
+
                         await _publisher.PublishAsync(topic, Encoding.UTF8.GetBytes(message.Payload), headers, cancellationToken);
 
                         message.MarkAsProcessed();
 
                         await processingDbContext.SaveChangesAsync(cancellationToken);
 
-                        messageStopwatch.Stop();
-
                         EventsMeters.IntegrationOutbox_MessagesProcessed.Add(1);
                         EventsMeters.IntegrationOutbox_DispatchDurationMs.Record(messageStopwatch.Elapsed.TotalMilliseconds);
                     }
                     catch (Exception ex)
                     {
-                        messageStopwatch.Stop();
-
                         EventsMeters.IntegrationOutbox_MessagesFailed.Add(1);
                         EventsMeters.IntegrationOutbox_DispatchDurationMs.Record(messageStopwatch.Elapsed.TotalMilliseconds);
 
@@ -275,6 +278,13 @@ public sealed class IntegrationEventPublisher : BackgroundService
         }
     }
 
+    private static TimeSpan AddJitter(TimeSpan baseDelay, double jitterFactor = 0.2)
+    {
+        var extraMs = baseDelay.TotalMilliseconds * jitterFactor * Random.Shared.NextDouble();
+
+        return TimeSpan.FromMilliseconds(baseDelay.TotalMilliseconds + extraMs);
+    }
+
     private Task<bool> HasDueIntegrationAsync(MessagingDbContext messagingContext, CancellationToken cancellationToken)
     {
         using var _ = SuppressInstrumentationScope.Begin();
@@ -296,12 +306,13 @@ public static class IntegrationOutboxQueryExtensions
 
         return query
             .Where(x => x.ProcessedUtc == null)
+            .Where(x => !x.IsPoisoned)
             .Where(x => x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now)
             .Where(x => x.ClaimedUntil == null || x.ClaimedUntil < now)
             .Where(x => x.Attempts < maxAttempts);
     }
 
-    public static IQueryable<IntegrationOutboxMessage> ClaimedBy(this IQueryable<IntegrationOutboxMessage> query, Guid claimedBy, DateTimeOffset now)
+    public static IQueryable<IntegrationOutboxMessage> ClaimedBy(this IQueryable<IntegrationOutboxMessage> query, Guid claimedBy, DateTime now)
     {
         ArgumentNullException.ThrowIfNull(query);
 
@@ -309,4 +320,5 @@ public static class IntegrationOutboxQueryExtensions
             .Where(x => x.ClaimedBy == claimedBy)
             .Where(x => x.ClaimedUntil != null && x.ClaimedUntil >= now);
     }
+
 }

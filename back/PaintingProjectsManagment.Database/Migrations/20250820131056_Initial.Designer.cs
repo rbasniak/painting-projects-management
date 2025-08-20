@@ -12,7 +12,7 @@ using PaintingProjectsManagment.Database;
 namespace PaintingProjectsManagment.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250820125314_Initial")]
+    [Migration("20250820131056_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -464,7 +464,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<Guid?>("ClaimedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTimeOffset?>("ClaimedUntil")
+                    b.Property<DateTime?>("ClaimedUntil")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CorrelationId")
@@ -476,6 +476,11 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.Property<DateTime?>("DoNotProcessBeforeUtc")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsPoisoned")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -519,10 +524,11 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedUtc")
-                        .HasFilter("\"ProcessedUtc\" IS NULL");
+                        .HasFilter("\"ProcessedUtc\" IS NULL AND \"IsPoisoned\" = FALSE");
 
-                    b.HasIndex("DoNotProcessBeforeUtc")
-                        .HasFilter("\"ProcessedUtc\" IS NULL AND \"DoNotProcessBeforeUtc\" IS NOT NULL");
+                    b.HasIndex("DoNotProcessBeforeUtc");
+
+                    b.HasIndex("IsPoisoned");
 
                     b.HasIndex("ProcessedUtc");
 
@@ -598,7 +604,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<Guid?>("ClaimedBy")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTimeOffset?>("ClaimedUntil")
+                    b.Property<DateTime?>("ClaimedUntil")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CorrelationId")
@@ -610,6 +616,11 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.Property<DateTime?>("DoNotProcessBeforeUtc")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsPoisoned")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -655,6 +666,8 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("CreatedUtc");
 
                     b.HasIndex("DoNotProcessBeforeUtc");
+
+                    b.HasIndex("IsPoisoned");
 
                     b.HasIndex("ProcessedUtc");
 

@@ -47,6 +47,10 @@ public class IntegrationOutboxMessageConfig : IEntityTypeConfiguration<Integrati
         
         builder.Property(x => x.DoNotProcessBeforeUtc);
 
+        builder.Property(x => x.IsPoisoned)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         builder.HasIndex(x => new { x.TenantId, x.Name, x.Version });
         
         builder.HasIndex(x => x.ProcessedUtc);
@@ -54,6 +58,9 @@ public class IntegrationOutboxMessageConfig : IEntityTypeConfiguration<Integrati
         builder.HasIndex(x => x.CreatedUtc);
         
         builder.HasIndex(x => x.DoNotProcessBeforeUtc);
+
+        // Index for poisoned messages for inspection queries
+        builder.HasIndex(x => x.IsPoisoned);
 
     }
 }

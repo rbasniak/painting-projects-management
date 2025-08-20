@@ -59,12 +59,12 @@ public sealed class DomainEventDispatcher : BackgroundService
 
                 using (var scope = _scopeFactory.CreateScope())
                 {
-                    var messagingDbContext = _options.ResolveSilentDbContext!(scope.ServiceProvider);
+                    var messagingDbContext = _options.ResolveSilentDbContext(scope.ServiceProvider);
 
                     // QUIET "is there anything to do?" check (no logs, no telemetry)
                     if (!await HasDueEventsAsync(messagingDbContext, cancellationToken))
                     {
-                        await Task.Delay(_options.PollIntervalMs, cancellationToken);
+                        await Task.Delay(AddJitter(TimeSpan.FromMilliseconds(_options.PollIntervalMs)), cancellationToken);
                         continue;
                     }
 
@@ -76,7 +76,7 @@ public sealed class DomainEventDispatcher : BackgroundService
                     var now = DateTime.UtcNow;
                     var claimTimeToLive = TimeSpan.FromMinutes(_options.ClaimDurationMin);
 
-                    // Fetching candidate messages that are not processed yet, not claimed by another instance, and not due for processing
+                    // Fetching candidate messages that are not processed yet, not claimed by another instance, and due for processing
                     var candidateIds = await messagingDbContext.DomainOutboxMessage
                         .Due(now, _options.MaxAttempts)
                         .OrderBy(x => x.CreatedUtc)
@@ -88,7 +88,7 @@ public sealed class DomainEventDispatcher : BackgroundService
                     // will avoid the next update state in the database
                     if (candidateIds.Count == 0)
                     {
-                        await Task.Delay(_options.PollIntervalMs, cancellationToken);
+                        await Task.Delay(AddJitter(TimeSpan.FromMilliseconds(_options.PollIntervalMs)), cancellationToken);
                         continue;
                     }
 
@@ -117,13 +117,13 @@ public sealed class DomainEventDispatcher : BackgroundService
                 // Process each message in its own scope/transaction
                 foreach (var messageId in batch)
                 {
-                    _logger.LogInformation("Processing message {Id}", messageId);
+                    _logger.LogDebug("Processing message {Id}", messageId);
 
                     var messageStopwatch = Stopwatch.StartNew();
 
                     using var processingScope = _scopeFactory.CreateScope();
 
-                    var processingDbContext = _options.ResolveSilentDbContext!(processingScope.ServiceProvider);
+                    var processingDbContext = _options.ResolveSilentDbContext(processingScope.ServiceProvider);
 
                     var message = await processingDbContext.DomainOutboxMessage
                         .Where(x => x.Id == messageId)
@@ -196,13 +196,15 @@ public sealed class DomainEventDispatcher : BackgroundService
                     {
                         if (!_eventTypeRegistry.TryResolve(message.Name, message.Version, out var domainEventType))
                         {
-                            _logger.LogWarning("Unknown domain event type {Name} v{Version}. Applying backoff for message {MessageId}.", message.Name, message.Version, message.Id);
+                            _logger.LogWarning("Unknown domain event type {Name} v{Version}. Marking message {MessageId} as poisoned.", message.Name, message.Version, message.Id);
 
-                            message.Backoff();
+                            message.MarkAsPoisoned();
 
                             await processingDbContext.SaveChangesAsync(cancellationToken);
 
                             await transaction.CommitAsync(cancellationToken);
+
+                            EventsMeters.DomainOutbox_MessagesPoisoned.Add(1);
 
                             continue;
                         }
@@ -221,11 +223,16 @@ public sealed class DomainEventDispatcher : BackgroundService
                         }
                         catch (System.Text.Json.JsonException jsonException)
                         {
-                            _logger.LogError(jsonException, "Invalid payload for domain event {EventId} ({Name} v{Version}). Applying backoff.", message.Id, message.Name, message.Version);
+                            _logger.LogError(jsonException, "Invalid payload for domain event {EventId} ({Name} v{Version}). Marking message as poisoned.", message.Id, message.Name, message.Version);
 
-                            message.Backoff();
+                            message.MarkAsPoisoned();
 
                             await processingDbContext.SaveChangesAsync(cancellationToken);
+
+                            await transaction.CommitAsync(cancellationToken);
+
+                            EventsMeters.DomainOutbox_MessagesPoisoned.Add(1);
+
                             continue;
                         }
 
@@ -326,6 +333,13 @@ public sealed class DomainEventDispatcher : BackgroundService
         _logger.LogInformation("OutboxDispatcher stopped");
     }
 
+    private static TimeSpan AddJitter(TimeSpan baseDelay, double jitterFactor = 0.2)
+    {
+        var extraMs = baseDelay.TotalMilliseconds * jitterFactor * Random.Shared.NextDouble();
+
+        return TimeSpan.FromMilliseconds(baseDelay.TotalMilliseconds + extraMs);
+    }
+
     private IEnumerable<object> ResolveHandlers(IServiceProvider sp, Type clrType)
         => sp.GetServices(typeof(IDomainEventHandler<>).MakeGenericType(clrType))?.Cast<object>() ?? Array.Empty<object>();
 
@@ -415,6 +429,7 @@ internal static class DomainOutboxQueryExtensions
 
         return query
             .Where(x => x.ProcessedUtc == null)
+            .Where(x => !x.IsPoisoned)
             .Where(x => x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now)
             .Where(x => x.ClaimedUntil == null || x.ClaimedUntil < now)
             .Where(x => x.Attempts < maxAttempts);

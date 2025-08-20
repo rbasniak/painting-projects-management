@@ -74,8 +74,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                     ProcessedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Attempts = table.Column<short>(type: "smallint", nullable: false),
                     DoNotProcessBeforeUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ClaimedUntil = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    ClaimedBy = table.Column<Guid>(type: "uuid", nullable: true)
+                    ClaimedUntil = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ClaimedBy = table.Column<Guid>(type: "uuid", nullable: true),
+                    IsPoisoned = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -117,8 +118,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                     ProcessedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Attempts = table.Column<short>(type: "smallint", nullable: false),
                     DoNotProcessBeforeUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ClaimedUntil = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    ClaimedBy = table.Column<Guid>(type: "uuid", nullable: true)
+                    ClaimedUntil = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ClaimedBy = table.Column<Guid>(type: "uuid", nullable: true),
+                    IsPoisoned = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -578,13 +580,17 @@ namespace PaintingProjectsManagment.Database.Migrations
                 name: "IX_DomainOutboxMessages_CreatedUtc",
                 table: "DomainOutboxMessages",
                 column: "CreatedUtc",
-                filter: "\"ProcessedUtc\" IS NULL");
+                filter: "\"ProcessedUtc\" IS NULL AND \"IsPoisoned\" = FALSE");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DomainOutboxMessages_DoNotProcessBeforeUtc",
                 table: "DomainOutboxMessages",
-                column: "DoNotProcessBeforeUtc",
-                filter: "\"ProcessedUtc\" IS NULL AND \"DoNotProcessBeforeUtc\" IS NOT NULL");
+                column: "DoNotProcessBeforeUtc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DomainOutboxMessages_IsPoisoned",
+                table: "DomainOutboxMessages",
+                column: "IsPoisoned");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DomainOutboxMessages_ProcessedUtc",
@@ -605,6 +611,11 @@ namespace PaintingProjectsManagment.Database.Migrations
                 name: "IX_IntegrationOutboxMessages_DoNotProcessBeforeUtc",
                 table: "IntegrationOutboxMessages",
                 column: "DoNotProcessBeforeUtc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IntegrationOutboxMessages_IsPoisoned",
+                table: "IntegrationOutboxMessages",
+                column: "IsPoisoned");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IntegrationOutboxMessages_ProcessedUtc",

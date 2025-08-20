@@ -47,6 +47,10 @@ public class DomainOutboxMessagesConfig : IEntityTypeConfiguration<DomainOutboxM
         
         builder.Property(x => x.DoNotProcessBeforeUtc);
 
+        builder.Property(x => x.IsPoisoned)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         // Indices to speed up queries
         builder.HasIndex(x => x.ProcessedUtc);
 
@@ -57,10 +61,12 @@ public class DomainOutboxMessagesConfig : IEntityTypeConfiguration<DomainOutboxM
 
         // Primary partial index to drive ORDER BY + LIMIT
         builder.HasIndex(x => x.CreatedUtc)
-            .HasFilter($@"""{nameof(DomainOutboxMessage.ProcessedUtc)}"" IS NULL");
+            .HasFilter($@"""{nameof(DomainOutboxMessage.ProcessedUtc)}"" IS NULL AND ""{nameof(DomainOutboxMessage.IsPoisoned)}"" = FALSE");
 
         // Help when many messages are delayed via backoff
-        builder.HasIndex(x => x.DoNotProcessBeforeUtc)
-            .HasFilter($@"""{nameof(DomainOutboxMessage.ProcessedUtc)}"" IS NULL AND ""{nameof(DomainOutboxMessage.DoNotProcessBeforeUtc)}"" IS NOT NULL");
+        builder.HasIndex(x => x.DoNotProcessBeforeUtc);
+
+        // Index for poisoned messages for inspection queries
+        builder.HasIndex(x => x.IsPoisoned);
     }
 } 
