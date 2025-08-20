@@ -1,5 +1,3 @@
-// TODO: DONE, REVIEWED
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,7 +10,7 @@ using System.Text;
 
 namespace rbkApiModules.Commons.Core;
 
-public class IntegrationEventPublisher : BackgroundService
+public sealed class IntegrationEventPublisher : BackgroundService
 {
     private static readonly TextMapPropagator Propagator = Propagators.DefaultTextMapPropagator;
 
@@ -20,14 +18,14 @@ public class IntegrationEventPublisher : BackgroundService
     private readonly IBrokerPublisher _publisher;
     private readonly IEventTypeRegistry _eventTypeRegistry;
     private readonly ILogger<IntegrationEventPublisher> _logger;
-    private readonly DomainEventDispatcherOptions _options;
+    private readonly IntegrationEventDispatcherOptions _options;
 
     public IntegrationEventPublisher(
-        IServiceScopeFactory scopeFactory, 
-        IBrokerPublisher publisher, 
-        IEventTypeRegistry eventTypeRegistry, 
-        ILogger<IntegrationEventPublisher> logger, 
-        IOptions<DomainEventDispatcherOptions> options)
+        IServiceScopeFactory scopeFactory,
+        IBrokerPublisher publisher,
+        IEventTypeRegistry eventTypeRegistry,
+        ILogger<IntegrationEventPublisher> logger,
+        IOptions<IntegrationEventDispatcherOptions> options)
     {
         ArgumentNullException.ThrowIfNull(scopeFactory);
         ArgumentNullException.ThrowIfNull(publisher);
@@ -46,69 +44,105 @@ public class IntegrationEventPublisher : BackgroundService
     {
         while (!cancellationToken.IsCancellationRequested)
         {
+            var loopStopwatch = Stopwatch.StartNew();
+
             try
             {
-                using var scope = _scopeFactory.CreateScope();
-
-                var messagingDbContext = _options.ResolveDbContext!(scope.ServiceProvider);
-
-                // QUIET "is there anything to do?" check (no logs, no telemetry)
-                if (!await HasDueIntegrationAsync(messagingDbContext, cancellationToken))
-                {
-                    await Task.Delay(_options.PollIntervalMs, cancellationToken);
-                    
-                    continue;
-                }
+                Guid[] batch = [];
 
                 var iterationId = Guid.CreateVersion7();
-                var outerLogExtraData = new Dictionary<string, object>
+
+                using (var scope = _scopeFactory.CreateScope())
                 {
-                    ["IntegrationOutboxDispatcherInstanceId"] = iterationId.ToString("N"),
-                };
+                    var messagingDbContext = _options.ResolveDbContext!(scope.ServiceProvider);
 
-                using var outerLogScope = _logger.BeginScope(outerLogExtraData);
+                    // QUIET "is there anything to do?" check (no logs, no telemetry)
+                    if (!await HasDueIntegrationAsync(messagingDbContext, cancellationToken))
+                    {
+                        await Task.Delay(_options.PollIntervalMs, cancellationToken);
+                        continue;
+                    }
 
-                var now = DateTimeOffset.UtcNow;
-                var claimTtl = TimeSpan.FromMinutes(5);
+                    var outerLogExtraData = new Dictionary<string, object>
+                    {
+                        ["IntegrationOutboxDispatcherInstanceId"] = iterationId.ToString("N"),
+                    };
+                    using var outerLogScope = _logger.BeginScope(outerLogExtraData);
 
-                // Fetching candidate messages that are not processed yet, not claimed by another instance, and not due for processing
-                var candidateIds = await messagingDbContext.IntegrationOutboxMessage
-                    .Where(x => x.ProcessedUtc == null)
-                    .Where(x => x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now)
-                    .Where(x => x.ClaimedUntil == null || x.ClaimedUntil < now)
-                    .OrderBy(x => x.CreatedUtc)
-                    .Select(x => x.Id)
-                    .Take(_options.BatchSize)
-                    .ToListAsync(cancellationToken);
+                    var now = DateTime.UtcNow;
+                    var claimTimeToLive = TimeSpan.FromMinutes(_options.ClaimDurationMin);
 
-                // Claim the messages for this instance
-                var claimed = await messagingDbContext.IntegrationOutboxMessage
-                    .Where(x => candidateIds.Contains(x.Id))
-                    .Where(x => x.ClaimedUntil == null || x.ClaimedUntil < now)
-                    .ExecuteUpdateAsync(s => s
-                        .SetProperty(x => x.ClaimedBy, x => iterationId)
-                        .SetProperty(x => x.ClaimedUntil, x => now.Add(claimTtl)), cancellationToken);
+                    // Fetching candidate messages that are not processed yet, not claimed by another instance, and not due for processing
+                    var candidateIds = await messagingDbContext.IntegrationOutboxMessage
+                        .Due(now, _options.MaxAttempts)
+                        .OrderBy(x => x.CreatedUtc)
+                        .Select(x => x.Id)
+                        .Take(_options.BatchSize)
+                        .ToListAsync(cancellationToken);
 
-                if (claimed == 0)
-                {
-                    // Lost the race to another instance, skip this iteration
-                    await Task.Delay(_options.PollIntervalMs, cancellationToken);
+                    // In the case of multiple dispatchers processing messages, this check
+                    // will avoid the next update state in the database
+                    if (candidateIds.Count == 0)
+                    {
+                        await Task.Delay(_options.PollIntervalMs, cancellationToken);
+                        continue;
+                    }
 
-                    continue;
+                    var claimedCount = await messagingDbContext.IntegrationOutboxMessage
+                        .Due(now, _options.MaxAttempts)
+                        .Where(x => candidateIds.Contains(x.Id))
+                        .ExecuteUpdateAsync(s => s
+                            .SetProperty(x => x.ClaimedBy, x => iterationId)
+                            .SetProperty(x => x.ClaimedUntil, x => now.Add(claimTimeToLive)), cancellationToken);
+
+                    if (claimedCount == 0)
+                    {
+                        // Lost the race to another instance, skip this iteration
+                        continue;
+                    }
+
+                    batch = await messagingDbContext.IntegrationOutboxMessage
+                        .ClaimedBy(iterationId, now)
+                        .OrderBy(x => x.CreatedUtc)
+                        .Select(x => x.Id)
+                        .ToArrayAsync(cancellationToken);
+
+                    _logger.LogInformation("Found {Count} integration events to publish", batch.Length);
                 }
 
-                // Fetching the messages that were claimed by this instance
-                var batch = await messagingDbContext.IntegrationOutboxMessage
-                    .Where(x => x.ClaimedBy == iterationId)
-                    .OrderBy(x => x.CreatedUtc)
-                    .ToListAsync(cancellationToken);
-
-                foreach (var message in batch)
+                foreach (var messageId in batch)
                 {
-                    var sw = Stopwatch.StartNew();
+                    _logger.LogInformation("Processing message {Id}", messageId);
+
+                    var messageStopwatch = Stopwatch.StartNew();
+
+                    using var processingScope = _scopeFactory.CreateScope();
+
+                    var processingDbContext = _options.ResolveSilentDbContext!(processingScope.ServiceProvider);
+
+                    var message = await processingDbContext.IntegrationOutboxMessage
+                        .Where(x => x.Id == messageId)
+                        .FirstOrDefaultAsync(cancellationToken);
+
+                    if (message is null)
+                    {
+                        _logger.LogWarning("Message {Id} not found in the outbox, skipping", messageId);
+                        continue;
+                    }
+
+                    if (message.ProcessedUtc is not null)
+                    {
+                        _logger.LogWarning("Message {Id} already processed at {ProcessedUtc}, skipping", message.Id, message.ProcessedUtc);
+                        continue;
+                    }
+
+                    if (message.ClaimedBy != null && message.ClaimedBy != iterationId)
+                    {
+                        _logger.LogWarning("Message {Id} is claimed by another instance {ClaimedBy}, skipping", message.Id, message.ClaimedBy);
+                        continue;
+                    }
 
                     var hasUpstream = TelemetryUtils.TryBuildUpstreamActivityContext(message, out var upstreamContext);
-
                     var links = hasUpstream ? [new ActivityLink(upstreamContext)] : (IEnumerable<ActivityLink>?)null;
 
                     using var publisherActivity =
@@ -120,32 +154,78 @@ public class IntegrationEventPublisher : BackgroundService
                             links,
                             default);
 
-                    publisherActivity?.SetTag("messaging.system", "rabbitmq");
-                    publisherActivity?.SetTag("messaging.destination_kind", "topic");
-                    publisherActivity?.SetTag("messaging.message_id", message.Id);
-                    publisherActivity?.SetTag("messaging.event.name", message.Name);
-                    publisherActivity?.SetTag("messaging.event.version", message.Version);
+                    if (publisherActivity is not null)
+                    {
+                        publisherActivity?.SetTag("messaging.system", "rabbitmq");
+                        publisherActivity?.SetTag("messaging.destination_kind", "topic");
+                        publisherActivity?.SetTag("messaging.message_id", message.Id);
+                        publisherActivity?.SetTag("messaging.event.name", message.Name);
+                        publisherActivity?.SetTag("messaging.event.version", message.Version);
+
+                        // For UI's that don't support showing the linked activities, we need to manually
+                        // query the other spans when debugging or investigating issues
+                        // Adding upstream trace and span IDs as tags to help with that
+                        if (hasUpstream)
+                        {
+                            publisherActivity.SetTag("upstream.trace_id", upstreamContext.TraceId.ToString());
+                            publisherActivity.SetTag("upstream.span_id", upstreamContext.SpanId.ToString());
+                        }
+
+                        publisherActivity.SetTag("correlation.id", message.CorrelationId ?? "");
+                    }
+
+                    var logExtraData = new Dictionary<string, object>
+                    {
+                        ["EventId"] = message.Id,
+                        ["CorrelationId"] = message.CorrelationId ?? string.Empty,
+                        ["Name"] = message.Name,
+                        ["Version"] = message.Version,
+                        ["Username"] = message.Username,
+                        ["TenantId"] = message.TenantId
+                    };
+
+                    using var scopeLog = _logger.BeginScope(logExtraData);
 
                     try
                     {
                         if (!_eventTypeRegistry.TryResolve(message.Name, message.Version, out var integrationEventType))
                         {
+                            _logger.LogWarning("Unknown integration event type {Name} v{Version}. Applying backoff for message {MessageId}.", message.Name, message.Version, message.Id);
+
                             message.Backoff();
 
-                            await messagingDbContext.SaveChangesAsync(cancellationToken);
-                            
+                            await processingDbContext.SaveChangesAsync(cancellationToken);
+
                             continue;
                         }
 
                         var envelopeType = typeof(EventEnvelope<>).MakeGenericType(integrationEventType);
 
-                        JsonEventSerializer.Deserialize(message.Payload, envelopeType);
+                        // Not using the serialization result, this is just a validation step, if the payload is invalid, we throw
+                        try
+                        {
+                            var envelope = JsonEventSerializer.Deserialize(message.Payload, envelopeType);
+
+                            if (envelope is null)
+                            {
+                                throw new InvalidOperationException($"Deserialized envelope for {message.Name} v{message.Version} is null.");
+                            }
+                        }
+                        catch (System.Text.Json.JsonException jsonException)
+                        {
+                            _logger.LogError(jsonException, "Invalid payload for integration event {EventId} ({Name} v{Version}). Applying backoff.", message.Id, message.Name, message.Version);
+
+                            message.Backoff();
+
+                            await processingDbContext.SaveChangesAsync(cancellationToken);
+                            continue;
+                        }
 
                         var topic = $"{message.Name}.v{message.Version}";
 
                         // Inject W3C trace headers
                         var headers = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
-                        
+
                         if (publisherActivity is not null)
                         {
                             Propagator.Inject(
@@ -158,25 +238,29 @@ public class IntegrationEventPublisher : BackgroundService
 
                         message.MarkAsProcessed();
 
-                        await messagingDbContext.SaveChangesAsync(cancellationToken);
+                        await processingDbContext.SaveChangesAsync(cancellationToken);
 
-                        sw.Stop();
+                        messageStopwatch.Stop();
 
                         EventsMeters.IntegrationOutbox_MessagesProcessed.Add(1);
-                        EventsMeters.IntegrationOutbox_DispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
+                        EventsMeters.IntegrationOutbox_DispatchDurationMs.Record(messageStopwatch.Elapsed.TotalMilliseconds);
                     }
                     catch (Exception ex)
                     {
-                        sw.Stop();
+                        messageStopwatch.Stop();
 
                         EventsMeters.IntegrationOutbox_MessagesFailed.Add(1);
-                        EventsMeters.IntegrationOutbox_DispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
+                        EventsMeters.IntegrationOutbox_DispatchDurationMs.Record(messageStopwatch.Elapsed.TotalMilliseconds);
 
                         _logger.LogError(ex, "Failed to publish integration event {EventId}", message.Id);
-                        
+
                         message.Backoff();
 
-                        await messagingDbContext.SaveChangesAsync(cancellationToken);
+                        await processingDbContext.SaveChangesAsync(cancellationToken);
+                    }
+                    finally
+                    {
+                        messageStopwatch.Stop();
                     }
                 }
             }
@@ -185,20 +269,44 @@ public class IntegrationEventPublisher : BackgroundService
                 _logger.LogError(ex, $"{nameof(IntegrationEventPublisher)} loop error");
             }
 
-            await Task.Delay(_options.PollIntervalMs, cancellationToken);
+            loopStopwatch.Stop();
+
+            EventsMeters.IntegrationOutbox_LoopDurationMs.Record(loopStopwatch.Elapsed.TotalMilliseconds);
         }
     }
 
-    private static Task<bool> HasDueIntegrationAsync(DbContext dbContext, CancellationToken cancellationToken)
+    private Task<bool> HasDueIntegrationAsync(MessagingDbContext messagingContext, CancellationToken cancellationToken)
     {
         using var _ = SuppressInstrumentationScope.Begin();
 
-        var now = DateTimeOffset.UtcNow;
+        var now = DateTime.UtcNow;
 
-        return dbContext.Set<IntegrationOutboxMessage>()
+        return messagingContext.IntegrationOutboxMessage
             .AsNoTracking()
-            .AnyAsync(x => x.ProcessedUtc == null
-                && (x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now)
-                && (x.ClaimedUntil == null || x.ClaimedUntil < now), cancellationToken);
+            .Due(now, _options.MaxAttempts)
+            .AnyAsync(cancellationToken);
+    }
+}
+
+public static class IntegrationOutboxQueryExtensions
+{
+    public static IQueryable<IntegrationOutboxMessage> Due(this IQueryable<IntegrationOutboxMessage> query, DateTime now, int maxAttempts)
+    {
+        ArgumentNullException.ThrowIfNull(query);
+
+        return query
+            .Where(x => x.ProcessedUtc == null)
+            .Where(x => x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now)
+            .Where(x => x.ClaimedUntil == null || x.ClaimedUntil < now)
+            .Where(x => x.Attempts < maxAttempts);
+    }
+
+    public static IQueryable<IntegrationOutboxMessage> ClaimedBy(this IQueryable<IntegrationOutboxMessage> query, Guid claimedBy, DateTimeOffset now)
+    {
+        ArgumentNullException.ThrowIfNull(query);
+
+        return query
+            .Where(x => x.ClaimedBy == claimedBy)
+            .Where(x => x.ClaimedUntil != null && x.ClaimedUntil >= now);
     }
 }

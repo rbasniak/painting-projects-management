@@ -40,6 +40,8 @@ public class IntegrationOutboxMessage : ITelemetryPropagationDataCarrier
     internal void MarkAsProcessed()
     {
         ProcessedUtc = DateTime.UtcNow;
+        ClaimedUntil = null;
+        ClaimedBy = null;
     }
 
     private TimeSpan ComputeBackoff(int attempts)

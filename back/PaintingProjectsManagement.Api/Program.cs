@@ -116,6 +116,22 @@ public class Program
             };
         });
 
+        builder.Services.Configure<IntegrationEventDispatcherOptions>(opts =>
+        {
+            opts.BatchSize = 50;
+            opts.PollIntervalMs = 1000;
+            opts.MaxAttempts = 10;
+            opts.ResolveSilentDbContext = serviceProvider =>
+            {
+                var contextFactory = serviceProvider.GetRequiredKeyedService<IDbContextFactory<MessagingDbContext>>("Silent");
+                return contextFactory.CreateDbContext();
+            };
+            opts.ResolveDbContext = serviceProvider =>
+            {
+                return serviceProvider.GetRequiredService<MessagingDbContext>();
+            };
+        });
+
         // TODO: move to the library builder with the possibility to disable it with startup options
         builder.Services.AddHostedService<DomainEventDispatcher>();
 

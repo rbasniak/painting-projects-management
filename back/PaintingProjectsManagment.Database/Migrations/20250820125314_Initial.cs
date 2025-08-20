@@ -54,11 +54,40 @@ namespace PaintingProjectsManagment.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DomainOutboxMessages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
+                    Version = table.Column<short>(type: "smallint", nullable: false),
+                    TenantId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    OccurredUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CorrelationId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    CausationId = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    TraceId = table.Column<string>(type: "text", nullable: true),
+                    ParentSpanId = table.Column<string>(type: "text", nullable: true),
+                    TraceFlags = table.Column<int>(type: "integer", nullable: true),
+                    TraceState = table.Column<string>(type: "text", nullable: true),
+                    Payload = table.Column<string>(type: "text", nullable: false),
+                    Username = table.Column<string>(type: "text", nullable: false),
+                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ProcessedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    Attempts = table.Column<short>(type: "smallint", nullable: false),
+                    DoNotProcessBeforeUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ClaimedUntil = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    ClaimedBy = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DomainOutboxMessages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "InboxMessages",
                 columns: table => new
                 {
                     EventId = table.Column<Guid>(type: "uuid", nullable: false),
-                    HandlerName = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    HandlerName = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     ProcessedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Attempts = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -68,57 +97,32 @@ namespace PaintingProjectsManagment.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OutboxDomainMessages",
+                name: "IntegrationOutboxMessages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Version = table.Column<int>(type: "integer", nullable: false),
+                    Version = table.Column<short>(type: "smallint", nullable: false),
                     TenantId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     OccurredUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CorrelationId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     CausationId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Payload = table.Column<string>(type: "text", nullable: false),
+                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Username = table.Column<string>(type: "text", nullable: false),
                     TraceId = table.Column<string>(type: "text", nullable: true),
                     ParentSpanId = table.Column<string>(type: "text", nullable: true),
                     TraceFlags = table.Column<int>(type: "integer", nullable: true),
                     TraceState = table.Column<string>(type: "text", nullable: true),
-                    Payload = table.Column<string>(type: "text", nullable: false),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ProcessedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Attempts = table.Column<int>(type: "integer", nullable: false),
-                    Username = table.Column<string>(type: "text", nullable: false),
-                    DoNotProcessBeforeUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OutboxDomainMessages", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "OutboxIntegrationEvents",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    Version = table.Column<int>(type: "integer", nullable: false),
-                    TenantId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    OccurredUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    CorrelationId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    CausationId = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Payload = table.Column<string>(type: "text", nullable: false),
-                    CreatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ProcessedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Attempts = table.Column<int>(type: "integer", nullable: false),
-                    Username = table.Column<string>(type: "text", nullable: false),
+                    Attempts = table.Column<short>(type: "smallint", nullable: false),
                     DoNotProcessBeforeUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    TraceId = table.Column<string>(type: "text", nullable: true),
-                    ParentSpanId = table.Column<string>(type: "text", nullable: true),
-                    TraceFlags = table.Column<int>(type: "integer", nullable: true),
-                    TraceState = table.Column<string>(type: "text", nullable: true)
+                    ClaimedUntil = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    ClaimedBy = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OutboxIntegrationEvents", x => x.Id);
+                    table.PrimaryKey("PK_IntegrationOutboxMessages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -571,9 +575,46 @@ namespace PaintingProjectsManagment.Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_DomainOutboxMessages_CreatedUtc",
+                table: "DomainOutboxMessages",
+                column: "CreatedUtc",
+                filter: "\"ProcessedUtc\" IS NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DomainOutboxMessages_DoNotProcessBeforeUtc",
+                table: "DomainOutboxMessages",
+                column: "DoNotProcessBeforeUtc",
+                filter: "\"ProcessedUtc\" IS NULL AND \"DoNotProcessBeforeUtc\" IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DomainOutboxMessages_ProcessedUtc",
+                table: "DomainOutboxMessages",
+                column: "ProcessedUtc");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_InboxMessages_ProcessedUtc",
                 table: "InboxMessages",
                 column: "ProcessedUtc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IntegrationOutboxMessages_CreatedUtc",
+                table: "IntegrationOutboxMessages",
+                column: "CreatedUtc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IntegrationOutboxMessages_DoNotProcessBeforeUtc",
+                table: "IntegrationOutboxMessages",
+                column: "DoNotProcessBeforeUtc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IntegrationOutboxMessages_ProcessedUtc",
+                table: "IntegrationOutboxMessages",
+                column: "ProcessedUtc");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IntegrationOutboxMessages_TenantId_Name_Version",
+                table: "IntegrationOutboxMessages",
+                columns: new[] { "TenantId", "Name", "Version" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_materials.materials_Name",
@@ -607,46 +648,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                 table: "models.models",
                 columns: new[] { "TenantId", "Name" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OutboxDomainMessages_CreatedUtc",
-                table: "OutboxDomainMessages",
-                column: "CreatedUtc");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OutboxDomainMessages_DoNotProcessBeforeUtc",
-                table: "OutboxDomainMessages",
-                column: "DoNotProcessBeforeUtc");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OutboxDomainMessages_ProcessedUtc",
-                table: "OutboxDomainMessages",
-                column: "ProcessedUtc");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OutboxDomainMessages_TenantId_Name_Version",
-                table: "OutboxDomainMessages",
-                columns: new[] { "TenantId", "Name", "Version" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OutboxIntegrationEvents_CreatedUtc",
-                table: "OutboxIntegrationEvents",
-                column: "CreatedUtc");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OutboxIntegrationEvents_DoNotProcessBeforeUtc",
-                table: "OutboxIntegrationEvents",
-                column: "DoNotProcessBeforeUtc");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OutboxIntegrationEvents_ProcessedUtc",
-                table: "OutboxIntegrationEvents",
-                column: "ProcessedUtc");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OutboxIntegrationEvents_TenantId_Name_Version",
-                table: "OutboxIntegrationEvents",
-                columns: new[] { "TenantId", "Name", "Version" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_paints_catalog.brands_Name",
@@ -785,16 +786,16 @@ namespace PaintingProjectsManagment.Database.Migrations
                 name: "ApplicationOptions");
 
             migrationBuilder.DropTable(
+                name: "DomainOutboxMessages");
+
+            migrationBuilder.DropTable(
                 name: "InboxMessages");
 
             migrationBuilder.DropTable(
+                name: "IntegrationOutboxMessages");
+
+            migrationBuilder.DropTable(
                 name: "models.models");
-
-            migrationBuilder.DropTable(
-                name: "OutboxDomainMessages");
-
-            migrationBuilder.DropTable(
-                name: "OutboxIntegrationEvents");
 
             migrationBuilder.DropTable(
                 name: "paints_catalog.colors");

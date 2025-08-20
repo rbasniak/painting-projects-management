@@ -26,17 +26,22 @@ public class DomainOutboxMessage : ITelemetryPropagationDataCarrier
     public DateTime? ProcessedUtc { get; private set; }
     public short Attempts { get; private set; } = 0;
     public DateTime? DoNotProcessBeforeUtc { get; private set; }
+    public DateTimeOffset? ClaimedUntil { get; internal set; }
+    public Guid? ClaimedBy { get; internal set; }
 
     internal void Backoff()
     {
         Attempts++;
-
         DoNotProcessBeforeUtc = DateTime.UtcNow.Add(ComputeBackoff(Attempts));
+        ClaimedUntil = null;
+        ClaimedBy = null;
     }
 
     internal void MarAsProcessed()
     {
         ProcessedUtc = DateTime.UtcNow;
+        ClaimedUntil = null;
+        ClaimedBy = null;
     }
 
     private TimeSpan ComputeBackoff(int attempts)

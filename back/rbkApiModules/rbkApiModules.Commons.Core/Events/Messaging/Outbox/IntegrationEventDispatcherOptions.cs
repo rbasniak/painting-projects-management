@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace rbkApiModules.Commons.Core;
 
-public sealed class DomainEventDispatcherOptions
+public sealed class IntegrationEventDispatcherOptions
 {
     private Func<IServiceProvider, MessagingDbContext>? _resolveSilentContext;
     private Func<IServiceProvider, MessagingDbContext>? _resolveDbContext;
@@ -14,6 +14,7 @@ public sealed class DomainEventDispatcherOptions
     public int PollIntervalMs { get; set; } = 1000;
     public int MaxAttempts { get; set; } = 5;
     public int ClaimDurationMin { get; set; } = 5;
+
 
     // Required: provide a way to resolve the application's DbContext
     public Func<IServiceProvider, MessagingDbContext> ResolveSilentDbContext 

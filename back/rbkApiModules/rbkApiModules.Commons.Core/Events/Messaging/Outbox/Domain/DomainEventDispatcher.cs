@@ -1,7 +1,5 @@
 ﻿// TODO: DONE, REVIEWED
 
-// TODO: implement a dead letter queue for messages that failed too many times (table or status in current table?)
-
 // DOCS: Keep handlers DB-only. No HTTP, queues, or other databases inside the transaction.
 //       If a handler must trigger external effects, persist an outbox record for that effect instead of calling the external system inline.
 //       Watch transaction length and lock contention. Consider smaller batches, reasonable command timeout, and clear guidance that handlers must be fast and idempotent.
@@ -12,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenTelemetry;
+using rbkApiModules.Commons.Core;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
@@ -25,7 +24,7 @@ public sealed class DomainEventDispatcher : BackgroundService
     private readonly ILogger<DomainEventDispatcher> _logger;
     private readonly DomainEventDispatcherOptions _options;
 
-    private static readonly ConcurrentDictionary<Type, Func<object, object, CancellationToken, Task>> _dispatchers =[];
+    private static readonly ConcurrentDictionary<Type, Func<object, object, CancellationToken, Task>> _dispatchers = [];
 
     public DomainEventDispatcher(
         IServiceScopeFactory scopeFactory,
@@ -50,61 +49,133 @@ public sealed class DomainEventDispatcher : BackgroundService
 
         while (!cancellationToken.IsCancellationRequested)
         {
+            var loopStopwatch = Stopwatch.StartNew();
+
             try
             {
                 Guid[] batch = [];
+                
+                var iterationId = Guid.CreateVersion7();
 
-                // Get a batch of messages to process (short-lived scope, no tracking)
-                // Keep things clean, not cached entities because of long-running scope
                 using (var scope = _scopeFactory.CreateScope())
                 {
-                    var messagingContext = _options.ResolveSilentDbContext!(scope.ServiceProvider);
+                    var messagingDbContext = _options.ResolveSilentDbContext!(scope.ServiceProvider);
 
-                    batch = await GetMessagesToProcessAsync(messagingContext, _options.MaxAttempts, _options.BatchSize, cancellationToken);
-
-                    if (batch.Length == 0)
+                    // QUIET "is there anything to do?" check (no logs, no telemetry)
+                    if (!await HasDueEventsAsync(messagingDbContext, cancellationToken))
                     {
-                        try
-                        {
-                            await Task.Delay(_options.PollIntervalMs, cancellationToken);
-                        }
-                        catch (OperationCanceledException)
-                        {
-                        }
-
-                        continue; // no messages due to processing, skip this tick without emitting logs or telemetry
+                        await Task.Delay(_options.PollIntervalMs, cancellationToken);
+                        continue;
                     }
+
+                    var outerLogExtraData = new Dictionary<string, object>
+                    {
+                        ["DomainOutboxDispatcherInstanceId"] = iterationId.ToString("N"),
+                    };
+
+                    var now = DateTime.UtcNow;
+                    var claimTimeToLive = TimeSpan.FromMinutes(_options.ClaimDurationMin);
+
+                    // Fetching candidate messages that are not processed yet, not claimed by another instance, and not due for processing
+                    var candidateIds = await messagingDbContext.DomainOutboxMessage
+                        .Due(now, _options.MaxAttempts)
+                        .OrderBy(x => x.CreatedUtc)
+                        .Select(x => x.Id)
+                        .Take(_options.BatchSize)
+                        .ToListAsync(cancellationToken);
+
+                    // In the case of multiple dispatchers processing messages, this check
+                    // will avoid the next update state in the database
+                    if (candidateIds.Count == 0)
+                    {
+                        await Task.Delay(_options.PollIntervalMs, cancellationToken);
+                        continue;
+                    }
+
+                    var claimedCount = await messagingDbContext.DomainOutboxMessage
+                        .Due(now, _options.MaxAttempts)
+                        .Where(x => candidateIds.Contains(x.Id))
+                        .ExecuteUpdateAsync(s => s
+                            .SetProperty(x => x.ClaimedBy, x => iterationId)
+                            .SetProperty(x => x.ClaimedUntil, x => now.Add(claimTimeToLive)), cancellationToken);
+
+                    if (claimedCount == 0)
+                    {
+                        // Lost the race to another instance, skip this iteration
+                        continue;
+                    }
+
+                    batch = await messagingDbContext.DomainOutboxMessage
+                        .ClaimedBy(iterationId, now)
+                        .OrderBy(x => x.CreatedUtc)
+                        .Select(x => x.Id)
+                        .ToArrayAsync(cancellationToken);
+
+                    _logger.LogInformation("Found {Count} domain messages to dispatch", batch.Length);
                 }
-
-                var outerLogExtraData = new Dictionary<string, object>
-                {
-                    ["DomainOutboxDispatcherInstanceId"] = Guid.CreateVersion7().ToString("N"),
-                };
-
-                using var outerLogScope = _logger.BeginScope(outerLogExtraData);
-
-                _logger.LogInformation("Found {Count} domain messages to dispatch", batch.Length);
 
                 // Process each message in its own scope/transaction
                 foreach (var messageId in batch)
                 {
                     _logger.LogInformation("Processing message {Id}", messageId);
 
-                    using var scope = _scopeFactory.CreateScope();
+                    var messageStopwatch = Stopwatch.StartNew();
 
-                    var context = _options.ResolveDbContext(scope.ServiceProvider);
+                    using var processingScope = _scopeFactory.CreateScope();
 
-                    var sw = Stopwatch.StartNew();
+                    var processingDbContext = _options.ResolveSilentDbContext!(processingScope.ServiceProvider);
 
-                    await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
-
-                    // Reload the full message in this context
-                    // This is important to ensure we have the latest state and can handle concurrency correctly
-                    var message = await context.DomainOutboxMessage.FirstOrDefaultAsync(x => x.Id == messageId, cancellationToken);
+                    var message = await processingDbContext.DomainOutboxMessage
+                        .Where(x => x.Id == messageId)
+                        .FirstOrDefaultAsync(cancellationToken);
 
                     if (message is null)
                     {
-                        continue; // deleted 
+                        _logger.LogWarning("Message {Id} not found in the outbox, skipping", messageId);
+                        continue;
+                    }
+
+                    if (message.ProcessedUtc is not null)
+                    {
+                        _logger.LogWarning("Message {Id} already processed at {ProcessedUtc}, skipping", message.Id, message.ProcessedUtc);
+                        continue;
+                    }
+
+                    if (message.ClaimedBy != null && message.ClaimedBy != iterationId)
+                    {
+                        _logger.LogWarning("Message {Id} is claimed by another instance {ClaimedBy}, skipping", message.Id, message.ClaimedBy);
+                        continue;
+                    }
+
+                    var hasUpstream = TelemetryUtils.TryBuildUpstreamActivityContext(message, out var upstreamContext);
+                    var links = hasUpstream ? [new ActivityLink(upstreamContext)] : (IEnumerable<ActivityLink>?)null;
+
+                    using var dispatcherActivity =
+                        EventsTracing.ActivitySource.StartActivity(
+                            "domain-outbox.dispatch",
+                            ActivityKind.Consumer,
+                            default(ActivityContext), // no parent, otherwise it will grow forever until the next http request, use linked activities instead
+                            null,
+                            links,
+                            default);
+
+                    if (dispatcherActivity is not null)
+                    {
+                        dispatcherActivity.SetTag("messaging.system", "outbox");
+                        dispatcherActivity.SetTag("messaging.domain-event.id", message.Id);
+                        dispatcherActivity.SetTag("messaging.domain-event.name", message.Name);
+                        dispatcherActivity.SetTag("messaging.domain-event.version", message.Version);
+
+                        // For UI's that don't support showing the linked activities, we need to manually
+                        // query the other spans when debugging or investigating issues
+                        // Adding upstream trace and span IDs as tags to help with that
+                        if (hasUpstream)
+                        {
+                            dispatcherActivity.SetTag("upstream.trace_id", upstreamContext.TraceId.ToString());
+                            dispatcherActivity.SetTag("upstream.span_id", upstreamContext.SpanId.ToString());
+                        }
+
+                        dispatcherActivity.SetTag("correlation.id", message.CorrelationId ?? "");
                     }
 
                     var logExtraData = new Dictionary<string, object>
@@ -117,97 +188,63 @@ public sealed class DomainEventDispatcher : BackgroundService
                         ["TenantId"] = message.TenantId
                     };
 
-                    using var scopeLog = _logger.BeginScope(logExtraData);
+                    using var messageScopedLog = _logger.BeginScope(logExtraData);
 
-                    if (message.ProcessedUtc != null)
-                    {
-                        _logger.LogDebug("Message {Id} already processed at {ProcessedUtc}, skipping", message.Id, message.ProcessedUtc);
-                        
-                        continue; // already done or raced
-                    }
-
-                    if (message.DoNotProcessBeforeUtc.HasValue && message.DoNotProcessBeforeUtc > DateTime.UtcNow)
-                    {
-                        _logger.LogWarning("Message {Id} has back off and is not due yet, skipping until {Date}", message.Id, message.DoNotProcessBeforeUtc);
-                        
-                        continue;
-                    }
-
-
-                    var hasUpstream = TelemetryUtils.TryBuildUpstreamActivityContext(message, out var upstreamContext);
-
-                    var links = hasUpstream ? [new ActivityLink(upstreamContext)] : (IEnumerable<ActivityLink>?)null;
-
-                    using var dispatchActivity =
-                        EventsTracing.ActivitySource.StartActivity(
-                            "domain-outbox.dispatch",
-                            ActivityKind.Consumer,
-                            default(ActivityContext), // no parent, otherwise it will grow forever until the next http request, use linked activities instead
-                            null,
-                            links,
-                            default);
-
-                    if (dispatchActivity is not null)
-                    {
-                        dispatchActivity.SetTag("messaging.system", "outbox");
-                        dispatchActivity.SetTag("messaging.domain-event.id", message.Id);
-                        dispatchActivity.SetTag("messaging.domain-event.name", message.Name);
-                        dispatchActivity.SetTag("messaging.domain-event.version", message.Version);
-
-                        // For UI's that don't support showing the linked activities, we need to manually
-                        // query the other spans when debugging or investigating issues
-                        // Adding upstream trace and span IDs as tags to help with that
-                        if (hasUpstream)
-                        {
-                            dispatchActivity.SetTag("upstream.trace_id", upstreamContext.TraceId.ToString());
-                            dispatchActivity.SetTag("upstream.span_id", upstreamContext.SpanId.ToString());
-                        }
-
-                        dispatchActivity.SetTag("correlation.id", message.CorrelationId ?? "");
-                    }
+                    await using var transaction = await processingDbContext.Database.BeginTransactionAsync(cancellationToken);
 
                     try
                     {
                         if (!_eventTypeRegistry.TryResolve(message.Name, message.Version, out var domainEventType))
                         {
-                            _logger.LogError("No event type found for {Name} v{Version}", message.Name, message.Version);
-
-                            dispatchActivity?.AddEvent(new ActivityEvent("handler.not-found",
-                                   tags: new ActivityTagsCollection {
-                                       { "domain-event-name", message.Name },
-                                       { "domain-event-version", message.Version},
-                                       { "reason", "handler-not-found" }
-                                   }));
+                            _logger.LogWarning("Unknown domain event type {Name} v{Version}. Applying backoff for message {MessageId}.", message.Name, message.Version, message.Id);
 
                             message.Backoff();
 
-                            await context.SaveChangesAsync(cancellationToken);
-                            
+                            await processingDbContext.SaveChangesAsync(cancellationToken);
+
                             await transaction.CommitAsync(cancellationToken);
-                            
+
                             continue;
                         }
 
                         var envelopeType = typeof(EventEnvelope<>).MakeGenericType(domainEventType);
 
-                        var envelope = JsonEventSerializer.Deserialize(message.Payload, envelopeType);
+                        object envelope;
+                        try
+                        {
+                            envelope = JsonEventSerializer.Deserialize(message.Payload, envelopeType);
 
-                        var handlers = ResolveHandlers(scope.ServiceProvider, domainEventType);
+                            if (envelope is null)
+                            {
+                                throw new InvalidOperationException($"Deserialized envelope for {message.Name} v{message.Version} is null.");
+                            }
+                        }
+                        catch (System.Text.Json.JsonException jsonException)
+                        {
+                            _logger.LogError(jsonException, "Invalid payload for domain event {EventId} ({Name} v{Version}). Applying backoff.", message.Id, message.Name, message.Version);
+
+                            message.Backoff();
+
+                            await processingDbContext.SaveChangesAsync(cancellationToken);
+                            continue;
+                        }
+
+                        var handlers = ResolveHandlers(processingScope.ServiceProvider, domainEventType);
 
                         foreach (var handler in handlers)
                         {
                             var handlerName = handler.GetType().FullName!;
 
                             // Check if this handler has already processed the message at some point
-                            var processedMessage = await context.InboxMessages.FindAsync([ message.Id, handlerName ], cancellationToken);
+                            var processedMessage = await processingDbContext.InboxMessages.FindAsync([message.Id, handlerName], cancellationToken);
 
                             // Just in case, but should not happen because if one handler fails, we fail all together
                             if (processedMessage is not null)
                             {
-                                dispatchActivity?.AddEvent(new ActivityEvent("handler.skipped",
+                                dispatcherActivity?.AddEvent(new ActivityEvent("handler.skipped",
                                    tags: new ActivityTagsCollection {
-                                       { "handler", handlerName }, 
-                                       { "reason", "inbox-duplicate" }
+                                           { "handler", handlerName },
+                                           { "reason", "inbox-duplicate" }
                                    }));
 
                                 continue;
@@ -216,7 +253,7 @@ public sealed class DomainEventDispatcher : BackgroundService
                             _logger.LogInformation("Dispatching {Name} v{Version} to {Handler}", message.Name, message.Version, handlerName);
 
                             using var handlerActivity = EventsTracing.ActivitySource.StartActivity(
-                                "domain-event.handler", ActivityKind.Internal, dispatchActivity?.Context ?? default);
+                                "domain-event.handler", ActivityKind.Internal, dispatcherActivity?.Context ?? default);
 
                             handlerActivity?.SetTag("messaging.domain-event.handler", handlerName);
                             handlerActivity?.SetTag("messaging.domain-event.name", message.Name);
@@ -224,82 +261,66 @@ public sealed class DomainEventDispatcher : BackgroundService
 
                             await InvokeHandler(handler, envelope, cancellationToken);
 
-                            // KNOWN ISSUE: in a scenario where multiple dispatchers are running,
-                            // it's possible that one of them processes the message before this one
-                            // and the other one will try to insert the same InboxMessage,
-                            // causing a unique constraint violation.
-                            context.InboxMessages.Add(new InboxMessage
+                            processingDbContext.InboxMessages.Add(new InboxMessage
                             {
                                 EventId = message.Id,
                                 HandlerName = handlerName,
                                 ProcessedUtc = DateTime.UtcNow,
-                                Attempts = 1
+                                Attempts = message.Attempts
                             });
                         }
 
                         // mark as processed only after all handlers succeed
                         message.MarAsProcessed();
 
-                        await context.SaveChangesAsync(cancellationToken);
+                        await processingDbContext.SaveChangesAsync(cancellationToken);
 
                         await transaction.CommitAsync(cancellationToken);
 
                         EventsMeters.DomainOutbox_MessagesProcessed.Add(1);
-                        EventsMeters.DomainOutbox_DispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
+                        EventsMeters.DomainOutbox_DispatchDurationMs.Record(messageStopwatch.Elapsed.TotalMilliseconds);
                     }
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Outbox dispatch failed for {Id}", message.Id);
 
                         // rollback transacation and backoff
-                        try 
-                        { 
-                            await transaction.RollbackAsync(cancellationToken); 
-                        } 
+                        try
+                        {
+                            await transaction.RollbackAsync(cancellationToken);
+                        }
                         catch (Exception transactionException)
-                        { 
+                        {
                             _logger.LogWarning(transactionException, "Failed to rollback transaction for message {Id}", message.Id);
                         }
 
-                        dispatchActivity?.AddEvent(new ActivityEvent("handler.error", tags: new ActivityTagsCollection 
-                        { 
-                            { "exception.message", ex.Message },
-                            { "exception.details", ex.ToBetterString() },
-                        }));
+                        dispatcherActivity?.AddEvent(new ActivityEvent("handler.error", tags: new ActivityTagsCollection
+                            {
+                                { "exception.message", ex.Message },
+                                { "exception.details", ex.ToBetterString() },
+                            }));
 
                         message.Backoff();
 
-                        await context.SaveChangesAsync(cancellationToken);
+                        await processingDbContext.SaveChangesAsync(cancellationToken);
 
                         EventsMeters.DomainOutbox_MessagesFailed.Add(1);
-                        EventsMeters.DomainOutbox_DispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
+                        EventsMeters.DomainOutbox_DispatchDurationMs.Record(messageStopwatch.Elapsed.TotalMilliseconds);
                     }
                     finally
                     {
-                        sw.Stop();
+                        messageStopwatch.Stop();
                     }
                 }
             }
-            catch (OperationCanceledException) 
-            {
-                /* application shutdown */ 
-            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "OutboxDispatcher loop error");
+                _logger.LogError(ex, $"{nameof(DomainEventDispatcher)} loop error");
             }
 
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                try 
-                { 
-                    await Task.Delay(_options.PollIntervalMs, cancellationToken); 
-                }
-                catch (OperationCanceledException) 
-                {
-                    /* application shutdown */
-                }
-            }
+            loopStopwatch.Stop();
+
+            EventsMeters.DomainOutbox_LoopDurationMs.Record(loopStopwatch.Elapsed.TotalMilliseconds);
         }
 
         _logger.LogInformation("OutboxDispatcher stopped");
@@ -323,35 +344,96 @@ public sealed class DomainEventDispatcher : BackgroundService
                 throw new InvalidOperationException($"Handler {handler.GetType().FullName} does not have a public HandleAsync method.");
             }
 
-            return (handler, envelope, cancellationToken) => (Task)method.Invoke(handler, [ envelope, cancellationToken ])!;
+            return (handler, envelope, cancellationToken) => (Task)method.Invoke(handler, [envelope, cancellationToken])!;
         });
 
         return invoker(handler, envelope, cancellationToken);
     }
 
 
-    private static async Task<Guid[]> GetMessagesToProcessAsync(MessagingDbContext context, int maxAttempts, int batchSize, CancellationToken cancellationToken)
+    private static async Task<Guid[]> GetMessagesToProcessAsync(MessagingDbContext context, int maxAttempts, int batchSize, Guid iterationId, TimeSpan claimTimeToLive, CancellationToken cancellationToken)
     {
         using var _ = SuppressInstrumentationScope.Begin(); // no telemetry, avoid flooding it with idle loops data
 
         var now = DateTime.UtcNow; // close enough for "due" check
 
-        // KNOWN ISSUE: in a scenario with multiple dispatchers running at same time, 
-        // it's possible that more than one dispatcher will pick the same batch of messages
-        // If this scenario can happen, we might need to add a distributed lock in Postgres but 
-        // for that we need to ditch EF and use raw SQL queries with advisory locks
-        var batch = await context.Set<DomainOutboxMessage>()
+        var candidateIds = await context.Set<DomainOutboxMessage>()
             .AsNoTracking()
-            .Where(x => x.ProcessedUtc == null)
-            .Where(x => x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now)
-            .Where(x => x.Attempts < maxAttempts)
+            .Due(now, maxAttempts)
+            .NotClaimed(now)
             .OrderBy(x => x.CreatedUtc)
-            .Take(batchSize)
             .Select(x => x.Id) // get keys only, because messages are reloaded in the processing scope
+            .Take(batchSize)
             .ToArrayAsync(cancellationToken);
 
-        return batch;
+        if (candidateIds.Length == 0)
+        {
+            return Array.Empty<Guid>();
+        }
+
+        var claimedCount = await context.Set<DomainOutboxMessage>()
+            .Where(x => candidateIds.Contains(x.Id))
+            .Due(now, maxAttempts)
+            .NotClaimed(now)
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(x => x.ClaimedBy, x => iterationId)
+                .SetProperty(x => x.ClaimedUntil, x => now.Add(claimTimeToLive)), cancellationToken);
+
+        if (claimedCount == 0)
+        {
+            return Array.Empty<Guid>();
+        }
+
+        var claimedIds = await context.Set<DomainOutboxMessage>()
+            .AsNoTracking()
+            .ClaimedBy(iterationId, now)
+            .OrderBy(x => x.CreatedUtc)
+            .Select(x => x.Id)
+            .ToArrayAsync(cancellationToken);
+
+        return claimedIds;
     }
 
+    private Task<bool> HasDueEventsAsync(MessagingDbContext messagingDbContext, CancellationToken cancellationToken)
+    {
+        using var _ = SuppressInstrumentationScope.Begin();
 
+        var now = DateTime.UtcNow;
+
+        return messagingDbContext.DomainOutboxMessage
+            .AsNoTracking()
+            .Due(now, _options.MaxAttempts)
+            .AnyAsync(cancellationToken);
+    }
+}
+
+internal static class DomainOutboxQueryExtensions
+{
+    public static IQueryable<DomainOutboxMessage> Due(this IQueryable<DomainOutboxMessage> query, DateTime now, int maxAttempts)
+    {
+        ArgumentNullException.ThrowIfNull(query);
+
+        return query
+            .Where(x => x.ProcessedUtc == null)
+            .Where(x => x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now)
+            .Where(x => x.ClaimedUntil == null || x.ClaimedUntil < now)
+            .Where(x => x.Attempts < maxAttempts);
+    }
+
+    public static IQueryable<DomainOutboxMessage> NotClaimed(this IQueryable<DomainOutboxMessage> query, DateTime now)
+    {
+        ArgumentNullException.ThrowIfNull(query);
+
+        return query
+            .Where(x => x.ClaimedUntil == null || x.ClaimedUntil < now);
+    }
+
+    public static IQueryable<DomainOutboxMessage> ClaimedBy(this IQueryable<DomainOutboxMessage> query, Guid claimedBy, DateTime now)
+    {
+        ArgumentNullException.ThrowIfNull(query);
+
+        return query
+            .Where(x => x.ClaimedBy == claimedBy)
+            .Where(x => x.ClaimedUntil != null && x.ClaimedUntil >= now);
+    }
 }

@@ -445,6 +445,87 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.ToTable("ReadOnlyMaterials", (string)null);
                 });
 
+            modelBuilder.Entity("rbkApiModules.Commons.Core.DomainOutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<short>("Attempts")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("CausationId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<Guid?>("ClaimedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("ClaimedUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DoNotProcessBeforeUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<DateTime>("OccurredUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ParentSpanId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ProcessedUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int?>("TraceFlags")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TraceId")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TraceState")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<short>("Version")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedUtc")
+                        .HasFilter("\"ProcessedUtc\" IS NULL");
+
+                    b.HasIndex("DoNotProcessBeforeUtc")
+                        .HasFilter("\"ProcessedUtc\" IS NULL AND \"DoNotProcessBeforeUtc\" IS NOT NULL");
+
+                    b.HasIndex("ProcessedUtc");
+
+                    b.ToTable("DomainOutboxMessages", (string)null);
+                });
+
             modelBuilder.Entity("rbkApiModules.Commons.Core.Features.ApplicationOptions.ApplicationOption", b =>
                 {
                     b.Property<Guid>("Id")
@@ -482,8 +563,8 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("HandlerName")
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
 
                     b.Property<int>("Attempts")
                         .HasColumnType("integer");
@@ -498,18 +579,24 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.ToTable("InboxMessages", (string)null);
                 });
 
-            modelBuilder.Entity("rbkApiModules.Commons.Core.OutboxDomainMessage", b =>
+            modelBuilder.Entity("rbkApiModules.Commons.Core.IntegrationOutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Attempts")
-                        .HasColumnType("integer");
+                    b.Property<short>("Attempts")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("CausationId")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<Guid?>("ClaimedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("ClaimedUntil")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CorrelationId")
                         .HasMaxLength(100)
@@ -557,8 +644,8 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Version")
-                        .HasColumnType("integer");
+                    b.Property<short>("Version")
+                        .HasColumnType("smallint");
 
                     b.HasKey("Id");
 
@@ -570,82 +657,7 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasIndex("TenantId", "Name", "Version");
 
-                    b.ToTable("OutboxDomainMessages", (string)null);
-                });
-
-            modelBuilder.Entity("rbkApiModules.Commons.Core.OutboxIntegrationEvent", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Attempts")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("CausationId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("CorrelationId")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime>("CreatedUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DoNotProcessBeforeUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<DateTime>("OccurredUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ParentSpanId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Payload")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ProcessedUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("TenantId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int?>("TraceFlags")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("TraceId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("TraceState")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedUtc");
-
-                    b.HasIndex("DoNotProcessBeforeUtc");
-
-                    b.HasIndex("ProcessedUtc");
-
-                    b.HasIndex("TenantId", "Name", "Version");
-
-                    b.ToTable("OutboxIntegrationEvents", (string)null);
+                    b.ToTable("IntegrationOutboxMessages", (string)null);
                 });
 
             modelBuilder.Entity("rbkApiModules.Commons.Relational.SeedHistory", b =>
