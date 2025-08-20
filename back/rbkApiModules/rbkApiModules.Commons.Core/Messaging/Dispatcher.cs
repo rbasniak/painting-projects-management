@@ -221,10 +221,10 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
             sw.Stop();
             if (result is not null)
             {
-                if (result.IsValid) EventsMeters.DispatcherRequestsProcessed.Add(1);
-                else EventsMeters.DispatcherRequestsFailed.Add(1);
+                if (result.IsValid) EventsMeters.Dispatcher_RequestsProcessed.Add(1);
+                else EventsMeters.Dispatcher_RequestsFailed.Add(1);
 
-                EventsMeters.DispatcherRequestDurationMs.Record(sw.Elapsed.TotalMilliseconds);
+                EventsMeters.Dispatcher_RequestDurationMs.Record(sw.Elapsed.TotalMilliseconds);
             }
             logger.LogInformation("Command {CommandType} execution completed in {ElapsedMilliseconds}ms", commandTypeName, sw.ElapsedMilliseconds);
         }

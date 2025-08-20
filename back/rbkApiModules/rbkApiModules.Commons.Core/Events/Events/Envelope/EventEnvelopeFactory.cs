@@ -37,7 +37,7 @@ public static class EventEnvelopeFactory
             Username = username,
             CorrelationId = correlationId,
             CausationId = causationId,
-            Event = @event!
+            Event = @event
         };
     }
 

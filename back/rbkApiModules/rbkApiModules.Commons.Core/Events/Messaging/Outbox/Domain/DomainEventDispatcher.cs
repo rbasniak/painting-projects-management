@@ -25,7 +25,7 @@ public sealed class DomainEventDispatcher : BackgroundService
     private readonly ILogger<DomainEventDispatcher> _logger;
     private readonly DomainEventDispatcherOptions _options;
 
-    private static readonly ConcurrentDictionary<Type, Func<object, object, CancellationToken, Task>> _dispatchers = new();
+    private static readonly ConcurrentDictionary<Type, Func<object, object, CancellationToken, Task>> _dispatchers =[];
 
     public DomainEventDispatcher(
         IServiceScopeFactory scopeFactory,
@@ -100,7 +100,7 @@ public sealed class DomainEventDispatcher : BackgroundService
 
                     // Reload the full message in this context
                     // This is important to ensure we have the latest state and can handle concurrency correctly
-                    var message = await context.OutboxDomainMessages.FirstOrDefaultAsync(x => x.Id == messageId, cancellationToken);
+                    var message = await context.DomainOutboxMessage.FirstOrDefaultAsync(x => x.Id == messageId, cancellationToken);
 
                     if (message is null)
                     {
@@ -134,13 +134,13 @@ public sealed class DomainEventDispatcher : BackgroundService
                     }
 
 
-                    var hasUpstream = TryBuildUpstreamActivityContext(message, out var upstreamContext);
+                    var hasUpstream = TelemetryUtils.TryBuildUpstreamActivityContext(message, out var upstreamContext);
 
-                    IEnumerable<ActivityLink>? links = hasUpstream ? [new ActivityLink(upstreamContext)] : null;
+                    var links = hasUpstream ? [new ActivityLink(upstreamContext)] : (IEnumerable<ActivityLink>?)null;
 
                     using var dispatchActivity =
                         EventsTracing.ActivitySource.StartActivity(
-                            "outbox.dispatch",
+                            "domain-outbox.dispatch",
                             ActivityKind.Consumer,
                             default(ActivityContext), // no parent, otherwise it will grow forever until the next http request, use linked activities instead
                             null,
@@ -238,14 +238,14 @@ public sealed class DomainEventDispatcher : BackgroundService
                         }
 
                         // mark as processed only after all handlers succeed
-                        message.ProcessedUtc = DateTime.UtcNow;
+                        message.MarAsProcessed();
 
                         await context.SaveChangesAsync(cancellationToken);
 
                         await transaction.CommitAsync(cancellationToken);
 
-                        EventsMeters.DomainOutboxMessagesProcessed.Add(1);
-                        EventsMeters.DomainOutboxDispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
+                        EventsMeters.DomainOutbox_MessagesProcessed.Add(1);
+                        EventsMeters.DomainOutbox_DispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
                     }
                     catch (Exception ex)
                     {
@@ -271,8 +271,8 @@ public sealed class DomainEventDispatcher : BackgroundService
 
                         await context.SaveChangesAsync(cancellationToken);
 
-                        EventsMeters.DomainOutboxMessagesFailed.Add(1);
-                        EventsMeters.DomainOutboxDispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
+                        EventsMeters.DomainOutbox_MessagesFailed.Add(1);
+                        EventsMeters.DomainOutbox_DispatchDurationMs.Record(sw.Elapsed.TotalMilliseconds);
                     }
                     finally
                     {
@@ -305,40 +305,8 @@ public sealed class DomainEventDispatcher : BackgroundService
         _logger.LogInformation("OutboxDispatcher stopped");
     }
 
-    private static bool TryBuildUpstreamActivityContext(DomainOutboxMessages message, out ActivityContext parent)
-    {
-        parent = default;
-
-        if (string.IsNullOrWhiteSpace(message.TraceId) || string.IsNullOrWhiteSpace(message.ParentSpanId) ||
-            message.TraceId == "00000000000000000000000000000000" || message.ParentSpanId == "0000000000000000")
-        {
-            return false;
-        }
-
-        try
-        {
-            var traceId = ActivityTraceId.CreateFromString(message.TraceId.AsSpan());
-            var spanId = ActivitySpanId.CreateFromString(message.ParentSpanId.AsSpan());
-
-            parent = new ActivityContext(
-                traceId,
-                spanId,
-                (ActivityTraceFlags)(message.TraceFlags ?? 0),
-                message.TraceState,
-                isRemote: true);
-
-            return true;
-        }
-        catch
-        {
-            parent = default;
-            return false;
-        }
-    }
-
-
     private IEnumerable<object> ResolveHandlers(IServiceProvider sp, Type clrType)
-        => sp.GetServices(typeof(IEventHandler<>).MakeGenericType(clrType))?.Cast<object>() ?? Array.Empty<object>();
+        => sp.GetServices(typeof(IDomainEventHandler<>).MakeGenericType(clrType))?.Cast<object>() ?? Array.Empty<object>();
 
     private static Task InvokeHandler(object handler, object envelope, CancellationToken cancellationToken)
     {
@@ -348,11 +316,11 @@ public sealed class DomainEventDispatcher : BackgroundService
         var handlerType = handler.GetType();
         var invoker = _dispatchers.GetOrAdd(handlerType, x =>
         {
-            var method = x.GetMethod("Handle", BindingFlags.Public | BindingFlags.Instance);
+            var method = x.GetMethod(nameof(IDomainEventHandler<object>.HandleAsync), BindingFlags.Public | BindingFlags.Instance);
 
             if (method is null)
             {
-                throw new InvalidOperationException($"Handler {handler.GetType().FullName} does not have a public Handle method.");
+                throw new InvalidOperationException($"Handler {handler.GetType().FullName} does not have a public HandleAsync method.");
             }
 
             return (handler, envelope, cancellationToken) => (Task)method.Invoke(handler, [ envelope, cancellationToken ])!;
@@ -372,7 +340,7 @@ public sealed class DomainEventDispatcher : BackgroundService
         // it's possible that more than one dispatcher will pick the same batch of messages
         // If this scenario can happen, we might need to add a distributed lock in Postgres but 
         // for that we need to ditch EF and use raw SQL queries with advisory locks
-        var batch = await context.Set<DomainOutboxMessages>()
+        var batch = await context.Set<DomainOutboxMessage>()
             .AsNoTracking()
             .Where(x => x.ProcessedUtc == null)
             .Where(x => x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now)

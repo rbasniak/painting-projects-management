@@ -7,7 +7,7 @@ namespace rbkApiModules.Commons.Core;
 /// messages are stored in the <c>OutboxDomainMessages</c> table and later
 /// dispatched by the outbox dispatcher.
 /// </summary>
-public class DomainOutboxMessages
+public class DomainOutboxMessage : ITelemetryPropagationDataCarrier
 {
     public required Guid Id { get; init; }
     public required string Name { get; init; } = string.Empty;
@@ -23,15 +23,20 @@ public class DomainOutboxMessages
     public required string Payload { get; init; } = string.Empty;
     public required string Username { get; init; } = string.Empty;
     public required DateTime CreatedUtc { get; init; }
-    public DateTime? ProcessedUtc { get; set; }
+    public DateTime? ProcessedUtc { get; private set; }
     public short Attempts { get; private set; } = 0;
     public DateTime? DoNotProcessBeforeUtc { get; private set; }
 
-    public void Backoff()
+    internal void Backoff()
     {
         Attempts++;
 
         DoNotProcessBeforeUtc = DateTime.UtcNow.Add(ComputeBackoff(Attempts));
+    }
+
+    internal void MarAsProcessed()
+    {
+        ProcessedUtc = DateTime.UtcNow;
     }
 
     private TimeSpan ComputeBackoff(int attempts)

@@ -15,7 +15,7 @@ public class MaterialCreatedConsumer : IIntegrationEventHandler<MaterialCreatedV
         _db = db;
     }
 
-    public async Task Handle(EventEnvelope<MaterialCreatedV1> envelope, CancellationToken cancellationToken)
+    public async Task HandleAsync(EventEnvelope<MaterialCreatedV1> envelope, CancellationToken cancellationToken)
     {
         var e = envelope.Event;
         var pricePerUnit = e.PackageContentAmount == 0 ? 0 : e.PackagePriceAmount / e.PackageContentAmount;

@@ -3,7 +3,7 @@ using rbkApiModules.Commons.Core;
 
 namespace PaintingProjectsManagement.Features.Materials;
 
-internal sealed class MaterialDeletedHandler : IEventHandler<MaterialDeleted>
+internal sealed class MaterialDeletedHandler : IDomainEventHandler<MaterialDeleted>
 {
     private readonly IIntegrationOutbox _outbox;
 
@@ -12,7 +12,7 @@ internal sealed class MaterialDeletedHandler : IEventHandler<MaterialDeleted>
         _outbox = outbox;
     }
 
-    public async Task Handle(EventEnvelope<MaterialDeleted> envelope, CancellationToken cancellationToken)
+    public async Task HandleAsync(EventEnvelope<MaterialDeleted> envelope, CancellationToken cancellationToken)
     {
         var integrationEvent = new MaterialDeletedV1(envelope.Event.MaterialId);
 

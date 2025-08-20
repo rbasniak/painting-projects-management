@@ -6,9 +6,9 @@ using PaintingProjectsManagement.Features.Materials.Abstractions;
 namespace PaintingProjectsManagement.Features.Materials;
 
 internal sealed class MaterialUpdatedHandler :
-    IEventHandler<MaterialPackageContentChanged>, 
-    IEventHandler<MaterialPackagePriceChanged>, 
-    IEventHandler<MaterialNameChanged>
+    IDomainEventHandler<MaterialPackageContentChanged>, 
+    IDomainEventHandler<MaterialPackagePriceChanged>, 
+    IDomainEventHandler<MaterialNameChanged>
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IOptions<DomainEventDispatcherOptions> _outboxOptions;
@@ -21,13 +21,13 @@ internal sealed class MaterialUpdatedHandler :
         _outbox = outbox;
     }
 
-    public Task Handle(EventEnvelope<MaterialPackageContentChanged> envelope, CancellationToken cancellationToken)
+    public Task HandleAsync(EventEnvelope<MaterialPackageContentChanged> envelope, CancellationToken cancellationToken)
         => PublishUpdated(envelope, cancellationToken);
 
-    public Task Handle(EventEnvelope<MaterialPackagePriceChanged> envelope, CancellationToken cancellationToken)
+    public Task HandleAsync(EventEnvelope<MaterialPackagePriceChanged> envelope, CancellationToken cancellationToken)
         => PublishUpdated(envelope, cancellationToken);
 
-    public Task Handle(EventEnvelope<MaterialNameChanged> envelope, CancellationToken cancellationToken)
+    public Task HandleAsync(EventEnvelope<MaterialNameChanged> envelope, CancellationToken cancellationToken)
         => PublishUpdated(envelope, cancellationToken);
 
     private async Task PublishUpdated<TEvent>(EventEnvelope<TEvent> envelope, CancellationToken cancellationToken)

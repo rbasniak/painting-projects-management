@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// TODO: DONE, REVIEWED
+
+using Microsoft.EntityFrameworkCore;
 using rbkApiModules.Commons.Relational;
 using System;
 using System.Collections.Generic;
@@ -12,10 +14,12 @@ public class MessagingDbContext : DbContext
 {
     public const string DefaultSchema = "messaging";
 
-    public MessagingDbContext(DbContextOptions<MessagingDbContext> options) : base(options) { }
+    public MessagingDbContext(DbContextOptions<MessagingDbContext> options) : base(options) 
+    { 
+    }
 
-    public DbSet<DomainOutboxMessages> OutboxDomainMessages => Set<DomainOutboxMessages>();
-    public DbSet<IntegrationOutboxMessage> OutboxIntegrationEvents => Set<IntegrationOutboxMessage>();
+    public DbSet<DomainOutboxMessage> DomainOutboxMessage => Set<DomainOutboxMessage>();
+    public DbSet<IntegrationOutboxMessage> IntegrationOutboxMessage => Set<IntegrationOutboxMessage>();
     public DbSet<InboxMessage> InboxMessages => Set<InboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace PaintingProjectsManagement.Features.Materials;
 
-internal sealed class MaterialCreatedHandler : IEventHandler<MaterialCreated>
+internal sealed class MaterialCreatedHandler : IDomainEventHandler<MaterialCreated>
 {
     private readonly IIntegrationOutbox _outbox;
 
@@ -13,7 +13,7 @@ internal sealed class MaterialCreatedHandler : IEventHandler<MaterialCreated>
         _outbox = outbox;
     }
 
-    public async Task Handle(EventEnvelope<MaterialCreated> envelope, CancellationToken cancellationToken)
+    public async Task HandleAsync(EventEnvelope<MaterialCreated> envelope, CancellationToken cancellationToken)
     {
         using var span = EventsTracing.ActivitySource.StartActivity("integration.convert", ActivityKind.Internal);
         span?.SetTag("converter.source", nameof(MaterialCreated));

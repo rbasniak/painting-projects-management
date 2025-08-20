@@ -1,3 +1,5 @@
+// TODO: DONE, REVIEWED
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,16 +19,20 @@ public class IntegrationOutbox : IIntegrationOutbox
 
     public IntegrationOutbox(IServiceScopeFactory scopeFactory, IOptions<DomainEventDispatcherOptions> options)
     {
+        ArgumentNullException.ThrowIfNull(scopeFactory);
+        ArgumentNullException.ThrowIfNull(options);
+        
         _scopeFactory = scopeFactory;
         _options = options.Value;
     }
 
-    public async Task<Guid> Enqueue<T>(EventEnvelope<T> envelope, CancellationToken ct = default)
+    public async Task<Guid> Enqueue<T>(EventEnvelope<T> envelope, CancellationToken cancellationToken)
     {
         var activity = System.Diagnostics.Activity.Current?.Context ?? default;
 
         using var scope = _scopeFactory.CreateScope();
-        var db = _options.ResolveSilentDbContext!(scope.ServiceProvider);
+
+        var messagingDbContext = _options.ResolveSilentDbContext!(scope.ServiceProvider);
 
         var message = new IntegrationOutboxMessage
         {
@@ -36,19 +42,19 @@ public class IntegrationOutbox : IIntegrationOutbox
             TenantId = envelope.TenantId,
             Username = envelope.Username,
             OccurredUtc = envelope.OccurredUtc,
-            CorrelationId = envelope.CorrelationId,
-            CausationId = envelope.CausationId,
             Payload = JsonEventSerializer.Serialize(envelope),
             CreatedUtc = DateTime.UtcNow,
-            Attempts = 0,
             TraceId = activity.TraceId.ToString(),
             ParentSpanId = activity.SpanId.ToString(),
             TraceFlags = (int)activity.TraceFlags,
-            TraceState = activity.TraceState
+            TraceState = activity.TraceState,
+            CorrelationId = envelope.CorrelationId,
+            CausationId = envelope.CausationId,
         };
 
-        db.Set<IntegrationOutboxMessage>().Add(message);
-        await db.SaveChangesAsync(ct);
+        messagingDbContext.Add(message);
+
+        await messagingDbContext.SaveChangesAsync(cancellationToken);
         
         return message.Id;
     }

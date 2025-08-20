@@ -1,3 +1,5 @@
+// TODO: DONE, REVIEWED
+
 using System;
 using Microsoft.EntityFrameworkCore;
 
