@@ -99,22 +99,18 @@ public sealed class MaterialsIntegrationConsumer : BackgroundService
         var typedEnvelope = JsonEventSerializer.Deserialize(json, envelopeType)
             ?? throw new InvalidOperationException($"Cannot deserialize envelope for {envelopeHeader.Name} v{envelopeHeader.Version}");
 
-        var handlerNames = _subscriberRegistry.GetSubscribers(envelopeHeader.Name, envelopeHeader.Version);
+        var handlerInterface = typeof(IIntegrationEventHandler<>).MakeGenericType(clrType);
+        var handlers = scope.ServiceProvider.GetServices(handlerInterface).Cast<object>();
 
-        foreach (var handlerName in handlerNames)
+        foreach (var handler in handlers)
         {
-            var handlerType = Type.GetType(handlerName);
-            if (handlerType is null)
-            {
-                _logger.LogWarning("Handler type not found: {Handler}", handlerName);
-                continue;
-            }
+            var handlerName = handler.GetType().FullName!;
 
             // 1) Fence: insert once
             var inserted = await TryInsertInboxOnceAsync(
                 databaseContext,
                 envelopeHeader.EventId,
-                handlerType.FullName!,
+                handlerName,
                 DateTimeOffset.UtcNow,
                 cancellationToken);
 
@@ -123,7 +119,7 @@ public sealed class MaterialsIntegrationConsumer : BackgroundService
             {
                 var alreadyProcessed = await databaseContext.InboxMessages
                     .AsNoTracking()
-                    .Where(x => x.EventId == envelopeHeader.EventId && x.HandlerName == handlerType.FullName!)
+                    .Where(x => x.EventId == envelopeHeader.EventId && x.HandlerName == handlerName)
                     .Select(x => x.ProcessedUtc != null)
                     .SingleAsync(cancellationToken);
 
@@ -135,20 +131,19 @@ public sealed class MaterialsIntegrationConsumer : BackgroundService
 
             // 3) Increment attempts before running the handler
             await databaseContext.InboxMessages
-                .Where(x => x.EventId == envelopeHeader.EventId && x.HandlerName == handlerType.FullName!)
+                .Where(x => x.EventId == envelopeHeader.EventId && x.HandlerName == handlerName)
                 .ExecuteUpdateAsync(s => s.SetProperty(x => x.Attempts, x => x.Attempts + 1), cancellationToken);
 
             // 4) Invoke handler
-            var handler = scope.ServiceProvider.GetRequiredService(handlerType);
-            var handleMethod = HandleCache.GetOrAdd(handlerType, static x =>
-                x.GetMethod("Handle", BindingFlags.Instance | BindingFlags.Public)
+            var handleMethod = HandleCache.GetOrAdd(handler.GetType(), static x =>
+                x.GetMethod("HandleAsync", BindingFlags.Instance | BindingFlags.Public)
                 ?? throw new InvalidOperationException($"Handle method not found on {x.FullName}"));
 
             await (Task)handleMethod.Invoke(handler, new object?[] { typedEnvelope, cancellationToken })!;
 
             // 5) Mark processed
             await databaseContext.InboxMessages
-                .Where(x => x.EventId == envelopeHeader.EventId && x.HandlerName == handlerType.FullName!)
+                .Where(x => x.EventId == envelopeHeader.EventId && x.HandlerName == handlerName)
                 .ExecuteUpdateAsync(s => s.SetProperty(x => x.ProcessedUtc, x => DateTime.UtcNow), cancellationToken);
         }
     }
