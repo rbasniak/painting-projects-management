@@ -74,3 +74,27 @@ public class MaterialsIntegrationConsumer : BackgroundService
         await tx.CommitAsync(ct);
     }
 }
+
+/*
+ 
+await using var transaction = db.Database.BeginTransaction();
+
+var inbox = new InboxMessage { Id = envelope.MessageId, ReceivedUtc = DateTimeOffset.UtcNow };
+db.InboxMessages.Add(inbox);
+
+try
+{
+    await db.SaveChangesAsync(cancellationToken);
+}
+catch (DbUpdateException ex) when (IsUniqueViolation(ex))
+{
+    await transaction.RollbackAsync(cancellationToken);
+    return; // duplicata
+}
+
+// aplicar efeitos idempotentes aqui
+// ...
+
+await transaction.CommitAsync(cancellationToken); 
+
+ */

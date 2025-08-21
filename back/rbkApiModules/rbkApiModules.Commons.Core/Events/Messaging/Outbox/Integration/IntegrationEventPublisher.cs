@@ -239,7 +239,11 @@ public sealed class IntegrationEventPublisher : BackgroundService
                                 static (headers, key, value) => headers[key] = Encoding.UTF8.GetBytes(value));
                         }
 
-                        // TODO: check if message-id e correlation-id are present (for RabbitMQ)
+                        // RabbitMQ specific headers
+                        headers["message-id"] = message.Id.ToString("N");
+                        headers["event-name"] = message.Name;
+                        headers["event-version"] = message.Version.ToString();
+                        headers["correlation-id"] = message.CorrelationId ?? string.Empty;
 
                         await _publisher.PublishAsync(topic, Encoding.UTF8.GetBytes(message.Payload), headers, cancellationToken);
 
@@ -250,6 +254,16 @@ public sealed class IntegrationEventPublisher : BackgroundService
                         EventsMeters.IntegrationOutbox_MessagesProcessed.Add(1);
                         EventsMeters.IntegrationOutbox_DispatchDurationMs.Record(messageStopwatch.Elapsed.TotalMilliseconds);
                     }
+                    catch (PermanentPublishException ex)
+                    {
+                        EventsMeters.IntegrationOutbox_MessagesFailed.Add(1);
+                        EventsMeters.IntegrationOutbox_DispatchDurationMs.Record(messageStopwatch.Elapsed.TotalMilliseconds);
+
+                        _logger.LogError(ex, "Permanent publish failure for integration event {EventId}. Marking as poisoned.", message.Id);
+
+                        message.MarkAsPoisoned();
+                        await processingDbContext.SaveChangesAsync(cancellationToken);
+                    }
                     catch (Exception ex)
                     {
                         EventsMeters.IntegrationOutbox_MessagesFailed.Add(1);
@@ -258,7 +272,6 @@ public sealed class IntegrationEventPublisher : BackgroundService
                         _logger.LogError(ex, "Failed to publish integration event {EventId}", message.Id);
 
                         message.Backoff();
-
                         await processingDbContext.SaveChangesAsync(cancellationToken);
                     }
                     finally

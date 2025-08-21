@@ -43,6 +43,7 @@ public class DomainOutboxMessage : ITelemetryPropagationDataCarrier
         ProcessedUtc = DateTime.UtcNow;
         ClaimedUntil = null;
         ClaimedBy = null;
+        Attempts++;
     }
 
     internal void MarkAsPoisoned()
@@ -50,6 +51,7 @@ public class DomainOutboxMessage : ITelemetryPropagationDataCarrier
         IsPoisoned = true;
         ClaimedUntil = null;
         ClaimedBy = null;
+        Attempts++;
     }
 
     private TimeSpan ComputeBackoff(int attempts)

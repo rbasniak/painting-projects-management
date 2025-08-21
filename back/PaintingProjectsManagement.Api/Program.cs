@@ -132,9 +132,6 @@ public class Program
             };
         });
 
-        // TODO: move to the library builder with the possibility to disable it with startup options
-        builder.Services.AddHostedService<DomainEventDispatcher>();
-
         var brokerConnection = builder.Configuration.GetConnectionString("ppm-rabbitmq");
 
         if (string.IsNullOrEmpty(brokerConnection))
@@ -155,14 +152,23 @@ public class Program
             }
             opts.Exchange = "ppm-events";
         });
-        builder.Services.AddSingleton<IBrokerPublisher, RabbitMqPublisher>();
-        builder.Services.AddSingleton<IBrokerSubscriber, RabbitMqSubscriber>();
-        // builder.Services.AddHostedService<IntegrationOutboxRelay>();
-        builder.Services.AddSingleton<IIntegrationSubscriberRegistry, IntegrationSubscriberRegistry>();
+        builder.Services.AddSingleton<RabbitMqPublisher>();
+        builder.Services.AddSingleton<IBrokerPublisher>(x =>
+        {
+            var inner = x.GetRequiredService<RabbitMqPublisher>();
+            var logger = x.GetRequiredService<ILogger<ResilientBrokerPublisher>>();
+            
+            return new ResilientBrokerPublisher(inner, logger);
+        });
+
+        // TODO: move to the library builder with the possibility to disable it with startup options
+        builder.Services.AddHostedService<DomainEventDispatcher>();
+        builder.Services.AddHostedService<IntegrationEventPublisher>();
         builder.Services.AddScoped<IIntegrationOutbox, IntegrationOutbox>();
+        builder.Services.AddSingleton<IBrokerSubscriber, RabbitMqSubscriber>();
+        builder.Services.AddSingleton<IIntegrationSubscriberRegistry, IntegrationSubscriberRegistry>();
 
         // Register domain-to-integration event handlers for Materials and integration consumers for Projects
-        
         builder.Services.AddProjectsIntegrationHandlers();
 
         builder.Services.AddRbkApiCoreSetup(options => options
