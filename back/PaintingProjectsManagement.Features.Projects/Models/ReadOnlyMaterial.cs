@@ -1,11 +1,11 @@
 namespace PaintingProjectsManagement.Features.Projects;
 
-public class ReadOnlyMaterial
+public sealed record ReadOnlyMaterial
 {
-    public string Tenant { get; set; } = default!;
-    public Guid Id { get; set; }
-    public string Name { get; set; } = default!;
-    public double PricePerUnit { get; set; }
-    public string Unit { get; set; } = default!;
-    public DateTime UpdatedUtc { get; set; }
+    public required string Tenant { get; init; } = default!;
+    public required Guid Id { get; init; }
+    public required string Name { get; init; } = default!;
+    public required double PricePerUnit { get; init; }
+    public required string Unit { get; init; } = default!;
+    public required DateTime UpdatedUtc { get; init; }
 }

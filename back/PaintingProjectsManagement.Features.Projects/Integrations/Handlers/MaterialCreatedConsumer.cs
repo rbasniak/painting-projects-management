@@ -8,27 +8,39 @@ namespace PaintingProjectsManagement.Features.Projects;
 
 public class MaterialCreatedConsumer : IIntegrationEventHandler<MaterialCreatedV1>
 {
-    private readonly DbContext _db;
+    private readonly DbContext _context;
 
-    public MaterialCreatedConsumer(DbContext db)
+    public MaterialCreatedConsumer(DbContext context)
     {
-        _db = db;
+        _context = context;
     }
 
     public async Task HandleAsync(EventEnvelope<MaterialCreatedV1> envelope, CancellationToken cancellationToken)
     {
-        var e = envelope.Event;
-        var pricePerUnit = e.PackageContentAmount == 0 ? 0 : e.PackagePriceAmount / e.PackageContentAmount;
-        var entity = await _db.Set<ReadOnlyMaterial>().FindAsync(new object[] { envelope.TenantId, e.MaterialId }, cancellationToken);
+        var @event = envelope.Event;
+
+        var entity = await _context.Set<ReadOnlyMaterial>().FindAsync([envelope.TenantId, @event.MaterialId], cancellationToken);
+
         if (entity == null)
         {
-            entity = new ReadOnlyMaterial { Tenant = envelope.TenantId, Id = e.MaterialId };
-            _db.Add(entity);
+            entity = new ReadOnlyMaterial 
+            { 
+                Tenant = envelope.TenantId, 
+                Id = @event.MaterialId,
+                Name = @event.Name,
+                PricePerUnit = @event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount,
+                Unit = @event.PackageContentUnit,
+                UpdatedUtc = DateTime.UtcNow
+            };
+            
+            _context.Add(entity);
         }
-        entity.Name = e.Name;
+
+        entity.Name = @event.Name;
         entity.PricePerUnit = pricePerUnit;
-        entity.Unit = e.PackageContentUnit;
+        entity.Unit = @event.PackageContentUnit;
         entity.UpdatedUtc = DateTime.UtcNow;
-        await _db.SaveChangesAsync(cancellationToken);
+
+        var count = await _context.SaveChangesAsync(cancellationToken);
     }
 }
