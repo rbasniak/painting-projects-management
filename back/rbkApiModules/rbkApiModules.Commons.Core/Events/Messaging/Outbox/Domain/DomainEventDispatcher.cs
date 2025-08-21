@@ -272,6 +272,7 @@ public sealed class DomainEventDispatcher : BackgroundService
                             {
                                 EventId = message.Id,
                                 HandlerName = handlerName,
+                                ReceivedUtc = DateTime.UtcNow,
                                 ProcessedUtc = DateTime.UtcNow,
                                 Attempts = message.Attempts
                             });

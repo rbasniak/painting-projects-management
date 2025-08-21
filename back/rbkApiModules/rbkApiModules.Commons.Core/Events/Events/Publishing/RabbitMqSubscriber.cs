@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
@@ -8,57 +9,126 @@ using RabbitMQ.Client.Events;
 
 namespace rbkApiModules.Commons.Core;
 
-public class RabbitMqSubscriber : IBrokerSubscriber, IDisposable
+public sealed class RabbitMqSubscriber : IBrokerSubscriber, IDisposable
 {
     private readonly BrokerOptions _options;
     private readonly ConnectionFactory _factory;
     private IConnection? _connection;
     private IModel? _channel;
+    private AsyncEventingBasicConsumer? _consumer;
 
     public RabbitMqSubscriber(IOptions<BrokerOptions> options)
     {
+        ArgumentNullException.ThrowIfNull(options);
         _options = options.Value;
+
         _factory = new ConnectionFactory
         {
             HostName = _options.HostName,
             Port = _options.Port,
             UserName = _options.UserName,
             Password = _options.Password,
-            DispatchConsumersAsync = true
+            DispatchConsumersAsync = true,
+            AutomaticRecoveryEnabled = true,
+            TopologyRecoveryEnabled = true
         };
     }
 
-    public Task SubscribeAsync(string queue, IEnumerable<string> topics, Func<string, byte[], CancellationToken, Task> handler, CancellationToken ct)
+    public Task SubscribeAsync(string queue, IEnumerable<string> topics, Func<string, ReadOnlyMemory<byte>, IReadOnlyDictionary<string, object?>, CancellationToken, Task> handler, CancellationToken cancellationToken)
     {
         _connection = _factory.CreateConnection();
         _channel = _connection.CreateModel();
-        _channel.ExchangeDeclare(_options.Exchange, ExchangeType.Topic, durable: true);
-        _channel.QueueDeclare(queue, durable: true, exclusive: false, autoDelete: false);
-        foreach (var topic in topics)
+
+        var args = new Dictionary<string, object?>
         {
-            _channel.QueueBind(queue, _options.Exchange, topic);
+            // Expect DLX preconfigured externally as options.DeadLetterExchange if desired
+            // ["x-dead-letter-exchange"] = _options.DeadLetterExchange
+        };
+
+        _channel.ExchangeDeclare(_options.Exchange, ExchangeType.Topic, durable: true, autoDelete: false, arguments: null);
+        _channel.QueueDeclare(queue: queue, durable: true, exclusive: false, autoDelete: false, arguments: args);
+
+        foreach (var x in topics)
+        {
+            _channel.QueueBind(queue, _options.Exchange, x);
         }
 
-        var consumer = new AsyncEventingBasicConsumer(_channel);
-        consumer.Received += async (_, ea) =>
+        // backpressure
+        _channel.BasicQos(prefetchSize: 0, prefetchCount: (ushort)(_options.PrefetchCount > 0 ? _options.PrefetchCount : 32), global: false);
+
+        _consumer = new AsyncEventingBasicConsumer(_channel);
+        _consumer.Received += async (_, ea) =>
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
             try
             {
-                await handler(ea.RoutingKey, ea.Body.ToArray(), ct);
-                _channel.BasicAck(ea.DeliveryTag, false);
+                IReadOnlyDictionary<string, object?> headers = ea.BasicProperties?.Headers is null
+                    ? new Dictionary<string, object?>()
+                    : new Dictionary<string, object?>(ea.BasicProperties.Headers);
+
+                await handler(ea.RoutingKey, ea.Body, headers, cancellationToken);
+
+                _channel.BasicAck(ea.DeliveryTag, multiple: false);
             }
-            catch
+            catch (Exception ex)
             {
-                _channel.BasicNack(ea.DeliveryTag, false, true);
+                // Do not requeue. Use DLX + retry queues for delays.
+                _channel.BasicNack(ea.DeliveryTag, multiple: false, requeue: false);
             }
         };
-        _channel.BasicConsume(queue, autoAck: false, consumer);
-        return Task.CompletedTask;
+
+        _channel.BasicConsume(queue: queue, autoAck: false, consumer: _consumer);
+
+        // Block until cancellation
+        var completion = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        cancellationToken.Register(() => completion.TrySetResult(null));
+        return completion.Task;
     }
 
     public void Dispose()
     {
-        _channel?.Dispose();
-        _connection?.Dispose();
+        try 
+        { 
+            _consumer = null; 
+        } 
+        catch 
+        { 
+        }
+
+        try 
+        { 
+            _channel?.Close(); 
+        } 
+        catch 
+        { 
+        }
+        
+        try 
+        { 
+            _connection?.Close(); 
+        } 
+        catch 
+        { 
+        }
+        
+        try 
+        { 
+            _channel?.Dispose(); 
+        } 
+        catch 
+        { 
+        }
+        
+        try 
+        { 
+            _connection?.Dispose(); 
+        } 
+        catch 
+        { 
+        }
     }
 }

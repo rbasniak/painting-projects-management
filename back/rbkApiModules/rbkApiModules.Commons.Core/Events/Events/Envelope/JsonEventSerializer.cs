@@ -26,6 +26,9 @@ public static class JsonEventSerializer
 
     public static object Deserialize(string json, Type targetType) =>
         JsonSerializer.Deserialize(json, targetType, Options)!;
+
+    public static EnvelopeHeader DeserializeHeader(string json) =>
+        JsonSerializer.Deserialize<EnvelopeHeader>(json, Options)!;
 }
 
 public class RuntimeTypeConverter<TInterface> : JsonConverter<TInterface>

@@ -11,7 +11,7 @@ public static class ProjectsIntegrationBuilder
         services.AddScoped<IIntegrationEventHandler<MaterialCreatedV1>, MaterialCreatedConsumer>();
         services.AddScoped<IIntegrationEventHandler<MaterialUpdatedV1>, MaterialUpdatedConsumer>();
         services.AddScoped<IIntegrationEventHandler<MaterialDeletedV1>, MaterialDeletedConsumer>();
-        // services.AddHostedService<MaterialsIntegrationConsumer>();
+        services.AddHostedService<MaterialsIntegrationConsumer>();
         return services;
     }
 }

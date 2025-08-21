@@ -89,7 +89,8 @@ namespace PaintingProjectsManagment.Database.Migrations
                 {
                     EventId = table.Column<Guid>(type: "uuid", nullable: false),
                     HandlerName = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
-                    ProcessedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ReceivedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ProcessedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Attempts = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>

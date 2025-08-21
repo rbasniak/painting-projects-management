@@ -575,7 +575,10 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<int>("Attempts")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("ProcessedUtc")
+                    b.Property<DateTime?>("ProcessedUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ReceivedUtc")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("EventId", "HandlerName");

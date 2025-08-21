@@ -20,9 +20,6 @@ public class InboxMessageConfig : IEntityTypeConfiguration<InboxMessage>
             .IsRequired()
             .HasMaxLength(512);
 
-        builder.Property(x => x.ProcessedUtc)
-            .IsRequired();
-
         builder.Property(x => x.Attempts)
             .IsRequired();
 
