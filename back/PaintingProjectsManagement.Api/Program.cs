@@ -166,7 +166,6 @@ public class Program
         builder.Services.AddHostedService<IntegrationEventPublisher>();
         builder.Services.AddScoped<IIntegrationOutbox, IntegrationOutbox>();
         builder.Services.AddSingleton<IBrokerSubscriber, RabbitMqSubscriber>();
-        builder.Services.AddSingleton<IIntegrationSubscriberRegistry, IntegrationSubscriberRegistry>();
 
         // Register domain-to-integration event handlers for Materials and integration consumers for Projects
         builder.Services.AddProjectsIntegrationHandlers();
