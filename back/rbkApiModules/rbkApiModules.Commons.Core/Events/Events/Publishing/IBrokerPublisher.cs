@@ -5,5 +5,5 @@ namespace rbkApiModules.Commons.Core;
 
 public interface IBrokerPublisher
 {
-    Task PublishAsync(string topic, byte[] payload, CancellationToken ct = default);
+    Task PublishAsync(string topic, ReadOnlyMemory<byte> payload, IReadOnlyDictionary<string, object?>? headers, CancellationToken ct);
 }

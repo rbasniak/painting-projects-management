@@ -7,4 +7,5 @@ public class BrokerOptions
     public string UserName { get; set; } = "guest";
     public string Password { get; set; } = "guest";
     public string Exchange { get; set; } = "events";
+    public int PrefetchCount { get; set; } = 32;
 }

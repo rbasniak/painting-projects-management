@@ -1,3 +1,5 @@
+// TODO: DONE, REVIEWED
+
 using System.Diagnostics;
 
 namespace rbkApiModules.Commons.Core;

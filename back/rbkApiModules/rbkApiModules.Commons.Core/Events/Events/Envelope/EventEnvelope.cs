@@ -2,15 +2,19 @@ using System;
 
 namespace rbkApiModules.Commons.Core;
 
-public sealed class EventEnvelope<TEvent>
+public record EnvelopeHeader
 {
-    public Guid EventId { get; init; }
-    public string Name { get; init; } = default!;
-    public int Version { get; init; }
-    public DateTime OccurredUtc { get; init; }
-    public string TenantId { get; init; } = default!;
-    public string Username { get; init; } = default!;
-    public string? CorrelationId { get; init; }
-    public string? CausationId { get; init; }
-    public TEvent Event { get; init; } = default!;
-} 
+    public required Guid EventId { get; init; }
+    public required string Name { get; init; } = string.Empty;
+    public required short Version { get; init; } = 1;
+    public required DateTime OccurredUtc { get; init; }
+    public required string TenantId { get; init; } = string.Empty;
+    public required string Username { get; init; } = string.Empty;
+    public required string? CorrelationId { get; init; } = string.Empty;
+    public required string? CausationId { get; init; } = string.Empty;
+}
+
+public sealed record EventEnvelope<TEvent> : EnvelopeHeader
+{
+    public required TEvent Event { get; init; }
+}

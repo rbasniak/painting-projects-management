@@ -1,3 +1,3 @@
 namespace rbkApiModules.Commons.Core;
 
-public interface IDomainEvent { } 
+public interface IDomainEvent;

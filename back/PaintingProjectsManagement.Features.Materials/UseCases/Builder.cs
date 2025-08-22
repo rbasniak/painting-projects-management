@@ -6,11 +6,11 @@ public static class Builder
 {
     public static IServiceCollection AddMaterialsFeature(this IServiceCollection services)
     {
-        services.AddScoped<IEventHandler<MaterialCreated>, MaterialCreatedHandler>();
-        services.AddScoped<IEventHandler<MaterialDeleted>, MaterialDeletedHandler>();
-        services.AddScoped<IEventHandler<MaterialPackageContentChanged>, MaterialUpdatedHandler>();
-        services.AddScoped<IEventHandler<MaterialPackagePriceChanged>, MaterialUpdatedHandler>();
-        services.AddScoped<IEventHandler<MaterialNameChanged>, MaterialUpdatedHandler>();
+        services.AddScoped<IDomainEventHandler<MaterialCreated>, MaterialCreatedHandler>();
+        services.AddScoped<IDomainEventHandler<MaterialDeleted>, MaterialDeletedHandler>();
+        services.AddScoped<IDomainEventHandler<MaterialPackageContentChanged>, MaterialUpdatedHandler>();
+        services.AddScoped<IDomainEventHandler<MaterialPackagePriceChanged>, MaterialUpdatedHandler>();
+        services.AddScoped<IDomainEventHandler<MaterialNameChanged>, MaterialUpdatedHandler>();
 
         return services;
     }

@@ -14,11 +14,11 @@ namespace PaintingProjectsManagement.Api.Diagnostics
     {
         public static IEndpointRouteBuilder MapOutboxHealth(this IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapGet("/health/outbox", async (DbContext db, CancellationToken ct) =>
+            endpoints.MapGet("/api/health/outbox", async (DbContext db, CancellationToken ct) =>
             {
                 var now = DateTime.UtcNow;
 
-                var query = db.Set<OutboxDomainMessage>()
+                var query = db.Set<DomainOutboxMessage>()
                     .Where(x => x.ProcessedUtc == null && (x.DoNotProcessBeforeUtc == null || x.DoNotProcessBeforeUtc <= now));
 
                 var count = await query.CountAsync(ct);

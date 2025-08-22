@@ -30,6 +30,25 @@ public static class SeedBuilder
             {
                 if (!TestingEnvironmentChecker.IsTestingEnvironment)
                 {
+#if DEBUG
+                    try
+                    {
+                        context.Database.Migrate();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex.Message.Contains("\"__SeedHistory\" already exists"))
+                        {
+                            context.Database.EnsureDeleted();
+                            context.Database.Migrate();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+#endif
+
                     context.Database.Migrate();
                 }
             }

@@ -8,20 +8,22 @@ namespace PaintingProjectsManagement.Features.Projects;
 
 public class MaterialDeletedConsumer : IIntegrationEventHandler<MaterialDeletedV1>
 {
-    private readonly DbContext _db;
+    private readonly DbContext _context;
 
-    public MaterialDeletedConsumer(DbContext db)
+    public MaterialDeletedConsumer(DbContext context)
     {
-        _db = db;
+        _context = context;
     }
 
-    public async Task Handle(EventEnvelope<MaterialDeletedV1> envelope, CancellationToken cancellationToken)
+    public async Task HandleAsync(EventEnvelope<MaterialDeletedV1> envelope, CancellationToken cancellationToken)
     {
-        var entity = await _db.Set<ReadOnlyMaterial>().FindAsync(new object[] { envelope.TenantId, envelope.Event.MaterialId }, cancellationToken);
+        var entity = await _context.Set<ReadOnlyMaterial>().FindAsync([envelope.TenantId, envelope.Event.MaterialId], cancellationToken);
+
         if (entity != null)
         {
-            _db.Remove(entity);
-            await _db.SaveChangesAsync(cancellationToken);
+            _context.Remove(entity);
+
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

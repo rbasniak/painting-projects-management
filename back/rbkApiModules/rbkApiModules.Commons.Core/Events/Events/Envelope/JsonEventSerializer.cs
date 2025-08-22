@@ -6,10 +6,8 @@ namespace rbkApiModules.Commons.Core;
 
 public static class JsonEventSerializer
 {
-    // One place to centralize options
     private static readonly JsonSerializerOptions Options = new(JsonSerializerDefaults.Web)
     {
-        // add/adjust converters here (e.g., enums as strings)
         Converters = 
         { 
             new JsonStringEnumConverter(),
@@ -26,9 +24,11 @@ public static class JsonEventSerializer
     public static EventEnvelope<T> Deserialize<T>(string json) =>
         JsonSerializer.Deserialize<EventEnvelope<T>>(json, Options)!;
 
-    // New: generic type overload for runtime Type
     public static object Deserialize(string json, Type targetType) =>
         JsonSerializer.Deserialize(json, targetType, Options)!;
+
+    public static EnvelopeHeader DeserializeHeader(string json) =>
+        JsonSerializer.Deserialize<EnvelopeHeader>(json, Options)!;
 }
 
 public class RuntimeTypeConverter<TInterface> : JsonConverter<TInterface>

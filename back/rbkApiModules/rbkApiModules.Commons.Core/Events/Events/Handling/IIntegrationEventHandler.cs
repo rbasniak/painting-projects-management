@@ -1,3 +1,5 @@
+// TODO: DONE, REVIEWED
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,5 +11,5 @@ namespace rbkApiModules.Commons.Core;
 /// </summary>
 public interface IIntegrationEventHandler<TIntegrationEvent>
 {
-    Task Handle(EventEnvelope<TIntegrationEvent> envelope, CancellationToken cancellationToken);
+    Task HandleAsync(EventEnvelope<TIntegrationEvent> envelope, CancellationToken cancellationToken);
 }
