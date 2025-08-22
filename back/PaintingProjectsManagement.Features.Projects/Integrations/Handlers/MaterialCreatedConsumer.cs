@@ -23,6 +23,7 @@ public class MaterialCreatedConsumer : IIntegrationEventHandler<MaterialCreatedV
 
         if (entity == null)
         {
+            // TODO: change PricePerUnit to ValueObject called UnitPrice that contains unit, price and currency (money type). UnitPrice should be an owned entity in the ReadOnlyMaterial entity
             entity = new ReadOnlyMaterial 
             { 
                 Tenant = envelope.TenantId, 
@@ -33,14 +34,17 @@ public class MaterialCreatedConsumer : IIntegrationEventHandler<MaterialCreatedV
                 UpdatedUtc = DateTime.UtcNow
             };
             
+            entity = entity with 
+            { 
+                Name = @event.Name,
+                Unit = @event.PackageContentUnit,
+                UpdatedUtc = DateTime.UtcNow,
+                PricePerUnit = @event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount
+            };
+
             _context.Add(entity);
         }
 
-        entity.Name = @event.Name;
-        entity.PricePerUnit = pricePerUnit;
-        entity.Unit = @event.PackageContentUnit;
-        entity.UpdatedUtc = DateTime.UtcNow;
-
-        var count = await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }
