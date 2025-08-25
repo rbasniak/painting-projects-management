@@ -1,0 +1,166 @@
+﻿@using PaintingProjectsManagement.Blazor.Modules.Authentication;
+
+@page "/login"
+
+@inject IAuthenticationService AuthenticationService
+@inject NavigationManager NavigationManager
+@inject ITokenService TokenService
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="logo-container">
+                <div class="logo-icon">PAINT</div>
+            </div>
+            <h1 class="login-title">Welcome Back</h1>
+            <p class="login-subtitle">Sign in to your painting projects account</p>
+        </div>
+
+        @if (loading && !isLoggingIn)
+        {
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <p>Loading...</p>
+            </div>
+        }
+        else if (loginFailed)
+        {
+            <div class="error-message">
+                <div class="error-icon">!</div>
+                <p>Login failed. Please check your credentials and try again.</p>
+            </div>
+        }
+
+        <form @onsubmit="HandleLogin" class="login-form">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <div class="input-container">
+                    <span class="input-icon">U</span>
+                    <input type="text"
+                           id="username"
+                           @bind="Request.Username"
+                           @bind:event="oninput"
+                           class="@GetInputClass(usernameError)"
+                           placeholder="Enter your username"
+                           required
+                           disabled="@isLoggingIn" />
+                </div>
+                @if (!string.IsNullOrEmpty(usernameError))
+                {
+                    <span class="error-text">@usernameError</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="input-container">
+                    <span class="input-icon">P</span>
+                    <input type="password"
+                           id="password"
+                           @bind="Request.Password"
+                           @bind:event="oninput"
+                           class="@GetInputClass(passwordError)"
+                           placeholder="Enter your password"
+                           required
+                           disabled="@isLoggingIn" />
+                </div>
+                @if (!string.IsNullOrEmpty(passwordError))
+                {
+                    <span class="error-text">@passwordError</span>
+                }
+            </div>
+
+            <button type="submit"
+                    class="@GetButtonClass()"
+                    disabled="@isLoggingIn">
+                @if (isLoggingIn)
+                {
+                    <div class="button-spinner"></div>
+                    <span>Signing In...</span>
+                }
+                else
+                {
+                    <span>Sign In</span>
+                }
+            </button>
+        </form>
+
+        <div class="login-footer">
+            <p>Don't have an account? <a href="#" class="link">Contact administrator</a></p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool loading = true;
+    private bool loginFailed;
+    private bool hasInitialized;
+    private bool isLoggingIn;
+    private string? usernameError;
+    private string? passwordError;
+
+    public LoginRequest Request { get; set; } = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !hasInitialized)
+        {
+            hasInitialized = true;
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private string GetInputClass(string? error)
+    {
+        return $"form-input{(string.IsNullOrEmpty(error) ? "" : " error")}";
+    }
+
+    private string GetButtonClass()
+    {
+        return $"login-button{(isLoggingIn ? " loading" : "")}";
+    }
+
+    private async Task HandleLogin(EventArgs args)
+    {
+        try
+        {
+            // Reset errors
+            usernameError = null;
+            passwordError = null;
+            loginFailed = false;
+            isLoggingIn = true;
+
+            // Validate inputs
+            if (string.IsNullOrWhiteSpace(Request.Username))
+            {
+                usernameError = "Username is required";
+                StateHasChanged();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(Request.Password))
+            {
+                passwordError = "Password is required";
+                StateHasChanged();
+                return;
+            }
+
+            StateHasChanged();
+
+            var result = await AuthenticationService.LoginAsync(Request, default);
+            await TokenService.SetTokensAsync(result.AccessToken, result.RefreshToken, default);
+            NavigationManager.NavigateTo("/materials/library");
+        }
+        catch (Exception ex)
+        {
+            loginFailed = true;
+            StateHasChanged();
+        }
+        finally
+        {
+            isLoggingIn = false;
+            StateHasChanged();
+        }
+    }
+}

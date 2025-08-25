@@ -13,4 +13,10 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.UI.Modules.Materials\PaintingProjectsManagement.Features.Materials.UI.csproj" />
+  </ItemGroup>
+
 </Project>
