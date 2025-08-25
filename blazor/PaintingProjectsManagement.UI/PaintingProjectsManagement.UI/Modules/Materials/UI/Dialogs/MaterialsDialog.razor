@@ -1,0 +1,60 @@
+﻿@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Materials
+@using PaintingProjectsManagement.UI.Modules.Shared
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="3">
+            <MudTextField @bind-Value="Model.Name" Label="Name" />
+            
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudNumericField @bind-Value="Model.PackageContent.Amount" Label="Package Size" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudSelect @bind-Value="SelectedUnit" Label="Package Unit">
+                        @foreach (var unit in Enum.GetValues<PackageContentUnit>())
+                        {
+                            <MudSelectItem Value="unit">@unit.ToString()</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+            
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudNumericField @bind-Value="Model.PackagePrice.Amount" Label="Package Price"/>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="Model.PackagePrice.CurrencyCode" Label="Package Currency" />
+                </MudItem>
+            </MudGrid>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Submit" Color="Color.Primary">Save</MudButton>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter] public MaterialDetails Model { get; set; } = new();
+
+    [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
+
+    private PackageContentUnit SelectedUnit
+    {
+        get => (PackageContentUnit)Model.PackageContent.Unit.Id;
+        set => Model.PackageContent.Unit = new EnumReference(value);
+    }
+
+    private void Submit() 
+    {
+        MudDialog?.Close(DialogResult.Ok(Model));
+    }
+    
+    private void Cancel() 
+    {
+        MudDialog?.Cancel();
+    }
+}

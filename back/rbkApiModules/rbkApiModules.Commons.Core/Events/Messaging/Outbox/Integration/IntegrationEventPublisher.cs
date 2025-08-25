@@ -54,14 +54,20 @@ public sealed class IntegrationEventPublisher : BackgroundService
 
                 using (var scope = _scopeFactory.CreateScope())
                 {
-                    var messagingDbContext = _options.ResolveDbContext(scope.ServiceProvider);
+                    var silentDbContext = _options.ResolveSilentDbContext(scope.ServiceProvider);
 
                     // QUIET "is there anything to do?" check (no logs, no telemetry)
-                    if (!await HasDueIntegrationAsync(messagingDbContext, cancellationToken))
+                    if (!await HasDueIntegrationAsync(silentDbContext, cancellationToken))
                     {
                         await Task.Delay(AddJitter(TimeSpan.FromMilliseconds(_options.PollIntervalMs)), cancellationToken);
                         continue;
                     }
+                }
+
+                // If there is work to do, switch to a normal context, with logs and telemetry
+                using (var scope = _scopeFactory.CreateScope())
+                {
+                    var messagingDbContext = _options.ResolveDbContext(scope.ServiceProvider);
 
                     var outerLogExtraData = new Dictionary<string, object>
                     {

@@ -1,0 +1,165 @@
+﻿@page "/materials/library"
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Materials 
+@using PaintingProjectsManagement.UI.Modules.Materials.UI.Dialogs
+@using PaintingProjectsManagement.UI.Modules.Shared
+
+<MudPaper Class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
+        <MudText Typo="Typo.h5">Materials Library</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Add">Add</MudButton>
+    </MudStack>
+
+    <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" Class="mb-2" />
+
+    <MudTable Items="sortedMaterials" Hover="true" Dense="true" RowsPerPage="10" SortLabel="Sort by" @bind-TableState="tableState">
+        <HeaderContent>
+            <MudTh Style="width: 50%">
+                <MudTableSortLabel SortBy="new Func<MaterialDetails, object>(x => x.Name)">Name</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 150px">
+                <MudTableSortLabel SortBy="new Func<MaterialDetails, object>(x => x.PackagePrice.Amount)">Package Price</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 150px">
+                <MudTableSortLabel SortBy="new Func<MaterialDetails, object>(x => x.PackageContent.Amount)">Package Content</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 100px"></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name" Style="width: 50%">@context.Name</MudTd>
+            <MudTd DataLabel="Package Price" Style="width: 150px">@context.PackagePrice.Amount @context.PackagePrice.CurrencyCode</MudTd>
+            <MudTd DataLabel="Package Content" Style="width: 150px">@context.PackageContent.Amount @context.PackageContent.Unit.Value</MudTd>
+            <MudTd Style="width: 100px">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
+
+@code {
+    [Inject] public IMaterialsService MaterialsService { get; set; } = default!;
+    [Inject] public IDialogService DialogService { get; set; } = default!;
+
+    private List<MaterialDetails> materials = new();
+    private string searchString = string.Empty;
+    private TableState tableState = new();
+
+    private IEnumerable<MaterialDetails> sortedMaterials
+    {
+        get
+        {
+            var filtered = materials.Where(m => string.IsNullOrWhiteSpace(searchString) ||
+                m.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+
+            if (tableState.SortLabel == "Name")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(m => m.Name)
+                    : filtered.OrderByDescending(m => m.Name);
+            }
+            else if (tableState.SortLabel == "Package Price")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(m => m.PackagePrice.Amount)
+                    : filtered.OrderByDescending(m => m.PackagePrice.Amount);
+            }
+            else if (tableState.SortLabel == "Package Content")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(m => m.PackageContent.Amount)
+                    : filtered.OrderByDescending(m => m.PackageContent.Amount);
+            }
+
+            return filtered;
+        }
+    }
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        materials = (await MaterialsService.GetAllAsync(CancellationToken.None)).ToList();
+    }
+
+    private async Task Add()
+    {
+        var parameters = new DialogParameters { ["Model"] = new MaterialDetails() };
+        var dialog = DialogService.Show<MaterialsDialog>("Material", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled && result.Data is MaterialDetails input)
+        {
+            var request = new CreateMaterialRequest
+            {
+                Name = input.Name,
+                PackageContentAmount = input.PackageContent.Amount,
+                PackageContentUnit = (PackageContentUnit)input.PackageContent.Unit.Id,
+                PackagePriceAmount = input.PackagePrice.Amount,
+                PackagePriceCurrency = input.PackagePrice.CurrencyCode
+            };
+            var created = await MaterialsService.CreateAsync(request, CancellationToken.None);
+            materials.Add(created);
+        }
+    }
+
+    private async Task Edit(MaterialDetails material)
+    {
+        var input = new MaterialDetails
+        {
+            Id = material.Id,
+            Name = material.Name,
+            PackageContent = new QuantityDetails
+            {
+                Amount = material.PackageContent.Amount,
+                Unit = material.PackageContent.Unit
+            },
+            PackagePrice = new MoneyDetails
+            {
+                Amount = material.PackagePrice.Amount,
+                CurrencyCode = material.PackagePrice.CurrencyCode
+            }
+        };
+        var parameters = new DialogParameters { ["Model"] = input };
+        var dialog = DialogService.Show<MaterialsDialog>("Material", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled && result.Data is MaterialDetails updatedInput)
+        {
+            if (updatedInput.Id == Guid.Empty)
+            {
+                return;
+            }
+
+            var request = new UpdateMaterialRequest
+            {
+                Id = updatedInput.Id,
+                Name = updatedInput.Name,
+                PackageContentAmount = updatedInput.PackageContent.Amount,
+                PackageContentUnit = (PackageContentUnit)updatedInput.PackageContent.Unit.Id,
+                PackagePriceAmount = updatedInput.PackagePrice.Amount,
+                PackagePriceCurrency = updatedInput.PackagePrice.CurrencyCode
+            };
+            var updated = await MaterialsService.UpdateAsync(request, CancellationToken.None);
+            var index = materials.FindIndex(m => m.Id == updated.Id);
+            if (index >= 0)
+                materials[index] = updated;
+        }
+    }
+
+    private async Task Delete(MaterialDetails material)
+    {
+        bool? confirm = await DialogService.ShowMessageBox(
+            "Delete Material",
+            $"Delete '{material.Name}'?",
+            yesText: "Delete",
+            cancelText: "Cancel");
+
+        if (confirm == true)
+        {
+            await MaterialsService.DeleteAsync(material.Id, CancellationToken.None);
+            materials.Remove(material);
+        }
+    }
+}

@@ -57,16 +57,22 @@ public sealed class DomainEventDispatcher : BackgroundService
                 
                 var iterationId = Guid.CreateVersion7();
 
+                // QUIET "is there anything to do?" check (no logs, no telemetry)
                 using (var scope = _scopeFactory.CreateScope())
                 {
-                    var messagingDbContext = _options.ResolveSilentDbContext(scope.ServiceProvider);
+                    var silentDbContext = _options.ResolveSilentDbContext(scope.ServiceProvider);
 
-                    // QUIET "is there anything to do?" check (no logs, no telemetry)
-                    if (!await HasDueEventsAsync(messagingDbContext, cancellationToken))
+                    if (!await HasDueEventsAsync(silentDbContext, cancellationToken))
                     {
                         await Task.Delay(AddJitter(TimeSpan.FromMilliseconds(_options.PollIntervalMs)), cancellationToken);
                         continue;
                     }
+                }
+
+                // If there is work to do, switch to a normal context, with logs and telemetry
+                using (var scope = _scopeFactory.CreateScope())
+                {
+                    var messagingDbContext = _options.ResolveDbContext(scope.ServiceProvider);
 
                     var outerLogExtraData = new Dictionary<string, object>
                     {
