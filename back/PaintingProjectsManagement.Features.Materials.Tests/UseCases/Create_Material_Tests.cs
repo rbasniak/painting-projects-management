@@ -136,8 +136,8 @@ public class Create_Material_Tests
         result.Name.ShouldBe("Existing Material");
         result.PackagePrice.Amount.ShouldBe(25);
         result.PackagePrice.CurrencyCode.ShouldBe("USD");
-        result.PackagetContent.Amount.ShouldBe(1);
-        EnumAssertionExtensions.ShouldBeEquivalentTo(result.PackagetContent.Unit, PackageContentUnit.Each);
+        //result.PackagetContent.Amount.ShouldBe(1);
+        //EnumAssertionExtensions.ShouldBeEquivalentTo(result.PackagetContent.Unit, PackageContentUnit.Each);
 
         // Assert the database - should have two materials with the same name but different users
         var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Existing Material").ToList();

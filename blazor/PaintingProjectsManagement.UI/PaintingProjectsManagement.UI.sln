@@ -5,11 +5,13 @@ VisualStudioVersion = 17.14.36310.24 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.UI", "PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj", "{1EA2B27C-F885-4798-8418-718ACDAB8845}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.UI.Shared", "PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.UI.Shared.csproj", "{2EA2B27C-F885-4798-8418-718ACDAB8846}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Shared.UI", "PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj", "{2EA2B27C-F885-4798-8418-718ACDAB8846}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.UI.Authentication", "PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.UI.Authentication.csproj", "{3EA2B27C-F885-4798-8418-718ACDAB8847}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Authorization.UI", "PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj", "{3EA2B27C-F885-4798-8418-718ACDAB8847}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.UI.Materials", "PaintingProjectsManagement.UI.Modules.Materials\PaintingProjectsManagement.UI.Materials.csproj", "{4EA2B27C-F885-4798-8418-718ACDAB8848}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Materials.UI", "PaintingProjectsManagement.UI.Modules.Materials\PaintingProjectsManagement.Features.Materials.UI.csproj", "{4EA2B27C-F885-4798-8418-718ACDAB8848}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Models.UI", "PaintingProjectsManagement.UI.Modules.Models\PaintingProjectsManagement.Features.Models.UI.csproj", "{5EA2B27C-F885-4798-8418-718ACDAB8849}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{4EA2B27C-F885-4798-8418-718ACDAB8848}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4EA2B27C-F885-4798-8418-718ACDAB8848}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4EA2B27C-F885-4798-8418-718ACDAB8848}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EA2B27C-F885-4798-8418-718ACDAB8849}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EA2B27C-F885-4798-8418-718ACDAB8849}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EA2B27C-F885-4798-8418-718ACDAB8849}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EA2B27C-F885-4798-8418-718ACDAB8849}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

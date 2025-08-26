@@ -1,0 +1,218 @@
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Models
+@using PaintingProjectsManagement.UI.Modules.Shared
+
+@namespace PaintingProjectsManagement.UI.Modules.Models.UI.Dialogs
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="3">
+            <MudTextField @bind-Value="Model.Name" Label="Name" />
+            
+            <MudAutocomplete @bind-Value="Model.Franchise" 
+                           Label="Franchise" 
+                           SearchFunc="SearchFranchises"
+                           ToStringFunc="(string s) => s" />
+            
+            <MudAutocomplete @bind-Value="selectedCharacter" 
+                           Label="Add Character" 
+                           SearchFunc="SearchCharacters"
+                           ToStringFunc="(string s) => s"
+                           KeyPress="AddCharacter" />
+            
+            <MudChipSet T="string">
+                @foreach (var character in Model.Characters)
+                {
+                    <MudChip Value="@character" Text="@character" />
+                }
+            </MudChipSet>
+            
+            <MudSelect @bind-Value="SelectedCategoryId" Label="Category">
+                @foreach (var category in categories)
+                {
+                    <MudSelectItem Value="@category.Id">@category.Name</MudSelectItem>
+                }
+            </MudSelect>
+            
+            <MudSelect @bind-Value="SelectedType" Label="Type">
+                @foreach (var type in Enum.GetValues<ModelType>())
+                {
+                    <MudSelectItem Value="@type">@type.ToString()</MudSelectItem>
+                }
+            </MudSelect>
+            
+            <MudAutocomplete @bind-Value="Model.Artist" 
+                           Label="Artist" 
+                           SearchFunc="SearchArtists"
+                           ToStringFunc="(string s) => s" />
+            
+            <MudAutocomplete @bind-Value="newTag" 
+                           Label="Add Tag" 
+                           SearchFunc="SearchTags"
+                           ToStringFunc="(string s) => s"
+                           KeyPress="AddTag" />
+            
+            <MudChipSet T="string">
+                @foreach (var tag in Model.Tags)
+                {
+                    <MudChip Value="@tag" Text="@tag" />
+                }
+            </MudChipSet>
+            
+            <MudTextField @bind-Value="Model.CoverPicture" Label="Cover Picture URL" />
+            
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudSelect @bind-Value="SelectedBaseSize" Label="Base Size">
+                        @foreach (var size in Enum.GetValues<BaseSize>())
+                        {
+                            <MudSelectItem Value="@size">@size.ToString()</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudSelect @bind-Value="SelectedFigureSize" Label="Figure Size">
+                        @foreach (var size in Enum.GetValues<FigureSize>())
+                        {
+                            <MudSelectItem Value="@size">@size.ToString()</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+            
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudNumericField @bind-Value="Model.NumberOfFigures" Label="Number of Figures" />
+                </MudItem>
+                <MudItem xs="6">
+                    <MudNumericField @bind-Value="Model.Size" Label="Size (MB)" />
+                </MudItem>
+            </MudGrid>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Submit" Color="Color.Primary">Save</MudButton>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter] public ModelDetails Model { get; set; } = new();
+    [Inject] public IModelCategoriesService ModelCategoriesService { get; set; } = default!;
+
+    [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
+
+    private List<ModelCategoryDetails> categories = new();
+    private string selectedCharacter = string.Empty;
+    private string newTag = string.Empty;
+
+    private Guid SelectedCategoryId
+    {
+        get => Model.Category.Id;
+        set => Model.Category = new PaintingProjectsManagement.UI.Modules.Shared.EntityReference(value, categories.FirstOrDefault(c => c.Id == value)?.Name ?? string.Empty);
+    }
+
+    private ModelType SelectedType
+    {
+        get => (ModelType)Model.Type.Id;
+        set => Model.Type = new EnumReference((int)value, value.ToString());
+    }
+
+    private BaseSize SelectedBaseSize
+    {
+        get => (BaseSize)Model.BaseSize.Id;
+        set => Model.BaseSize = new EnumReference((int)value, value.ToString());
+    }
+
+    private FigureSize SelectedFigureSize
+    {
+        get => (FigureSize)Model.FigureSize.Id;
+        set => Model.FigureSize = new EnumReference((int)value, value.ToString());
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCategories();
+    }
+
+    private async Task LoadCategories()
+    {
+        categories = (await ModelCategoriesService.GetAllAsync(CancellationToken.None)).ToList();
+    }
+
+    private async Task<IEnumerable<string>> SearchFranchises(string value, CancellationToken cancellationToken)
+    {
+        // In a real application, you would get this from a service
+        // For now, return some sample franchises
+        var franchises = new[] { "Warhammer 40k", "Warhammer Fantasy", "D&D", "Star Wars", "Marvel", "DC", "Lord of the Rings" };
+        return franchises.Where(f => f.Contains(value, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task<IEnumerable<string>> SearchCharacters(string value, CancellationToken cancellationToken)
+    {
+        // In a real application, you would get this from a service
+        // For now, return some sample characters
+        var characters = new[] { "Space Marine", "Ork", "Eldar", "Tau", "Necron", "Tyranid", "Chaos Marine", "Imperial Guard" };
+        return characters.Where(c => c.Contains(value, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task<IEnumerable<string>> SearchArtists(string value, CancellationToken cancellationToken)
+    {
+        // In a real application, you would get this from a service
+        // For now, return some sample artists
+        var artists = new[] { "John Doe", "Jane Smith", "Bob Johnson", "Alice Brown", "Charlie Wilson" };
+        return artists.Where(a => a.Contains(value, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task<IEnumerable<string>> SearchTags(string value, CancellationToken cancellationToken)
+    {
+        // In a real application, you would get this from a service
+        // For now, return some sample tags
+        var tags = new[] { "Fantasy", "Sci-Fi", "Heroic", "Villain", "Monster", "Vehicle", "Terrain", "Character" };
+        return tags.Where(t => t.Contains(value, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private void AddCharacter(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter" && !string.IsNullOrWhiteSpace(selectedCharacter))
+        {
+            if (!Model.Characters.Contains(selectedCharacter))
+            {
+                Model.Characters = Model.Characters.Append(selectedCharacter).ToArray();
+            }
+            selectedCharacter = string.Empty;
+        }
+    }
+
+    private void RemoveCharacter(string character)
+    {
+        Model.Characters = Model.Characters.Where(c => c != character).ToArray();
+    }
+
+    private void AddTag(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter" && !string.IsNullOrWhiteSpace(newTag))
+        {
+            if (!Model.Tags.Contains(newTag))
+            {
+                Model.Tags = Model.Tags.Append(newTag).ToArray();
+            }
+            newTag = string.Empty;
+        }
+    }
+
+    private void RemoveTag(string tag)
+    {
+        Model.Tags = Model.Tags.Where(t => t != tag).ToArray();
+    }
+
+    private void Submit() 
+    {
+        MudDialog?.Close(DialogResult.Ok(Model));
+    }
+    
+    private void Cancel() 
+    {
+        MudDialog?.Cancel();
+    }
+}

@@ -203,6 +203,7 @@ public class Program
 
         // Application modules
         builder.Services.AddMaterialsFeature();
+        builder.Services.AddModelsFeature();
 
         // Configure OpenAPI with custom schema naming for nested classes
         builder.Services.AddOpenApi(config =>

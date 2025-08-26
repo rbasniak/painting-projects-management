@@ -36,4 +36,6 @@ public static class EnumReferenceConstants
     }
 }
 
-public record EnumReference(int Id, string Value); 
+public record EnumReference(int Id, string Value);
+
+public record EntityReference(Guid Id, string Name);

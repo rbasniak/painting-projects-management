@@ -24,9 +24,10 @@
         try
         {
             var materialsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Materials.Builder));
+            var modelsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Models.Builder));
             var authAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.Blazor.Modules.Authentication.Builder));
 
-            return new[] { materialsAssembly, authAssembly };
+            return new[] { materialsAssembly, modelsAssembly, authAssembly };
         }
         catch (Exception ex)
         {
