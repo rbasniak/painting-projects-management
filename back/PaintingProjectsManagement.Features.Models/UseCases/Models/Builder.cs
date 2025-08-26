@@ -9,7 +9,9 @@ public static class ModelsBuilder
         UpdateModel.MapEndpoint(app);
         DeleteModel.MapEndpoint(app);
         ListModels.MapEndpoint(app);
-        UploadModelPicture.MapEndpoint(app); 
+        UploadModelPicture.MapEndpoint(app);
+        PromotePictureToCover.MapEndpoint(app);
+        DeleteModelPicture.MapEndpoint(app);
         SetModelMustHave.MapEndpoint(app);
         ListPriorityModels.MapEndpoint(app);
 

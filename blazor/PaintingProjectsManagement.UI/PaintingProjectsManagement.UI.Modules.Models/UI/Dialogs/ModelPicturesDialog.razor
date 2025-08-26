@@ -1,0 +1,94 @@
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Forms
+@using System.IO
+@using System.Linq
+@using System.Threading
+@using System
+@using PaintingProjectsManagement.UI.Modules.Models
+@namespace PaintingProjectsManagement.UI.Modules.Models.UI.Dialogs
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="2">
+            <MudText Typo="Typo.h6">@Model.Name</MudText>
+            <label for="model-picture-input">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary">Add Image</MudButton>
+            </label>
+            <InputFile id="model-picture-input" OnChange="OnFileSelected" style="display:none" accept="image/*" />
+            <MudGrid Class="mt-2">
+                @foreach (var picture in Model.Pictures)
+                {
+                    <MudItem xs="12" sm="6" md="4" lg="3">
+                        <MudCard Class="@GetCardClass(picture)">
+                            <MudCardContent Class="d-flex justify-center">
+                                <img src="@picture" style="max-width:100%;max-height:300px;object-fit:contain;" />
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@(() => DeletePicture(picture))" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Star" Color="@(IsCover(picture) ? Color.Warning : Color.Default)" OnClick="@(() => PromotePicture(picture))" />
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter] public ModelDetails Model { get; set; } = new();
+
+    [Inject] public IModelsService ModelsService { get; set; } = default!;
+    [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
+;
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        using var stream = file.OpenReadStream(long.MaxValue);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        var base64 = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+        var url = await ModelsService.UploadPictureAsync(new UploadModelPictureRequest
+        {
+            ModelId = Model.Id,
+            Base64Image = base64
+        }, CancellationToken.None);
+
+        if (!string.IsNullOrWhiteSpace(url))
+        {
+            var list = Model.Pictures.ToList();
+            list.Add(url);
+            Model.Pictures = list.ToArray();
+        }
+    }
+
+    private async Task DeletePicture(string picture)
+    {
+        await ModelsService.DeletePictureAsync(Model.Id, picture, CancellationToken.None);
+        var list = Model.Pictures.Where(p => p != picture).ToList();
+        Model.Pictures = list.ToArray();
+        if (Model.CoverPicture == picture)
+        {
+            Model.CoverPicture = null;
+        }
+    }
+
+    private async Task PromotePicture(string picture)
+    {
+        await ModelsService.PromotePictureToCoverAsync(new PromoteModelPictureRequest
+        {
+            ModelId = Model.Id,
+            PictureUrl = picture
+        }, CancellationToken.None);
+        Model.CoverPicture = picture;
+    }
+
+    private bool IsCover(string picture) => Model.CoverPicture == picture;
+
+    private string GetCardClass(string picture) => IsCover(picture) ? "border border-2 border-primary" : string.Empty;
+
+    private void Close() => MudDialog?.Close();
+}

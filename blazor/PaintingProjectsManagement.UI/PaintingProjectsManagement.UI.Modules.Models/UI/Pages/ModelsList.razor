@@ -52,6 +52,7 @@
                 <MudCheckBox T="bool" @bind-Checked="context.MustHave" />
             </MudTd>
             <MudTd Style="width: 10%">
+                <MudIconButton Icon="@Icons.Material.Filled.Image" OnClick="() => Pictures(context)" Color="Color.Secondary" />
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
             </MudTd>
@@ -241,6 +242,15 @@
             if (index >= 0)
                 models[index] = updated;
         }
+    }
+
+    private async Task Pictures(ModelDetails model)
+    {
+        var parameters = new DialogParameters
+        {
+            ["Model"] = model
+        };
+        await DialogService.ShowAsync<ModelPicturesDialog>("Pictures", parameters);
     }
 
     private async Task Delete(ModelDetails model)

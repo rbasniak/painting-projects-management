@@ -56,3 +56,19 @@ public enum FigureSize
     Normal = 10,
     Big = 20
 }
+
+public class UploadModelPictureRequest
+{
+    public Guid ModelId { get; init; }
+    public string Base64Image { get; init; } = string.Empty;
+}
+
+public class PromoteModelPictureRequest
+{
+    public Guid ModelId { get; init; }
+    public string PictureUrl { get; init; } = string.Empty;
+}
+
+public class DeleteModelPictureRequest : PromoteModelPictureRequest
+{
+}

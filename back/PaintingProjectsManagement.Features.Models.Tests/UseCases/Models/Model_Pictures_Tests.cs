@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
+using System;
+using System.Linq;
 
 namespace PaintingProjectsManagement.Features.Models.Tests;
 
@@ -150,6 +152,20 @@ public class Model_Pictures_Tests
 
         // Assert
         response.ShouldHaveErrors(System.Net.HttpStatusCode.BadRequest, "Base64 image content is required.");
+    }
+
+    [Test, NotInParallel(Order = 7)]
+    public async Task Delete_Model_Picture_Should_Remove_From_Pictures_Array()
+    {
+        var model = await TestingServer.CreateContext().Set<Model>().FirstAsync(x => x.Id == _modelId);
+        var pictureUrl = model.Pictures.First();
+
+        var response = await TestingServer.DeleteAsync($"api/models/{_modelId}/picture?pictureUrl={Uri.EscapeDataString(pictureUrl)}");
+
+        response.ShouldBeSuccess();
+
+        var updated = await TestingServer.CreateContext().Set<Model>().FirstAsync(x => x.Id == _modelId);
+        updated.Pictures.ShouldNotContain(pictureUrl);
     }
 
     private async Task<Model> CreateTestModel()
