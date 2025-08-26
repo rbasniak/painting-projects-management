@@ -59,19 +59,27 @@
                            ToStringFunc="(string s) => s"
                            AllowCustomValues="true" />
             
-            <MudAutocomplete T="string" 
-                           Label="Tags" 
-                           SearchFunc="SearchTags"
-                           ToStringFunc="(string s) => s"
-                           MultiSelection="true"
-                           SelectedValues="selectedTags"
-                           SelectedValuesChanged="OnTagsChanged"
-                           AllowCustomValues="true" />
-            
-            <MudChipSet T="string">
+            <MudAutocomplete T="string"
+                             Label="Tags"
+                             @bind-Text="_tagInput"
+                             SearchFunc="SearchTags"
+                             ToStringFunc="(string s) => s"
+                             MultiSelection="true"
+                             SelectedValues="selectedTags"
+                             SelectedValuesChanged="OnTagsChanged"
+                             AllowCustomValues="true"
+                             CoerceText="false"
+                             CoerceValue="true"
+                             OnKeyDown="HandleTagKeyDown"
+                             Adornment="Adornment.End"
+                             AdornmentIcon="@Icons.Material.Filled.Add"
+                             OnAdornmentClick="AddTagFromInput" />
+
+            <MudChipSet T="string" Class="mt-2">
                 @foreach (var tag in Model.Tags)
                 {
-                    <MudChip Value="@tag" Text="@tag" Closeable="true" OnClose="@((MudChip<string> chip) => RemoveTag(tag))" />
+                    <MudChip Value="@tag" Text="@tag" Closeable="true"
+                             OnClose="@((MudChip<string> _) => RemoveTag(tag))" />
                 }
             </MudChipSet>
             
@@ -217,15 +225,36 @@
         Model.Tags = selectedTags.ToArray();
     }
 
+    private void HandleTagKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" || e.Key == ",")
+            AddTagFromInput();
+    }
 
+    private void AddTagFromInput()
+    {
+        var v = _tagInput?.Trim();
+        if (string.IsNullOrWhiteSpace(v)) return;
+
+        if (!selectedTags.Contains(v, StringComparer.OrdinalIgnoreCase))
+            AddTag(v);
+
+        _tagInput = "";
+    }
+
+    private void AddTag(string v)
+    {
+        if (selectedTags.Add(v))
+            Model.Tags = selectedTags.ToArray();
+    }
 
     private void RemoveTag(string tag)
     {
-        Model.Tags = Model.Tags.Where(t => t != tag).ToArray();
-        selectedTags.Remove(tag);
+        selectedTags.RemoveWhere(t => string.Equals(t, tag, StringComparison.OrdinalIgnoreCase));
+        Model.Tags = selectedTags.ToArray();
     }
 
-    private void Submit() 
+    private void Submit()
     {
         MudDialog?.Close(DialogResult.Ok(Model));
     }
@@ -243,6 +272,7 @@
 
 
 
+    private string _tagInput = "";
     private string _characterInput = "";
 
     private void HandleCharacterKeyDown(KeyboardEventArgs e)
