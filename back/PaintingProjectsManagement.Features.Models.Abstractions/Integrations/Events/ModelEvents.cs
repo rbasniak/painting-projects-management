@@ -1,3 +1,5 @@
+using rbkApiModules.Commons.Core.Abstractions;
+
 namespace PaintingProjectsManagement.Features.Models.Abstractions;
 
 // Fired once when a model is created
@@ -5,7 +7,7 @@ namespace PaintingProjectsManagement.Features.Models.Abstractions;
 public sealed record ModelCreatedV1(
     Guid ModelId,
     string Name,
-    Guid CategoryId,
+    EntityReference Category,
     string Artist,
     string Franchise,
     string ModelType,
@@ -17,7 +19,8 @@ public sealed record ModelCreatedV1(
     int SizeInMb,
     bool MustHave,
     int Score,
-    string? PictureUrl
+    string? CoverPicture,
+    string[] Pictures
 ) : IIntegrationEvent;
 
 // Fired when a model is (soft-)deleted
@@ -31,7 +34,7 @@ public sealed record ModelDeletedV1(
 public sealed record ModelUpdatedV1(
     Guid ModelId,
     string Name,
-    Guid CategoryId,
+    EntityReference Category,
     string Artist,
     string Franchise,
     string ModelType,
@@ -43,5 +46,6 @@ public sealed record ModelUpdatedV1(
     int SizeInMb,
     bool MustHave,
     int Score,
-    string? PictureUrl
+    string? CoverPicture,
+    string[] Pictures
 ) : IIntegrationEvent;

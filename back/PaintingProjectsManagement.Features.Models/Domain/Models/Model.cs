@@ -5,9 +5,11 @@ namespace PaintingProjectsManagement.Features.Models;
 
 public class Model : TenantEntity
 {
-    // Constructor for EF Core, do not remove it or make it public
     [JsonConstructor]
-    private Model() { }
+    private Model() 
+    {
+        // Constructor for EF Core, do not remove it or make it public
+    }
 
     public Model(string tenant, string name, ModelCategory category, string[] characters, string franchise, ModelType type, string artist, string[] tags,
         BaseSize baseSize, FigureSize figureSize, int numberOfFigures, int sizeInMb)
@@ -32,20 +34,7 @@ public class Model : TenantEntity
 
         RaiseDomainEvent(new ModelCreated(
             Id,
-            Name,
-            Category.Id,
-            Artist,
-            Franchise,
-            Type,
-            Tags,
-            Characters,
-            BaseSize,
-            FigureSize,
-            NumberOfFigures,
-            SizeInMb,
-            MustHave,
-            Score.Value,
-            PictureUrl
+            Name
         ));
     }
 
@@ -58,7 +47,9 @@ public class Model : TenantEntity
     public ModelType Type { get; private set; }
     public string Artist { get; private set; } = string.Empty;
     public string[] Tags { get; private set; } = Array.Empty<string>();
-    public string? PictureUrl { get; private set; }
+    public string? CoverPicture { get; private set; }
+    [JsonColumn]
+    public string[] Pictures { get; private set; } = [];
     public Rating Score { get; private set; } = default!;
     public BaseSize BaseSize { get; private set; }
     public FigureSize FigureSize { get; private set; }
@@ -147,16 +138,33 @@ public class Model : TenantEntity
         }
     }
 
-    public void UpdatePicture(string pictureUrl)
+    public void UpdateCoverPicture(string coverPicture)
     {
-        if (PictureUrl == pictureUrl)
+        if (CoverPicture == coverPicture)
         {
             return;
         }
 
-        PictureUrl = pictureUrl;
+        CoverPicture = coverPicture;
 
-        RaiseDomainEvent(new ModelPictureChanged(Id));
+        RaiseDomainEvent(new ModelCoverPictureChanged(Id));
+    }
+
+    public void AddPicture(string picture)
+    {
+        var hashset = new HashSet<string>(Pictures);
+        hashset.Add(picture);
+        
+        var newPictures = hashset.ToArray();    
+
+        if (Pictures.SequenceEqual(newPictures))
+        {
+            return;
+        }
+
+        Pictures = newPictures;
+
+        RaiseDomainEvent(new ModelPicturesChanged(Id));
     }
 
     public void Rate(int score)

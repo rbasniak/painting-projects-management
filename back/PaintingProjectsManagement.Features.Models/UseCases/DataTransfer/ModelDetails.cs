@@ -10,13 +10,14 @@ public class ModelDetails
     public string[] Characters { get; set; } = [];
     public int Size { get; set; } 
     public EntityReference Category { get; set; }
-    public ModelType Type { get; set; }
+    public EnumReference Type { get; set; }
     public string? Artist { get; set; }
     public string[] Tags { get; set; } = Array.Empty<string>();
-    public string? PictureUrl { get; set; }
+    public string? CoverPicture { get; set; }
+    public string[] Pictures { get; set; } = [];
     public int Score { get; set; }
-    public BaseSize BaseSize { get; set; }
-    public FigureSize FigureSize { get; set; }
+    public EnumReference BaseSize { get; set; }
+    public EnumReference FigureSize { get; set; }
     public int NumberOfFigures { get; set; }
     public bool MustHave { get; set; }
 
@@ -30,13 +31,14 @@ public class ModelDetails
             Characters = model.Characters,
             Size = model.SizeInMb,
             Category = new EntityReference(model.Category.Id, model.Category.Name),
-            Type = model.Type,
+            Type = new EnumReference(model.Type),
             Artist = model.Artist,
             Tags = model.Tags,
-            PictureUrl = model.PictureUrl,
+            CoverPicture = model.CoverPicture,
+            Pictures = model.Pictures,
             Score = model.Score.Value,
-            BaseSize = model.BaseSize,
-            FigureSize = model.FigureSize,
+            BaseSize = new EnumReference(model.BaseSize),
+            FigureSize = new EnumReference(model.FigureSize),
             NumberOfFigures = model.NumberOfFigures,
             MustHave = model.MustHave
         };

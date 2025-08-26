@@ -1,5 +1,6 @@
 using PaintingProjectsManagement.Features.Models.Abstractions;
 using rbkApiModules.Commons.Core;
+using rbkApiModules.Commons.Core.Abstractions;
 using System.Diagnostics;
 
 namespace PaintingProjectsManagement.Features.Models;
@@ -7,10 +8,12 @@ namespace PaintingProjectsManagement.Features.Models;
 internal sealed class ModelCreatedHandler : IDomainEventHandler<ModelCreated>
 {
     private readonly IIntegrationOutbox _outbox;
+    private readonly DbContext _context;
 
-    public ModelCreatedHandler(IIntegrationOutbox outbox)
+    public ModelCreatedHandler(IIntegrationOutbox outbox, DbContext context)
     {
         _outbox = outbox;
+        _context = context;
     }
 
     public async Task HandleAsync(EventEnvelope<ModelCreated> envelope, CancellationToken cancellationToken)
@@ -21,22 +24,28 @@ internal sealed class ModelCreatedHandler : IDomainEventHandler<ModelCreated>
 
         var domainEvent = envelope.Event;
 
+        var model = await _context.Set<Model>()
+            .Include(x => x.Category)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == domainEvent.ModelId, cancellationToken);
+
         var integrationEvent = new ModelCreatedV1(
-            domainEvent.ModelId,
-            domainEvent.Name,
-            domainEvent.CategoryId,
-            domainEvent.Artist,
-            domainEvent.Franchise,
-            domainEvent.Type.ToString(),
-            domainEvent.Tags,
-            domainEvent.Characters,
-            domainEvent.BaseSize.ToString(),
-            domainEvent.FigureSize.ToString(),
-            domainEvent.NumberOfFigures,
-            domainEvent.SizeInMb,
-            domainEvent.MustHave,
-            domainEvent.Score,
-            domainEvent.PictureUrl
+            model.Id,
+            model.Name,
+            new EntityReference(model.Category.Id, model.Category.Name),
+            model.Artist,
+            model.Franchise,
+            model.Type.ToString(),
+            model.Tags,
+            model.Characters,
+            model.BaseSize.ToString(),
+            model.FigureSize.ToString(),
+            model.NumberOfFigures,
+            model.SizeInMb,
+            model.MustHave,
+            model.Score.Value,
+            model.CoverPicture,
+            model.Pictures
         );
 
         var integrationEnvelope = EventEnvelopeFactory.Wrap(

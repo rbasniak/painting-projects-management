@@ -72,21 +72,17 @@ public class UploadModelPicture : IEndpoint
             var model = await _context.Set<Model>()
                 .Include(x => x.Category)
                 .FirstAsync(x => x.Id == request.ModelId, cancellationToken);
-                
-            if (!string.IsNullOrEmpty(model.PictureUrl))
-            {
-                await _fileStorage.DeleteFileAsync(model.PictureUrl, cancellationToken);
-            }
             
             string pictureUrl = await _fileStorage.StoreFileFromBase64Async(
                 request.Base64Image,
-                $"model_{model.Id:N}",
+                $"model_{model.Id:N}_{DateTime.UtcNow:yyyyMMddHHmmss}",
                 "models",
                 2048, 
                 2048,
                 cancellationToken);
                 
-            model.UpdatePicture(pictureUrl);
+            // Add the new picture to the Pictures array
+            model.AddPicture(pictureUrl);
             
             await _context.SaveChangesAsync(cancellationToken);
             

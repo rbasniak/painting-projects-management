@@ -2,30 +2,39 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using PaintingProjectsManagement.Features.Models.Abstractions;
+using rbkApiModules.Commons.Core;
+using rbkApiModules.Commons.Core.Abstractions;
 
 namespace PaintingProjectsManagement.Features.Models;
 
 internal sealed class ModelUpdatedHandler :
     IDomainEventHandler<ModelDetailsChanged>,
-    IDomainEventHandler<ModelPictureChanged>,
+    IDomainEventHandler<ModelCoverPictureChanged>,
+    IDomainEventHandler<ModelPicturesChanged>,
     IDomainEventHandler<ModelRated>,
     IDomainEventHandler<ModelMustHaveChanged>
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IOptions<DomainEventDispatcherOptions> _outboxOptions;
     private readonly IIntegrationOutbox _outbox;
+    private readonly DbContext _context;
 
-    public ModelUpdatedHandler(IServiceScopeFactory scopeFactory, IOptions<DomainEventDispatcherOptions> outboxOptions, IIntegrationOutbox outbox)
+    public ModelUpdatedHandler(IServiceScopeFactory scopeFactory, IOptions<DomainEventDispatcherOptions> outboxOptions, IIntegrationOutbox outbox, DbContext context    )
     {
         _scopeFactory = scopeFactory;
         _outboxOptions = outboxOptions;
         _outbox = outbox;
+        _context = context;
+
     }
 
     public Task HandleAsync(EventEnvelope<ModelDetailsChanged> envelope, CancellationToken cancellationToken)
         => PublishUpdated(envelope, cancellationToken);
 
-    public Task HandleAsync(EventEnvelope<ModelPictureChanged> envelope, CancellationToken cancellationToken)
+    public Task HandleAsync(EventEnvelope<ModelCoverPictureChanged> envelope, CancellationToken cancellationToken)
+        => PublishUpdated(envelope, cancellationToken);
+
+    public Task HandleAsync(EventEnvelope<ModelPicturesChanged> envelope, CancellationToken cancellationToken)
         => PublishUpdated(envelope, cancellationToken);
 
     public Task HandleAsync(EventEnvelope<ModelRated> envelope, CancellationToken cancellationToken)
@@ -43,13 +52,15 @@ internal sealed class ModelUpdatedHandler :
         var modelId = envelope.Event switch
         {
             ModelDetailsChanged e => e.ModelId,
-            ModelPictureChanged e => e.ModelId,
+            ModelCoverPictureChanged e => e.ModelId,
+            ModelPicturesChanged e => e.ModelId,
             ModelRated e => e.ModelId,
             ModelMustHaveChanged e => e.ModelId,
             _ => Guid.Empty
         };
 
-        var model = await dbContext.Set<Model>()
+        var model = await _context.Set<Model>()
+            .Include(x => x.Category)
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == modelId, cancellationToken);
 
@@ -61,7 +72,7 @@ internal sealed class ModelUpdatedHandler :
         var integrationEvent = new ModelUpdatedV1(
             model.Id,
             model.Name,
-            model.CategoryId,
+            new EntityReference(model.Category.Id, model.Category.Name),
             model.Artist,
             model.Franchise,
             model.Type.ToString(),
@@ -73,7 +84,8 @@ internal sealed class ModelUpdatedHandler :
             model.SizeInMb,
             model.MustHave,
             model.Score.Value,
-            model.PictureUrl
+            model.CoverPicture,
+            model.Pictures
         );
 
         var integrationEnvelope = EventEnvelopeFactory.Wrap(

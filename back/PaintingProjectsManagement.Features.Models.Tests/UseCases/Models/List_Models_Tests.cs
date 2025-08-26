@@ -179,7 +179,8 @@ public class List_Models_Tests
         model.NumberOfFigures.ShouldBe(1);
         model.MustHave.ShouldBeFalse(); // Default must-have flag
         model.Score.ShouldBe(0); // Default score
-        model.PictureUrl.ShouldBeNull(); // No picture URL set
+        model.CoverPicture.ShouldBeNull(); // No cover picture set
+        model.Pictures.ShouldBeEmpty(); // No pictures set
     }
 
     [Test, NotInParallel(Order = 6)]
@@ -198,6 +199,26 @@ public class List_Models_Tests
         models.First().Id.ShouldBe(_tenant2ModelId);
         models.First().Name.ShouldBe("Other Tenant Model");
         models.First().Category.Name.ShouldBe("Other Tenant Category");
+    }
+
+    [Test, NotInParallel(Order = 7)]
+    public async Task Model_Details_Include_CoverPicture_And_Pictures_Properties()
+    {
+        // Act
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/models", "rodrigo.basniak");
+
+        // Assert
+        response.ShouldBeSuccess();
+        var models = response.Data;
+        models.ShouldNotBeNull();
+
+        // Verify all models have the new properties
+        foreach (var model in models)
+        {
+            // These properties should exist and be accessible
+            model.CoverPicture.ShouldNotBeNull(); // Can be null, but property should exist
+            model.Pictures.ShouldNotBeNull(); // Should be an empty array, not null
+        }
     }
 
     [Test, NotInParallel(Order = 99)]

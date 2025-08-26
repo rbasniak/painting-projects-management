@@ -1,51 +1,39 @@
 namespace PaintingProjectsManagement.Features.Models;
 
-// Fired once when a model is created
+// DOCS: events can be thick or thin, thin events are ok for domain events, thick events are better for integration events. But we can also use thick events for domain events if needed.
+
 [EventName("Models.ModelCreated", 1)]
 public sealed record ModelCreated(
     Guid ModelId,
-    string Name,
-    Guid CategoryId,
-    string Artist,
-    string Franchise,
-    ModelType Type,
-    string[] Tags,
-    string[] Characters,
-    BaseSize BaseSize,
-    FigureSize FigureSize,
-    int NumberOfFigures,
-    int SizeInMb,
-    bool MustHave,
-    int Score,
-    string? PictureUrl
+    string ModelName
 ) : IDomainEvent;
 
-// Fired when a model is (soft-)deleted
 [EventName("Models.ModelDeleted", 1)]
 public sealed record ModelDeleted(
     Guid ModelId
 ) : IDomainEvent;
 
-// Fired when model details change
 [EventName("Models.ModelDetailsChanged", 1)]
 public sealed record ModelDetailsChanged(
     Guid ModelId
 ) : IDomainEvent;
 
-// Fired when model picture changes
-[EventName("Models.ModelPictureChanged", 1)]
-public sealed record ModelPictureChanged(
+[EventName("Models.ModelCoverPictureChanged", 1)]
+public sealed record ModelCoverPictureChanged(
     Guid ModelId
 ) : IDomainEvent;
 
-// Fired when model rating changes
+[EventName("Models.ModelPicturesChanged", 1)]
+public sealed record ModelPicturesChanged(
+    Guid ModelId
+) : IDomainEvent;
+
 [EventName("Models.ModelRated", 1)]
 public sealed record ModelRated(
     Guid ModelId,
     int Score
 ) : IDomainEvent;
 
-// Fired when model must-have status changes
 [EventName("Models.ModelMustHaveChanged", 1)]
 public sealed record ModelMustHaveChanged(
     Guid ModelId,
