@@ -34,7 +34,7 @@ public class ModelDetails
             Artist = model.Artist,
             Tags = model.Tags,
             PictureUrl = model.PictureUrl,
-            Score = model.Score,
+            Score = model.Score.Value,
             BaseSize = model.BaseSize,
             FigureSize = model.FigureSize,
             NumberOfFigures = model.NumberOfFigures,

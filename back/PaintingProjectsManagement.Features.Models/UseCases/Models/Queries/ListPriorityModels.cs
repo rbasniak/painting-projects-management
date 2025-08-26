@@ -33,7 +33,7 @@ public class ListPriorityModels : IEndpoint
                 .Include(x => x.Category)
                 .Where(x => x.TenantId == request.Identity.Tenant)
                 .Where(x => x.MustHave == true)
-                .OrderByDescending(x => x.Score) // Order by score descending
+                .OrderByDescending(x => x.Score.Value) // Order by score descending
                 .ThenBy(x => x.Category.Name)
                 .ThenBy(x => x.Name)
                 .ToListAsync(cancellationToken);
