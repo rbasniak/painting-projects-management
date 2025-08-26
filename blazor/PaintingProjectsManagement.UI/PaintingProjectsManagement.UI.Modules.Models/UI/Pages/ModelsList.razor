@@ -142,7 +142,11 @@
 
     private async Task Add()
     {
-        var parameters = new DialogParameters { ["Model"] = new ModelDetails() };
+        var parameters = new DialogParameters 
+        { 
+            ["Model"] = new ModelDetails(),
+            ["AllModels"] = models
+        };
         var dialog = await DialogService.ShowAsync<ModelsDialog>("Model", parameters);
         var result = await dialog.Result;
         if (!result.Canceled && result.Data is ModelDetails input)
@@ -157,12 +161,20 @@
                 Artist = input.Artist,
                 Tags = input.Tags,
                 CoverPicture = input.CoverPicture,
-                BaseSize = (BaseSize)input.BaseSize.Id,
-                FigureSize = (FigureSize)input.FigureSize.Id,
-                NumberOfFigures = input.NumberOfFigures,
-                SizeInMb = input.Size
+                BaseSize = BaseSize.Unknown,
+                FigureSize = FigureSize.Unknown,
+                NumberOfFigures = 1,
+                SizeInMb = 0
             };
             var created = await ModelsService.CreateAsync(request, CancellationToken.None);
+            
+            // Set MustHave separately if needed
+            if (input.MustHave)
+            {
+                await ModelsService.SetMustHaveAsync(created.Id, true, CancellationToken.None);
+                created.MustHave = true;
+            }
+            
             models.Add(created);
         }
     }
@@ -186,7 +198,11 @@
             Size = model.Size,
             MustHave = model.MustHave
         };
-        var parameters = new DialogParameters { ["Model"] = input };
+        var parameters = new DialogParameters 
+        { 
+            ["Model"] = input,
+            ["AllModels"] = models
+        };
         var dialog = await DialogService.ShowAsync<ModelsDialog>("Model", parameters);
         var result = await dialog.Result;
         if (!result.Canceled && result.Data is ModelDetails updatedInput)
@@ -207,12 +223,20 @@
                 Artist = updatedInput.Artist,
                 Tags = updatedInput.Tags,
                 CoverPicture = updatedInput.CoverPicture,
-                BaseSize = (BaseSize)updatedInput.BaseSize.Id,
-                FigureSize = (FigureSize)updatedInput.FigureSize.Id,
-                NumberOfFigures = updatedInput.NumberOfFigures,
-                SizeInMb = updatedInput.Size
+                BaseSize = BaseSize.Unknown,
+                FigureSize = FigureSize.Unknown,
+                NumberOfFigures = 1,
+                SizeInMb = 0
             };
             var updated = await ModelsService.UpdateAsync(request, CancellationToken.None);
+            
+            // Update MustHave separately if it changed
+            if (updatedInput.MustHave != model.MustHave)
+            {
+                await ModelsService.SetMustHaveAsync(updatedInput.Id, updatedInput.MustHave, CancellationToken.None);
+                updated.MustHave = updatedInput.MustHave;
+            }
+            
             var index = models.FindIndex(m => m.Id == updated.Id);
             if (index >= 0)
                 models[index] = updated;

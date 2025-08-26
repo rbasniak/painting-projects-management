@@ -12,18 +12,30 @@
             <MudAutocomplete @bind-Value="Model.Franchise" 
                            Label="Franchise" 
                            SearchFunc="SearchFranchises"
-                           ToStringFunc="(string s) => s" />
-            
-            <MudAutocomplete @bind-Value="selectedCharacter" 
-                           Label="Add Character" 
-                           SearchFunc="SearchCharacters"
                            ToStringFunc="(string s) => s"
-                           KeyPress="AddCharacter" />
-            
-            <MudChipSet T="string">
+                           AllowCustomValues="true" />
+
+            <MudAutocomplete T="string"
+                             Label="Characters"
+                             @bind-Text="_characterInput"
+                             SearchFunc="SearchCharacters"
+                             ToStringFunc="(string s) => s"
+                             MultiSelection="true"
+                             SelectedValues="selectedCharacters"
+                             SelectedValuesChanged="OnCharactersChanged"
+                             AllowCustomValues="true"
+                             CoerceText="false"
+                             CoerceValue="true"
+                             OnKeyDown="HandleCharacterKeyDown"
+                             Adornment="Adornment.End"
+                             AdornmentIcon="@Icons.Material.Filled.Add"
+                             OnAdornmentClick="AddCharacterFromInput" />
+
+            <MudChipSet T="string" Class="mt-2">
                 @foreach (var character in Model.Characters)
                 {
-                    <MudChip Value="@character" Text="@character" />
+                    <MudChip Value="@character" Text="@character" Closeable="true"
+                             OnClose="@((MudChip<string> _) => RemoveCharacter(character))" />
                 }
             </MudChipSet>
             
@@ -44,50 +56,26 @@
             <MudAutocomplete @bind-Value="Model.Artist" 
                            Label="Artist" 
                            SearchFunc="SearchArtists"
-                           ToStringFunc="(string s) => s" />
+                           ToStringFunc="(string s) => s"
+                           AllowCustomValues="true" />
             
-            <MudAutocomplete @bind-Value="newTag" 
-                           Label="Add Tag" 
+            <MudAutocomplete T="string" 
+                           Label="Tags" 
                            SearchFunc="SearchTags"
                            ToStringFunc="(string s) => s"
-                           KeyPress="AddTag" />
+                           MultiSelection="true"
+                           SelectedValues="selectedTags"
+                           SelectedValuesChanged="OnTagsChanged"
+                           AllowCustomValues="true" />
             
             <MudChipSet T="string">
                 @foreach (var tag in Model.Tags)
                 {
-                    <MudChip Value="@tag" Text="@tag" />
+                    <MudChip Value="@tag" Text="@tag" Closeable="true" OnClose="@((MudChip<string> chip) => RemoveTag(tag))" />
                 }
             </MudChipSet>
             
-            <MudTextField @bind-Value="Model.CoverPicture" Label="Cover Picture URL" />
-            
-            <MudGrid>
-                <MudItem xs="6">
-                    <MudSelect @bind-Value="SelectedBaseSize" Label="Base Size">
-                        @foreach (var size in Enum.GetValues<BaseSize>())
-                        {
-                            <MudSelectItem Value="@size">@size.ToString()</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudItem>
-                <MudItem xs="6">
-                    <MudSelect @bind-Value="SelectedFigureSize" Label="Figure Size">
-                        @foreach (var size in Enum.GetValues<FigureSize>())
-                        {
-                            <MudSelectItem Value="@size">@size.ToString()</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudItem>
-            </MudGrid>
-            
-            <MudGrid>
-                <MudItem xs="6">
-                    <MudNumericField @bind-Value="Model.NumberOfFigures" Label="Number of Figures" />
-                </MudItem>
-                <MudItem xs="6">
-                    <MudNumericField @bind-Value="Model.Size" Label="Size (MB)" />
-                </MudItem>
-            </MudGrid>
+            <MudCheckBox T="bool" @bind-Checked="Model.MustHave" Label="Must Have" />
         </MudStack>
     </DialogContent>
     <DialogActions>
@@ -98,13 +86,14 @@
 
 @code {
     [Parameter] public ModelDetails Model { get; set; } = new();
+    [Parameter] public List<ModelDetails> AllModels { get; set; } = new();
     [Inject] public IModelCategoriesService ModelCategoriesService { get; set; } = default!;
 
     [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
 
     private List<ModelCategoryDetails> categories = new();
-    private string selectedCharacter = string.Empty;
-    private string newTag = string.Empty;
+    private HashSet<string> selectedCharacters = new();
+    private HashSet<string> selectedTags = new();
 
     private Guid SelectedCategoryId
     {
@@ -118,21 +107,13 @@
         set => Model.Type = new EnumReference((int)value, value.ToString());
     }
 
-    private BaseSize SelectedBaseSize
-    {
-        get => (BaseSize)Model.BaseSize.Id;
-        set => Model.BaseSize = new EnumReference((int)value, value.ToString());
-    }
-
-    private FigureSize SelectedFigureSize
-    {
-        get => (FigureSize)Model.FigureSize.Id;
-        set => Model.FigureSize = new EnumReference((int)value, value.ToString());
-    }
-
     protected override async Task OnInitializedAsync()
     {
         await LoadCategories();
+        // Initialize selectedCharacters with existing characters
+        selectedCharacters = new HashSet<string>(Model.Characters);
+        // Initialize selectedTags with existing tags
+        selectedTags = new HashSet<string>(Model.Tags);
     }
 
     private async Task LoadCategories()
@@ -142,68 +123,106 @@
 
     private async Task<IEnumerable<string>> SearchFranchises(string value, CancellationToken cancellationToken)
     {
-        // In a real application, you would get this from a service
-        // For now, return some sample franchises
-        var franchises = new[] { "Warhammer 40k", "Warhammer Fantasy", "D&D", "Star Wars", "Marvel", "DC", "Lord of the Rings" };
-        return franchises.Where(f => f.Contains(value, StringComparison.OrdinalIgnoreCase));
+        var franchises = AllModels
+            .Where(m => !string.IsNullOrWhiteSpace(m.Franchise))
+            .Select(m => m.Franchise)
+            .Distinct()
+            .OrderBy(f => f)
+            .ToList();
+
+        var results = franchises.Where(f => f.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+        
+        // Add the current input value if it's not empty and not already in the results
+        if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
+        {
+            results.Insert(0, value);
+        }
+        
+        return results;
     }
 
     private async Task<IEnumerable<string>> SearchCharacters(string value, CancellationToken cancellationToken)
     {
-        // In a real application, you would get this from a service
-        // For now, return some sample characters
-        var characters = new[] { "Space Marine", "Ork", "Eldar", "Tau", "Necron", "Tyranid", "Chaos Marine", "Imperial Guard" };
-        return characters.Where(c => c.Contains(value, StringComparison.OrdinalIgnoreCase));
+        var characters = AllModels
+            .SelectMany(m => m.Characters)
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .Distinct()
+            .OrderBy(c => c)
+            .ToList();
+
+        var results = characters.Where(c => c.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+        
+        // Add the current input value if it's not empty and not already in the results
+        if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
+        {
+            results.Insert(0, value);
+        }
+        
+        return results;
     }
 
     private async Task<IEnumerable<string>> SearchArtists(string value, CancellationToken cancellationToken)
     {
-        // In a real application, you would get this from a service
-        // For now, return some sample artists
-        var artists = new[] { "John Doe", "Jane Smith", "Bob Johnson", "Alice Brown", "Charlie Wilson" };
-        return artists.Where(a => a.Contains(value, StringComparison.OrdinalIgnoreCase));
+        var artists = AllModels
+            .Where(m => !string.IsNullOrWhiteSpace(m.Artist))
+            .Select(m => m.Artist!)
+            .Distinct()
+            .OrderBy(a => a)
+            .ToList();
+
+        var results = artists.Where(a => a.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+        
+        // Add the current input value if it's not empty and not already in the results
+        if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
+        {
+            results.Insert(0, value);
+        }
+        
+        return results;
     }
 
     private async Task<IEnumerable<string>> SearchTags(string value, CancellationToken cancellationToken)
     {
-        // In a real application, you would get this from a service
-        // For now, return some sample tags
-        var tags = new[] { "Fantasy", "Sci-Fi", "Heroic", "Villain", "Monster", "Vehicle", "Terrain", "Character" };
-        return tags.Where(t => t.Contains(value, StringComparison.OrdinalIgnoreCase));
-    }
+        var tags = AllModels
+            .SelectMany(m => m.Tags)
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .Distinct()
+            .OrderBy(t => t)
+            .ToList();
 
-    private void AddCharacter(KeyboardEventArgs args)
-    {
-        if (args.Key == "Enter" && !string.IsNullOrWhiteSpace(selectedCharacter))
+        var results = tags.Where(t => t.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+        
+        // Add the current input value if it's not empty and not already in the results
+        if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
         {
-            if (!Model.Characters.Contains(selectedCharacter))
-            {
-                Model.Characters = Model.Characters.Append(selectedCharacter).ToArray();
-            }
-            selectedCharacter = string.Empty;
+            results.Insert(0, value);
         }
+        
+        return results;
     }
 
-    private void RemoveCharacter(string character)
+
+
+ 
+
+    private void OnCharactersChanged(HashSet<string> newSelectedCharacters)
     {
-        Model.Characters = Model.Characters.Where(c => c != character).ToArray();
+        selectedCharacters = newSelectedCharacters;
+        Model.Characters = selectedCharacters.ToArray();
     }
 
-    private void AddTag(KeyboardEventArgs args)
+    private void OnTagsChanged(HashSet<string> newSelectedTags)
     {
-        if (args.Key == "Enter" && !string.IsNullOrWhiteSpace(newTag))
-        {
-            if (!Model.Tags.Contains(newTag))
-            {
-                Model.Tags = Model.Tags.Append(newTag).ToArray();
-            }
-            newTag = string.Empty;
-        }
+        selectedTags = newSelectedTags;
+        Model.Tags = selectedTags.ToArray();
     }
+
+
 
     private void RemoveTag(string tag)
     {
         Model.Tags = Model.Tags.Where(t => t != tag).ToArray();
+        selectedTags.Remove(tag);
     }
 
     private void Submit() 
@@ -214,5 +233,45 @@
     private void Cancel() 
     {
         MudDialog?.Cancel();
+    }
+
+
+
+
+
+
+
+
+
+    private string _characterInput = "";
+
+    private void HandleCharacterKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" || e.Key == ",")
+            AddCharacterFromInput();
+    }
+
+    private void AddCharacterFromInput()
+    {
+        var v = _characterInput?.Trim();
+        if (string.IsNullOrWhiteSpace(v)) return;
+
+        // include in selectable list for future searches if it didn't exist
+        if (!selectedCharacters.Contains(v, StringComparer.OrdinalIgnoreCase))
+            AddCharacter(v);
+
+        _characterInput = "";
+    }
+
+    private void AddCharacter(string v)
+    {
+        if (selectedCharacters.Add(v))
+            Model.Characters = selectedCharacters.ToArray();
+    }
+
+    private void RemoveCharacter(string character)
+    {
+        selectedCharacters.RemoveWhere(c => string.Equals(c, character, StringComparison.OrdinalIgnoreCase));
+        Model.Characters = selectedCharacters.ToArray();
     }
 }
