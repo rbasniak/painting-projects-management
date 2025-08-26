@@ -167,6 +167,26 @@ public class Model : TenantEntity
         RaiseDomainEvent(new ModelPicturesChanged(Id));
     }
 
+    public void RemovePicture(string picture)
+    {
+        var newPictures = Pictures.Where(x => x != picture).ToArray();
+
+        if (newPictures.Length == Pictures.Length)
+        {
+            return;
+        }
+
+        Pictures = newPictures;
+
+        if (CoverPicture == picture)
+        {
+            CoverPicture = null;
+            RaiseDomainEvent(new ModelCoverPictureChanged(Id));
+        }
+
+        RaiseDomainEvent(new ModelPicturesChanged(Id));
+    }
+
     public void Rate(int score)
     {
         var newScore = new Rating(Math.Min(Math.Max(score, 0), 5));

@@ -10,7 +10,7 @@ public class UploadModelPicture : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
-        .Produces(StatusCodes.Status200OK)
+        .Produces<string>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Upload Model Picture")
         .WithTags("Models");
@@ -85,8 +85,8 @@ public class UploadModelPicture : IEndpoint
             model.AddPicture(pictureUrl);
             
             await _context.SaveChangesAsync(cancellationToken);
-            
-            return CommandResponse.Success();
+
+            return CommandResponse.Success(pictureUrl);
         }
     }
 }
