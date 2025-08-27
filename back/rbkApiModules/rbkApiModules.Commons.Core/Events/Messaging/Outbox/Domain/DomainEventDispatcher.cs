@@ -24,7 +24,7 @@ public sealed class DomainEventDispatcher : BackgroundService
     private readonly ILogger<DomainEventDispatcher> _logger;
     private readonly DomainEventDispatcherOptions _options;
 
-    private static readonly ConcurrentDictionary<Type, Func<object, object, CancellationToken, Task>> _dispatchers = [];
+    private static readonly ConcurrentDictionary<(Type HandlerType, Type EnvelopeType), Func<object, object, CancellationToken, Task>> _dispatchers = [];
 
     public DomainEventDispatcher(
         IServiceScopeFactory scopeFactory,
@@ -356,9 +356,14 @@ public sealed class DomainEventDispatcher : BackgroundService
         ArgumentNullException.ThrowIfNull(envelope);
 
         var handlerType = handler.GetType();
-        var invoker = _dispatchers.GetOrAdd(handlerType, x =>
+        var key = (HandlerType: handlerType, EnvelopeType: envelope.GetType());
+        var invoker = _dispatchers.GetOrAdd(key, x =>
         {
-            var method = x.GetMethod(nameof(IDomainEventHandler<object>.HandleAsync), BindingFlags.Public | BindingFlags.Instance);
+            var methods = x.HandlerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Where(x => x.Name == nameof(IDomainEventHandler<object>.HandleAsync))
+                .ToArray();
+
+            var method = methods.FirstOrDefault(x => x.GetParameters().First().ParameterType == key.EnvelopeType);
 
             if (method is null)
             {

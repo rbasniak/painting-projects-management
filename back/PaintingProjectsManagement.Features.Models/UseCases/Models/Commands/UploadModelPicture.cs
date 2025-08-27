@@ -10,7 +10,7 @@ public class UploadModelPicture : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
-        .Produces<string>(StatusCodes.Status200OK)
+        .Produces<ModelDetails>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Upload Model Picture")
         .WithTags("Models");
@@ -20,6 +20,7 @@ public class UploadModelPicture : IEndpoint
     {
         public Guid ModelId { get; set; }
         public string Base64Image { get; set; } = string.Empty;
+        public string? FileExtension { get; set; } = string.Empty;
     }
 
     public class Validator : SmartValidator<Request, Model>
@@ -32,35 +33,11 @@ public class UploadModelPicture : IEndpoint
         {
             RuleFor(x => x.Base64Image)
                 .NotEmpty()
-                .WithMessage("Base64 image content is required.")
-                .Must(data => IsValidBase64Image(data))
-                .WithMessage("Invalid base64 image format. Must be a valid base64 encoded image with proper header.");
-        }
-        
-        private bool IsValidBase64Image(string base64)
-        {
-            if (string.IsNullOrEmpty(base64))
-            {
-                return false;
-            }
-                
-            var hasImagePrefix = base64.StartsWith("data:image/") && base64.Contains(";base64,");
-            if (!hasImagePrefix)
-            {
-                return false;
-            }
-                
-            var base64Content = base64.Split(',')[1];
-            
-            try
-            {
-                var bytes = Convert.FromBase64String(base64Content);
-                return bytes.Length > 0;
-            }
-            catch
-            {
-                return false;
-            }
+                .WithMessage("Base64 image content is required.");
+
+            RuleFor(x => x.FileExtension)
+                .NotEmpty()
+                .WithMessage("Extension must be provided.");
         }
     }
 
@@ -69,24 +46,29 @@ public class UploadModelPicture : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(request);
+
             var model = await _context.Set<Model>()
                 .Include(x => x.Category)
                 .FirstAsync(x => x.Id == request.ModelId, cancellationToken);
-            
+
+            string baseFileName = $"model_{model.Id:N}_{DateTime.UtcNow:yyyyMMddHHmmss}";
+            string fullFileName = string.IsNullOrWhiteSpace(request.FileExtension)
+                ? baseFileName
+                : $"{baseFileName}{request.FileExtension}";
+
             string pictureUrl = await _fileStorage.StoreFileFromBase64Async(
                 request.Base64Image,
-                $"model_{model.Id:N}_{DateTime.UtcNow:yyyyMMddHHmmss}",
+                fullFileName,
                 "models",
-                2048, 
+                2048,
                 2048,
                 cancellationToken);
-                
-            // Add the new picture to the Pictures array
+
             model.AddPicture(pictureUrl);
-            
             await _context.SaveChangesAsync(cancellationToken);
 
-            return CommandResponse.Success(pictureUrl);
+            return CommandResponse.Success(ModelDetails.FromModel(model));
         }
     }
 }

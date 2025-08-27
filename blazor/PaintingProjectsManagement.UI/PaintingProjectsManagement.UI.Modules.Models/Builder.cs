@@ -61,10 +61,17 @@ public class ModelsModule : IModule
         },
         new ModuleRoute
         {
+            Name = "Classification",
+            Route = "classification",
+            Icon = "icon",
+            Order = 2
+        },
+        new ModuleRoute
+        {
             Name = "Categories",
             Route = "categories",
             Icon = "icon",
-            Order = 2
+            Order = 3
         }
     ];
 }

@@ -61,6 +61,7 @@ public class UploadModelPictureRequest
 {
     public Guid ModelId { get; init; }
     public string Base64Image { get; init; } = string.Empty;
+    public string FileExtension { get; init; } = string.Empty;
 }
 
 public class PromoteModelPictureRequest

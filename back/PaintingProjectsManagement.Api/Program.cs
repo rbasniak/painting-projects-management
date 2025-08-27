@@ -177,10 +177,9 @@ public class Program
                  options.AddPolicy("_defaultPolicy", builder =>
                  {
                      builder
-                        .WithOrigins("https://localhost:7233", "https://localhost:7114", "http://localhost:5251", "http://localhost:*")
+                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials()
                         .WithExposedHeaders("Content Disposition");
                  }))
              .UseDefaultHsts(builder.Environment.IsDevelopment())

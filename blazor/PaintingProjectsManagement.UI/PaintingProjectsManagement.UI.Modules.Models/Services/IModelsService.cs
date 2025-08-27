@@ -11,7 +11,7 @@ public interface IModelsService
     Task<ModelDetails> UpdateAsync(UpdateModelRequest request, CancellationToken cancellationToken);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     Task SetMustHaveAsync(Guid id, bool mustHave, CancellationToken cancellationToken);
-    Task<string> UploadPictureAsync(UploadModelPictureRequest request, CancellationToken cancellationToken);
+    Task<ModelDetails> UploadPictureAsync(UploadModelPictureRequest request, CancellationToken cancellationToken);
     Task PromotePictureToCoverAsync(PromoteModelPictureRequest request, CancellationToken cancellationToken);
     Task DeletePictureAsync(Guid modelId, string pictureUrl, CancellationToken cancellationToken);
 }
@@ -70,12 +70,12 @@ public class ModelsService : IModelsService
         response.EnsureSuccessStatusCode();
     }
 
-    public async Task<string> UploadPictureAsync(UploadModelPictureRequest request, CancellationToken cancellationToken)
+    public async Task<ModelDetails> UploadPictureAsync(UploadModelPictureRequest request, CancellationToken cancellationToken)
     {
         var response = await _httpClient.PostAsJsonAsync("api/models/picture", request, cancellationToken);
         response.EnsureSuccessStatusCode();
-        var result = await response.Content.ReadFromJsonAsync<string>();
-        return result ?? string.Empty;
+        var result = await response.Content.ReadFromJsonAsync<ModelDetails>();
+        return result;
     }
 
     public async Task PromotePictureToCoverAsync(PromoteModelPictureRequest request, CancellationToken cancellationToken)

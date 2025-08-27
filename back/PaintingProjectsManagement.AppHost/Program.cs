@@ -38,9 +38,6 @@ var apiService = builder.AddProject<Projects.PaintingProjectsManagement_Api>("pp
 
 var blazorApp = builder.AddProject<Projects.PaintingProjectsManagement_UI>("ppm-ui")
     .WithReference(apiService)
-    .WaitFor(apiService)
-    .WithEnvironment("DOTNET_LAUNCH_BROWSER", "false")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Development")
-    .WithEnvironment("DOTNET_ENVIRONMENT", "Development");
+    .WaitFor(apiService);
 
 builder.Build().Run();

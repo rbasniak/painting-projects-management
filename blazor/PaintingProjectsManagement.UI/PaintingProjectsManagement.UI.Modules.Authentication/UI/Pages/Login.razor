@@ -150,7 +150,7 @@
 
             var result = await AuthenticationService.LoginAsync(Request, default);
             await TokenService.SetTokensAsync(result.AccessToken, result.RefreshToken, default);
-            NavigationManager.NavigateTo("/materials/library");
+            NavigationManager.NavigateTo("/models/classification");
         }
         catch (Exception ex)
         {

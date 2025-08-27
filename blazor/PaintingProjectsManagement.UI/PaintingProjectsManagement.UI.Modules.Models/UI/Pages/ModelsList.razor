@@ -52,7 +52,7 @@
                 <MudCheckBox T="bool" @bind-Checked="context.MustHave" />
             </MudTd>
             <MudTd Style="width: 200px; min-width: 200px">
-                <MudIconButton Icon="@Icons.Material.Filled.Image" OnClick="() => Pictures(context)" Color="Color.Secondary" />
+                <MudIconButton Icon="@Icons.Material.Filled.Image" OnClick="() => ManagePictures(context)" Color="Color.Secondary" />
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
             </MudTd>
@@ -148,6 +148,7 @@
             ["Model"] = new ModelDetails(),
             ["AllModels"] = models
         };
+
         var dialog = await DialogService.ShowAsync<ModelsDialog>("Model", parameters);
         var result = await dialog.Result;
         if (!result.Canceled && result.Data is ModelDetails input)
@@ -168,14 +169,14 @@
                 SizeInMb = 0
             };
             var created = await ModelsService.CreateAsync(request, CancellationToken.None);
-            
+
             // Set MustHave separately if needed
             if (input.MustHave)
             {
                 await ModelsService.SetMustHaveAsync(created.Id, true, CancellationToken.None);
                 created.MustHave = true;
             }
-            
+
             models.Add(created);
         }
     }
@@ -230,27 +231,43 @@
                 SizeInMb = 0
             };
             var updated = await ModelsService.UpdateAsync(request, CancellationToken.None);
-            
+
             // Update MustHave separately if it changed
             if (updatedInput.MustHave != model.MustHave)
             {
                 await ModelsService.SetMustHaveAsync(updatedInput.Id, updatedInput.MustHave, CancellationToken.None);
                 updated.MustHave = updatedInput.MustHave;
             }
-            
+
             var index = models.FindIndex(m => m.Id == updated.Id);
             if (index >= 0)
                 models[index] = updated;
         }
     }
 
-    private async Task Pictures(ModelDetails model)
+    private async Task ManagePictures(ModelDetails model)
     {
         var parameters = new DialogParameters
         {
             ["Model"] = model
         };
-        await DialogService.ShowAsync<ModelPicturesDialog>("Pictures", parameters);
+
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.ExtraLarge,
+            FullWidth = true,
+            CloseButton = true,
+            CloseOnEscapeKey = true
+        };
+
+        var dialogTitle = model.Name;
+
+        if (!string.IsNullOrEmpty(model.Artist))
+        {
+            dialogTitle += $" ({model.Artist})";
+        } 
+
+        await DialogService.ShowAsync<ModelPicturesDialog>(dialogTitle, parameters, options);
     }
 
     private async Task Delete(ModelDetails model)
