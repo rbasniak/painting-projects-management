@@ -38,7 +38,7 @@
             <MudTh Style="width: 10%">
                 <MudTableSortLabel SortBy="new Func<ModelDetails, object>(x => x.MustHave)">Must Have</MudTableSortLabel>
             </MudTh>
-            <MudTh Style="width: 10%"></MudTh>
+            <MudTh Style="width: 200px; min-width: 200px"></MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name" Style="width: 20%">@context.Name</MudTd>
@@ -51,7 +51,7 @@
             <MudTd DataLabel="Must Have" Style="width: 10%">
                 <MudCheckBox T="bool" @bind-Checked="context.MustHave" />
             </MudTd>
-            <MudTd Style="width: 10%">
+            <MudTd Style="width: 200px; min-width: 200px">
                 <MudIconButton Icon="@Icons.Material.Filled.Image" OnClick="() => Pictures(context)" Color="Color.Secondary" />
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />

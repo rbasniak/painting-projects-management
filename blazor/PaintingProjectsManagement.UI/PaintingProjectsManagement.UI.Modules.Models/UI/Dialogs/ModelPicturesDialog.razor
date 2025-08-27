@@ -5,16 +5,22 @@
 @using System.Threading
 @using System
 @using PaintingProjectsManagement.UI.Modules.Models
+@using Microsoft.JSInterop
 @namespace PaintingProjectsManagement.UI.Modules.Models.UI.Dialogs
 
 <MudDialog>
     <DialogContent>
         <MudStack Spacing="2">
             <MudText Typo="Typo.h6">@Model.Name</MudText>
-            <label for="model-picture-input">
-                <MudButton Variant="Variant.Filled" Color="Color.Primary">Add Image</MudButton>
-            </label>
-            <InputFile id="model-picture-input" OnChange="OnFileSelected" style="display:none" accept="image/*" />
+            <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+                <ActivatorContent>
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.CloudUpload">
+                        Upload Files
+                    </MudButton>
+                </ActivatorContent>
+            </MudFileUpload>
             <MudGrid Class="mt-2">
                 @foreach (var picture in Model.Pictures)
                 {
@@ -42,26 +48,45 @@
     [Parameter] public ModelDetails Model { get; set; } = new();
 
     [Inject] public IModelsService ModelsService { get; set; } = default!;
-    [CascadingParameter] public MudDialogInstance? MudDialog { get; set; }
-;
+
+    [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
+    
+    private bool isUploading = false;
+    
     private async Task OnFileSelected(InputFileChangeEventArgs e)
     {
-        var file = e.File;
-        using var stream = file.OpenReadStream(long.MaxValue);
-        using var ms = new MemoryStream();
-        await stream.CopyToAsync(ms);
-        var base64 = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
-        var url = await ModelsService.UploadPictureAsync(new UploadModelPictureRequest
+        try
         {
-            ModelId = Model.Id,
-            Base64Image = base64
-        }, CancellationToken.None);
+            isUploading = true;
+            StateHasChanged();
+            
+            var file = e.File;
+            using var stream = file.OpenReadStream(long.MaxValue);
+            using var ms = new MemoryStream();
+            await stream.CopyToAsync(ms);
+            var base64 = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+            var url = await ModelsService.UploadPictureAsync(new UploadModelPictureRequest
+            {
+                ModelId = Model.Id,
+                Base64Image = base64
+            }, CancellationToken.None);
 
-        if (!string.IsNullOrWhiteSpace(url))
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                var list = Model.Pictures.ToList();
+                list.Add(url);
+                Model.Pictures = list.ToArray();
+            }
+        }
+        catch (Exception ex)
         {
-            var list = Model.Pictures.ToList();
-            list.Add(url);
-            Model.Pictures = list.ToArray();
+            // You might want to show a snackbar or toast notification here
+            Console.WriteLine($"Error uploading image: {ex.Message}");
+        }
+        finally
+        {
+            isUploading = false;
+            StateHasChanged();
         }
     }
 
@@ -91,4 +116,12 @@
     private string GetCardClass(string picture) => IsCover(picture) ? "border border-2 border-primary" : string.Empty;
 
     private void Close() => MudDialog?.Close();
+
+    IList<IBrowserFile> _files = new List<IBrowserFile>();
+    private void UploadFiles(IBrowserFile file)
+    {
+        Console.WriteLine("File selected: " + file.Name);
+        _files.Add(file);
+        //TODO upload the files to the server
+    }
 }
