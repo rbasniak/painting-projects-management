@@ -204,6 +204,14 @@
         if (!_states.TryGetValue(CurrentModel.Id, out var state))
         {
             state = new ModelClassificationState();
+            
+            // Initialize state with current model values
+            state.Rating = CurrentModel.Score;
+            state.BaseSize = MapBaseSizeToBaseSizeOption((BaseSize)CurrentModel.BaseSize.Id);
+            state.FigureSize = MapFigureSizeToFigureSizeOption((FigureSize)CurrentModel.FigureSize.Id);
+            state.NumberOfFigures = MapIntToNumberOfFiguresOption(CurrentModel.NumberOfFigures);
+            state.MustHave = CurrentModel.MustHave;
+            
             _states[CurrentModel.Id] = state;
         }
 
@@ -212,45 +220,145 @@
         StateHasChanged();
     }
 
+    private static BaseSizeOption MapBaseSizeToBaseSizeOption(BaseSize baseSize) => baseSize switch
+    {
+        BaseSize.Small => BaseSizeOption.Small,
+        BaseSize.Medium => BaseSizeOption.Medium,
+        BaseSize.Big => BaseSizeOption.Big,
+        _ => BaseSizeOption.Medium
+    };
+
+    private static FigureSizeOption MapFigureSizeToFigureSizeOption(FigureSize figureSize) => figureSize switch
+    {
+        FigureSize.Normal => FigureSizeOption.Medium,
+        FigureSize.Big => FigureSizeOption.Big,
+        _ => FigureSizeOption.Medium
+    };
+
+    private static NumberOfFiguresOption MapIntToNumberOfFiguresOption(int numberOfFigures) => numberOfFigures switch
+    {
+        1 => NumberOfFiguresOption.One,
+        2 => NumberOfFiguresOption.Two,
+        >= 3 => NumberOfFiguresOption.ThreePlus,
+        _ => NumberOfFiguresOption.One
+    };
+
     private string GetPictureAddress(string url)
     {
-        return $"https://localhost:7236{url}";
+        return $"https://localhost:7236/{url.Trim('/')}";
     }
 
     private async Task OnRatingChanged(int value)
     {
         _state.Rating = value;
 
-        // TODO: implement
+        if (CurrentModel is not null)
+        {
+            try
+            {
+                await ModelsService.RateModelAsync(CurrentModel.Id, value, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                // Handle error
+            }
+        }
     }
 
     private async Task OnBaseSizeChanged(BaseSizeOption value)
     {
         _state.BaseSize = value;
         
-        // TODO: implement
+        if (CurrentModel is not null)
+        {
+            try
+            {
+                var baseSize = MapBaseSizeOptionToBaseSize(value);
+                await ModelsService.SetBaseSizeAsync(CurrentModel.Id, baseSize, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                // Handle error
+            }
+        }
     }
 
     private async Task OnFigureSizeChanged(FigureSizeOption value)
     {
         _state.FigureSize = value;
         
-        // TODO: implement
+        if (CurrentModel is not null)
+        {
+            try
+            {
+                var figureSize = MapFigureSizeOptionToFigureSize(value);
+                await ModelsService.SetFigureSizeAsync(CurrentModel.Id, figureSize, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                // Handle error
+            }
+        }
     }
 
     private async Task OnNumberOfFiguresChanged(NumberOfFiguresOption value)
     {
         _state.NumberOfFigures = value;
         
-        // TODO: implement
+        if (CurrentModel is not null)
+        {
+            try
+            {
+                var numberOfFigures = MapNumberOfFiguresOptionToInt(value);
+                await ModelsService.SetFigureCountAsync(CurrentModel.Id, numberOfFigures, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                // Handle error
+            }
+        }
     }
 
     private async Task OnMustHaveChanged(bool value)
     {
         _state.MustHave = value;
         
-        // TODO: implement
+        if (CurrentModel is not null)
+        {
+            try
+            {
+                await ModelsService.SetMustHaveAsync(CurrentModel.Id, value, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                // Handle error
+            }
+        }
     }
+
+    private static BaseSize MapBaseSizeOptionToBaseSize(BaseSizeOption option) => option switch
+    {
+        BaseSizeOption.Small => BaseSize.Small,
+        BaseSizeOption.Medium => BaseSize.Medium,
+        BaseSizeOption.Big => BaseSize.Big,
+        _ => BaseSize.Medium
+    };
+
+    private static FigureSize MapFigureSizeOptionToFigureSize(FigureSizeOption option) => option switch
+    {
+        FigureSizeOption.Small => FigureSize.Normal,
+        FigureSizeOption.Medium => FigureSize.Normal,
+        FigureSizeOption.Big => FigureSize.Big,
+        _ => FigureSize.Normal
+    };
+
+    private static int MapNumberOfFiguresOptionToInt(NumberOfFiguresOption option) => option switch
+    {
+        NumberOfFiguresOption.One => 1,
+        NumberOfFiguresOption.Two => 2,
+        NumberOfFiguresOption.ThreePlus => 3,
+        _ => 1
+    };
 
     public async ValueTask DisposeAsync()
     {

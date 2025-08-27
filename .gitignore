@@ -426,5 +426,4 @@ FodyWeavers.xsd
 /back/rbkApiModules/Demo1/demo1.Application.db
 /back/rbkApiModules/Demo1/demo1.Application.db-shm
 /back/rbkApiModules/Demo1/demo1.Application.db-wal
-/back/PaintingProjectsManagement.Api/wwwroot/uploads/models
-/back/PaintingProjectsManagement.Api/wwwroot/uploads/rodrigo.basniak/models
+/back/PaintingProjectsManagement.Api/wwwroot/uploads

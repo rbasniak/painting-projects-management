@@ -39,3 +39,21 @@ public sealed record ModelMustHaveChanged(
     Guid ModelId,
     bool MustHave
 ) : IDomainEvent;
+
+[EventName("Models.ModelBaseSizeChanged", 1)]
+public sealed record ModelBaseSizeChanged(
+    Guid ModelId,
+    BaseSize BaseSize
+) : IDomainEvent;
+
+[EventName("Models.ModelFigureSizeChanged", 1)]
+public sealed record ModelFigureSizeChanged(
+    Guid ModelId,
+    FigureSize FigureSize
+) : IDomainEvent;
+
+[EventName("Models.ModelNumberOfFiguresChanged", 1)]
+public sealed record ModelNumberOfFiguresChanged(
+    Guid ModelId,
+    int NumberOfFigures
+) : IDomainEvent;

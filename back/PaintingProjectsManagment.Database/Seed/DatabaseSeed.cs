@@ -35,11 +35,6 @@ public partial class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatab
         context.SaveChanges();
     }
 
-    private void DevelopmentModelsSeed(DatabaseContext context, IServiceProvider provider)
-    {
-        ModelsSeeder.SeedFromDisk(context);
-    }
-
     private void DevelopmentMaterialsSeed(DatabaseContext context, IServiceProvider provider)
     {
         context.Set<Material>().Add(new Material("rodrigo.basniak", "6x3 magnet", new Quantity(1, PackageContentUnit.Each), new Money(6, "USD")));

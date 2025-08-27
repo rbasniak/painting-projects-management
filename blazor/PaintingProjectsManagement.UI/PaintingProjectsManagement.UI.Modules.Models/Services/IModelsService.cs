@@ -11,6 +11,10 @@ public interface IModelsService
     Task<ModelDetails> UpdateAsync(UpdateModelRequest request, CancellationToken cancellationToken);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     Task SetMustHaveAsync(Guid id, bool mustHave, CancellationToken cancellationToken);
+    Task RateModelAsync(Guid id, int score, CancellationToken cancellationToken);
+    Task SetBaseSizeAsync(Guid id, BaseSize baseSize, CancellationToken cancellationToken);
+    Task SetFigureSizeAsync(Guid id, FigureSize figureSize, CancellationToken cancellationToken);
+    Task SetFigureCountAsync(Guid id, int numberOfFigures, CancellationToken cancellationToken);
     Task<ModelDetails> UploadPictureAsync(UploadModelPictureRequest request, CancellationToken cancellationToken);
     Task PromotePictureToCoverAsync(PromoteModelPictureRequest request, CancellationToken cancellationToken);
     Task DeletePictureAsync(Guid modelId, string pictureUrl, CancellationToken cancellationToken);
@@ -65,8 +69,36 @@ public class ModelsService : IModelsService
 
     public async Task SetMustHaveAsync(Guid id, bool mustHave, CancellationToken cancellationToken)
     {
-        var request = new { MustHave = mustHave };
-        var response = await _httpClient.PutAsJsonAsync($"api/models/{id}/must-have", request, cancellationToken);
+        var request = new { Id = id, MustHave = mustHave };
+        var response = await _httpClient.PutAsJsonAsync("api/models/must-have", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task RateModelAsync(Guid id, int score, CancellationToken cancellationToken)
+    {
+        var request = new { Id = id, Score = score };
+        var response = await _httpClient.PostAsJsonAsync("api/models/rate", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task SetBaseSizeAsync(Guid id, BaseSize baseSize, CancellationToken cancellationToken)
+    {
+        var request = new { Id = id, BaseSize = baseSize };
+        var response = await _httpClient.PutAsJsonAsync("api/models/base-size", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task SetFigureSizeAsync(Guid id, FigureSize figureSize, CancellationToken cancellationToken)
+    {
+        var request = new { Id = id, FigureSize = figureSize };
+        var response = await _httpClient.PutAsJsonAsync("api/models/figure-size", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task SetFigureCountAsync(Guid id, int numberOfFigures, CancellationToken cancellationToken)
+    {
+        var request = new { Id = id, NumberOfFigures = numberOfFigures };
+        var response = await _httpClient.PutAsJsonAsync("api/models/figure-count", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 

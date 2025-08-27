@@ -101,9 +101,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<int>("SizeInMb")
                         .HasColumnType("integer");
 
-                    b.PrimitiveCollection<string[]>("Tags")
+                    b.PrimitiveCollection<string>("Tags")
                         .IsRequired()
-                        .HasColumnType("text[]");
+                        .HasColumnType("text");
 
                     b.Property<string>("TenantId")
                         .HasMaxLength(255)
@@ -116,8 +116,7 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("TenantId", "Name")
-                        .IsUnique();
+                    b.HasIndex("TenantId", "Name");
 
                     b.ToTable("models.models", (string)null);
                 });
