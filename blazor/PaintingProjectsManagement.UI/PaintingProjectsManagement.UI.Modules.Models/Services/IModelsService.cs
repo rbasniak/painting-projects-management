@@ -37,89 +37,98 @@ public class ModelsService : IModelsService
     public async Task<IReadOnlyCollection<ModelDetails>> GetAllAsync(CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync("api/models", cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<ModelDetails>>();
-        return result ?? [];
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<ModelDetails>>();
+            return result ?? Array.Empty<ModelDetails>();
+        }
+
+        return Array.Empty<ModelDetails>();
     }
 
     public async Task<ModelDetails> CreateAsync(CreateModelRequest request, CancellationToken cancellationToken)
     {
         var response = await _httpClient.PostAsJsonAsync("api/models", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<ModelDetails>();
-        return result ?? new ModelDetails();
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<ModelDetails>();
+            return result ?? new ModelDetails();
+        }
+
+        return new ModelDetails();
     }
 
     public async Task<ModelDetails> UpdateAsync(UpdateModelRequest request, CancellationToken cancellationToken)
     {
         var response = await _httpClient.PutAsJsonAsync("api/models", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<ModelDetails>();
-        return result ?? new ModelDetails();
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<ModelDetails>();
+            return result ?? new ModelDetails();
+        }
+
+        return new ModelDetails();
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.DeleteAsync($"api/models/{id}", cancellationToken);
-        response.EnsureSuccessStatusCode();
+        await _httpClient.DeleteAsync($"api/models/{id}", cancellationToken);
     }
 
     public async Task SetMustHaveAsync(Guid id, bool mustHave, CancellationToken cancellationToken)
     {
         var request = new { Id = id, MustHave = mustHave };
-        var response = await _httpClient.PutAsJsonAsync("api/models/must-have", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        await _httpClient.PutAsJsonAsync("api/models/must-have", request, cancellationToken);
     }
 
     public async Task RateModelAsync(Guid id, int score, CancellationToken cancellationToken)
     {
         var request = new { Id = id, Score = score };
-        var response = await _httpClient.PostAsJsonAsync("api/models/rate", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        await _httpClient.PostAsJsonAsync("api/models/rate", request, cancellationToken);
     }
 
     public async Task SetBaseSizeAsync(Guid id, BaseSize baseSize, CancellationToken cancellationToken)
     {
         var request = new { Id = id, BaseSize = baseSize };
-        var response = await _httpClient.PutAsJsonAsync("api/models/base-size", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        await _httpClient.PutAsJsonAsync("api/models/base-size", request, cancellationToken);
     }
 
     public async Task SetFigureSizeAsync(Guid id, FigureSize figureSize, CancellationToken cancellationToken)
     {
         var request = new { Id = id, FigureSize = figureSize };
-        var response = await _httpClient.PutAsJsonAsync("api/models/figure-size", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        await _httpClient.PutAsJsonAsync("api/models/figure-size", request, cancellationToken);
     }
 
     public async Task SetFigureCountAsync(Guid id, int numberOfFigures, CancellationToken cancellationToken)
     {
         var request = new { Id = id, NumberOfFigures = numberOfFigures };
-        var response = await _httpClient.PutAsJsonAsync("api/models/figure-count", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        await _httpClient.PutAsJsonAsync("api/models/figure-count", request, cancellationToken);
     }
 
     public async Task<ModelDetails> UploadPictureAsync(UploadModelPictureRequest request, CancellationToken cancellationToken)
     {
         var response = await _httpClient.PostAsJsonAsync("api/models/picture", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-        var result = await response.Content.ReadFromJsonAsync<ModelDetails>();
-        return result;
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<ModelDetails>();
+            return result ?? new ModelDetails();
+        }
+
+        return new ModelDetails();
     }
 
     public async Task PromotePictureToCoverAsync(PromoteModelPictureRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync($"api/models/{request.ModelId}/promote-picture", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+        await _httpClient.PostAsJsonAsync($"api/models/{request.ModelId}/promote-picture", request, cancellationToken);
     }
 
     public async Task DeletePictureAsync(Guid modelId, string pictureUrl, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.DeleteAsync($"api/models/{modelId}/picture?pictureUrl={Uri.EscapeDataString(pictureUrl)}", cancellationToken);
-        response.EnsureSuccessStatusCode();
+        await _httpClient.DeleteAsync($"api/models/{modelId}/picture?pictureUrl={Uri.EscapeDataString(pictureUrl)}", cancellationToken);
     }
 }
 
@@ -132,33 +141,44 @@ public class ModelCategoriesService : IModelCategoriesService
     public async Task<IReadOnlyCollection<ModelCategoryDetails>> GetAllAsync(CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync("api/models/categories", cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<ModelCategoryDetails>>();
-        return result ?? [];
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<ModelCategoryDetails>>();
+            return result ?? Array.Empty<ModelCategoryDetails>();
+        }
+
+        return Array.Empty<ModelCategoryDetails>();
     }
 
     public async Task<ModelCategoryDetails> CreateAsync(CreateModelCategoryRequest request, CancellationToken cancellationToken)
     {
         var response = await _httpClient.PostAsJsonAsync("api/models/categories", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<ModelCategoryDetails>();
-        return result ?? new ModelCategoryDetails();
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<ModelCategoryDetails>();
+            return result ?? new ModelCategoryDetails();
+        }
+
+        return new ModelCategoryDetails();
     }
 
     public async Task<ModelCategoryDetails> UpdateAsync(UpdateModelCategoryRequest request, CancellationToken cancellationToken)
     {
         var response = await _httpClient.PutAsJsonAsync("api/models/categories", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<ModelCategoryDetails>();
-        return result ?? new ModelCategoryDetails();
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<ModelCategoryDetails>();
+            return result ?? new ModelCategoryDetails();
+        }
+
+        return new ModelCategoryDetails();
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.DeleteAsync($"api/models/categories/{id}", cancellationToken);
-        response.EnsureSuccessStatusCode();
+        await _httpClient.DeleteAsync($"api/models/categories/{id}", cancellationToken);
     }
 }

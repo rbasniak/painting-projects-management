@@ -27,10 +27,14 @@ public class MaterialsService : IMaterialsService
       CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync("api/materials", cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<MaterialDetails>>();
-        return result;
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<MaterialDetails>>();
+            return result ?? Array.Empty<MaterialDetails>();
+        }
+
+        return Array.Empty<MaterialDetails>();
     }
 
     public async Task<MaterialDetails> CreateAsync(
@@ -38,11 +42,14 @@ public class MaterialsService : IMaterialsService
       CancellationToken cancellationToken)
     {
         var response = await _httpClient.PostAsJsonAsync("api/materials", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<MaterialDetails>();
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<MaterialDetails>();
+            return result ?? new MaterialDetails();
+        }
 
-        return result;
+        return new MaterialDetails();
     }
 
     public async Task<MaterialDetails> UpdateAsync(
@@ -50,16 +57,18 @@ public class MaterialsService : IMaterialsService
       CancellationToken cancellationToken)
     {
         var response = await _httpClient.PutAsJsonAsync("api/materials", request, cancellationToken);
-        response.EnsureSuccessStatusCode();
 
-        var result = await response.Content.ReadFromJsonAsync<MaterialDetails>();
-        return result;
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<MaterialDetails>();
+            return result ?? new MaterialDetails();
+        }
+
+        return new MaterialDetails();
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.DeleteAsync($"api/materials/{id}", cancellationToken);
-
-        response.EnsureSuccessStatusCode();
+        await _httpClient.DeleteAsync($"api/materials/{id}", cancellationToken);
     }
-} 
+}

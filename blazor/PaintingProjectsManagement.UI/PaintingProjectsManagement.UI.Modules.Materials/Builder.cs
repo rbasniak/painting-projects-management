@@ -12,12 +12,13 @@ public static class Builder
 
         services.AddScoped<IMaterialsService>(sp =>
         {
-            var handler = sp.GetRequiredService<BearerDelegatingHandler>();
+            var bearer = sp.GetRequiredService<BearerDelegatingHandler>();
+            var errorHandler = sp.GetRequiredService<HttpErrorHandler>();
 
-            // Assign the inner handler (required!!!!)
-            handler.InnerHandler = new HttpClientHandler();
+            bearer.InnerHandler = new HttpClientHandler();
+            errorHandler.InnerHandler = bearer;
 
-            var httpClient = new HttpClient(handler)
+            var httpClient = new HttpClient(errorHandler)
             {
                 BaseAddress = new Uri("https://localhost:7236")
             };

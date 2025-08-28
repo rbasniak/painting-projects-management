@@ -1,0 +1,14 @@
+@page "/debug"
+
+@inject PaintingProjectsManagement.UI.Modules.Shared.ProblemDetailsState ProblemState
+
+<h3>Debug</h3>
+
+@if (ProblemState.Details is not null)
+{
+    <pre>@System.Text.Json.JsonSerializer.Serialize(ProblemState.Details, new System.Text.Json.JsonSerializerOptions { WriteIndented = true })</pre>
+}
+else
+{
+    <p>No debug information available.</p>
+}
