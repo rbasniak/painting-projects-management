@@ -21,13 +21,25 @@ public class AuthenticationService : IAuthenticationService
     {
         var response = await _httpClient.PostAsJsonAsync("api/authentication/login", request, cancellationToken);
 
-        return await response.Content.ReadFromJsonAsync<LoginResponse>();
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<LoginResponse>();
+            return result ?? new LoginResponse();
+        }
+
+        return new LoginResponse();
     }
 
     public async Task<RefreshTokenResponse> RefreshTokenAsync(RefreshTokenRequest request, CancellationToken cancellationToken)
     {
         var response = await _httpClient.PostAsJsonAsync("api/authentication/refresh-token", request, cancellationToken);
 
-        return await response.Content.ReadFromJsonAsync<RefreshTokenResponse>();
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<RefreshTokenResponse>();
+            return result ?? new RefreshTokenResponse();
+        }
+
+        return new RefreshTokenResponse();
     }
 }

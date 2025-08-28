@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using PaintingProjectsManagement.UI.Modules.Shared;
 
 namespace PaintingProjectsManagement.Blazor.Modules.Authentication;
 
@@ -11,7 +12,10 @@ public static class Builder
 
         services.AddScoped<IAuthenticationService>(sp =>
         {
-            var httpClient = new HttpClient()
+            var errorHandler = sp.GetRequiredService<HttpErrorHandler>();
+            errorHandler.InnerHandler = new HttpClientHandler();
+
+            var httpClient = new HttpClient(errorHandler)
             {
                 BaseAddress = new Uri("https://localhost:7236")
             };
@@ -20,4 +24,4 @@ public static class Builder
 
         return services;
     }
-} 
+}
