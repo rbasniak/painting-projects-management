@@ -8,6 +8,8 @@ public static class Builder
 {
     public static IServiceCollection AddModelsModule(this IServiceCollection services)
     {
+        services.AddSingleton<IModule, ModelsModule>();
+
         services.AddScoped<IModelCategoriesService>(sp =>
         {
             var handler = sp.GetRequiredService<BearerDelegatingHandler>();
@@ -37,11 +39,6 @@ public static class Builder
         });
 
         return services;
-    }
-
-    public static IModule GetModule()
-    {
-        return new ModelsModule();
     }
 }
 

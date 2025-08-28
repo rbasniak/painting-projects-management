@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using PaintingProjectsManagement.Blazor.Modules.Authentication;
+using PaintingProjectsManagement.UI.Modules.Shared;
 
 namespace PaintingProjectsManagement.UI.Modules.Materials;
 
@@ -7,6 +8,8 @@ public static class Builder
 {
     public static IServiceCollection AddMaterialsModule(this IServiceCollection services)
     {
+        services.AddSingleton<IModule, Menu>();
+
         services.AddScoped<IMaterialsService>(sp =>
         {
             var handler = sp.GetRequiredService<BearerDelegatingHandler>();
@@ -23,4 +26,4 @@ public static class Builder
 
         return services;
     }
-} 
+}
