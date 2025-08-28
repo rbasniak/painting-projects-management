@@ -46,6 +46,7 @@ public class Model : TenantEntity
     public ModelCategory Category { get; private set; } = default!;
     public ModelType Type { get; private set; }
     public string Artist { get; private set; } = string.Empty;
+    [JsonColumn]
     public string[] Tags { get; private set; } = Array.Empty<string>();
     public string? CoverPicture { get; private set; }
     [JsonColumn]
@@ -211,5 +212,43 @@ public class Model : TenantEntity
         MustHave = mustHave;
 
         RaiseDomainEvent(new ModelMustHaveChanged(Id, MustHave));
+    }
+
+    public void SetBaseSize(BaseSize baseSize)
+    {
+        if (BaseSize == baseSize)
+        {
+            return;
+        }
+
+        BaseSize = baseSize;
+
+        RaiseDomainEvent(new ModelBaseSizeChanged(Id, BaseSize));
+    }
+
+    public void SetFigureSize(FigureSize figureSize)
+    {
+        if (FigureSize == figureSize)
+        {
+            return;
+        }
+
+        FigureSize = figureSize;
+
+        RaiseDomainEvent(new ModelFigureSizeChanged(Id, FigureSize));
+    }
+
+    public void SetNumberOfFigures(int numberOfFigures)
+    {
+        var newNumberOfFigures = numberOfFigures > 0 ? numberOfFigures : 1;
+        
+        if (NumberOfFigures == newNumberOfFigures)
+        {
+            return;
+        }
+
+        NumberOfFigures = newNumberOfFigures;
+
+        RaiseDomainEvent(new ModelNumberOfFiguresChanged(Id, NumberOfFigures));
     }
 }

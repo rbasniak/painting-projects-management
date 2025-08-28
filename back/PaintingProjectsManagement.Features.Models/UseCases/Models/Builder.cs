@@ -13,6 +13,9 @@ public static class ModelsBuilder
         PromotePictureToCover.MapEndpoint(app);
         DeleteModelPicture.MapEndpoint(app);
         SetModelMustHave.MapEndpoint(app);
+        SetModelBaseSize.MapEndpoint(app);
+        SetModelFigureSize.MapEndpoint(app);
+        SetModelFigureCount.MapEndpoint(app);
         ListPriorityModels.MapEndpoint(app);
 
         return app;

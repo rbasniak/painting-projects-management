@@ -41,7 +41,6 @@ public class ModelConfig : IEntityTypeConfiguration<Model>
             .HasForeignKey(x => x.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(e => new { e.TenantId, e.Name })
-           .IsUnique();
+        builder.HasIndex(e => new { e.TenantId, e.Name });
     }
 }

@@ -6,9 +6,8 @@ public class SetModelMustHave : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/api/models/{id}/must-have", async (Guid id, Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/api/models/must-have", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            request.Id = id;
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
             return ResultsMapper.FromResponse(result);
