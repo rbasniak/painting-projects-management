@@ -12,7 +12,7 @@ using PaintingProjectsManagment.Database;
 namespace PaintingProjectsManagment.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250827201142_Initial")]
+    [Migration("20250828203231_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -83,6 +83,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(75)
                         .HasColumnType("character varying(75)");
+
+                    b.Property<string>("Identity")
+                        .HasColumnType("text");
 
                     b.Property<bool>("MustHave")
                         .ValueGeneratedOnAdd()
