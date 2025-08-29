@@ -53,8 +53,9 @@ public enum BaseSize
 public enum FigureSize
 {
     Unknown = 0,
-    Normal = 10,
-    Big = 20
+    Small = 10,
+    Medium = 20,
+    Big = 30
 }
 
 public class UploadModelPictureRequest

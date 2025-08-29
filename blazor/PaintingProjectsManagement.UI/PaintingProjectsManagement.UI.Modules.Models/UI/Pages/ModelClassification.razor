@@ -16,7 +16,10 @@
 
 <MudContainer Class="viewer-container" MaxWidth="MaxWidth.False">
 
-    <MudText Typo="Typo.h5" Class="mb-2">Model Classification</MudText>
+    <MudText Typo="Typo.h5" Class="mb-2">Model Classification: @CurrentModel.Name</MudText>
+    <MudText Typo="Typo.body1" Class="mb-2">Artist: @CurrentModel.Artist</MudText>
+    <MudText Typo="Typo.body1" Class="mb-2">Category: @CurrentModel.Category.Name</MudText>
+    <MudText Typo="Typo.body1" Class="mb-2">Characters: @(string.Join(", ", CurrentModel.Characters))</MudText>
 
     <!-- Stage: arrows + big image -->
     <div class="stage">
@@ -46,41 +49,44 @@
             <MudText Typo="Typo.h6" Class="mr-2">Rating</MudText>
             <MudRating Class="rating-xl"
                        MaxValue="5"
-                       Size="Size.Large"
-                       SelectedValue="@_state.Rating"
+                       Size="Size.Medium"
+                       SelectedValue="@CurrentModel.Score"
                        SelectedValueChanged="OnRatingChanged" />
         </div>
 
         <div class="criteria-grid">
             <div class="criteria-group">
                 <MudText Typo="Typo.subtitle1" Class="mb-1">Base Size</MudText>
-                <MudRadioGroup T="BaseSizeOption" Value="@_state.BaseSize" ValueChanged="OnBaseSizeChanged" Orientation="Orientation.Horizontal">
-                    <MudRadio T="BaseSizeOption" Value="BaseSizeOption.Small" Size="Size.Large" Label="Small" />
-                    <MudRadio T="BaseSizeOption" Value="BaseSizeOption.Medium" Size="Size.Large" Label="Medium" />
-                    <MudRadio T="BaseSizeOption" Value="BaseSizeOption.Big" Size="Size.Large" Label="Big" />
+                <MudRadioGroup T="BaseSize" Value="@((BaseSize)CurrentModel.BaseSize.Id)" ValueChanged="OnBaseSizeChanged" Orientation="Orientation.Horizontal">
+                    <MudRadio T="BaseSize" Value="BaseSize.Small" Size="Size.Medium" Label="Small" />
+                    <MudRadio T="BaseSize" Value="BaseSize.Medium" Size="Size.Medium" Label="Medium" />
+                    <MudRadio T="BaseSize" Value="BaseSize.Big" Size="Size.Medium" Label="Big" />
                 </MudRadioGroup>
             </div>
 
             <div class="criteria-group">
                 <MudText Typo="Typo.subtitle1" Class="mb-1">Figure Size</MudText>
-                <MudRadioGroup T="FigureSizeOption" Value="@_state.FigureSize" ValueChanged="OnFigureSizeChanged" Orientation="Orientation.Horizontal">
-                    <MudRadio T="FigureSizeOption" Value="FigureSizeOption.Small" Size="Size.Large" Label="Small" />
-                    <MudRadio T="FigureSizeOption" Value="FigureSizeOption.Medium" Size="Size.Large" Label="Medium" />
-                    <MudRadio T="FigureSizeOption" Value="FigureSizeOption.Big" Size="Size.Large" Label="Big" />
+                <MudRadioGroup T="FigureSize" Value="@((FigureSize)CurrentModel.FigureSize.Id)" ValueChanged="OnFigureSizeChanged" Orientation="Orientation.Horizontal">
+                    <MudRadio T="FigureSize" Value="FigureSize.Small" Size="Size.Medium" Label="Small" />
+                    <MudRadio T="FigureSize" Value="FigureSize.Medium" Size="Size.Medium" Label="Medium" />
+                    <MudRadio T="FigureSize" Value="FigureSize.Big" Size="Size.Medium" Label="Big" />
                 </MudRadioGroup>
             </div>
 
             <div class="criteria-group">
                 <MudText Typo="Typo.subtitle1" Class="mb-1">Number of Figures</MudText>
-                <MudRadioGroup T="NumberOfFiguresOption" Value="@_state.NumberOfFigures" ValueChanged="OnNumberOfFiguresChanged" Orientation="Orientation.Horizontal">
-                    <MudRadio T="NumberOfFiguresOption" Value="NumberOfFiguresOption.One" Size="Size.Large" Label="1" />
-                    <MudRadio T="NumberOfFiguresOption" Value="NumberOfFiguresOption.Two" Size="Size.Large" Label="2" />
-                    <MudRadio T="NumberOfFiguresOption" Value="NumberOfFiguresOption.ThreePlus" Size="Size.Large" Label="3+" />
+                <MudRadioGroup T="int" Value="@CurrentModel.NumberOfFigures" ValueChanged="OnNumberOfFiguresChanged" Orientation="Orientation.Horizontal">
+                    <MudRadio T="int" Value="1" Size="Size.Medium" Label="1" />
+                    <MudRadio T="int" Value="2" Size="Size.Medium" Label="2" />
+                    <MudRadio T="int" Value="3" Size="Size.Medium" Label="3" />
+                    <MudRadio T="int" Value="4" Size="Size.Medium" Label="4" />
+                    <MudRadio T="int" Value="5" Size="Size.Medium" Label="5" />
+                    <MudRadio T="int" Value="6" Size="Size.Medium" Label="6" />
                 </MudRadioGroup>
             </div>
 
             <div class="criteria-group">
-                <MudCheckBox T="bool" @bind-Checked="@MustHave" Size="Size.Large" Label="Must have" />
+                <MudCheckBox T="bool" @bind-Checked="@MustHave" Size="Size.Medium" Label="Must have" />
             </div>
         </div>
     </MudPaper>
@@ -90,24 +96,21 @@
 
     private IReadOnlyCollection<ModelDetails> _models = [];
     private int _index = 0;
-    private readonly Dictionary<Guid, ModelClassificationState> _states = new();
-
-    private ModelClassificationState _state = new();
 
     private IJSObjectReference? _keysModule;
     private IJSObjectReference? _keysHandle;
     private IDisposable? _selfRef; // holds DotNetObjectReference for cleanup
 
-    private ModelDetails? CurrentModel => (_models.Count == 0) ? null : _models.ElementAt(_index);
+    private ModelDetails CurrentModel => (_models.Count == 0) ? null : _models.ElementAt(_index);
 
     private bool MustHave
     {
-        get => _state.MustHave;
+        get => CurrentModel.MustHave;
         set
         {
-            if (_state.MustHave != value)
+            if (CurrentModel.MustHave != value)
             {
-                _state.MustHave = value;
+                CurrentModel.MustHave = value;
                 _ = OnMustHaveChanged(value);
             }
         }
@@ -158,17 +161,17 @@
         LoadStateForCurrentModel();
     }
 
-    [JSInvokable] 
-    public void JsPrev() 
-    { 
-        Prev(); 
+    [JSInvokable]
+    public void JsPrev()
+    {
+        Prev();
     }
 
-    [JSInvokable] 
-    public void JsNext() 
-    { 
-        Next(); 
-    } 
+    [JSInvokable]
+    public void JsNext()
+    {
+        Next();
+    }
 
     private void Next()
     {
@@ -201,47 +204,8 @@
             return;
         }
 
-        if (!_states.TryGetValue(CurrentModel.Id, out var state))
-        {
-            state = new ModelClassificationState();
-            
-            // Initialize state with current model values
-            state.Rating = CurrentModel.Score;
-            state.BaseSize = MapBaseSizeToBaseSizeOption((BaseSize)CurrentModel.BaseSize.Id);
-            state.FigureSize = MapFigureSizeToFigureSizeOption((FigureSize)CurrentModel.FigureSize.Id);
-            state.NumberOfFigures = MapIntToNumberOfFiguresOption(CurrentModel.NumberOfFigures);
-            state.MustHave = CurrentModel.MustHave;
-            
-            _states[CurrentModel.Id] = state;
-        }
-
-        _state = state;
-
         StateHasChanged();
     }
-
-    private static BaseSizeOption MapBaseSizeToBaseSizeOption(BaseSize baseSize) => baseSize switch
-    {
-        BaseSize.Small => BaseSizeOption.Small,
-        BaseSize.Medium => BaseSizeOption.Medium,
-        BaseSize.Big => BaseSizeOption.Big,
-        _ => BaseSizeOption.Medium
-    };
-
-    private static FigureSizeOption MapFigureSizeToFigureSizeOption(FigureSize figureSize) => figureSize switch
-    {
-        FigureSize.Normal => FigureSizeOption.Medium,
-        FigureSize.Big => FigureSizeOption.Big,
-        _ => FigureSizeOption.Medium
-    };
-
-    private static NumberOfFiguresOption MapIntToNumberOfFiguresOption(int numberOfFigures) => numberOfFigures switch
-    {
-        1 => NumberOfFiguresOption.One,
-        2 => NumberOfFiguresOption.Two,
-        >= 3 => NumberOfFiguresOption.ThreePlus,
-        _ => NumberOfFiguresOption.One
-    };
 
     private string GetPictureAddress(string url)
     {
@@ -250,115 +214,73 @@
 
     private async Task OnRatingChanged(int value)
     {
-        _state.Rating = value;
+        CurrentModel.Score = value;
 
-        if (CurrentModel is not null)
+        try
         {
-            try
-            {
-                await ModelsService.RateModelAsync(CurrentModel.Id, value, CancellationToken.None);
-            }
-            catch (Exception ex)
-            {
-                // Handle error
-            }
+            await ModelsService.RateModelAsync(CurrentModel.Id, value, default);
+        }
+        catch (Exception ex)
+        {
+            // Handle error
         }
     }
 
-    private async Task OnBaseSizeChanged(BaseSizeOption value)
+    private async Task OnBaseSizeChanged(BaseSize value)
     {
-        _state.BaseSize = value;
-        
-        if (CurrentModel is not null)
+        CurrentModel.BaseSize = EnumReference.FromValue(value); 
+
+        try
         {
-            try
-            {
-                var baseSize = MapBaseSizeOptionToBaseSize(value);
-                await ModelsService.SetBaseSizeAsync(CurrentModel.Id, baseSize, CancellationToken.None);
-            }
-            catch (Exception ex)
-            {
-                // Handle error
-            }
+            await ModelsService.SetBaseSizeAsync(CurrentModel.Id, value, default);
+        }
+        catch (Exception ex)
+        {
+            // Handle error
         }
     }
 
-    private async Task OnFigureSizeChanged(FigureSizeOption value)
+    private async Task OnFigureSizeChanged(FigureSize value)
     {
-        _state.FigureSize = value;
-        
-        if (CurrentModel is not null)
+        CurrentModel.FigureSize = EnumReference.FromValue(value);
+
+        try
         {
-            try
-            {
-                var figureSize = MapFigureSizeOptionToFigureSize(value);
-                await ModelsService.SetFigureSizeAsync(CurrentModel.Id, figureSize, CancellationToken.None);
-            }
-            catch (Exception ex)
-            {
-                // Handle error
-            }
+            await ModelsService.SetFigureSizeAsync(CurrentModel.Id, (FigureSize)value, default);
+        }
+        catch (Exception ex)
+        {
+            // Handle error
         }
     }
 
-    private async Task OnNumberOfFiguresChanged(NumberOfFiguresOption value)
+    private async Task OnNumberOfFiguresChanged(int value)
     {
-        _state.NumberOfFigures = value;
-        
-        if (CurrentModel is not null)
+        CurrentModel.NumberOfFigures = value;
+
+        try
         {
-            try
-            {
-                var numberOfFigures = MapNumberOfFiguresOptionToInt(value);
-                await ModelsService.SetFigureCountAsync(CurrentModel.Id, numberOfFigures, CancellationToken.None);
-            }
-            catch (Exception ex)
-            {
-                // Handle error
-            }
+            await ModelsService.SetFigureCountAsync(CurrentModel.Id, value, default);
+        }
+        catch (Exception ex)
+        {
+            // Handle error
         }
     }
 
     private async Task OnMustHaveChanged(bool value)
     {
-        _state.MustHave = value;
-        
-        if (CurrentModel is not null)
+        CurrentModel.MustHave = value;
+
+        try
         {
-            try
-            {
-                await ModelsService.SetMustHaveAsync(CurrentModel.Id, value, CancellationToken.None);
-            }
-            catch (Exception ex)
-            {
-                // Handle error
-            }
+            await ModelsService.SetMustHaveAsync(CurrentModel.Id, value, default);
+        }
+        catch (Exception ex)
+        {
+            // Handle error
         }
     }
-
-    private static BaseSize MapBaseSizeOptionToBaseSize(BaseSizeOption option) => option switch
-    {
-        BaseSizeOption.Small => BaseSize.Small,
-        BaseSizeOption.Medium => BaseSize.Medium,
-        BaseSizeOption.Big => BaseSize.Big,
-        _ => BaseSize.Medium
-    };
-
-    private static FigureSize MapFigureSizeOptionToFigureSize(FigureSizeOption option) => option switch
-    {
-        FigureSizeOption.Small => FigureSize.Normal,
-        FigureSizeOption.Medium => FigureSize.Normal,
-        FigureSizeOption.Big => FigureSize.Big,
-        _ => FigureSize.Normal
-    };
-
-    private static int MapNumberOfFiguresOptionToInt(NumberOfFiguresOption option) => option switch
-    {
-        NumberOfFiguresOption.One => 1,
-        NumberOfFiguresOption.Two => 2,
-        NumberOfFiguresOption.ThreePlus => 3,
-        _ => 1
-    };
 
     public async ValueTask DisposeAsync()
     {
@@ -374,22 +296,6 @@
 
         _selfRef?.Dispose();
     }
-
-
-    private sealed class ModelClassificationState
-    {
-        public int Rating { get; set; } = 0;
-        public BaseSizeOption BaseSize { get; set; } = BaseSizeOption.Medium;
-        public FigureSizeOption FigureSize { get; set; } = FigureSizeOption.Medium;
-        public NumberOfFiguresOption NumberOfFigures { get; set; } = NumberOfFiguresOption.One;
-        public bool MustHave { get; set; } = false;
-    }
-
-    private enum BaseSizeOption { Small, Medium, Big }
-    
-    private enum FigureSizeOption { Small, Medium, Big }
-    
-    private enum NumberOfFiguresOption { One, Two, ThreePlus }
 }
 
 <style>
@@ -412,7 +318,7 @@
     }
 
     .nav-zone {
-        height: 70vh;
+        height: 60vh;
         border: none;
         background: transparent;
         cursor: pointer;
@@ -431,7 +337,7 @@
     }
 
     .image-box {
-        height: 70vh; /* full image visible within viewport height */
+        height: 60vh; /* full image visible within viewport height */
         width: 100%;
         background: var(--mud-palette-background);
         border-radius: 12px;
