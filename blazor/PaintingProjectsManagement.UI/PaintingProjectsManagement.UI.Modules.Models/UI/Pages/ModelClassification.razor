@@ -14,7 +14,9 @@
 @inject IJSRuntime JsRuntime
 @inject IModelsService ModelsService
 
-<MudContainer Class="viewer-container" MaxWidth="MaxWidth.False">
+@if (CurrentModel != null)
+{
+    <MudContainer Class="viewer-container" MaxWidth="MaxWidth.False">
 
     <MudText Typo="Typo.h5" Class="mb-2">Model Classification: @CurrentModel.Name</MudText>
     <MudText Typo="Typo.body1" Class="mb-2">Artist: @CurrentModel.Artist</MudText>
@@ -90,7 +92,12 @@
             </div>
         </div>
     </MudPaper>
-</MudContainer>
+    </MudContainer>
+}
+else
+{
+    <p>Loading...</p>
+}
 
 @code {
 
