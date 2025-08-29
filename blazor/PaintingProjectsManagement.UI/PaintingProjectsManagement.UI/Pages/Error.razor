@@ -8,7 +8,7 @@
 {
     <p>@ProblemState.Details.Title</p>
     <p>@ProblemState.Details.Detail</p>
-    @if (ProblemState.Details.Extensions?.Count > 0)
+    @* @if (ProblemState.Details.Extensions?.Count > 0)
     {
         <ul>
         @foreach (var item in ProblemState.Details.Extensions)
@@ -16,7 +16,7 @@
             <li>@item.Key: @item.Value</li>
         }
         </ul>
-    }
+    } *@
 }
 else
 {

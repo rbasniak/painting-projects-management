@@ -81,6 +81,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasMaxLength(75)
                         .HasColumnType("character varying(75)");
 
+                    b.Property<string>("Identity")
+                        .HasColumnType("text");
+
                     b.Property<bool>("MustHave")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")

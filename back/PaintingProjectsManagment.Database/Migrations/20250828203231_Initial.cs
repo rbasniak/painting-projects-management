@@ -349,6 +349,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     NumberOfFigures = table.Column<int>(type: "integer", nullable: false),
                     SizeInMb = table.Column<int>(type: "integer", nullable: false),
                     MustHave = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                    Identity = table.Column<string>(type: "text", nullable: true),
                     TenantId = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true)
                 },
                 constraints: table =>

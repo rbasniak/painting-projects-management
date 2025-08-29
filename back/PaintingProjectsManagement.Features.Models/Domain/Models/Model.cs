@@ -12,7 +12,7 @@ public class Model : TenantEntity
     }
 
     public Model(string tenant, string name, ModelCategory category, string[] characters, string franchise, ModelType type, string artist, string[] tags,
-        BaseSize baseSize, FigureSize figureSize, int numberOfFigures, int sizeInMb)
+        BaseSize baseSize, FigureSize figureSize, int numberOfFigures, int sizeInMb, string? identity = null)
     {
         Id = Guid.CreateVersion7();
         TenantId = tenant;
@@ -57,6 +57,7 @@ public class Model : TenantEntity
     public int NumberOfFigures { get; private set; }
     public int SizeInMb { get; private set; } = 0;
     public bool MustHave { get; private set; }
+    public string? Identity { get; private set; }
 
     public void UpdateDetails(string name, ModelCategory category, string[] characters, string artist, string[] tags,
         BaseSize baseSize, FigureSize figureSize, int numberOfFigures, string franchise, ModelType type, int sizeInMb)

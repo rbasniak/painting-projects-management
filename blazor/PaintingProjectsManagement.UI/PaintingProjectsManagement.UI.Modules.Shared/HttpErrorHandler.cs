@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Mvc;
 using MudBlazor;
 
 namespace PaintingProjectsManagement.UI.Modules.Shared;
