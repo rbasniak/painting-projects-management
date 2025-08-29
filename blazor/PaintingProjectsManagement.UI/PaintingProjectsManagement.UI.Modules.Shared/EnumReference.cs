@@ -5,12 +5,6 @@ namespace PaintingProjectsManagement.UI.Modules.Shared;
 public record EnumReference
 {
 
-    public EnumReference(Enum value)
-    {
-        Id = Convert.ToInt32(value);
-        Value = value.ToString();
-    }
-
     [JsonConstructor]
     public EnumReference(int id, string value)
     {
@@ -20,6 +14,11 @@ public record EnumReference
 
     public int Id { get; init; }
     public string Value { get; init; }
+
+    public  static EnumReference FromValue(Enum value)
+    {
+        return new EnumReference(Convert.ToInt32(value), value.ToString() ?? string.Empty);
+    }
 }
 
 public record EntityReference(Guid Id, string Name);
