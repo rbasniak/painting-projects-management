@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using OpenTelemetry.Trace;
@@ -99,7 +100,8 @@ public class Program
         );
 
         // Events infrastructure registrations
-        builder.Services.AddSingleton<IEventTypeRegistry>(sp => new ReflectionEventTypeRegistry(AppDomain.CurrentDomain.GetAssemblies()));
+        builder.Services.AddSingleton<IEventTypeRegistry>(sp => new ReflectionEventTypeRegistry());
+
         builder.Services.Configure<DomainEventDispatcherOptions>(opts =>
         {
             opts.BatchSize = 50;
