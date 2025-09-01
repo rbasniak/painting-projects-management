@@ -9,3 +9,4 @@ global using System.Threading.Tasks;
 global using Shouldly;
 global using rbkApiModules.Identity.Core;
 global using PaintingProjectsManagement.Features.Paints.Tests;
+global using PaintingProjectsManagement.Api;
