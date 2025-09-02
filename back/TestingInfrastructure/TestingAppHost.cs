@@ -9,7 +9,7 @@ namespace PaintingProjectsManagement.Testing;
 
 public static class TestingAppHost
 {
-    private static readonly DistributedApplicationFactory<Program> _factory = new();
+    private static readonly DistributedApplicationFactory _factory = new(typeof(Program));
     private static readonly DistributedApplication _app;
 
     static TestingAppHost()
