@@ -11,6 +11,8 @@ public class List_Materials_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
+        TestEvents.Add($"Create_Material_Tests starting using {TestingServer.CreateContext().Database.GetConnectionString()}");
+
         // Create test materials for different users
         var rodrigoMaterial1 = new Material("rodrigo.basniak", "Rodrigo Material 1", new Quantity(1, PackageContentUnit.Each), new Money(10.0, "USD"));
         var rodrigoMaterial2 = new Material("rodrigo.basniak", "Rodrigo Material 2", new Quantity(1, PackageContentUnit.Each), new Money(5.0, "USD"));
@@ -38,6 +40,10 @@ public class List_Materials_Tests
             var ricardoMaterials = context.Set<Material>().Where(x => x.TenantId == "RICARDO.SMARZARO").ToList();
             ricardoMaterials.Count.ShouldBe(2);
         }
+
+        // Login with the users that will be used in the tests, so they will be cached in the TestingServer for easy access
+        await TestingServer.CacheCredentialsAsync("rodrigo.basniak", "trustno1", "rodrigo.basniak");
+        await TestingServer.CacheCredentialsAsync("ricardo.smarzaro", "zemiko987", "ricardo.smarzaro");
     }
 
     [Test, NotInParallel(Order = 2)]
@@ -91,6 +97,7 @@ public class List_Materials_Tests
     [Test, NotInParallel(Order = 99)]
     public async Task CleanUp()
     {
-        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
+        TestingServer.Dispose();
+        // await TestingServer.CreateContext().Database.EnsureDeletedAsync();
     }
 }

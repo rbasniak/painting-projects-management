@@ -33,19 +33,19 @@ public partial class DatabaseSeed
     
     private void SeedFromSqlFile(DatabaseContext context)
     {
-        var basePath = new DirectoryInfo(".");
+        var rootPath = new DirectoryInfo(".");
 
-        var seedDirectory = Path.Combine(basePath.Parent.FullName, "PaintingProjectsManagment.Database", "Seed");
-        Directory.CreateDirectory(seedDirectory);
+        var relativePath = Path.Combine("PaintingProjectsManagment.Database", "Seed", "models_seed.sql");
 
-        var sqlFilePath = Path.Combine(seedDirectory, "models_seed.sql");
+        var seedSqlFile = new FileInfo(Path.Combine(rootPath.FullName, relativePath));
 
-        if (!File.Exists(sqlFilePath))
+        while (!seedSqlFile.Exists)
         {
-            throw new FileNotFoundException(sqlFilePath);
+            rootPath = rootPath.Parent;
+            seedSqlFile = new FileInfo(Path.Combine(rootPath.FullName, relativePath));
         }
-        
-        var sql = File.ReadAllLines(sqlFilePath);
+
+        var sql = File.ReadAllLines(seedSqlFile.FullName);
 
         foreach (var item in sql)
         {

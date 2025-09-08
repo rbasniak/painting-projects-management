@@ -62,4 +62,9 @@ public sealed class Material : TenantEntity
             RaiseDomainEvent(new MaterialNameChanged(Id, name));
         }
     }
+
+    public void Delete()
+    {
+        RaiseDomainEvent(new MaterialDeleted(Id));
+    }
 }

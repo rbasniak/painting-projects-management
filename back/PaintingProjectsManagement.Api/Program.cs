@@ -63,6 +63,9 @@ public class Program
 
         var connectionString = builder.Configuration.GetConnectionString("ppm-database");
 
+        var temp = builder.Configuration.Sources;
+
+
         if (string.IsNullOrEmpty(connectionString))
         {
             throw new InvalidDataException($"Could not read Postgres connection string from configuration");

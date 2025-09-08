@@ -129,7 +129,7 @@ public sealed class DomainEventDispatcher : BackgroundService
 
                     using var processingScope = _scopeFactory.CreateScope();
 
-                    var processingDbContext = _options.ResolveSilentDbContext(processingScope.ServiceProvider);
+                    var processingDbContext = _options.ResolveDbContext(processingScope.ServiceProvider);
 
                     var message = await processingDbContext.DomainOutboxMessage
                         .Where(x => x.Id == messageId)
@@ -280,7 +280,7 @@ public sealed class DomainEventDispatcher : BackgroundService
                                 HandlerName = handlerName,
                                 ReceivedUtc = DateTime.UtcNow,
                                 ProcessedUtc = DateTime.UtcNow,
-                                Attempts = message.Attempts
+                                Attempts = message.Attempts + 1 // +1 because the value in the original message will be updated only down the stream, when it is marked as processed or backed of
                             });
                         }
 
