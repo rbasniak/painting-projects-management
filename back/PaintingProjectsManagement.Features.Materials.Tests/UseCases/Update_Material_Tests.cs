@@ -80,7 +80,7 @@ public class Update_Material_Tests
         unchangedEntity.Name.ShouldBe("Existing Material"); // Name should remain unchanged
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
     }
 
     [Test, NotInParallel(Order = 3)]
@@ -111,7 +111,7 @@ public class Update_Material_Tests
         materials.ShouldBeEmpty();
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
     }
 
     [Test, NotInParallel(Order = 4)]
@@ -147,7 +147,7 @@ public class Update_Material_Tests
         unchangedEntity.TenantId.ShouldBe("RICARDO.SMARZARO"); // Should still belong to the original user
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
     }
 
     [Test, NotInParallel(Order = 5)]
@@ -181,7 +181,7 @@ public class Update_Material_Tests
         unchangedEntity.Name.ShouldBe("Existing Material"); // Name should remain unchanged
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
     }
 
     [Test, NotInParallel(Order = 7)]
@@ -222,7 +222,7 @@ public class Update_Material_Tests
         otherUserMaterial.ShouldNotBeNull();
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
+        MessagingAssert.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialNameChanged)] = 1,
             [typeof(MaterialPackagePriceChanged)] = 1,
@@ -263,7 +263,7 @@ public class Update_Material_Tests
         updatedEntity.UnitPriceUnit.ShouldBe(PackageContentUnit.Each); // Unit was updated
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
+        MessagingAssert.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialPackagePriceChanged)] = 1,
             [typeof(MaterialPackageContentChanged)] = 1,
@@ -305,46 +305,11 @@ public class Update_Material_Tests
         updatedEntity.TenantId.ShouldBe("RODRIGO.BASNIAK"); // Should still belong to the same user
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
+        MessagingAssert.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialNameChanged)] = 1,
             [typeof(MaterialPackagePriceChanged)] = 1,
             [typeof(MaterialPackageContentChanged)] = 1,
         }, out var events);
-    }
-
-    [Test, NotInParallel(Order = 99)]
-    public async Task CleanUp()
-    {
-        TestingServer.Dispose();
-        // await TestingServer.CreateContext().Database.EnsureDeletedAsync();
-    }
-}
-
-public static class MessageAssertionExtensions
-{
-    public static void ShouldNotHaveCreatedDomainEvents(this DbContext context, DateTime afterDate)
-    {
-        var domainEvents = context.Set<DomainOutboxMessage>().Where(x => x.CreatedUtc >= afterDate).ToArray();
-        var integrationEvents = context.Set<IntegrationOutboxMessage>().Where(x => x.CreatedUtc >= afterDate).ToArray();
-        var inboxMessages = context.Set<InboxMessage>().Where(x => x.ReceivedUtc >= afterDate).ToArray();
-
-        domainEvents.Length.ShouldBe(0);
-    }
-
-    public static void ShouldHaveCreatedDomainEvents(this DbContext context, DateTime afterDate, Dictionary<Type, int> expectedEvents, out EnvelopeHeader[] events)
-    {
-        var messages = context.Set<DomainOutboxMessage>().Where(x => x.CreatedUtc >= afterDate).ToArray();
-
-        events = messages.Select(x => JsonEventSerializer.DeserializeHeader(x.Payload)).ToArray();
-
-        var uniqueEventTypes = events.GroupBy(x => x.Name).ToArray();
-
-        foreach (var kvp in expectedEvents)
-        {
-            var searchedEvents = events.Where(x => x.Name == kvp.Key.GetEventName()).ToArray();
-
-            searchedEvents.Length.ShouldBe(kvp.Value, $"Unexpected number of {kvp.Key.GetEventName()} events");
-        }
-    }
-}
+    } 
+} 

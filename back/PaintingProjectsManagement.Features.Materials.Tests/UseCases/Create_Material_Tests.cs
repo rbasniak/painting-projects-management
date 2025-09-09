@@ -68,7 +68,7 @@ public class Create_Material_Tests
         materials.ShouldBeEmpty();
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
     }
 
     [Test, NotInParallel(Order = 3)]
@@ -99,7 +99,7 @@ public class Create_Material_Tests
         materials.ShouldBeEmpty();
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
     }
 
     [Test, NotInParallel(Order = 6)]
@@ -128,7 +128,7 @@ public class Create_Material_Tests
         materials.Count.ShouldBe(1); // Only the original one from Seed
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
     }
 
     [Test, NotInParallel(Order = 13)]
@@ -176,7 +176,7 @@ public class Create_Material_Tests
         rsMaterial.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
+        MessagingAssert.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialCreated)] = 1,
         }, out var events);
@@ -217,18 +217,11 @@ public class Create_Material_Tests
         entity.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
 
         // Assert the messages
-        MessageAssertionExtensions.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
+        MessagingAssert.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialCreated)] = 1,
         }, out var events);
-    }
-
-    [Test, NotInParallel(Order = 99)]
-    public async Task CleanUp()
-    {
-        TestingServer.Dispose();
-        // await TestingServer.CreateContext().Database.EnsureDeletedAsync();
-    }
+    } 
 }
 
 public static class TestEvents
