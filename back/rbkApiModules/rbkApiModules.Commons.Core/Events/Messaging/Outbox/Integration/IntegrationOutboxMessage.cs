@@ -23,6 +23,10 @@ public class IntegrationOutboxMessage : ITelemetryPropagationDataCarrier
     public required string? ParentSpanId { get; init; }
     public required int? TraceFlags { get; init; }
     public required string? TraceState { get; init; }
+
+    // Time when the message was published to the broker, so it was
+    // processed in the outbox, but each consumer will later process it
+    // with their own logic
     public DateTime? ProcessedUtc { get; set; }
     public short Attempts { get; private set; }
     public DateTime? DoNotProcessBeforeUtc { get; private set; }

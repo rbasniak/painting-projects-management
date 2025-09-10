@@ -11,8 +11,6 @@ public class List_Materials_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        TestEvents.Add($"Create_Material_Tests starting using {TestingServer.CreateContext().Database.GetConnectionString()}");
-
         // Create test materials for different users
         var rodrigoMaterial1 = new Material("rodrigo.basniak", "Rodrigo Material 1", new Quantity(1, PackageContentUnit.Each), new Money(10.0, "USD"));
         var rodrigoMaterial2 = new Material("rodrigo.basniak", "Rodrigo Material 2", new Quantity(1, PackageContentUnit.Each), new Money(5.0, "USD"));

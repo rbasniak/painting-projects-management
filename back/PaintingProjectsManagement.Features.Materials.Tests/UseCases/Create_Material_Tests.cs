@@ -12,8 +12,6 @@ public class Create_Material_Tests
     [Test, NotInParallel(Order = 1)]
     public async Task Seed()
     {
-        TestEvents.Add($"Create_Material_Tests starting using {TestingServer.CreateContext().Database.GetConnectionString()}");
-
         // Create a test material for duplicate name validation tests
         var existingMaterial = new Material(
             "rodrigo.basniak",
@@ -223,15 +221,4 @@ public class Create_Material_Tests
         }, out var events);
     } 
 }
-
-public static class TestEvents
-{
-    private static List<string> Entries { get; } = new();
-
-    public static void Add(string message)
-    {
-        Debug.WriteLine("********************* " + message);
-        Entries.Add(message);
-    }
-
-}
+ 
