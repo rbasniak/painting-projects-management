@@ -78,7 +78,7 @@ public class Update_Material_Tests
         unchangedEntity.Name.ShouldBe("Existing Material"); // Name should remain unchanged
 
         // Assert the messages
-        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     [Test, NotInParallel(Order = 3)]
@@ -109,7 +109,7 @@ public class Update_Material_Tests
         materials.ShouldBeEmpty();
 
         // Assert the messages
-        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     [Test, NotInParallel(Order = 4)]
@@ -145,7 +145,7 @@ public class Update_Material_Tests
         unchangedEntity.TenantId.ShouldBe("RICARDO.SMARZARO"); // Should still belong to the original user
 
         // Assert the messages
-        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     [Test, NotInParallel(Order = 5)]
@@ -179,7 +179,7 @@ public class Update_Material_Tests
         unchangedEntity.Name.ShouldBe("Existing Material"); // Name should remain unchanged
 
         // Assert the messages
-        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     [Test, NotInParallel(Order = 7)]
@@ -220,7 +220,7 @@ public class Update_Material_Tests
         otherUserMaterial.ShouldNotBeNull();
 
         // Assert the messages
-        MessagingAssert.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
+        TestingServer.ShouldHaveCreatedDomainEvents(testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialNameChanged)] = 1,
             [typeof(MaterialPackagePriceChanged)] = 1,
@@ -261,7 +261,7 @@ public class Update_Material_Tests
         updatedEntity.UnitPriceUnit.ShouldBe(PackageContentUnit.Each); // Unit was updated
 
         // Assert the messages
-        MessagingAssert.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
+        TestingServer.ShouldHaveCreatedDomainEvents(testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialPackagePriceChanged)] = 1,
             [typeof(MaterialPackageContentChanged)] = 1,
@@ -303,7 +303,7 @@ public class Update_Material_Tests
         updatedEntity.TenantId.ShouldBe("RODRIGO.BASNIAK"); // Should still belong to the same user
 
         // Assert the messages
-        MessagingAssert.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
+        TestingServer.ShouldHaveCreatedDomainEvents(testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialNameChanged)] = 1,
             [typeof(MaterialPackagePriceChanged)] = 1,

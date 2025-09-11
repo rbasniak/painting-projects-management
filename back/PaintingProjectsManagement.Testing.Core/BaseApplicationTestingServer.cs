@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using rbkApiModules.Commons.Testing;
 using rbkApiModules.Commons.Core;
+using rbkApiModules.Commons.Core.Messaging;
+using rbkApiModules.Commons.Testing;
+using Shouldly;
 using System.Net.Http.Headers;
 using System.Text;
-using Testcontainers.PostgreSql;
-using Testcontainers.RabbitMq;
-using System.Reflection;
 
 namespace PaintingProjectsManagement.Testing.Core;
 
@@ -316,30 +315,72 @@ public abstract class BaseApplicationTestingServer<TProgram> : RbkTestingServer<
     /// <summary>
     /// Waits for all pending integration events to be processed in their consumers
     /// </summary>
-    public async Task WaitForAllIntegrationEventsProcessedAsync(TimeSpan? timeout = null)
+    public async Task WaitForAllIntegrationEventsProcessedAsync(DateTime after, Dictionary<Type, int> expectedHandlers, TimeSpan? timeout = null)
     {
+        await WaitForAllIntegrationEventsPublishedAsync();
+
         timeout ??= TimeSpan.FromSeconds(15);
-        var endTime = DateTime.UtcNow.Add(timeout.Value);
 
         var delay = 100;
         var steps = timeout.Value.TotalMilliseconds / delay;
 
         for (int i = 0; i < steps; i++)
         {
-            using var context = CreateContext();
-            var pendingCount = await context.Set<IntegrationOutboxMessage>()
-                .Where(m => m.ProcessedUtc == null)
-                .CountAsync();
-
-            if (pendingCount == 0)
+            foreach (var kvp in expectedHandlers)
             {
-                return; // All events processed
-            }
+                using var context = CreateContext();
 
-            await Task.Delay(delay);
+                var processedMessages = await context.Set<InboxMessage>()
+                    .Where(x => x.ProcessedUtc != null)
+                    .Where(x => x.ProcessedUtc >= after)
+                    .Where(x => x.HandlerName == kvp.Key.FullName)
+                    .ToListAsync();
+
+                if (processedMessages.Count == kvp.Value)
+                {
+                    return; // All events processed
+                }
+
+                if (processedMessages.Count > kvp.Value)
+                {
+                    throw new InvalidOperationException($"More messages than expected were processed by consumers");
+                }
+
+                await Task.Delay(delay);
+            }
         }
 
         throw new InvalidOperationException($"Not all integration events were processed within {timeout.Value}");
+    }
+
+
+    public void ShouldNotHaveCreatedDomainEvents(DateTime afterDate)
+    {
+        var context = CreateContext();
+
+        var domainEvents = context.Set<DomainOutboxMessage>().Where(x => x.CreatedUtc >= afterDate).ToArray();
+        var integrationEvents = context.Set<IntegrationOutboxMessage>().Where(x => x.CreatedUtc >= afterDate).ToArray();
+        var inboxMessages = context.Set<InboxMessage>().Where(x => x.ReceivedUtc >= afterDate).ToArray();
+
+        domainEvents.Length.ShouldBe(0);
+    }
+
+    public void ShouldHaveCreatedDomainEvents(DateTime afterDate, Dictionary<Type, int> expectedEvents, out EnvelopeHeader[] events)
+    {
+        var context = CreateContext();
+
+        var messages = context.Set<DomainOutboxMessage>().Where(x => x.CreatedUtc >= afterDate).ToArray();
+
+        events = messages.Select(x => JsonEventSerializer.DeserializeHeader(x.Payload)).ToArray();
+
+        var uniqueEventTypes = events.GroupBy(x => x.Name).ToArray();
+
+        foreach (var kvp in expectedEvents)
+        {
+            var searchedEvents = events.Where(x => x.Name == kvp.Key.GetEventName()).ToArray();
+
+            searchedEvents.Length.ShouldBe(kvp.Value, $"Unexpected number of {kvp.Key.GetEventName()} events");
+        }
     }
 
     #endregion

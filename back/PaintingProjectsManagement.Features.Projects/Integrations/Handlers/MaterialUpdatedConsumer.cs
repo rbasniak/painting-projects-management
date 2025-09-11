@@ -19,7 +19,9 @@ public class MaterialUpdatedConsumer : IIntegrationEventHandler<MaterialUpdatedV
     {
         var @event = envelope.Event;
 
-        var entity = await _context.Set<ReadOnlyMaterial>().FindAsync([envelope.TenantId, @event.MaterialId], cancellationToken);
+        var entity = await _context.Set<ReadOnlyMaterial>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Tenant == envelope.TenantId && x.Id == @event.MaterialId, cancellationToken);
 
         if (entity == null)
         {
@@ -33,6 +35,10 @@ public class MaterialUpdatedConsumer : IIntegrationEventHandler<MaterialUpdatedV
                 UpdatedUtc = DateTime.UtcNow
             };
 
+            _context.Add(entity);
+        }
+        else
+        {
             entity = entity with
             {
                 Name = @event.Name,
@@ -41,7 +47,9 @@ public class MaterialUpdatedConsumer : IIntegrationEventHandler<MaterialUpdatedV
                 PricePerUnit = @event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount
             };
 
-            _context.Add(entity);
+            _context.Update(entity);
         }
+
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

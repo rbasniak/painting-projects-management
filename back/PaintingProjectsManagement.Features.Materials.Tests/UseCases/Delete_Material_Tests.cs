@@ -53,7 +53,7 @@ public class Delete_Material_Tests
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
 
         // Assert the messages
-        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public class Delete_Material_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
 
         // Assert the messages
-        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     /// <summary>
@@ -101,7 +101,7 @@ public class Delete_Material_Tests
         stillExistingEntity.ShouldNotBeNull("Material should still exist in database");
 
         // Assert the messages
-        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     /// <summary>
@@ -140,7 +140,7 @@ public class Delete_Material_Tests
         deletedEntity.ShouldBeNull("Material should be deleted from database");
 
         // Assert the messages
-        MessagingAssert.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
+        TestingServer.ShouldHaveCreatedDomainEvents(testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialDeleted)] = 1,
         }, out var events);

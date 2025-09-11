@@ -24,6 +24,8 @@ public class Material_Integration_Event_Handlers_Tests
     [Test, NotInParallel(Order = 2)]
     public async Task MaterialCreatedConsumer_CreatesReadOnlyMaterial_WhenMaterialCreatedEventReceived()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Arrange
         var materialId = Guid.NewGuid();
         var integrationEvent = new MaterialCreatedV1(
@@ -39,7 +41,11 @@ public class Material_Integration_Event_Handlers_Tests
         await TestingServer.PublishIntegrationEventAsync(integrationEvent, "RODRIGO.BASNIAK", TestUser);
         
         // Wait for integration events to be processed
-        await TestingServer.WaitForAllIntegrationEventsProcessedAsync();
+        
+        await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialCreatedConsumer)] = 1,
+        });
 
         // Assert - Verify read-only material was created
         using var context = TestingServer.CreateContext();
@@ -56,6 +62,8 @@ public class Material_Integration_Event_Handlers_Tests
     [Test, NotInParallel(Order = 3)]
     public async Task MaterialUpdatedConsumer_UpdatesReadOnlyMaterial_WhenMaterialUpdatedEventReceived()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Arrange - First create a read-only material
         var materialId = Guid.NewGuid();
         var createEvent = new MaterialCreatedV1(
@@ -68,7 +76,12 @@ public class Material_Integration_Event_Handlers_Tests
         );
 
         await TestingServer.PublishIntegrationEventAsync(createEvent, "RODRIGO.BASNIAK", TestUser);
-        await TestingServer.WaitForAllIntegrationEventsProcessedAsync();
+        await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialCreatedConsumer)] = 1,
+        });
+
+        testStartTime = DateTime.UtcNow;
 
         // Act - Publish update event
         var updateEvent = new MaterialUpdatedV1(
@@ -81,7 +94,10 @@ public class Material_Integration_Event_Handlers_Tests
         );
 
         await TestingServer.PublishIntegrationEventAsync(updateEvent, "RODRIGO.BASNIAK", TestUser);
-        await TestingServer.WaitForAllIntegrationEventsProcessedAsync();
+        await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialUpdatedConsumer)] = 1,
+        });
 
         // Assert - Verify read-only material was updated
         using var context = TestingServer.CreateContext();
@@ -97,6 +113,8 @@ public class Material_Integration_Event_Handlers_Tests
     [Test, NotInParallel(Order = 4)]
     public async Task MaterialUpdatedConsumer_CreatesReadOnlyMaterial_WhenMaterialUpdatedEventReceivedForNonExistentMaterial()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Arrange
         var materialId = Guid.NewGuid();
         var updateEvent = new MaterialUpdatedV1(
@@ -110,7 +128,10 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Act - Publish update event for non-existent material
         await TestingServer.PublishIntegrationEventAsync(updateEvent, "RODRIGO.BASNIAK", TestUser);
-        await TestingServer.WaitForAllIntegrationEventsProcessedAsync();
+        await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialUpdatedConsumer)] = 1,
+        });
 
         // Assert - Verify read-only material was created
         using var context = TestingServer.CreateContext();
@@ -126,6 +147,8 @@ public class Material_Integration_Event_Handlers_Tests
     [Test, NotInParallel(Order = 5)]
     public async Task MaterialDeletedConsumer_DeletesReadOnlyMaterial_WhenMaterialDeletedEventReceived()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Arrange - First create a read-only material
         var materialId = Guid.NewGuid();
         var createEvent = new MaterialCreatedV1(
@@ -138,7 +161,10 @@ public class Material_Integration_Event_Handlers_Tests
         );
 
         await TestingServer.PublishIntegrationEventAsync(createEvent, "RODRIGO.BASNIAK", TestUser);
-        await TestingServer.WaitForAllIntegrationEventsProcessedAsync();
+        await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialCreatedConsumer)] = 1,
+        });
 
         // Verify material exists
         using (var context = TestingServer.CreateContext())
@@ -148,10 +174,16 @@ public class Material_Integration_Event_Handlers_Tests
             readOnlyMaterial.ShouldNotBeNull();
         }
 
+        testStartTime = DateTime.UtcNow;
+
         // Act - Publish delete event
         var deleteEvent = new MaterialDeletedV1(materialId);
+
         await TestingServer.PublishIntegrationEventAsync(deleteEvent, "RODRIGO.BASNIAK", TestUser);
-        await TestingServer.WaitForAllIntegrationEventsProcessedAsync();
+        await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialDeletedConsumer)] = 1,
+        });
 
         // Assert - Verify read-only material was deleted
         using (var context = TestingServer.CreateContext())
@@ -165,13 +197,18 @@ public class Material_Integration_Event_Handlers_Tests
     [Test, NotInParallel(Order = 6)]
     public async Task MaterialDeletedConsumer_HandlesGracefully_WhenMaterialDoesNotExist()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Arrange
         var materialId = Guid.NewGuid();
         var deleteEvent = new MaterialDeletedV1(materialId);
 
         // Act - Publish delete event for non-existent material
         await TestingServer.PublishIntegrationEventAsync(deleteEvent, "RODRIGO.BASNIAK", TestUser);
-        await TestingServer.WaitForAllIntegrationEventsProcessedAsync();
+        await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialDeletedConsumer)] = 1,
+        });
 
         // Assert - Should not throw exception and complete successfully
         // (The handler should handle the case where the material doesn't exist gracefully)
@@ -184,6 +221,8 @@ public class Material_Integration_Event_Handlers_Tests
     [Test, NotInParallel(Order = 7)]
     public async Task MaterialCreatedConsumer_HandlesZeroPackageContent_WhenCalculatingUnitPrice()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Arrange
         var materialId = Guid.NewGuid();
         var integrationEvent = new MaterialCreatedV1(
@@ -197,7 +236,10 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Act - Publish integration event with zero package content
         await TestingServer.PublishIntegrationEventAsync(integrationEvent, "RODRIGO.BASNIAK", TestUser);
-        await TestingServer.WaitForAllIntegrationEventsProcessedAsync();
+        await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialCreatedConsumer)] = 1,
+        });
 
         // Assert - Verify read-only material was created with zero unit price
         using var context = TestingServer.CreateContext();
@@ -213,6 +255,8 @@ public class Material_Integration_Event_Handlers_Tests
     [Test, NotInParallel(Order = 8)]
     public async Task MaterialUpdatedConsumer_HandlesZeroPackageContent_WhenCalculatingUnitPrice()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Arrange - First create a read-only material
         var materialId = Guid.NewGuid();
         var createEvent = new MaterialCreatedV1(
@@ -225,7 +269,12 @@ public class Material_Integration_Event_Handlers_Tests
         );
 
         await TestingServer.PublishIntegrationEventAsync(createEvent, "RODRIGO.BASNIAK", TestUser);
-        await TestingServer.WaitForAllIntegrationEventsProcessedAsync();
+        await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialCreatedConsumer)] = 1,
+        });
+
+        testStartTime = DateTime.UtcNow;
 
         // Act - Publish update event with zero package content
         var updateEvent = new MaterialUpdatedV1(
@@ -238,7 +287,10 @@ public class Material_Integration_Event_Handlers_Tests
         );
 
         await TestingServer.PublishIntegrationEventAsync(updateEvent, "RODRIGO.BASNIAK", TestUser);
-        await TestingServer.WaitForAllIntegrationEventsProcessedAsync();
+        await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialUpdatedConsumer)] = 1,
+        });
 
         // Assert - Verify read-only material was updated with zero unit price
         using var context = TestingServer.CreateContext();
@@ -254,6 +306,8 @@ public class Material_Integration_Event_Handlers_Tests
     [Test, NotInParallel(Order = 9)]
     public async Task MaterialIntegrationEventHandlers_ProcessEventsInCorrectOrder()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Arrange
         var materialId = Guid.NewGuid();
 
@@ -267,7 +321,12 @@ public class Material_Integration_Event_Handlers_Tests
         var deleteEvent = new MaterialDeletedV1(materialId);
         await TestingServer.PublishIntegrationEventAsync(deleteEvent, "RODRIGO.BASNIAK", TestUser);
 
-        await TestingServer.WaitForAllIntegrationEventsProcessedAsync();
+        await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialCreatedConsumer)] = 1,
+            [typeof(MaterialUpdatedConsumer)] = 1,
+            [typeof(MaterialDeletedConsumer)] = 1,
+        });
 
         // Assert - Verify final state (material should be deleted)
         using var context = TestingServer.CreateContext();

@@ -2,7 +2,7 @@ using FluentValidation.Results;
 
 namespace PaintingProjectsManagement.Features.Materials;
 
-public sealed class Quantity
+public sealed record Quantity
 {
     private Quantity() 
     {

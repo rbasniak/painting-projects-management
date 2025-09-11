@@ -2,7 +2,7 @@ using FluentValidation.Results;
 
 namespace PaintingProjectsManagement.Features.Materials;
 
-public sealed class Money
+public sealed record Money
 {
     private Money()
     {

@@ -66,7 +66,7 @@ public class Create_Material_Tests
         materials.ShouldBeEmpty();
 
         // Assert the messages
-        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     [Test, NotInParallel(Order = 3)]
@@ -97,7 +97,7 @@ public class Create_Material_Tests
         materials.ShouldBeEmpty();
 
         // Assert the messages
-        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     [Test, NotInParallel(Order = 6)]
@@ -126,7 +126,7 @@ public class Create_Material_Tests
         materials.Count.ShouldBe(1); // Only the original one from Seed
 
         // Assert the messages
-        MessagingAssert.ShouldNotHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime);
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     [Test, NotInParallel(Order = 13)]
@@ -174,7 +174,7 @@ public class Create_Material_Tests
         rsMaterial.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
 
         // Assert the messages
-        MessagingAssert.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
+        TestingServer.ShouldHaveCreatedDomainEvents(testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialCreated)] = 1,
         }, out var events);
@@ -215,7 +215,7 @@ public class Create_Material_Tests
         entity.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
 
         // Assert the messages
-        MessagingAssert.ShouldHaveCreatedDomainEvents(TestingServer.CreateContext(), testStartTime, new Dictionary<Type, int>
+        TestingServer.ShouldHaveCreatedDomainEvents(testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialCreated)] = 1,
         }, out var events);
