@@ -42,7 +42,7 @@ public sealed class RabbitMqPublisher : IBrokerPublisher, IAsyncDisposable
 
         try
         {
-            // idempotência: mapear headers comuns e BasicProperties
+            // idempotï¿½ncia: mapear headers comuns e BasicProperties
             var props = _channel!.CreateBasicProperties();
 
             props.Persistent = true;
@@ -66,7 +66,7 @@ public sealed class RabbitMqPublisher : IBrokerPublisher, IAsyncDisposable
                 }
             }
 
-            // troca deve existir; se não existir, considere falha permanente
+            // troca deve existir; se nï¿½o existir, considere falha permanente
             try
             {
                 _channel.ExchangeDeclare(_options.Exchange, ExchangeType.Topic, durable: true, autoDelete: false, arguments: null);
