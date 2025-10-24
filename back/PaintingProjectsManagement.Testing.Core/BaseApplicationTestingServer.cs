@@ -131,6 +131,8 @@ public abstract class BaseApplicationTestingServer<TProgram> : RbkTestingServer<
 
     public override async ValueTask DisposeAsync()
     {
+        await base.DisposeAsync();
+
         await DropDatabaseIfExists(_dbName);
         await DeleteRabbitVHostAsync(_vhost);
     }

@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
-public class Update_Material_Tests
+public class Update_Material_Tests : BaseTestClass
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
     public required TestingServer TestingServer { get; set; } = default!;
@@ -303,5 +303,11 @@ public class Update_Material_Tests
             [typeof(MaterialPackagePriceChanged)] = 1,
             [typeof(MaterialPackageContentChanged)] = 1,
         }, out var events);
-    } 
+    }
+
+    [Test, NotInParallel(Order = 99)]
+    public async Task Cleanup()
+    {
+        await TestingServer.DisposeAsync();
+    }
 } 

@@ -1,6 +1,3 @@
- Quando roda todos testes juntos parece que cada Testing Server cria uma instancia do TestContainers e dai dá conflito no uso das ports
- É preciso investigar se é isso mesmo e como tratar esse problema. será que tem como o testContainers ser unico para todos testes e apenas os containers recriados?
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

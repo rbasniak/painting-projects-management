@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
-public class Delete_Material_Tests
+public class Delete_Material_Tests : BaseTestClass
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
     public required TestingServer TestingServer { get; set; } = default!;
@@ -142,5 +142,11 @@ public class Delete_Material_Tests
         {
             [typeof(MaterialDeleted)] = 1,
         }, out var events);
-    } 
+    }
+
+    [Test, NotInParallel(Order = 99)]
+    public async Task Cleanup()
+    {
+        await TestingServer.DisposeAsync();
+    }
 }

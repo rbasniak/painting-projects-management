@@ -3,7 +3,7 @@ using rbkApiModules.Commons.Core;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
-public class Material_Domain_Event_Handlers_Tests
+public class Material_Domain_Event_Handlers_Tests : BaseTestClass
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
     public required TestingServer TestingServer { get; set; } = default!;
@@ -214,7 +214,7 @@ public class Material_Domain_Event_Handlers_Tests
         var testStartDate = DateTime.UtcNow;
 
         // Arrange - Create a material first
-        var material = await CreateTestMaterialAsync("Test Material");
+        var material = await CreateTestMaterialAsync("Test Material For Deletion");
 
         // Act - Delete material (this will raise MaterialDeleted domain event)
         var response = await TestingServer.DeleteAsync($"api/materials/{material.Id}", TestUser);
@@ -260,6 +260,12 @@ public class Material_Domain_Event_Handlers_Tests
             .ToListAsync();
 
         outboxMessages.ShouldBeEmpty();
+    }
+
+    [Test, NotInParallel(Order = 99)]
+    public async Task Cleanup()
+    {
+        await TestingServer.DisposeAsync();
     }
 
     #region Helper Methods

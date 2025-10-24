@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
-public class List_Materials_Tests
+public class List_Materials_Tests: BaseTestClass
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
     public required TestingServer TestingServer { get; set; } = default!;
@@ -87,5 +87,11 @@ public class List_Materials_Tests
         var material2 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Material 2");
         material2.ShouldNotBeNull();
         material2.PackagePrice.Amount.ShouldBe(5.0);
-    } 
+    }
+
+    [Test, NotInParallel(Order = 99)]
+    public async Task Cleanup()
+    {
+        await TestingServer.DisposeAsync();
+    }
 }

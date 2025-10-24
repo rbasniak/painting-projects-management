@@ -3,7 +3,7 @@ using rbkApiModules.Commons.Core;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
-public class Material_End_To_End_Event_Flow_Tests
+public class Material_End_To_End_Event_Flow_Tests : BaseTestClass
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
     public required TestingServer TestingServer { get; set; } = default!;
@@ -53,7 +53,7 @@ public class Material_End_To_End_Event_Flow_Tests
 
         var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialDetails.Id);
-        
+
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe(materialName);
         readOnlyMaterial.PricePerUnit.ShouldBe(0.255); // 25.50 / 100
@@ -94,7 +94,7 @@ public class Material_End_To_End_Event_Flow_Tests
         using var context = TestingServer.CreateContext();
         var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material.Id);
-        
+
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
         readOnlyMaterial.PricePerUnit.ShouldBe(0.17875); // 35.75 / 200
@@ -185,7 +185,7 @@ public class Material_End_To_End_Event_Flow_Tests
 
         // Assert - Verify all operations were processed correctly
         using var context = TestingServer.CreateContext();
-        
+
         // Material 1 should be updated
         var readOnlyMaterial1 = await context.Set<ReadOnlyMaterial>()
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material1.Id);
@@ -254,11 +254,17 @@ public class Material_End_To_End_Event_Flow_Tests
         using var context = TestingServer.CreateContext();
         var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material.Id);
-        
+
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Update 2");
         readOnlyMaterial.PricePerUnit.ShouldBe(40.0 / 300.0); // 40.00 / 300
         readOnlyMaterial.Unit.ShouldBe("Milliliter");
+    }
+
+    [Test, NotInParallel(Order = 99)]
+    public async Task Cleanup()
+    {
+        await TestingServer.DisposeAsync();
     }
 
     #region Helper Methods

@@ -770,6 +770,23 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
         return data;
     }
+
+    public override async ValueTask DisposeAsync()
+    {
+        await base.DisposeAsync();
+
+        try
+        {
+            if (Directory.Exists(ContentFolder))
+            {
+                Directory.Delete(ContentFolder, true);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"*** RbkTestingServer Dispose: Could not delete content folder {ContentFolder}. Exception: {ex.Message}");
+        }
+    }
 }
 
 public record Credentials

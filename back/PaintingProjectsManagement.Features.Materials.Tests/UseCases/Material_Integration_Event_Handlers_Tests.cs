@@ -3,7 +3,7 @@ using PaintingProjectsManagement.Features.Projects;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
-public class Material_Integration_Event_Handlers_Tests
+public class Material_Integration_Event_Handlers_Tests : BaseTestClass
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
     public required TestingServer TestingServer { get; set; } = default!;
@@ -36,9 +36,9 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Act - Publish integration event directly to outbox
         await TestingServer.PublishIntegrationEventAsync(integrationEvent, "RODRIGO.BASNIAK", TestUser);
-        
+
         // Wait for integration events to be processed
-        
+
         await TestingServer.WaitForAllIntegrationEventsProcessedAsync(testStartTime, new Dictionary<Type, int>
         {
             [typeof(MaterialCreatedConsumer)] = 1,
@@ -48,7 +48,7 @@ public class Material_Integration_Event_Handlers_Tests
         using var context = TestingServer.CreateContext();
         var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
-        
+
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Test Material");
         readOnlyMaterial.PricePerUnit.ShouldBe(0.255); // 25.50 / 100
@@ -100,7 +100,7 @@ public class Material_Integration_Event_Handlers_Tests
         using var context = TestingServer.CreateContext();
         var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
-        
+
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
         readOnlyMaterial.PricePerUnit.ShouldBe(0.17875); // 35.75 / 200
@@ -134,7 +134,7 @@ public class Material_Integration_Event_Handlers_Tests
         using var context = TestingServer.CreateContext();
         var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
-        
+
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("New Material");
         readOnlyMaterial.PricePerUnit.ShouldBe(0.2); // 30.00 / 150
@@ -242,7 +242,7 @@ public class Material_Integration_Event_Handlers_Tests
         using var context = TestingServer.CreateContext();
         var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
-        
+
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Test Material");
         readOnlyMaterial.PricePerUnit.ShouldBe(0); // Should be 0 when package content is 0
@@ -293,7 +293,7 @@ public class Material_Integration_Event_Handlers_Tests
         using var context = TestingServer.CreateContext();
         var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
-        
+
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
         readOnlyMaterial.PricePerUnit.ShouldBe(0); // Should be 0 when package content is 0
@@ -329,7 +329,13 @@ public class Material_Integration_Event_Handlers_Tests
         using var context = TestingServer.CreateContext();
         var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
-        
+
         readOnlyMaterial.ShouldBeNull();
-    } 
+    }
+
+    [Test, NotInParallel(Order = 99)]
+    public async Task Cleanup()
+    {
+        await TestingServer.DisposeAsync();
+    }
 }
