@@ -7,8 +7,4 @@ namespace PaintingProjectsManagement.Features.Materials.Tests;
 
 public class TestingServer : BaseApplicationTestingServer<Program>
 {
-    public TestingServer()
-    {
-        ServerCache2.Cache.Add(InstanceId,  this);
-    }
 }
