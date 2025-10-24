@@ -201,29 +201,9 @@ public class List_Models_Tests
         models.First().Category.Name.ShouldBe("Other Tenant Category");
     }
 
-    [Test, NotInParallel(Order = 7)]
-    public async Task Model_Details_Include_CoverPicture_And_Pictures_Properties()
-    {
-        // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/models", "rodrigo.basniak");
-
-        // Assert
-        response.ShouldBeSuccess();
-        var models = response.Data;
-        models.ShouldNotBeNull();
-
-        // Verify all models have the new properties
-        foreach (var model in models)
-        {
-            // These properties should exist and be accessible
-            model.CoverPicture.ShouldNotBeNull(); // Can be null, but property should exist
-            model.Pictures.ShouldNotBeNull(); // Should be an empty array, not null
-        }
-    }
-
     [Test, NotInParallel(Order = 99)]
-    public async Task CleanUp()
+    public async Task Cleanup()
     {
-        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
+        await TestingServer.DisposeAsync();
     }
 } 

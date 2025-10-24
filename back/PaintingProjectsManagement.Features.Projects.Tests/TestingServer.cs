@@ -1,27 +1,11 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using PaintingProjectsManagement.Testing.Core;
 
 namespace PaintingProjectsManagement.Features.Projects.Tests;
 
-public class TestingServer : RbkTestingServer<Program>
+// IMPORTANT: if using Podman instead of Docker, make sure Docker Compatibility is enabled in Podman settings.
+
+public class TestingServer : BaseApplicationTestingServer<Program>
 {
-    protected override bool UseHttps => true;
-
-    protected override Task InitializeApplicationAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    protected override void ConfigureAppConfiguration(WebHostBuilderContext context, IConfigurationBuilder config)
-    {
-    }
-
-    protected override void ConfigureTestServices(IServiceCollection services)
-    {
-    }
-
-    protected override IEnumerable<KeyValuePair<string, string>> ConfigureInMemoryOverrides()
-    {
-        throw new NotImplementedException();
-    }
 }

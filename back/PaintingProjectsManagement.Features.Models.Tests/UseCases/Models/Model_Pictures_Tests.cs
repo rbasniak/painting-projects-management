@@ -1,3 +1,5 @@
+using PaintingProjectsManagement.Features.Materials;
+
 namespace PaintingProjectsManagement.Features.Models.Tests;
 
 public class Model_Pictures_Tests
@@ -5,25 +7,32 @@ public class Model_Pictures_Tests
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
     public required TestingServer TestingServer { get; set; } = default!;
 
+    private readonly string _base64Image1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAQSURBVBhXY/iPBkgW+P8fAHg8P8Hpkr/2AAAAAElFTkSuQmCC";
+    private readonly string _base64Image2 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAATSURBVBhXY2BY9OI/CiZV4MV/AEmXKJHeHyJtAAAAAElFTkSuQmCC";
+
     private static Guid _modelId;
-    private static string _tenantId = "test-tenant";
+
+    [Test, NotInParallel(Order = -1)]
+    public async Task Seed()
+    {
+        var model = await CreateTestModel(Guid.NewGuid().ToString());
+        _modelId = model.Id;
+
+        // Login with the users that will be used in the tests, so they will be cached in the TestingServer for easy access
+        await TestingServer.CacheCredentialsAsync("rodrigo.basniak", "trustno1", "rodrigo.basniak");
+    }
 
     [Test, NotInParallel(Order = 1)]
     public async Task Upload_Model_Picture_Should_Add_To_Pictures_Array()
     {
-        // Arrange
-        _modelId = Guid.NewGuid();
-        var model = await CreateTestModel();
-        var base64Image = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A";
-
         // Act
         var response = await TestingServer.PostAsync(
             "api/models/picture",
             new UploadModelPicture.Request
             {
                 ModelId = _modelId,
-                Base64Image = base64Image
-            });
+                Base64Image = _base64Image1,
+            }, "rodrigo.basniak");
 
         // Assert
         response.ShouldBeSuccess();
@@ -38,26 +47,22 @@ public class Model_Pictures_Tests
     [Test, NotInParallel(Order = 2)]
     public async Task Upload_Multiple_Model_Pictures_Should_Add_To_Pictures_Array()
     {
-        // Arrange
-        var base64Image1 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8A";
-        var base64Image2 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
-
         // Act
         var response1 = await TestingServer.PostAsync(
             "api/models/picture",
             new UploadModelPicture.Request
             {
                 ModelId = _modelId,
-                Base64Image = base64Image1
-            });
+                Base64Image = _base64Image1
+            }, "rodrigo.basniak");
 
         var response2 = await TestingServer.PostAsync(
             "api/models/picture",
             new UploadModelPicture.Request
             {
                 ModelId = _modelId,
-                Base64Image = base64Image2
-            });
+                Base64Image = _base64Image2
+            }, "rodrigo.basniak");
 
         // Assert
         response1.ShouldBeSuccess();
@@ -78,12 +83,12 @@ public class Model_Pictures_Tests
 
         // Act
         var response = await TestingServer.PostAsync(
-            $"api/models/{_modelId}/promote-picture",
+            $"api/models/picture/promote",
             new PromotePictureToCover.Request
             {
                 ModelId = _modelId,
                 PictureUrl = pictureUrl
-            });
+            }, "rodrigo.basniak");
 
         // Assert
         response.ShouldBeSuccess();
@@ -102,15 +107,15 @@ public class Model_Pictures_Tests
 
         // Act
         var response = await TestingServer.PostAsync(
-            $"api/models/{_modelId}/promote-picture",
+            $"api/models/picture/promote",
             new PromotePictureToCover.Request
             {
                 ModelId = _modelId,
                 PictureUrl = nonExistentPictureUrl
-            });
+            }, "rodrigo.basniak");
 
         // Assert
-        response.ShouldHaveErrors(System.Net.HttpStatusCode.BadRequest, "The specified picture URL must exist in the model's pictures collection.");
+        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "The specified picture URL must exist in the model's pictures collection.");
     }
 
     [Test, NotInParallel(Order = 5)]
@@ -126,10 +131,10 @@ public class Model_Pictures_Tests
             {
                 ModelId = _modelId,
                 Base64Image = invalidBase64
-            });
+            }, "rodrigo.basniak");
 
         // Assert
-        response.ShouldHaveErrors(System.Net.HttpStatusCode.BadRequest, "Invalid base64 image format. Must be a valid base64 encoded image with proper header.");
+        response.ShouldHaveErrors(System.Net.HttpStatusCode.BadRequest, "Invalid image format.");
     }
 
     [Test, NotInParallel(Order = 6)]
@@ -143,10 +148,10 @@ public class Model_Pictures_Tests
             {
                 ModelId = _modelId,
                 Base64Image = string.Empty
-            });
+            }, "rodrigo.basniak");
 
         // Assert
-        response.ShouldHaveErrors(System.Net.HttpStatusCode.BadRequest, "Base64 image content is required.");
+        response.ShouldHaveErrors(System.Net.HttpStatusCode.BadRequest, "'Base64 Image' must not be empty.");
     }
 
     [Test, NotInParallel(Order = 7)]
@@ -155,7 +160,9 @@ public class Model_Pictures_Tests
         var model = await TestingServer.CreateContext().Set<Model>().FirstAsync(x => x.Id == _modelId);
         var pictureUrl = model.Pictures.First();
 
-        var response = await TestingServer.DeleteAsync($"api/models/{_modelId}/picture?pictureUrl={Uri.EscapeDataString(pictureUrl)}");
+        var response = await TestingServer.PostAsync($"api/models/picture/delete", 
+            new DeleteModelPicture.Request { ModelId = _modelId, PictureUrl = pictureUrl }, 
+            "rodrigo.basniak");
 
         response.ShouldBeSuccess();
 
@@ -163,12 +170,18 @@ public class Model_Pictures_Tests
         updated.Pictures.ShouldNotContain(pictureUrl);
     }
 
-    private async Task<Model> CreateTestModel()
+    [Test, NotInParallel(Order = 99)]
+    public async Task Cleanup()
     {
-        var category = new ModelCategory(_tenantId, "Test Category");
+        await TestingServer.DisposeAsync();
+    }
+
+    private async Task<Model> CreateTestModel(string name)
+    {
+        var category = new ModelCategory("rodrigo.basniak", "Test Category");
         var model = new Model(
-            _tenantId,
-            "Test Model",
+            "rodrigo.basniak",
+            name,
             category,
             ["Character1", "Character2"],
             "Test Franchise",
@@ -180,10 +193,6 @@ public class Model_Pictures_Tests
             1,
             100
         );
-
-        // Override the ID for testing
-        var modelReflection = typeof(Model).GetField("_id", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        modelReflection?.SetValue(model, _modelId);
 
         var context = TestingServer.CreateContext();
         context.Set<ModelCategory>().Add(category);

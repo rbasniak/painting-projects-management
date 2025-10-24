@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
-public class List_Materials_Tests: BaseTestClass
+public class List_Materials_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
     public required TestingServer TestingServer { get; set; } = default!;

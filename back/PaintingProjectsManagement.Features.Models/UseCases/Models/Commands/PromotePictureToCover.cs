@@ -4,9 +4,8 @@ public class PromotePictureToCover : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/models/{modelId}/promote-picture", async (Guid modelId, Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
-        {
-            request.ModelId = modelId;
+        endpoints.MapPost("/api/models/picture/promote", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        { 
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
             return ResultsMapper.FromResponse(result);
@@ -49,8 +48,7 @@ public class PromotePictureToCover : IEndpoint
     {
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var model = await _context.Set<Model>()
-                .Include(x => x.Category)
+            var model = await _context.Set<Model>() 
                 .FirstAsync(x => x.Id == request.ModelId, cancellationToken);
 
             model.UpdateCoverPicture(request.PictureUrl);

@@ -1,3 +1,5 @@
+using rbkApiModules.Core.Utilities;
+
 namespace PaintingProjectsManagement.Features.Models;
 
 public class UploadModelPicture : IEndpoint
@@ -20,7 +22,6 @@ public class UploadModelPicture : IEndpoint
     {
         public Guid ModelId { get; set; }
         public string Base64Image { get; set; } = string.Empty;
-        public string? FileExtension { get; set; } = string.Empty;
     }
 
     public class Validator : SmartValidator<Request, Model>
@@ -33,11 +34,20 @@ public class UploadModelPicture : IEndpoint
         {
             RuleFor(x => x.Base64Image)
                 .NotEmpty()
-                .WithMessage("Base64 image content is required.");
+                .Must(HaveValidExtension).WithMessage("Invalid image format.");
+        }
 
-            RuleFor(x => x.FileExtension)
-                .NotEmpty()
-                .WithMessage("Extension must be provided.");
+        private bool HaveValidExtension(Request request, string base64Image)
+        {
+            try
+            {
+                var extension = ImageUtilities.ExtractExtension(base64Image);
+                return extension.Equals("jpg", StringComparison.InvariantCultureIgnoreCase) || extension.Equals("png", StringComparison.InvariantCultureIgnoreCase);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 
@@ -52,15 +62,13 @@ public class UploadModelPicture : IEndpoint
                 .Include(x => x.Category)
                 .FirstAsync(x => x.Id == request.ModelId, cancellationToken);
 
-            string baseFileName = $"model_{model.Id:N}_{DateTime.UtcNow:yyyyMMddHHmmss}";
-            string fullFileName = string.IsNullOrWhiteSpace(request.FileExtension)
-                ? baseFileName
-                : $"{baseFileName}{request.FileExtension}";
+            string baseFileName = $"model_{model.Id:N}_{DateTime.UtcNow.Ticks}";
+            string fullFileName = $"{baseFileName}.{ImageUtilities.ExtractExtension(request.Base64Image)}";
 
             string pictureUrl = await _fileStorage.StoreFileFromBase64Async(
                 request.Base64Image,
                 fullFileName,
-                "models",
+                Path.Combine(request.Identity.Tenant, "models"),
                 2048,
                 2048,
                 cancellationToken);

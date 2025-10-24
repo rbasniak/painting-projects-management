@@ -3,7 +3,7 @@ using rbkApiModules.Commons.Core;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
-public class Material_Domain_Event_Handlers_Tests : BaseTestClass
+public class Material_Domain_Event_Handlers_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
     public required TestingServer TestingServer { get; set; } = default!;

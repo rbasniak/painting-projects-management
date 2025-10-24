@@ -7,6 +7,7 @@ public class ModelCategory: TenantEntity
 
     public ModelCategory(string tenant, string name)
     {
+        Id = Guid.CreateVersion7();
         Name = name;
         TenantId = tenant;
     }
