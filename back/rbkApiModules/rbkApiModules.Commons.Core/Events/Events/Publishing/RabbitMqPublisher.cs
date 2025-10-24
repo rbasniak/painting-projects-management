@@ -28,6 +28,9 @@ public sealed class RabbitMqPublisher : IBrokerPublisher, IAsyncDisposable
             Port = _options.Port,
             UserName = _options.UserName,
             Password = _options.Password,
+            VirtualHost = _options.VirtualHost,
+            RequestedHeartbeat = _options.Heartbeat,
+            RequestedConnectionTimeout = _options.ConnectionTimeout,
             DispatchConsumersAsync = true,
             AutomaticRecoveryEnabled = true,
             TopologyRecoveryEnabled = true

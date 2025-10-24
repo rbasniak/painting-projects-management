@@ -28,6 +28,9 @@ public sealed class RabbitMqSubscriber : IBrokerSubscriber, IDisposable
             Port = _options.Port,
             UserName = _options.UserName,
             Password = _options.Password,
+            VirtualHost = _options.VirtualHost,
+            RequestedHeartbeat = _options.Heartbeat,
+            RequestedConnectionTimeout = _options.ConnectionTimeout,
             DispatchConsumersAsync = true,
             AutomaticRecoveryEnabled = true,
             TopologyRecoveryEnabled = true
@@ -36,8 +39,18 @@ public sealed class RabbitMqSubscriber : IBrokerSubscriber, IDisposable
 
     public Task SubscribeAsync(string queue, IEnumerable<string> topics, Func<string, ReadOnlyMemory<byte>, IReadOnlyDictionary<string, object?>, CancellationToken, Task> handler, CancellationToken cancellationToken)
     {
-        _connection = _factory.CreateConnection();
-        _channel = _connection.CreateModel();
+        // Create connection and channel if they don't exist or are closed
+        if (_connection?.IsOpen != true)
+        {
+            _connection?.Dispose();
+            _connection = _factory.CreateConnection();
+        }
+        
+        if (_channel?.IsOpen != true)
+        {
+            _channel?.Dispose();
+            _channel = _connection.CreateModel();
+        }
 
         var args = new Dictionary<string, object?>
         {
@@ -91,6 +104,7 @@ public sealed class RabbitMqSubscriber : IBrokerSubscriber, IDisposable
 
     public void Dispose()
     {
+        // Stop consumer first to prevent new messages from being processed
         try 
         { 
             _consumer = null; 
@@ -99,33 +113,45 @@ public sealed class RabbitMqSubscriber : IBrokerSubscriber, IDisposable
         { 
         }
 
+        // Close channel first to stop message processing
         try 
         { 
-            _channel?.Close(); 
+            if (_channel?.IsOpen == true)
+            {
+                _channel.Close();
+            }
         } 
         catch 
         { 
         }
         
+        // Close connection
         try 
         { 
-            _connection?.Close(); 
+            if (_connection?.IsOpen == true)
+            {
+                _connection.Close();
+            }
         } 
         catch 
         { 
         }
         
+        // Dispose channel
         try 
         { 
             _channel?.Dispose(); 
+            _channel = null;
         } 
         catch 
         { 
         }
         
+        // Dispose connection
         try 
         { 
             _connection?.Dispose(); 
+            _connection = null;
         } 
         catch 
         { 

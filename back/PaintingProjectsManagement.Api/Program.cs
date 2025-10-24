@@ -155,6 +155,8 @@ public class Program
                 opts.UserName = parts[0];
                 if (parts.Length > 1) opts.Password = parts[1];
             }
+            // Extract virtual host from URI path (e.g., "/" or "/custom-vhost")
+            opts.VirtualHost = string.IsNullOrEmpty(uri.AbsolutePath) || uri.AbsolutePath == "/" ? "/" : uri.AbsolutePath.TrimStart('/');
             opts.Exchange = "ppm-events";
         });
         builder.Services.AddSingleton<RabbitMqPublisher>();
