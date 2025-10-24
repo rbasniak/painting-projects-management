@@ -1,5 +1,4 @@
 using PaintingProjectsManagement.Features.Models.Abstractions;
-using rbkApiModules.Commons.Core;
 
 namespace PaintingProjectsManagement.Features.Models;
 

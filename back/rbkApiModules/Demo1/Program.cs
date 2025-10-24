@@ -6,7 +6,6 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using rbkApiModules.Commons.Core.Helpers;
 using Demo1.UseCases.Commands;
-using rbkApiModules.Commons.Core.Features.ApplicationOptions;
 
 namespace Demo1
 {

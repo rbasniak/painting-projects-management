@@ -1,9 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using rbkApiModules.Commons.Core;
-using rbkApiModules.Commons.Core.Messaging;
-using System.Diagnostics;
-using TUnit.Core;
-
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
 public class Update_Material_Tests
@@ -281,7 +275,7 @@ public class Update_Material_Tests
         {
             Id = existingMaterial.Id,
             Name = "Updated Material Name",
-            PackageContentAmount = 2,
+            PackageContentAmount = 5,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 25.50,
             PackagePriceCurrency = "USD",
@@ -298,7 +292,7 @@ public class Update_Material_Tests
         updatedEntity.ShouldNotBeNull();
         updatedEntity.Id.ShouldBe(existingMaterial.Id);
         updatedEntity.Name.ShouldBe("Updated Material Name");
-        updatedEntity.UnitPriceAmount.ShouldBe(12.75); // 25.5/2
+        updatedEntity.UnitPriceAmount.ShouldBe(5.1); // 25.5/5
         updatedEntity.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
         updatedEntity.TenantId.ShouldBe("RODRIGO.BASNIAK"); // Should still belong to the same user
 

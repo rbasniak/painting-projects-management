@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenTelemetry;
-using rbkApiModules.Commons.Core;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;

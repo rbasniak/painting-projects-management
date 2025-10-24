@@ -1,7 +1,3 @@
-using PaintingProjectsManagement.Features.Models.Tests;
-using System.Net;
-using Shouldly;
-
 namespace PaintingProjectsManagement.Features.Models.Tests;
 
 public class Set_Model_Must_Have_Tests

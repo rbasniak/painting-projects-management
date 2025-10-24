@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using DotNet.Testcontainers.Configurations;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,10 @@ public abstract class BaseApplicationTestingServer<TProgram> : RbkTestingServer<
     private string _postgresConnectionString = string.Empty;
     private string _rabbitAmqp = string.Empty;
 
+    [ClassDataSource<PostgreSqlContainerWrapper>(Shared = SharedType.PerTestSession)]
     public required virtual PostgreSqlContainerWrapper PostgresContainerWrapper { get; set; } = new();
+
+    [ClassDataSource<RabbitMqContainerWrapper>(Shared = SharedType.PerTestSession)]
     public required virtual RabbitMqContainerWrapper RabbitContainerWrapper { get; set; } = new();
 
     protected override bool UseHttps => true;

@@ -1,7 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Shouldly;
-using System.Diagnostics;
-
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
 public class Create_Material_Tests

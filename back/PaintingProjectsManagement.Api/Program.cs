@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using Npgsql;
 using OpenTelemetry.Trace;
 using PaintingProjectsManagement.Api.Diagnostics;

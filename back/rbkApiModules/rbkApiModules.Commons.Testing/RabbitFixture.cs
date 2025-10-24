@@ -1,7 +1,4 @@
-﻿using DotNet.Testcontainers.Builders;
-using DotNet.Testcontainers.Containers;
-using Testcontainers.PostgreSql;
-using Testcontainers.RabbitMq;
+﻿using Testcontainers.RabbitMq;
 using TUnit.Core.Interfaces;
 
 namespace rbkApiModules.Commons.Testing;

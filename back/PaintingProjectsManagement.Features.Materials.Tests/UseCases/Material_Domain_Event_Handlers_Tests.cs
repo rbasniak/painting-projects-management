@@ -1,10 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.Features.Materials.Abstractions;
-using PaintingProjectsManagement.Features.Projects;
-using PaintingProjectsManagement.Testing.Core;
 using rbkApiModules.Commons.Core;
-using rbkApiModules.Commons.Core.Abstractions;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 

@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using System.Diagnostics;
 using System.Text;
-using System.Text.Json;
 
 namespace PaintingProjectsManagement.Features.Models;
 

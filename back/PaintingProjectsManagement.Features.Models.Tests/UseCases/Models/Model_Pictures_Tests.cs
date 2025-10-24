@@ -1,8 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Shouldly;
-using System;
-using System.Linq;
-
 namespace PaintingProjectsManagement.Features.Models.Tests;
 
 public class Model_Pictures_Tests

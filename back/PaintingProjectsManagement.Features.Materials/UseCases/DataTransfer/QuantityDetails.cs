@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace PaintingProjectsManagement.Features.Materials;
+﻿namespace PaintingProjectsManagement.Features.Materials;
 
 public class QuantityDetails
 {

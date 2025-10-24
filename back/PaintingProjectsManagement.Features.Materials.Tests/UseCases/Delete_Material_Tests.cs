@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
 public class Delete_Material_Tests

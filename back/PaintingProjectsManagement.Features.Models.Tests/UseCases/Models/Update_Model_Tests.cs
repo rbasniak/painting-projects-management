@@ -1,5 +1,3 @@
-using PaintingProjectsManagement.Features.Models.Tests;
-
 namespace PaintingProjectsManagement.Features.Models.Tests;
 
 public class Update_Model_Tests

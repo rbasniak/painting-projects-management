@@ -1,8 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using PaintingProjectsManagement.Features.Models.Abstractions;
-using rbkApiModules.Commons.Core;
 using rbkApiModules.Commons.Core.Abstractions;
 
 namespace PaintingProjectsManagement.Features.Models;

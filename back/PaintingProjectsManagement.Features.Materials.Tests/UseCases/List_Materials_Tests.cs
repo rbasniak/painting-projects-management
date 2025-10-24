@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using rbkApiModules.Testing.Core;
-
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
 public class List_Materials_Tests

@@ -1,6 +1,4 @@
-﻿using rbkApiModules.Commons.Core.Abstractions;
-
-namespace PaintingProjectsManagement.Features.Materials;
+﻿namespace PaintingProjectsManagement.Features.Materials;
 public class MaterialDetails
 {
     public Guid Id { get; init; }

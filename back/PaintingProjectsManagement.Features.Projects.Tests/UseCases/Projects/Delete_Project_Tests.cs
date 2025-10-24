@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace PaintingProjectsManagement.Features.Projects.Tests;
 
 public class Delete_Project_Tests

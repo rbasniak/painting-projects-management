@@ -1,16 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DotNet.Testcontainers.Configurations;
 using PaintingProjectsManagement.Testing.Core;
-using rbkApiModules.Commons.Core;
-using rbkApiModules.Commons.Core.Messaging;
-using TUnit.Core;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
+// IMPORTANT: if using Podman instead of Docker, make sure Docker Compatibility is enabled in Podman settings.
+
 public class TestingServer : BaseApplicationTestingServer<Program>
 {
-    [ClassDataSource<PostgreSqlContainerWrapper>(Shared = SharedType.PerTestSession)]
-    public override required PostgreSqlContainerWrapper PostgresContainerWrapper { get; set; } = new();
-
-    [ClassDataSource<RabbitMqContainerWrapper>(Shared = SharedType.PerTestSession)]
-    public override required RabbitMqContainerWrapper RabbitContainerWrapper { get; set; } = new();
+    public TestingServer()
+    {
+        ServerCache2.Cache.Add(InstanceId,  this);
+    }
 }

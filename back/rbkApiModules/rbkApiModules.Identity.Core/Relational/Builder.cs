@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using rbkApiModules.Commons.Core.Authentication;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Core;
 using System.Diagnostics;

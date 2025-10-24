@@ -1,6 +1,4 @@
-﻿using PaintingProjectsManagement.Features.Materials.Abstractions;
-
-namespace PaintingProjectsManagement.Features.Projects;
+﻿namespace PaintingProjectsManagement.Features.Projects;
 
 public class GetProjectDetails : IEndpoint
 {

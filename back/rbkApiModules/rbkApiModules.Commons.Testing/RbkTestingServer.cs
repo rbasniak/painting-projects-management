@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using Npgsql;
 using rbkApiModules.Commons.Core;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Core;
 using Shouldly;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
@@ -38,6 +38,8 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
     public async Task InitializeAsync()
     {
+        Debug.WriteLine($"*** RbkTestingServer Initialize: {InstanceId}");
+
         await InitializeApplicationAsync();
 
         // Grab a reference to the server

@@ -1,7 +1,5 @@
 // TODO: DONE, REVIEWED
 
-using System;
-
 namespace rbkApiModules.Commons.Core;
 
 /// <summary>

@@ -1,6 +1,4 @@
-﻿using PaintingProjectsManagement.Features.Materials;
-
-namespace PaintingProjectsManagement.Features.Projects;
+﻿namespace PaintingProjectsManagement.Features.Projects;
 
 public class Project : TenantEntity
 {

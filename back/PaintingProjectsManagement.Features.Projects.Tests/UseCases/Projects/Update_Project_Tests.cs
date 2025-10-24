@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace PaintingProjectsManagement.Features.Projects.Tests;
 
 public class Update_Project_Tests

@@ -1,11 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PaintingProjectsManagement.Features;
-using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.Features.Models;
-using PaintingProjectsManagement.Features.Paints;
-using PaintingProjectsManagement.Features.Projects;
-using rbkApiModules.Commons.Relational;
-using rbkApiModules.Identity.Core;
 using System.Diagnostics;
 
 namespace PaintingProjectsManagment.Database;

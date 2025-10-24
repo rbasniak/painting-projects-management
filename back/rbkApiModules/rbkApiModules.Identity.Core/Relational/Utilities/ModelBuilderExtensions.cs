@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.EntityFrameworkCore.Metadata;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection;
-using rbkApiModules.Identity.Core;
+﻿using rbkApiModules.Identity.Core;
 
 namespace rbkApiModules.Identity;
 

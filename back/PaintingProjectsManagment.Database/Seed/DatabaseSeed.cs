@@ -1,6 +1,5 @@
 ﻿using PaintingProjectsManagement.Features;
 using PaintingProjectsManagement.Features.Materials;
-using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Paints;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Core;

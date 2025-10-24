@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace PaintingProjectsManagement.Features.Models;
 
 public class SetModelFigureCount : IEndpoint
