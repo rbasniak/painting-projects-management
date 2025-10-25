@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using PaintingProjectsManagement.Api;
 using PaintingProjectsManagement.Testing.Core;
 

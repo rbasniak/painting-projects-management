@@ -42,6 +42,7 @@ public class PostgreSqlContainerWrapper
                 .WithDatabase("postgres")
                 .WithUsername("postgres")
                 .WithPassword("postgrespw")
+                .WithReuse(true) // Either this or random ports in between assemblies
                 .Build();
 
             _isInitialized = true;

@@ -23,6 +23,6 @@ public class Demo1TestingServer : RbkTestingServer<Program>
 
     protected override IEnumerable<KeyValuePair<string, string>> ConfigureInMemoryOverrides()
     {
-        throw new NotImplementedException();
+        return Array.Empty<KeyValuePair<string, string>>();
     }
 }

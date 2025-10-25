@@ -32,6 +32,7 @@ public class RabbitMqContainerWrapper
             _container = new RabbitMqBuilder()
                 .WithImage("rabbitmq:3.13-management")
                 .WithPortBinding(15672, 15672)
+                .WithReuse(true) // Either this or random ports in between assemblies
                 .WithUsername("guest")
                 .WithPassword("guest")
                 .Build();
