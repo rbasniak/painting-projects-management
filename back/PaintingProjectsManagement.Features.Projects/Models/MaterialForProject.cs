@@ -1,5 +1,3 @@
-using PaintingProjectsManagement.Features.Materials;
-
 namespace PaintingProjectsManagement.Features.Projects;
 
 public class MaterialForProject

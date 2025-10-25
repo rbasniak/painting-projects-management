@@ -1,5 +1,3 @@
-using System;
-
 namespace rbkApiModules.Commons.Core;
 
 public interface IEventTypeRegistry

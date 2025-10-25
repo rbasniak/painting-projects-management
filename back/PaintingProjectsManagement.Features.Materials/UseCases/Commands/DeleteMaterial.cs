@@ -42,6 +42,8 @@ public class DeleteMaterial : IEndpoint
                 .Where(x => x.TenantId == request.Identity.Tenant)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
+            material.Delete();
+
             _context.Remove(material);
 
             await _context.SaveChangesAsync(cancellationToken);

@@ -5,3 +5,4 @@
 - If method is async, it must have async suffix
 - CancellationToken parameters should be named cancellationToken
 - EventName must match class name
+- BaseEntity cannot be returned in endpoitns

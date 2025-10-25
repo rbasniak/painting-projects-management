@@ -1,13 +1,10 @@
 using PaintingProjectsManagement.Api;
+using PaintingProjectsManagement.Testing.Core;
 
 namespace PaintingProjectsManagement.Features.Paints.Tests;
 
-public class TestingServer : RbkTestingServer<Program>
-{
-    protected override bool UseHttps => true;
+// IMPORTANT: if using Podman instead of Docker, make sure Docker Compatibility is enabled in Podman settings.
 
-    protected override void ConfigureTestServices(IServiceCollection services)
-    {
-        base.ConfigureTestServices(services);
-    }
+public class TestingServer : BaseApplicationTestingServer<Program>
+{
 }

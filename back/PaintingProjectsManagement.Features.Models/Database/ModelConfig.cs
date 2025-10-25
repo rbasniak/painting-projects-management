@@ -28,12 +28,19 @@ public class ModelConfig : IEntityTypeConfiguration<Model>
             .IsRequired()
             .HasDefaultValue(false);
 
+        builder.OwnsOne(x => x.Score, owned =>
+        {
+            owned.Property(p => p.Value)
+                .HasColumnName("Score")
+                .IsRequired()
+                .HasDefaultValue(0);
+        });
+
         builder.HasOne(x => x.Category)
             .WithMany()
             .HasForeignKey(x => x.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(e => new { e.TenantId, e.Name })
-           .IsUnique();
+        builder.HasIndex(e => new { e.TenantId, e.Name });
     }
 }

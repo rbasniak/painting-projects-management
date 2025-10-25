@@ -1,3 +1,5 @@
+using rbkApiModules.Core.Utilities;
+
 namespace PaintingProjectsManagement.Features.Models;
 
 public class UploadModelPicture : IEndpoint
@@ -10,7 +12,7 @@ public class UploadModelPicture : IEndpoint
 
             return ResultsMapper.FromResponse(result);
         })
-        .Produces(StatusCodes.Status200OK)
+        .Produces<ModelDetails>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Upload Model Picture")
         .WithTags("Models");
@@ -32,32 +34,17 @@ public class UploadModelPicture : IEndpoint
         {
             RuleFor(x => x.Base64Image)
                 .NotEmpty()
-                .WithMessage("Base64 image content is required.")
-                .Must(data => IsValidBase64Image(data))
-                .WithMessage("Invalid base64 image format. Must be a valid base64 encoded image with proper header.");
+                .Must(HaveValidExtension).WithMessage("Invalid image format.");
         }
-        
-        private bool IsValidBase64Image(string base64)
+
+        private bool HaveValidExtension(Request request, string base64Image)
         {
-            if (string.IsNullOrEmpty(base64))
-            {
-                return false;
-            }
-                
-            var hasImagePrefix = base64.StartsWith("data:image/") && base64.Contains(";base64,");
-            if (!hasImagePrefix)
-            {
-                return false;
-            }
-                
-            var base64Content = base64.Split(',')[1];
-            
             try
             {
-                var bytes = Convert.FromBase64String(base64Content);
-                return bytes.Length > 0;
+                var extension = ImageUtilities.ExtractExtension(base64Image);
+                return extension.Equals("jpg", StringComparison.InvariantCultureIgnoreCase) || extension.Equals("png", StringComparison.InvariantCultureIgnoreCase);
             }
-            catch
+            catch (Exception ex)
             {
                 return false;
             }
@@ -69,28 +56,27 @@ public class UploadModelPicture : IEndpoint
 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(request);
+
             var model = await _context.Set<Model>()
                 .Include(x => x.Category)
                 .FirstAsync(x => x.Id == request.ModelId, cancellationToken);
-                
-            if (!string.IsNullOrEmpty(model.PictureUrl))
-            {
-                await _fileStorage.DeleteFileAsync(model.PictureUrl, cancellationToken);
-            }
-            
+
+            string baseFileName = $"model_{model.Id:N}_{DateTime.UtcNow.Ticks}";
+            string fullFileName = $"{baseFileName}.{ImageUtilities.ExtractExtension(request.Base64Image)}";
+
             string pictureUrl = await _fileStorage.StoreFileFromBase64Async(
                 request.Base64Image,
-                $"model_{model.Id:N}",
-                "models",
-                2048, 
+                fullFileName,
+                Path.Combine(request.Identity.Tenant, "models"),
+                2048,
                 2048,
                 cancellationToken);
-                
-            model.UpdatePicture(pictureUrl);
-            
+
+            model.AddPicture(pictureUrl);
             await _context.SaveChangesAsync(cancellationToken);
-            
-            return CommandResponse.Success();
+
+            return CommandResponse.Success(ModelDetails.FromModel(model));
         }
     }
 }

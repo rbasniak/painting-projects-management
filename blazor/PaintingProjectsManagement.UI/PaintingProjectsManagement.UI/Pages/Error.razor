@@ -1,0 +1,24 @@
+@page "/error"
+
+@inject PaintingProjectsManagement.UI.Modules.Shared.ProblemDetailsState ProblemState
+
+<h3>Error</h3>
+
+@if (ProblemState.Details is not null)
+{
+    <p>@ProblemState.Details.Title</p>
+    <p>@ProblemState.Details.Detail</p>
+    @* @if (ProblemState.Details.Extensions?.Count > 0)
+    {
+        <ul>
+        @foreach (var item in ProblemState.Details.Extensions)
+        {
+            <li>@item.Key: @item.Value</li>
+        }
+        </ul>
+    } *@
+}
+else
+{
+    <p>No error details available.</p>
+}

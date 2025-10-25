@@ -5,6 +5,8 @@ public class MoneyDetails
     public string CurrencyCode { get; init; } = string.Empty;
     public double Amount { get; init; } = 0;
 
+    public override string ToString() => $"{Amount} {CurrencyCode}";
+
     public static MoneyDetails Empty => new()
     { 
         CurrencyCode = string.Empty, 

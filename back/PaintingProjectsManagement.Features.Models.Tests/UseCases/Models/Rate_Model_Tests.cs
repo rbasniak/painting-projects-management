@@ -80,7 +80,7 @@ public class Rate_Model_Tests
         // Assert the database - score should remain unchanged
         using var context = TestingServer.CreateContext();
         var model = await context.Set<Model>().FirstAsync(x => x.Id == _tenant1ModelId);
-        model.Score.ShouldBe(0); // Default score
+        model.Score.Value.ShouldBe(0); // Default score
     }
 
     [Test, NotInParallel(Order = 3)]
@@ -102,7 +102,7 @@ public class Rate_Model_Tests
         // Assert the database - no changes should be made
         using var context = TestingServer.CreateContext();
         var model = await context.Set<Model>().FirstAsync(x => x.Id == _tenant1ModelId);
-        model.Score.ShouldBe(0); // Default score
+        model.Score.Value.ShouldBe(0); // Default score
     }
 
     [Test, NotInParallel(Order = 4)]
@@ -124,7 +124,7 @@ public class Rate_Model_Tests
         // Assert the database - score should remain unchanged
         using var context = TestingServer.CreateContext();
         var model = await context.Set<Model>().FirstAsync(x => x.Id == _tenant2ModelId);
-        model.Score.ShouldBe(0); // Default score
+        model.Score.Value.ShouldBe(0); // Default score
     }
 
     [Test, NotInParallel(Order = 5)]
@@ -148,7 +148,7 @@ public class Rate_Model_Tests
         // Assert the database - score should remain unchanged
         using var context = TestingServer.CreateContext();
         var model = await context.Set<Model>().FirstAsync(x => x.Id == _tenant1ModelId);
-        model.Score.ShouldBe(0); // Default score
+        model.Score.Value.ShouldBe(0); // Default score
     }
 
     [Test, NotInParallel(Order = 6)]
@@ -177,7 +177,7 @@ public class Rate_Model_Tests
         // Assert the database
         using var context = TestingServer.CreateContext();
         var model = await context.Set<Model>().FirstAsync(x => x.Id == _tenant1ModelId);
-        model.Score.ShouldBe(validScore);
+        model.Score.Value.ShouldBe(validScore);
     }
 
     [Test, NotInParallel(Order = 8)]
@@ -210,15 +210,15 @@ public class Rate_Model_Tests
         // Assert the database - both models should have their respective scores
         using var context = TestingServer.CreateContext();
         var model1 = await context.Set<Model>().FirstAsync(x => x.Id == _tenant1ModelId);
-        model1.Score.ShouldBe(3);
+        model1.Score.Value.ShouldBe(3);
 
         var model2 = await context.Set<Model>().FirstAsync(x => x.Id == _tenant2ModelId);
-        model2.Score.ShouldBe(5);
+        model2.Score.Value.ShouldBe(5);
     }
 
     [Test, NotInParallel(Order = 99)]
-    public async Task CleanUp()
+    public async Task Cleanup()
     {
-        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
+        await TestingServer.DisposeAsync();
     }
 } 

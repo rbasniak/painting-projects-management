@@ -1,6 +1,5 @@
 ﻿using PaintingProjectsManagement.Features;
 using PaintingProjectsManagement.Features.Materials;
-using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Paints;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Core;
@@ -12,10 +11,10 @@ public partial class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatab
     public DatabaseSeed()
     {
         AddSeed("2025-07-19 16:00: Users seed", new SeedInfo<DatabaseContext>(UsersSeed));
-        AddSeed("2025-07-19 16:48: Development materials seed", new SeedInfo<DatabaseContext>(DevelopmentMaterialsSeed));
-        AddSeed("2025-07-20 08:15: Development models seed", new SeedInfo<DatabaseContext>(DevelopmentModelsSeed));
+        AddSeed("2025-07-19 16:48: Development materials seed", new SeedInfo<DatabaseContext>(DevelopmentMaterialsSeed, EnvironmentUsage.Development));
+        AddSeed("2025-07-20 08:15: Development models seed", new SeedInfo<DatabaseContext>(DevelopmentModelsSeed, EnvironmentUsage.Development));
         AddSeed("2025-07-22 23:15: Admin claims seed", new SeedInfo<DatabaseContext>(AdminClaimsSeed));
-        AddSeed("2025-08-11 23:15: Example projects", new SeedInfo<DatabaseContext>(ProjectsSeed));
+        AddSeed("2025-08-11 23:15: Example projects", new SeedInfo<DatabaseContext>(ProjectsSeed, EnvironmentUsage.Development));
         // AddSeed("2025-07-20: Army Painter Seed", new SeedInfo<DatabaseContext>(ArmyPainterFanaticsSeed));
     }
 
@@ -33,11 +32,6 @@ public partial class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatab
         user2.Confirm();
 
         context.SaveChanges();
-    }
-
-    private void DevelopmentModelsSeed(DatabaseContext context, IServiceProvider provider)
-    {
-        ModelsSeeder.SeedFromDisk(context);
     }
 
     private void DevelopmentMaterialsSeed(DatabaseContext context, IServiceProvider provider)

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 using PaintingProjectsManagement.Blazor.Modules.Authentication;
 using PaintingProjectsManagement.UI.Modules.Materials;
+using PaintingProjectsManagement.UI.Modules.Models;
+using PaintingProjectsManagement.UI.Modules.Shared;
 
 namespace PaintingProjectsManagement.UI
 {
@@ -17,10 +19,14 @@ namespace PaintingProjectsManagement.UI
             builder.Services.AddMudServices();
 
             builder.Services.AddMaterialsModule();
+            builder.Services.AddModelsModule();
             builder.Services.AddAuthenticationModule();
 
             // Register storage service
             builder.Services.AddScoped<IStorageService, StorageService>();
+
+            builder.Services.AddScoped<ProblemDetailsState>();
+            builder.Services.AddTransient<HttpErrorHandler>();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

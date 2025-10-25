@@ -1,5 +1,3 @@
-using System.Security.Claims;
-
 namespace rbkApiModules.Commons.Core.Features.ApplicationOptions;
 
 public interface IApplicationOptionsManager

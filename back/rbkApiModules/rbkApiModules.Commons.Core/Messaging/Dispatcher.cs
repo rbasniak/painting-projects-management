@@ -221,8 +221,14 @@ public class Dispatcher(IServiceProvider serviceProvider, IHttpContextAccessor h
             sw.Stop();
             if (result is not null)
             {
-                if (result.IsValid) EventsMeters.Dispatcher_RequestsProcessed.Add(1);
-                else EventsMeters.Dispatcher_RequestsFailed.Add(1);
+                if (result.IsValid)
+                {
+                    EventsMeters.Dispatcher_RequestsProcessed.Add(1);
+                }
+                else
+                {
+                    EventsMeters.Dispatcher_RequestsFailed.Add(1);
+                }
 
                 EventsMeters.Dispatcher_RequestDurationMs.Record(sw.Elapsed.TotalMilliseconds);
             }

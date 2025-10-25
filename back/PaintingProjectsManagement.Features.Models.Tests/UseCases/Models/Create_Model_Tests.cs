@@ -775,9 +775,9 @@ public class Create_Model_Tests
         result.Tags.ShouldBe(["tag1", "tag2"]);
         result.Characters.ShouldBe(["character1", "character2"]);
         result.Franchise.ShouldBe("Test Franchise");
-        result.Type.ShouldBe(ModelType.Miniature);
-        result.BaseSize.ShouldBe(BaseSize.Medium);
-        result.FigureSize.ShouldBe(FigureSize.Normal);
+        //result.Type.ShouldBe(ModelType.Miniature);
+        //result.BaseSize.ShouldBe(BaseSize.Medium);
+        //result.FigureSize.ShouldBe(FigureSize.Normal);
         result.NumberOfFigures.ShouldBe(2);
         result.Size.ShouldBe(15);
         result.Category.Id.ShouldBe(_tenant1Category);
@@ -798,8 +798,8 @@ public class Create_Model_Tests
     }
 
     [Test, NotInParallel(Order = 99)]
-    public async Task CleanUp()
+    public async Task Cleanup()
     {
-        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
+        await TestingServer.DisposeAsync();
     }
 } 

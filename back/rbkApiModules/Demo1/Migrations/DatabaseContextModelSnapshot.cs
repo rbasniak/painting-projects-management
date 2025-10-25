@@ -45,7 +45,7 @@ namespace Demo1.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TenantId")
-                        .HasMaxLength(32)
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -81,7 +81,7 @@ namespace Demo1.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TenantId")
-                        .HasMaxLength(32)
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -125,7 +125,7 @@ namespace Demo1.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TenantId")
-                        .HasMaxLength(32)
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -133,6 +133,93 @@ namespace Demo1.Migrations
                     b.HasIndex("TenantId");
 
                     b.ToTable("Plants");
+                });
+
+            modelBuilder.Entity("rbkApiModules.Commons.Core.DomainOutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<short>("Attempts")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CausationId")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ClaimedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ClaimedUntil")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CorrelationId")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DoNotProcessBeforeUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsPoisoned")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("OccurredUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ParentSpanId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ProcessedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("TraceFlags")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TraceId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TraceState")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<short>("Version")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedUtc")
+                        .HasFilter("\"ProcessedUtc\" IS NULL AND \"IsPoisoned\" = FALSE");
+
+                    b.HasIndex("DoNotProcessBeforeUtc");
+
+                    b.HasIndex("IsPoisoned");
+
+                    b.HasIndex("ProcessedUtc");
+
+                    b.ToTable("DomainOutboxMessages", (string)null);
                 });
 
             modelBuilder.Entity("rbkApiModules.Commons.Core.Features.ApplicationOptions.ApplicationOption", b =>
@@ -160,8 +247,6 @@ namespace Demo1.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TenantId");
-
                     b.HasIndex("Key", "TenantId", "Username")
                         .IsUnique();
 
@@ -174,13 +259,16 @@ namespace Demo1.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("HandlerName")
-                        .HasMaxLength(250)
+                        .HasMaxLength(512)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Attempts")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("ProcessedUtc")
+                    b.Property<DateTime?>("ProcessedUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ReceivedUtc")
                         .HasColumnType("TEXT");
 
                     b.HasKey("EventId", "HandlerName");
@@ -190,17 +278,23 @@ namespace Demo1.Migrations
                     b.ToTable("InboxMessages", (string)null);
                 });
 
-            modelBuilder.Entity("rbkApiModules.Commons.Core.OutboxMessage", b =>
+            modelBuilder.Entity("rbkApiModules.Commons.Core.IntegrationOutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Attempts")
+                    b.Property<short>("Attempts")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CausationId")
                         .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ClaimedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("ClaimedUntil")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CorrelationId")
@@ -210,12 +304,23 @@ namespace Demo1.Migrations
                     b.Property<DateTime>("CreatedUtc")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("DoNotProcessBeforeUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsPoisoned")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("OccurredUtc")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ParentSpanId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Payload")
@@ -230,22 +335,35 @@ namespace Demo1.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("TraceFlags")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TraceId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TraceState")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Version")
+                    b.Property<short>("Version")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedUtc");
 
+                    b.HasIndex("DoNotProcessBeforeUtc");
+
+                    b.HasIndex("IsPoisoned");
+
                     b.HasIndex("ProcessedUtc");
 
                     b.HasIndex("TenantId", "Name", "Version");
 
-                    b.ToTable("OutboxMessages", (string)null);
+                    b.ToTable("IntegrationOutboxMessages", (string)null);
                 });
 
             modelBuilder.Entity("rbkApiModules.Commons.Relational.SeedHistory", b =>
@@ -300,7 +418,7 @@ namespace Demo1.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TenantId")
-                        .HasMaxLength(32)
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -400,7 +518,7 @@ namespace Demo1.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("TenantId")
-                        .HasMaxLength(32)
+                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Username")
@@ -486,23 +604,6 @@ namespace Demo1.Migrations
                         .WithMany()
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("rbkApiModules.Commons.Core.Features.ApplicationOptions.ApplicationOption", b =>
-                {
-                    b.HasOne("rbkApiModules.Identity.Core.Tenant", null)
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("rbkApiModules.Commons.Core.OutboxMessage", b =>
-                {
-                    b.HasOne("rbkApiModules.Identity.Core.Tenant", null)
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("rbkApiModules.Identity.Core.Role", b =>

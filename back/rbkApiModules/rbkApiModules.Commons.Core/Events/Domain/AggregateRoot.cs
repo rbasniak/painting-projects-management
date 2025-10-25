@@ -1,7 +1,5 @@
 // TODO: DONE, REVIEWED
 
-using System.Collections.Generic;
-
 namespace rbkApiModules.Commons.Core;
 
 public abstract class AggregateRoot : BaseEntity

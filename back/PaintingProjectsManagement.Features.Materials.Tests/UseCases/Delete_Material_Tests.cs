@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
 public class Delete_Material_Tests
@@ -41,6 +39,8 @@ public class Delete_Material_Tests
     [Test, NotInParallel(Order = 2)]
     public async Task Non_Authenticated_User_Cannot_Delete_Material()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Prepare - Use a non-existent material ID
         var nonExistentId = Guid.NewGuid();
 
@@ -49,6 +49,9 @@ public class Delete_Material_Tests
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
+
+        // Assert the messages
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     /// <summary>
@@ -57,6 +60,8 @@ public class Delete_Material_Tests
     [Test, NotInParallel(Order = 3)]
     public async Task User_Cannot_Delete_Material_That_Does_Not_Exist()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Prepare - Use a non-existent material ID
         var nonExistentId = Guid.NewGuid();
 
@@ -65,6 +70,9 @@ public class Delete_Material_Tests
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
+
+        // Assert the messages
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     /// <summary>
@@ -73,6 +81,8 @@ public class Delete_Material_Tests
     [Test, NotInParallel(Order = 4)]
     public async Task User_Cannot_Delete_Material_That_Belongs_To_Another_User()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Prepare - Load the material created by another user
         var anotherUserMaterial = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Name == "Another User Material");
         anotherUserMaterial.TenantId.ShouldBe("RICARDO.SMARZARO", "Material should belong to another user");
@@ -87,6 +97,9 @@ public class Delete_Material_Tests
         // Assert the database - material should still exist
         var stillExistingEntity = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Id == anotherUserMaterial.Id);
         stillExistingEntity.ShouldNotBeNull("Material should still exist in database");
+
+        // Assert the messages
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     /// <summary>
@@ -108,6 +121,8 @@ public class Delete_Material_Tests
     [Test, NotInParallel(Order = 6)]
     public async Task User_Can_Delete_Material()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Prepare - Load the material created in the seed
         var existingMaterial = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Name == "Existing Material");
         existingMaterial.ShouldNotBeNull("Material should exist from seed");
@@ -121,11 +136,17 @@ public class Delete_Material_Tests
         // Assert the database - material should be deleted
         var deletedEntity = TestingServer.CreateContext().Set<Material>().FirstOrDefault(x => x.Id == existingMaterial.Id);
         deletedEntity.ShouldBeNull("Material should be deleted from database");
+
+        // Assert the messages
+        TestingServer.ShouldHaveCreatedDomainEvents(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialDeleted)] = 1,
+        }, out var events);
     }
 
     [Test, NotInParallel(Order = 99)]
-    public async Task CleanUp()
+    public async Task Cleanup()
     {
-        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
+        await TestingServer.DisposeAsync();
     }
 }

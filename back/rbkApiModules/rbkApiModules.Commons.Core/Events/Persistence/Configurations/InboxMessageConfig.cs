@@ -4,7 +4,6 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using rbkApiModules.Commons.Core;
 
 namespace rbkApiModules.Commons.Core;
 

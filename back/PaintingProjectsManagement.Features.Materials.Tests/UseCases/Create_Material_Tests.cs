@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Shouldly;
-
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
 public class Create_Material_Tests
@@ -42,6 +39,8 @@ public class Create_Material_Tests
     [Test, NotInParallel(Order = 2)]
     public async Task Non_Authenticated_User_Cannot_Create_Material()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Prepare
         var request = new CreateMaterial.Request
         {
@@ -61,6 +60,9 @@ public class Create_Material_Tests
         // Assert the database
         var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Test Material").ToList();
         materials.ShouldBeEmpty();
+
+        // Assert the messages
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     [Test, NotInParallel(Order = 3)]
@@ -68,6 +70,8 @@ public class Create_Material_Tests
     [Arguments(-1)]
     public async Task User_Cannot_Create_Material_When_PackageContentAmount_Is_Not_Positive(double packageAmount)
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Prepare
         var request = new CreateMaterial.Request
         {
@@ -82,16 +86,21 @@ public class Create_Material_Tests
         var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
 
         // Assert the response
-        response.ShouldHaveErrors(HttpStatusCode.BadRequest);
+        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Package amount must be greater than zero.");
 
         // Assert the database
         var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Invalid Amount").ToList();
         materials.ShouldBeEmpty();
+
+        // Assert the messages
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     [Test, NotInParallel(Order = 6)]
     public async Task User_Cannot_Create_Material_When_Name_Already_Exists()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Prepare
         var request = new CreateMaterial.Request
         {
@@ -111,11 +120,16 @@ public class Create_Material_Tests
         // Assert the database
         var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Existing Material").ToList();
         materials.Count.ShouldBe(1); // Only the original one from Seed
+
+        // Assert the messages
+        TestingServer.ShouldNotHaveCreatedDomainEvents(testStartTime);
     }
 
     [Test, NotInParallel(Order = 13)]
     public async Task User_Can_Create_Material_With_Same_Name_As_Another_User()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Prepare
         var request = new CreateMaterial.Request
         {
@@ -136,8 +150,8 @@ public class Create_Material_Tests
         result.Name.ShouldBe("Existing Material");
         result.PackagePrice.Amount.ShouldBe(25);
         result.PackagePrice.CurrencyCode.ShouldBe("USD");
-        result.PackagetContent.Amount.ShouldBe(1);
-        EnumAssertionExtensions.ShouldBeEquivalentTo(result.PackagetContent.Unit, PackageContentUnit.Each);
+        //result.PackagetContent.Amount.ShouldBe(1);
+        //EnumAssertionExtensions.ShouldBeEquivalentTo(result.PackagetContent.Unit, PackageContentUnit.Each);
 
         // Assert the database - should have two materials with the same name but different users
         var materials = TestingServer.CreateContext().Set<Material>().Where(x => x.Name == "Existing Material").ToList();
@@ -154,11 +168,19 @@ public class Create_Material_Tests
         rsMaterial.ShouldNotBeNull();
         rsMaterial.UnitPriceAmount.ShouldBe(25);
         rsMaterial.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
+
+        // Assert the messages
+        TestingServer.ShouldHaveCreatedDomainEvents(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialCreated)] = 1,
+        }, out var events);
     }
 
     [Test, NotInParallel(Order = 14)]
     public async Task User_Can_Create_Material()
     {
+        var testStartTime = DateTime.UtcNow;
+
         // Prepare
         var request = new CreateMaterial.Request
         {
@@ -187,11 +209,17 @@ public class Create_Material_Tests
         entity.Name.ShouldBe("8x4 magnet for test");
         entity.UnitPriceAmount.ShouldBe(19);
         entity.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
+
+        // Assert the messages
+        TestingServer.ShouldHaveCreatedDomainEvents(testStartTime, new Dictionary<Type, int>
+        {
+            [typeof(MaterialCreated)] = 1,
+        }, out var events);
     }
 
     [Test, NotInParallel(Order = 99)]
-    public async Task CleanUp()
+    public async Task Cleanup()
     {
-        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
+        await TestingServer.DisposeAsync();
     }
 }

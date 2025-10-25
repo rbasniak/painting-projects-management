@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace PaintingProjectsManagement.Features.Projects.Tests;
 
 public class Delete_Project_Tests
@@ -101,8 +99,8 @@ public class Delete_Project_Tests
     }
 
     [Test, NotInParallel(Order = 99)]
-    public async Task CleanUp()
+    public async Task Cleanup()
     {
-        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
+        await TestingServer.DisposeAsync();
     }
 } 

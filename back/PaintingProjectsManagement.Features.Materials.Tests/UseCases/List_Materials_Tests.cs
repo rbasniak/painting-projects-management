@@ -1,6 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using rbkApiModules.Testing.Core;
-
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
 public class List_Materials_Tests
@@ -38,6 +35,10 @@ public class List_Materials_Tests
             var ricardoMaterials = context.Set<Material>().Where(x => x.TenantId == "RICARDO.SMARZARO").ToList();
             ricardoMaterials.Count.ShouldBe(2);
         }
+
+        // Login with the users that will be used in the tests, so they will be cached in the TestingServer for easy access
+        await TestingServer.CacheCredentialsAsync("rodrigo.basniak", "trustno1", "rodrigo.basniak");
+        await TestingServer.CacheCredentialsAsync("ricardo.smarzaro", "zemiko987", "ricardo.smarzaro");
     }
 
     [Test, NotInParallel(Order = 2)]
@@ -89,8 +90,8 @@ public class List_Materials_Tests
     }
 
     [Test, NotInParallel(Order = 99)]
-    public async Task CleanUp()
+    public async Task Cleanup()
     {
-        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
+        await TestingServer.DisposeAsync();
     }
 }

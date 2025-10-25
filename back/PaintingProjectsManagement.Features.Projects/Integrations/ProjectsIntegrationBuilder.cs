@@ -1,6 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
 using PaintingProjectsManagement.Features.Materials.Abstractions;
-using rbkApiModules.Commons.Core;
 
 namespace PaintingProjectsManagement.Features.Projects;
 

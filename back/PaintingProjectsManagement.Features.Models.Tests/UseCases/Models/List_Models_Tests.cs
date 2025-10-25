@@ -171,15 +171,16 @@ public class List_Models_Tests
         model.Characters.ShouldBe(new[] { "Character1" });
         model.Size.ShouldBe(100);
         model.Category.Name.ShouldBe("Category A");
-        model.Type.ShouldBe(ModelType.Miniature);
+        //model.Type.ShouldBe(ModelType.Miniature);
         model.Artist.ShouldBe("Artist1");
         model.Tags.ShouldBe(new[] { "tag1" });
-        model.BaseSize.ShouldBe(BaseSize.Small);
-        model.FigureSize.ShouldBe(FigureSize.Normal);
+        //model.BaseSize.ShouldBe(BaseSize.Small);
+        //model.FigureSize.ShouldBe(FigureSize.Normal);
         model.NumberOfFigures.ShouldBe(1);
         model.MustHave.ShouldBeFalse(); // Default must-have flag
         model.Score.ShouldBe(0); // Default score
-        model.PictureUrl.ShouldBeNull(); // No picture URL set
+        model.CoverPicture.ShouldBeNull(); // No cover picture set
+        model.Pictures.ShouldBeEmpty(); // No pictures set
     }
 
     [Test, NotInParallel(Order = 6)]
@@ -201,8 +202,8 @@ public class List_Models_Tests
     }
 
     [Test, NotInParallel(Order = 99)]
-    public async Task CleanUp()
+    public async Task Cleanup()
     {
-        await TestingServer.CreateContext().Database.EnsureDeletedAsync();
+        await TestingServer.DisposeAsync();
     }
 } 

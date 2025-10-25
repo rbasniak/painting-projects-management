@@ -1,20 +1,21 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using rbkApiModules.Commons.Core;
+using rbkApiModules.Commons.Relational;
+using rbkApiModules.Identity.Core;
+using Shouldly;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using rbkApiModules.Commons.Relational;
 using TUnit.Core.Interfaces;
-using rbkApiModules.Identity.Core;
-using Shouldly;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using rbkApiModules.Commons.Core;
 
 namespace rbkApiModules.Commons.Testing;
 
@@ -26,7 +27,7 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
     protected readonly Dictionary<Credentials, string> CachedCredentials = new();
 
-    public string InstanceId => Guid.NewGuid().ToString("N");
+    public string InstanceId = Guid.NewGuid().ToString("N");
 
     private TestServer? TestingServer;
 
@@ -35,9 +36,11 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
 
     protected abstract bool UseHttps { get; }
 
-    public Task InitializeAsync()
+    public async Task InitializeAsync()
     {
-        // You can also override certain services here to mock things out
+        Debug.WriteLine($"*** RbkTestingServer Initialize: {InstanceId}");
+
+        await InitializeApplicationAsync();
 
         // Grab a reference to the server
         // This forces it to initialize.
@@ -45,8 +48,9 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         // And avoids multiple initialisations from different tests if parallelisation is switched on
         TestingServer = Server;
 
-        return Task.CompletedTask;
     }
+
+    protected abstract Task InitializeApplicationAsync();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -59,30 +63,33 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
             Directory.Delete(ContentFolder, true);
         }
 
-        if (!Directory.Exists(ContentFolder))
-        {
-            Directory.CreateDirectory(ContentFolder);
-        }
+        Directory.CreateDirectory(ContentFolder);
 
         builder
             .UseEnvironment("Testing")
-            .UseWebRoot(ContentFolder)
-            .UseConfiguration(new ConfigurationBuilder()
-                .SetBasePath(projectDir)
-                .AddJsonFile("appsettings.Testing.json")
-                .Build()
+            .UseConfiguration(
+                new ConfigurationBuilder()
+                    .SetBasePath(projectDir!)
+                    .AddJsonFile("appsettings.Testing.json", optional: false, reloadOnChange: false)
+                    .AddInMemoryCollection(ConfigureInMemoryOverrides()) // last wins
+                    .Build()
             )
-            .ConfigureTestServices(services =>
-            {
-                ConfigureTestServices(services);
-            });
+            .UseWebRoot(ContentFolder)
+            //.UseConfiguration(new ConfigurationBuilder()
+            //    .SetBasePath(projectDir!)
+            //    .AddJsonFile("appsettings.Testing.json")
+            //    .Build()
+            //)
+            .ConfigureTestServices(services => ConfigureTestServices(services));
 
         base.ConfigureWebHost(builder);
     }
 
-    protected virtual void ConfigureTestServices(IServiceCollection services)
-    {
-    }
+    protected abstract IEnumerable<KeyValuePair<string, string>> ConfigureInMemoryOverrides();
+
+    protected abstract void ConfigureAppConfiguration(WebHostBuilderContext context, IConfigurationBuilder config);
+
+    protected abstract void ConfigureTestServices(IServiceCollection services);
 
     private HttpClient CreateHttpClient()
     {
@@ -764,7 +771,22 @@ public abstract class RbkTestingServer<TProgram> : WebApplicationFactory<TProgra
         return data;
     }
 
+    public override async ValueTask DisposeAsync()
+    {
+        await base.DisposeAsync();
 
+        try
+        {
+            if (Directory.Exists(ContentFolder))
+            {
+                Directory.Delete(ContentFolder, true);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"*** RbkTestingServer Dispose: Could not delete content folder {ContentFolder}. Exception: {ex.Message}");
+        }
+    }
 }
 
 public record Credentials

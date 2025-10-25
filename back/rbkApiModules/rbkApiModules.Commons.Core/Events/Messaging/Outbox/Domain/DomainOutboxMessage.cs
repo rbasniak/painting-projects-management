@@ -65,4 +65,9 @@ public class DomainOutboxMessage : ITelemetryPropagationDataCarrier
 
         return backoff;
     }
+
+    public override string ToString()
+    {
+        return $"{Name}, {OccurredUtc}, ${(ProcessedUtc != null ? "PROCCESSED" : "NOT YET PROCCESSED")}";
+    }
 } 

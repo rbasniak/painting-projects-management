@@ -6,3 +6,4 @@ global using rbkApiModules.Commons.Testing;
 global using rbkApiModules.Identity.Core;
 global using System.Net;
 global using rbkApiModules.Testing.Core;
+global using Microsoft.EntityFrameworkCore;

@@ -1,0 +1,18 @@
+@using MudBlazor
+@using PaintingProjectsManagement.Blazor.Modules.Authentication
+
+<MudIconButton Icon="@Icons.Material.Filled.Logout" 
+               Color="Color.Inherit" 
+               OnClick="HandleLogout" 
+               Title="Logout" />
+
+@code {
+    [Inject] public ITokenService TokenService { get; set; } = default!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+
+    private async Task HandleLogout()
+    {
+        await TokenService.ClearTokensAsync(CancellationToken.None);
+        NavigationManager.NavigateTo("/login");
+    }
+} 

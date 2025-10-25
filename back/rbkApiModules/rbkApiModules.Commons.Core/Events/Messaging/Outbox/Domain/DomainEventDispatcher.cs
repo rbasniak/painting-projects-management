@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenTelemetry;
-using rbkApiModules.Commons.Core;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
@@ -24,7 +23,7 @@ public sealed class DomainEventDispatcher : BackgroundService
     private readonly ILogger<DomainEventDispatcher> _logger;
     private readonly DomainEventDispatcherOptions _options;
 
-    private static readonly ConcurrentDictionary<Type, Func<object, object, CancellationToken, Task>> _dispatchers = [];
+    private static readonly ConcurrentDictionary<(Type HandlerType, Type EnvelopeType), Func<object, object, CancellationToken, Task>> _dispatchers = [];
 
     public DomainEventDispatcher(
         IServiceScopeFactory scopeFactory,
@@ -57,16 +56,22 @@ public sealed class DomainEventDispatcher : BackgroundService
                 
                 var iterationId = Guid.CreateVersion7();
 
+                // QUIET "is there anything to do?" check (no logs, no telemetry)
                 using (var scope = _scopeFactory.CreateScope())
                 {
-                    var messagingDbContext = _options.ResolveSilentDbContext(scope.ServiceProvider);
+                    var silentDbContext = _options.ResolveSilentDbContext(scope.ServiceProvider);
 
-                    // QUIET "is there anything to do?" check (no logs, no telemetry)
-                    if (!await HasDueEventsAsync(messagingDbContext, cancellationToken))
+                    if (!await HasDueEventsAsync(silentDbContext, cancellationToken))
                     {
                         await Task.Delay(AddJitter(TimeSpan.FromMilliseconds(_options.PollIntervalMs)), cancellationToken);
                         continue;
                     }
+                }
+
+                // If there is work to do, switch to a normal context, with logs and telemetry
+                using (var scope = _scopeFactory.CreateScope())
+                {
+                    var messagingDbContext = _options.ResolveDbContext(scope.ServiceProvider);
 
                     var outerLogExtraData = new Dictionary<string, object>
                     {
@@ -123,7 +128,7 @@ public sealed class DomainEventDispatcher : BackgroundService
 
                     using var processingScope = _scopeFactory.CreateScope();
 
-                    var processingDbContext = _options.ResolveSilentDbContext(processingScope.ServiceProvider);
+                    var processingDbContext = _options.ResolveDbContext(processingScope.ServiceProvider);
 
                     var message = await processingDbContext.DomainOutboxMessage
                         .Where(x => x.Id == messageId)
@@ -274,7 +279,7 @@ public sealed class DomainEventDispatcher : BackgroundService
                                 HandlerName = handlerName,
                                 ReceivedUtc = DateTime.UtcNow,
                                 ProcessedUtc = DateTime.UtcNow,
-                                Attempts = message.Attempts
+                                Attempts = message.Attempts + 1 // +1 because the value in the original message will be updated only down the stream, when it is marked as processed or backed of
                             });
                         }
 
@@ -350,9 +355,14 @@ public sealed class DomainEventDispatcher : BackgroundService
         ArgumentNullException.ThrowIfNull(envelope);
 
         var handlerType = handler.GetType();
-        var invoker = _dispatchers.GetOrAdd(handlerType, x =>
+        var key = (HandlerType: handlerType, EnvelopeType: envelope.GetType());
+        var invoker = _dispatchers.GetOrAdd(key, x =>
         {
-            var method = x.GetMethod(nameof(IDomainEventHandler<object>.HandleAsync), BindingFlags.Public | BindingFlags.Instance);
+            var methods = x.HandlerType.GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                .Where(x => x.Name == nameof(IDomainEventHandler<object>.HandleAsync))
+                .ToArray();
+
+            var method = methods.FirstOrDefault(x => x.GetParameters().First().ParameterType == key.EnvelopeType);
 
             if (method is null)
             {

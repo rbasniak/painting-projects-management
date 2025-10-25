@@ -1,6 +1,4 @@
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Exceptions;
@@ -28,6 +26,9 @@ public sealed class RabbitMqPublisher : IBrokerPublisher, IAsyncDisposable
             Port = _options.Port,
             UserName = _options.UserName,
             Password = _options.Password,
+            VirtualHost = _options.VirtualHost,
+            RequestedHeartbeat = _options.Heartbeat,
+            RequestedConnectionTimeout = _options.ConnectionTimeout,
             DispatchConsumersAsync = true,
             AutomaticRecoveryEnabled = true,
             TopologyRecoveryEnabled = true
@@ -42,7 +43,7 @@ public sealed class RabbitMqPublisher : IBrokerPublisher, IAsyncDisposable
 
         try
         {
-            // idempotência: mapear headers comuns e BasicProperties
+            // idempotï¿½ncia: mapear headers comuns e BasicProperties
             var props = _channel!.CreateBasicProperties();
 
             props.Persistent = true;
@@ -66,7 +67,7 @@ public sealed class RabbitMqPublisher : IBrokerPublisher, IAsyncDisposable
                 }
             }
 
-            // troca deve existir; se não existir, considere falha permanente
+            // troca deve existir; se nï¿½o existir, considere falha permanente
             try
             {
                 _channel.ExchangeDeclare(_options.Exchange, ExchangeType.Topic, durable: true, autoDelete: false, arguments: null);

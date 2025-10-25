@@ -1,1 +1,5 @@
 dotnet ef migrations add Initial --context DatabaseContext --project PaintingProjectsManagment.Database --startup-project PaintingProjectsManagement.Api
+
+
+cd .\back\rbkApiModules\Demo1\
+dotnet ef migrations add Initial --context DatabaseContext --project Demo1.csproj --startup-project Demo1.csproj

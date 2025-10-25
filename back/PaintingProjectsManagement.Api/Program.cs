@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.OpenApi.Models;
 using Npgsql;
 using OpenTelemetry.Trace;
 using PaintingProjectsManagement.Api.Diagnostics;
@@ -62,6 +60,9 @@ public class Program
 
         var connectionString = builder.Configuration.GetConnectionString("ppm-database");
 
+        var temp = builder.Configuration.Sources;
+
+
         if (string.IsNullOrEmpty(connectionString))
         {
             throw new InvalidDataException($"Could not read Postgres connection string from configuration");
@@ -99,7 +100,8 @@ public class Program
         );
 
         // Events infrastructure registrations
-        builder.Services.AddSingleton<IEventTypeRegistry>(sp => new ReflectionEventTypeRegistry(AppDomain.CurrentDomain.GetAssemblies()));
+        builder.Services.AddSingleton<IEventTypeRegistry>(sp => new ReflectionEventTypeRegistry());
+
         builder.Services.Configure<DomainEventDispatcherOptions>(opts =>
         {
             opts.BatchSize = 50;
@@ -150,6 +152,8 @@ public class Program
                 opts.UserName = parts[0];
                 if (parts.Length > 1) opts.Password = parts[1];
             }
+            // Extract virtual host from URI path (e.g., "/" or "/custom-vhost")
+            opts.VirtualHost = string.IsNullOrEmpty(uri.AbsolutePath) || uri.AbsolutePath == "/" ? "/" : uri.AbsolutePath.TrimStart('/');
             opts.Exchange = "ppm-events";
         });
         builder.Services.AddSingleton<RabbitMqPublisher>();
@@ -177,10 +181,9 @@ public class Program
                  options.AddPolicy("_defaultPolicy", builder =>
                  {
                      builder
-                        .WithOrigins("https://localhost:7233", "https://localhost:7114", "http://localhost:5251", "http://localhost:*")
+                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials()
                         .WithExposedHeaders("Content Disposition");
                  }))
              .UseDefaultHsts(builder.Environment.IsDevelopment())
@@ -203,6 +206,7 @@ public class Program
 
         // Application modules
         builder.Services.AddMaterialsFeature();
+        builder.Services.AddModelsFeature();
 
         // Configure OpenAPI with custom schema naming for nested classes
         builder.Services.AddOpenApi(config =>

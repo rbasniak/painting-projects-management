@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using PaintingProjectsManagement.Features.Materials.Abstractions;
@@ -36,7 +35,7 @@ internal sealed class MaterialUpdatedHandler :
 
         using var scope = _scopeFactory.CreateScope();
 
-        var dbContext = _outboxOptions.Value.ResolveDbContext!(scope.ServiceProvider);
+        var applicationDb = scope.ServiceProvider.GetRequiredService<DbContext>();
 
         var materialId = domainEnvelope.Event switch
         {
@@ -46,7 +45,7 @@ internal sealed class MaterialUpdatedHandler :
             _ => Guid.Empty
         };
 
-        var material = await dbContext.Set<Material>()
+        var material = await applicationDb.Set<Material>()
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == materialId, cancellationToken);
 

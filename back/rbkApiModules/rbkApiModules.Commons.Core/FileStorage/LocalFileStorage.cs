@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using rbkApiModules.Core.Utilities;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using System.Text.RegularExpressions;
+using SixLabors.ImageSharp.Processing; 
 
 namespace rbkApiModules.Commons.Core;
 
@@ -31,20 +31,19 @@ public class LocalFileStorage : IFileStorage
     
     public async Task<string> StoreFileFromBase64Async(
         string base64FileContent,
-        string fileName,
-        string? folderPath = null,
+        string filename,
+        string folderPath,
         int? maxWidth = null,
         int? maxHeight = null,
         CancellationToken cancellationToken = default)
     {
         try
         {
+            folderPath = folderPath.ToLower();
+
             // Parse the base64 content
             string base64Data = ExtractBase64Data(base64FileContent);
-            string fileExtension = GetFileExtensionFromBase64(base64FileContent);
-            
-            // Generate a unique file name to avoid collisions
-            string uniqueFileName = $"{fileName}_{DateTime.UtcNow.Ticks}{fileExtension}";
+            string fileExtension =ImageUtilities.ExtractExtension(base64FileContent);
             
             // Create the target directory if specified
             string targetDirectory = _uploadDirectory;
@@ -57,12 +56,12 @@ public class LocalFileStorage : IFileStorage
                 }
             }
             
-            string filePath = Path.Combine(targetDirectory, uniqueFileName);
+            string filePath = Path.Combine(targetDirectory, filename);
             byte[] fileBytes = Convert.FromBase64String(base64Data);
             
             // Process the image if max dimensions are provided and it's an image file
             if ((maxWidth.HasValue || maxHeight.HasValue) && 
-                (fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" || fileExtension == ".gif"))
+                (fileExtension == "jpg" || fileExtension == "jpeg" || fileExtension == "png" || fileExtension == "bmp"))
             {
                 await ResizeAndSaveImageAsync(fileBytes, filePath, maxWidth, maxHeight, cancellationToken);
             }
@@ -73,7 +72,7 @@ public class LocalFileStorage : IFileStorage
             }
             
             // Construct the URL
-            string relativePath = Path.Combine(folderPath ?? string.Empty, uniqueFileName).Replace('\\', '/');
+            string relativePath = Path.Combine(folderPath, filename).Replace('\\', '/');
             string url = $"{_baseUrl}/{relativePath}";
             
             _logger.LogInformation("File saved successfully at {FilePath}", filePath);
@@ -136,30 +135,7 @@ public class LocalFileStorage : IFileStorage
         return base64FileContent;
     }
     
-    private string GetFileExtensionFromBase64(string base64FileContent)
-    {
-        // Try to extract mime type from data URL
-        var mimeTypeMatch = Regex.Match(base64FileContent, @"data:([^;]+);base64,");
         
-        if (mimeTypeMatch.Success)
-        {
-            string mimeType = mimeTypeMatch.Groups[1].Value.ToLower();
-            
-            return mimeType switch
-            {
-                "image/jpeg" => ".jpg",
-                "image/png" => ".png",
-                "image/gif" => ".gif",
-                "image/webp" => ".webp",
-                "image/bmp" => ".bmp",
-                _ => ".bin" // Default binary extension
-            };
-        }
-        
-        // Default to jpg if we can't determine the type
-        return ".jpg";
-    }
-    
     private async Task ResizeAndSaveImageAsync(
         byte[] imageData, 
         string outputPath, 

@@ -1,4 +1,6 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@using System.Reflection
+
+<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="@AdditionalAssemblies">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
@@ -7,6 +9,30 @@
         <PageTitle>Not found</PageTitle>
         <LayoutView Layout="@typeof(MainLayout)">
             <p role="alert">Sorry, there's nothing at this address.</p>
+            <p>Debug: @DebugInfo</p>
         </LayoutView>
     </NotFound>
 </Router>
+
+@code {
+    private Assembly[] AdditionalAssemblies => GetAdditionalAssemblies();
+    
+    private string DebugInfo => $"Loaded assemblies: {string.Join(", ", GetAdditionalAssemblies().Select(a => a.GetName().Name))}";
+    
+    private Assembly[] GetAdditionalAssemblies()
+    {
+        try
+        {
+            var materialsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Materials.Builder));
+            var modelsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Models.Builder));
+            var authAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.Blazor.Modules.Authentication.Builder));
+
+            return new[] { materialsAssembly, modelsAssembly, authAssembly };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading assemblies: {ex.Message}");
+            return new Assembly[0];
+        }
+    }
+}
