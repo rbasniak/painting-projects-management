@@ -11,6 +11,7 @@ public static class Builder
         UpdateProject.MapEndpoint(app);
         DeleteProject.MapEndpoint(app);
         AddProjectMaterial.MapEndpoint(app);
+        AddProjectStepSpan.MapEndpoint(app);
 
         return app;
     }

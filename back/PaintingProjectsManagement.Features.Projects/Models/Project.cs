@@ -1,4 +1,4 @@
-﻿namespace PaintingProjectsManagement.Features.Projects;
+namespace PaintingProjectsManagement.Features.Projects;
 
 public class Project : TenantEntity
 {
@@ -63,11 +63,14 @@ public class Project : TenantEntity
     public void AddExecutionWindow(ProjectStepDefinition step, DateTime start, DateTime end)
     {
         _steps.Add(new ProjectStepData(Id, step, start, end));
+        RaiseDomainEvent(new BuildingStepAddedToTheProject(Id, (int)step, start, end));
     }
 
     public void AddExecutionWindow(ProjectStepDefinition step, DateTime start, double duration)
     {
         _steps.Add(new ProjectStepData(Id, step, start, duration));
+        var end = start.AddHours(duration);
+        RaiseDomainEvent(new BuildingStepAddedToTheProject(Id, (int)step, start, end));
     }
 
     public void SetTotalPrintingHeight(int v)
