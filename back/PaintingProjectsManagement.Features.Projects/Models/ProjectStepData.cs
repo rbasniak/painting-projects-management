@@ -7,12 +7,12 @@ public class ProjectStepData
         // EF Core constructor, don't remove it
     }
 
-    public ProjectStepData(Guid projectId, ProjectStepDefinition step, DateTime date, double duration)
+    public ProjectStepData(Guid projectId, ProjectStepDefinition step, DateTime date, double durationInMinutes)
     {
         ProjectId = projectId;
         Step = step;
         Date = date;
-        Duration = duration;
+        Duration = durationInMinutes;
     }
 
     public ProjectStepData(Guid projectId, ProjectStepDefinition step, DateTime startDate, DateTime endDate)

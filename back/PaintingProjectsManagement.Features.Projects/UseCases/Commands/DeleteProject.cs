@@ -41,7 +41,7 @@ public class DeleteProject : IEndpoint
                 .Include(x => x.Pictures)
                 .Include(x => x.Materials)
                 .Include(x => x.References)
-                .Include(x => x.Groups)
+                .Include(x => x.ColorGroups)
                 .Include(x => x.Steps)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
                 
@@ -61,7 +61,7 @@ public class DeleteProject : IEndpoint
             _context.RemoveRange(project.Pictures);
             _context.RemoveRange(project.Materials);
             _context.RemoveRange(project.References);
-            _context.RemoveRange(project.Groups);
+            _context.RemoveRange(project.ColorGroups);
             _context.RemoveRange(project.Steps);
             _context.Remove(project);
             

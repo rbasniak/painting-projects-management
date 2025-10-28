@@ -6,7 +6,6 @@ public class Project : TenantEntity
     private HashSet<ProjectReference> _references = new();
     private HashSet<ProjectPicture> _pictures = new();
     private HashSet<ColorGroup> _groups = new();
-    private HashSet<ColorSection> _sections = new();
     private HashSet<ProjectStepData> _steps = new();
 
     // EF Core constructor, don't remote it
@@ -39,8 +38,7 @@ public class Project : TenantEntity
     public IEnumerable<MaterialForProject> Materials => _materials.AsReadOnly();
     public IEnumerable<ProjectReference> References => _references.AsReadOnly();
     public IEnumerable<ProjectPicture> Pictures => _pictures.AsReadOnly();
-    public IEnumerable<ColorGroup> Groups => _groups.AsReadOnly();
-    public IEnumerable<ColorSection> Sections => _sections.AsReadOnly();
+    public IEnumerable<ColorGroup> ColorGroups => _groups.AsReadOnly();
     public IEnumerable<ProjectStepData> Steps => _steps.AsReadOnly();
 
     public void UpdateDetails(string name, string pictureUrl, DateTime? startDate, DateTime? endDate)

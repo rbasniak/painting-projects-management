@@ -36,7 +36,7 @@ public class ProjectDetails
                 Id = p.Id,
                 Url = p.Url
             }).ToArray(),
-            Groups = project.Groups
+            Groups = project.ColorGroups
                 .Select(ColorGroupDetails.FromModel)
                 .ToArray()
         };

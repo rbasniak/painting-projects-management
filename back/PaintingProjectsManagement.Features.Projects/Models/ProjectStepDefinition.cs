@@ -4,6 +4,7 @@ public enum ProjectStepDefinition
 {
     Planning = 10,
     Supporting = 20,
-    Preparation = 30,
-    Painting = 40,
+    Cleaning = 30,
+    PostProcessing = 40,
+    Painting = 50,
 }
