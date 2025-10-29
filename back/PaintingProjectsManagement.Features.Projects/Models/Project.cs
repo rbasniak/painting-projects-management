@@ -24,7 +24,6 @@ public class Project : TenantEntity
         _materials = new HashSet<MaterialForProject>();
         _references = new HashSet<ProjectReference>();
         _pictures = new HashSet<ProjectPicture>();
-        _sections = new HashSet<ColorSection>();
         _steps = new HashSet<ProjectStepData>();
         _groups = new HashSet<ColorGroup>();
     }
@@ -66,10 +65,5 @@ public class Project : TenantEntity
     public void AddExecutionWindow(ProjectStepDefinition step, DateTime start, double duration)
     {
         _steps.Add(new ProjectStepData(Id, step, start, duration));
-    }
-
-    public void SetTotalPrintingHeight(int v)
-    {
-        throw new NotImplementedException();
-    }
+    } 
 }
