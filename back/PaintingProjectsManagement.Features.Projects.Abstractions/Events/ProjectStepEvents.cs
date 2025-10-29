@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Projects.Abstractions;
 
-[EventName("Projects.BuildingStepAddedToTheProject", 1)]
+[EventName("Projects.BuildingStepAdded", 1)]
 public sealed record BuildingStepAddedToTheProject(
     Guid ProjectId,
     int StepId,

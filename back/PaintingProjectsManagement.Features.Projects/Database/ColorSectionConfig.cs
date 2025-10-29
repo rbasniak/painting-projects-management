@@ -12,7 +12,7 @@ public class ColorSectionConfig : IEntityTypeConfiguration<ColorSection>
         
         builder.Property(x => x.Id).ValueGeneratedOnAdd();
         
-        builder.Property(x => x.Color)
+        builder.Property(x => x.ReferenceColor)
             .IsRequired()
             .HasMaxLength(7); // Hex color format
             

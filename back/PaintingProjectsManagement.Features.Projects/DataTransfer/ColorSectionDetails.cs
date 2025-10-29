@@ -15,7 +15,7 @@ public class ColorSectionDetails
             Id = section.Id,
             Group = ColorGroupDetails.FromModel(section.ColorGroup),
             Zone = section.Zone,
-            Color = section.Color,
+            Color = section.ReferenceColor,
             SuggestedColorIds = section.SuggestedColorIds
         };
     }

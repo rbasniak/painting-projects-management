@@ -28,7 +28,7 @@ public class MaterialCreatedConsumer : IIntegrationEventHandler<MaterialCreatedV
                 Id = @event.MaterialId,
                 Name = @event.Name,
                 PricePerUnit = @event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount,
-                Unit = @event.PackageContentUnit,
+                Unit = UnitsHelper.Convert(@event.PackageContentUnit),
                 UpdatedUtc = DateTime.UtcNow
             };
 
@@ -39,7 +39,7 @@ public class MaterialCreatedConsumer : IIntegrationEventHandler<MaterialCreatedV
             entity = entity with
             {
                 Name = @event.Name,
-                Unit = @event.PackageContentUnit,
+                Unit = UnitsHelper.Convert(@event.PackageContentUnit),
                 UpdatedUtc = DateTime.UtcNow,
                 PricePerUnit = @event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount
             };

@@ -50,12 +50,6 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
             
-        builder.HasMany(x => x.Sections)
-            .WithOne()
-            .HasForeignKey(x => x.ColorGroupId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
-
         // Indexes
         builder.HasIndex(p => p.Name);
         builder.HasIndex(p => p.StartDate);

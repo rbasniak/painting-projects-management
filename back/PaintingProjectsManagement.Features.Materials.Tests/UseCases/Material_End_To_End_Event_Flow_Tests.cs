@@ -57,7 +57,7 @@ public class Material_End_To_End_Event_Flow_Tests
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe(materialName);
         readOnlyMaterial.PricePerUnit.ShouldBe(0.255); // 25.50 / 100
-        readOnlyMaterial.Unit.ShouldBe(packageContent.Unit.ToString());
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
         readOnlyMaterial.UpdatedUtc.ShouldNotBe(default(DateTime));
     }
 
@@ -98,7 +98,7 @@ public class Material_End_To_End_Event_Flow_Tests
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
         readOnlyMaterial.PricePerUnit.ShouldBe(0.17875); // 35.75 / 200
-        readOnlyMaterial.Unit.ShouldBe("Milliliter");
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
     }
 
     [Test, NotInParallel(Order = 4)]
@@ -258,7 +258,7 @@ public class Material_End_To_End_Event_Flow_Tests
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Update 2");
         readOnlyMaterial.PricePerUnit.ShouldBe(40.0 / 300.0); // 40.00 / 300
-        readOnlyMaterial.Unit.ShouldBe("Milliliter");
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
     }
 
     [Test, NotInParallel(Order = 99)]

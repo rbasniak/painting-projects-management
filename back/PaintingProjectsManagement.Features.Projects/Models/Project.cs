@@ -68,11 +68,5 @@ public class Project : TenantEntity
         _steps.Add(new ProjectStepData(Id, step, start, duration));
         var end = start.AddHours(duration);
         RaiseDomainEvent(new BuildingStepAddedToTheProject(Id, (int)step, start, end));
-    }
-
-    public void SetTotalPrintingHeight(int v)
-    {
-        throw new NotImplementedException();
-    }
     } 
 }

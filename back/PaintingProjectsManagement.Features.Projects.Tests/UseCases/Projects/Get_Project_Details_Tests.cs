@@ -78,7 +78,7 @@ public class Get_Project_Details_Tests
         Guid materialId;
         using (var context = TestingServer.CreateContext())
         {
-            var newMaterial1 = new Material("rodrigo.basniak", "Test Material 1", new Quantity(9, PackageContentUnit.Gram), new Money(10.5, "BRL"));
+            var newMaterial1 = new Material("rodrigo.basniak", "Test Material 1", new Materials.Quantity(9, PackageContentUnit.Gram), new Materials.Money(10.5, "BRL"));
             await context.AddAsync(newMaterial1);
             await context.SaveChangesAsync();
             materialId = newMaterial1.Id;

@@ -10,4 +10,8 @@
     <ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Enums\" />
+  </ItemGroup>
+
 </Project>
