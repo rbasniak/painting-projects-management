@@ -42,7 +42,7 @@ public class GetProjectDetails : IEndpoint
                 .Include(x => x.References)
                 .Include(x => x.Pictures)
                 .Include(x => x.Materials)
-                .Include(x => x.Groups)
+                .Include(x => x.ColorGroups)
                     .ThenInclude(x => x.Sections)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
 

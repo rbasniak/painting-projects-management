@@ -4,9 +4,8 @@ public class AddProjectMaterial : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/projects/{projectId:guid}/materials", async (Guid projectId, Request body, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/projects/materials", async (Request body, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            body.ProjectId = projectId;
             var result = await dispatcher.SendAsync(body, cancellationToken);
             return ResultsMapper.FromResponse(result);
         })
