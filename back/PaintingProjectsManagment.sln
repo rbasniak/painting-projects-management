@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36121.58
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11123.170 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Api", "PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj", "{9CBFB336-FFF3-B7F5-4AAB-EA81F533505A}"
 EndProject
@@ -113,6 +113,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{CE5E17BC-8320-423F-88E3-080F5D2CD7F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Testing.Core", "PaintingProjectsManagement.Testing.Core\PaintingProjectsManagement.Testing.Core.csproj", "{8873A856-A399-5538-2EF9-FFFFD4D09E4B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Currency", "Currency", "{4BED9631-C8FF-4A27-B4E9-AD734F1216FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Currency", "PaintingProjectsManagement.Features.Currency\PaintingProjectsManagement.Features.Currency.csproj", "{74412597-73DA-4825-A8C9-78C4A0B7A109}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -520,6 +524,18 @@ Global
 		{8873A856-A399-5538-2EF9-FFFFD4D09E4B}.Release|x64.Build.0 = Release|Any CPU
 		{8873A856-A399-5538-2EF9-FFFFD4D09E4B}.Release|x86.ActiveCfg = Release|Any CPU
 		{8873A856-A399-5538-2EF9-FFFFD4D09E4B}.Release|x86.Build.0 = Release|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Debug|x64.Build.0 = Debug|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Debug|x86.Build.0 = Debug|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Release|x64.ActiveCfg = Release|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Release|x64.Build.0 = Release|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Release|x86.ActiveCfg = Release|Any CPU
+		{74412597-73DA-4825-A8C9-78C4A0B7A109}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -568,6 +584,8 @@ Global
 		{36C9B331-48E4-D506-98B8-26A9118B2979} = {BE9FF04B-C8FA-48FA-9C1A-4508D8CACCF0}
 		{CE5E17BC-8320-423F-88E3-080F5D2CD7F8} = {945C31FD-D6F8-4151-B6AF-CC2CE597DF36}
 		{8873A856-A399-5538-2EF9-FFFFD4D09E4B} = {CE5E17BC-8320-423F-88E3-080F5D2CD7F8}
+		{4BED9631-C8FF-4A27-B4E9-AD734F1216FE} = {945C31FD-D6F8-4151-B6AF-CC2CE597DF36}
+		{74412597-73DA-4825-A8C9-78C4A0B7A109} = {4BED9631-C8FF-4A27-B4E9-AD734F1216FE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D9D84DD-C876-47C0-8479-5AA1E9881CFA}

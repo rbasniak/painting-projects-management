@@ -51,7 +51,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Test Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0.255); // 25.50 / 100
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.255); // 25.50 / 100
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
         readOnlyMaterial.UpdatedUtc.ShouldNotBe(default(DateTime));
     }
@@ -103,7 +103,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0.17875); // 35.75 / 200
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.17875); // 35.75 / 200
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
     }
 
@@ -137,7 +137,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("New Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0.2); // 30.00 / 150
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.2); // 30.00 / 150
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
     }
 
@@ -245,7 +245,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Test Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0); // Should be 0 when package content is 0
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0); // Should be 0 when package content is 0
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
     }
 
@@ -296,7 +296,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0); // Should be 0 when package content is 0
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0); // Should be 0 when package content is 0
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
     }
 

@@ -48,7 +48,7 @@ public class Project : TenantEntity
         EndDate = endDate;
     }
 
-    public void ConsumeMaterial(Guid materialId, double quantity, PackageContentUnit unit)
+    public void ConsumeMaterial(Guid materialId, double quantity, MaterialUnit unit)
     {
         // TODO: make it idempotent
 
@@ -68,5 +68,34 @@ public class Project : TenantEntity
         _steps.Add(new ProjectStepData(Id, step, start, duration));
         var end = start.AddHours(duration);
         RaiseDomainEvent(new BuildingStepAddedToTheProject(Id, (int)step, start, end));
-    } 
+    }
+
+    internal double GetTotalWorkingHours()
+    {
+        if (_steps == null)
+        {
+            throw new InvalidOperationException($"Property {nameof(Steps)} is not loaded from the database");
+        }
+
+        return _steps
+            .Where(x => x.Step is
+                ProjectStepDefinition.Planning or
+                ProjectStepDefinition.Supporting or
+                ProjectStepDefinition.PostProcessing or 
+                ProjectStepDefinition.Cleaning or 
+                ProjectStepDefinition.Painting)
+            .Sum(step => step.Duration);
+    }
+
+    internal double GetTotalPrintingTimeInHours()
+    {
+        if (_steps == null)
+        {
+            throw new InvalidOperationException($"Property {nameof(Steps)} is not loaded from the database");
+        }
+
+        return _steps
+            .Where(x => x.Step is ProjectStepDefinition.Printing)
+            .Sum(step => step.Duration);
+    }
 }

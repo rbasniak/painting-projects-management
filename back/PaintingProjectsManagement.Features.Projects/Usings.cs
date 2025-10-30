@@ -6,3 +6,4 @@ global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Http;
 global using PaintingProjectsManagement.Features.Materials;
 global using PaintingProjectsManagement.Features.Projects.Abstractions;
+global using Microsoft.Extensions.DependencyInjection;

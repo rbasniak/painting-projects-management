@@ -87,7 +87,7 @@ public class Get_Project_Details_Tests
         // Arrange - Add materials to the project
         using (var context = TestingServer.CreateContext())
         {
-            var materialForProject = new MaterialForProject(_testProjectId, materialId, 7, PackageContentUnit.Each);
+            var materialForProject = new MaterialForProject(_testProjectId, materialId, 7, MaterialUnit.Unit);
             await context.AddAsync(materialForProject);
             await context.SaveChangesAsync();
         }

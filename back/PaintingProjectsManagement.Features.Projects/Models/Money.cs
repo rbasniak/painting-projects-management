@@ -1,4 +1,6 @@
-﻿namespace PaintingProjectsManagement.Features.Projects;
+﻿using PaintingProjectsManagement.Features.Currency;
+
+namespace PaintingProjectsManagement.Features.Projects;
 
 public readonly record struct Money(double Amount, string Currency)
 {
@@ -35,8 +37,15 @@ public readonly record struct Money(double Amount, string Currency)
 
 public static class MoneyExtensions
 {
-    public static Money Convert(this Money money, string currency, double conversionRate)
+    public static async Task<Money> Convert(this Money money, string currency, ICurrencyConverter converter)
     {
+        if (string.Equals(money.Currency, currency, StringComparison.OrdinalIgnoreCase))
+        {
+            return money;
+        }
+
+        var conversionRate = await converter.GetConversionRate(money.Currency, currency);
+
         return new Money(conversionRate * money.Amount, currency);
     }
 }

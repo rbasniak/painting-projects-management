@@ -20,7 +20,7 @@ public class AddProjectMaterial : IEndpoint
         public Guid ProjectId { get; set; }
         public Guid MaterialId { get; set; }
         public double Quantity { get; set; }
-        public PackageContentUnit Unit { get; set; }
+        public MaterialUnit Unit { get; set; }
     }
 
     public class Validator : SmartValidator<Request, Project>

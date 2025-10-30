@@ -2,6 +2,14 @@ namespace PaintingProjectsManagement.Features.Projects;
 
 public static class Builder
 {
+    public static IServiceCollection AddProjectsFeature(this IServiceCollection services)
+    {
+        services.AddScoped<ProjectCostCalculator>();
+        services.AddTransient<IUnitsConverter>();
+        services.AddApplicationOptions<ProjectSettings>();
+        return services;
+    }
+
     public static IEndpointRouteBuilder MapProjectsFeature(this IEndpointRouteBuilder app)
     {
         ListProjects.MapEndpoint(app);

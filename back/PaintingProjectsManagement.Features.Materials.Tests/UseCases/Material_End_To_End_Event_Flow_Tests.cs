@@ -56,7 +56,7 @@ public class Material_End_To_End_Event_Flow_Tests
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe(materialName);
-        readOnlyMaterial.PricePerUnit.ShouldBe(0.255); // 25.50 / 100
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.255); // 25.50 / 100
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
         readOnlyMaterial.UpdatedUtc.ShouldNotBe(default(DateTime));
     }
@@ -97,7 +97,7 @@ public class Material_End_To_End_Event_Flow_Tests
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0.17875); // 35.75 / 200
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.17875); // 35.75 / 200
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
     }
 
@@ -191,7 +191,7 @@ public class Material_End_To_End_Event_Flow_Tests
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material1.Id);
         readOnlyMaterial1.ShouldNotBeNull();
         readOnlyMaterial1.Name.ShouldBe("Updated Material 1");
-        readOnlyMaterial1.PricePerUnit.ShouldBe(0.2); // 30.00 / 150
+        readOnlyMaterial1.PricePerUnit.Amount.ShouldBe(0.2); // 30.00 / 150
 
         // Material 2 should be deleted
         var readOnlyMaterial2 = await context.Set<ReadOnlyMaterial>()
@@ -203,7 +203,7 @@ public class Material_End_To_End_Event_Flow_Tests
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material3.Id);
         readOnlyMaterial3.ShouldNotBeNull();
         readOnlyMaterial3.Name.ShouldBe("Material 3");
-        readOnlyMaterial3.PricePerUnit.ShouldBe(0.2); // 15.00 / 75
+        readOnlyMaterial3.PricePerUnit.Amount.ShouldBe(0.2); // 15.00 / 75
     }
 
     [Test, NotInParallel(Order = 6)]
@@ -257,7 +257,7 @@ public class Material_End_To_End_Event_Flow_Tests
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Update 2");
-        readOnlyMaterial.PricePerUnit.ShouldBe(40.0 / 300.0); // 40.00 / 300
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(40.0 / 300.0); // 40.00 / 300
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
     }
 

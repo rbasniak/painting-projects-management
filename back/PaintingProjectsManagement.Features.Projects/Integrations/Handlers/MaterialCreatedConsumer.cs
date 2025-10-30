@@ -27,7 +27,9 @@ public class MaterialCreatedConsumer : IIntegrationEventHandler<MaterialCreatedV
                 Tenant = envelope.TenantId,
                 Id = @event.MaterialId,
                 Name = @event.Name,
-                PricePerUnit = @event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount,
+                CategoryId = "10",
+                CategoryName = "Test Category",
+                PricePerUnit = new Money(@event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount, "USD"),
                 Unit = UnitsHelper.Convert(@event.PackageContentUnit),
                 UpdatedUtc = DateTime.UtcNow
             };
@@ -41,7 +43,7 @@ public class MaterialCreatedConsumer : IIntegrationEventHandler<MaterialCreatedV
                 Name = @event.Name,
                 Unit = UnitsHelper.Convert(@event.PackageContentUnit),
                 UpdatedUtc = DateTime.UtcNow,
-                PricePerUnit = @event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount
+                PricePerUnit = new Money(@event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount, "USD")
             };
 
             _context.Update(entity);
