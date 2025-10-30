@@ -13,4 +13,7 @@ public class ProjectSettings : IApplicationOptions
 
     [DefaultValue(0)]
     public Money LaborCostPerHour { get; set; }
+    
+    [DefaultValue(0.04)]
+    public double MililiterPerDrop { get; set; }
 }

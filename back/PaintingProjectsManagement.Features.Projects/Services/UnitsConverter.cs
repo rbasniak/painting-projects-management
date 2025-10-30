@@ -5,7 +5,9 @@ internal interface IUnitsConverter
     public Quantity Convert(Quantity quantity, MaterialUnit targetUnit);
 }
 
-internal class UnitsConverter : IUnitsConverter
+internal class UnitsConverter 
+    (ProjectSettings projectSettings)
+    : IUnitsConverter
 {
     public Quantity Convert(Quantity quantity, MaterialUnit targetUnit)
     {
@@ -37,16 +39,16 @@ internal class UnitsConverter : IUnitsConverter
             $"Cannot convert from {quantity.Unit} to {targetUnit}. These units are incompatible.");
     }
 
-    private static bool IsLengthUnit(MaterialUnit unit) =>
+    private bool IsLengthUnit(MaterialUnit unit) =>
         unit is MaterialUnit.Centimeter or MaterialUnit.Meter;
 
-    private static bool IsWeightUnit(MaterialUnit unit) =>
+    private bool IsWeightUnit(MaterialUnit unit) =>
         unit is MaterialUnit.Gram or MaterialUnit.Kilogram;
 
-    private static bool IsVolumeUnit(MaterialUnit unit) =>
-        unit is MaterialUnit.Milliliter or MaterialUnit.Liter;
+    private bool IsVolumeUnit(MaterialUnit unit) =>
+        unit is MaterialUnit.Milliliter or MaterialUnit.Liter or MaterialUnit.Drop;
 
-    private static Quantity ConvertLength(Quantity quantity, MaterialUnit targetUnit)
+    private Quantity ConvertLength(Quantity quantity, MaterialUnit targetUnit)
     {
         // Convert to base unit (centimeters)
         double centimeters = quantity.Unit switch
@@ -67,7 +69,7 @@ internal class UnitsConverter : IUnitsConverter
         return new Quantity(result, targetUnit);
     }
 
-    private static Quantity ConvertWeight(Quantity quantity, MaterialUnit targetUnit)
+    private Quantity ConvertWeight(Quantity quantity, MaterialUnit targetUnit)
     {
         // Convert to base unit (grams)
         double grams = quantity.Unit switch
@@ -88,13 +90,14 @@ internal class UnitsConverter : IUnitsConverter
         return new Quantity(result, targetUnit);
     }
 
-    private static Quantity ConvertVolume(Quantity quantity, MaterialUnit targetUnit)
+    private Quantity ConvertVolume(Quantity quantity, MaterialUnit targetUnit)
     {
         // Convert to base unit (milliliters)
         double milliliters = quantity.Unit switch
         {
             MaterialUnit.Milliliter => quantity.Value,
             MaterialUnit.Liter => quantity.Value * 1000,
+            MaterialUnit.Drop => projectSettings.MililiterPerDrop,
             _ => throw new InvalidOperationException($"Unsupported volume unit: {quantity.Unit}")
         };
 

@@ -42,32 +42,30 @@ internal class ProjectCostCalculator(
                 SpentHours = project.GetTotalWorkingHours(),
                 CostPerHour = await projectSettings.LaborCostPerHour.Convert(currency, currencyConverter),
             },
-            Materials = await projectMaterials
-                .GroupBy(x => x.Value.MaterialDefinition.CategoryId)
-                .ToDictionary(
-                    x => x.Key,
-                    x => x.Select(async pm =>
-                    {
-                        var projectMaterial = pm.Value.ProjectMaterial;
-                        var materiaDefinition = pm.Value.MaterialDefinition;
-                        return new MaterialsCost
-                        {
-                            MaterialId = pm.Key,
-                            Description = materiaDefinition.Name,
-                            Quantity = unitsConverter.Convert(projectMaterial.Quantity, materiaDefinition.Unit),
-                            CostPerUnit = await materiaDefinition.PricePerUnit.Convert(currency, currencyConverter)
-                        };
-                    }).ToList().AsReadOnly()
-                )
-        };
-
-        // Placeholder implementation
-        return new ProjectCostBreakdown
-        {
-            ProjectId = projectId,
-            Electricity = ElectricityCost.Empty(),
-            Labor = LaborCost.Empty(),
             Materials = new Dictionary<string, IReadOnlyCollection<MaterialsCost>>()
         };
+
+        foreach (var categoryGroup in projectMaterials.GroupBy(x => x.Value.MaterialDefinition.CategoryId))
+        {
+            var materialsCosts = new List<MaterialsCost>();
+
+            foreach (var pm in categoryGroup)
+            {
+                var projectMaterial = pm.Value.ProjectMaterial;
+                var materiaDefinition = pm.Value.MaterialDefinition;
+
+                materialsCosts.Add(new MaterialsCost
+                {
+                    MaterialId = pm.Key,
+                    Description = materiaDefinition.Name,
+                    Quantity = unitsConverter.Convert(projectMaterial.Quantity, materiaDefinition.Unit),
+                    CostPerUnit = await materiaDefinition.PricePerUnit.Convert(currency, currencyConverter)
+                });
+            }
+
+            costBreakdown.Materials[categoryGroup.Key] = materialsCosts.AsReadOnly();
+        }
+
+        return costBreakdown;
     }
 }
