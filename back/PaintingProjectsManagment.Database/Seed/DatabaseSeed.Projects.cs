@@ -1,11 +1,17 @@
-﻿namespace PaintingProjectsManagment.Database;
+﻿using PaintingProjectsManagement.Features.Projects;
+
+namespace PaintingProjectsManagment.Database;
 
 public partial class DatabaseSeed
 {
 
     private void ProjectsSeed(DatabaseContext context, IServiceProvider provider)
     {
-        //var model = context.Set<Model>().First(x => x.Name == "Archangel" && x.Artist == "Wicked 3D");
+        //void AddMaterial(Project project, string materialName,  quantity, MaterialUnit unit)
+        //{
+        //    var material = context.Set<Material>().First(x => x.Name == materialName);
+        //    project.ConsumeMaterial(material.Id, quantity, unit);
+        //}
         //var magnet10x5 = context.Set<Material>().First(x => x.Name == "Magnet 10x5");
         //var magnet5x3 = context.Set<Material>().First(x => x.Name == "Magnet 5x3");
         //var sunluStandardResin = context.Set<Material>().First(x => x.Name == "Sunlu Standard Resin");
