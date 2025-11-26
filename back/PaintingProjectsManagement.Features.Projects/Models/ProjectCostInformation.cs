@@ -1,6 +1,4 @@
-﻿using PaintingProjectsManagement.Features.Currency;
-
-namespace PaintingProjectsManagement.Features.Projects;
+﻿namespace PaintingProjectsManagement.Features.Projects;
 
 public class ProjectCostBreakdown : BaseEntity
 {
