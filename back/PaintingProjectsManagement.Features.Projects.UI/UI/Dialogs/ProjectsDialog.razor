@@ -1,13 +1,13 @@
 @using MudBlazor
-@using PaintingProjectsManagement.UI.Modules.Materials
 @using PaintingProjectsManagement.UI.Modules.Shared
+@using PaintingProjectsManagement.UI.Modules.Projects
 
 @namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 
 <MudDialog>
     <DialogContent>
         <MudStack Spacing="3">
-            <MudTextField @bind-Value="Model.Name" Label="Name" />
+            <MudTextField @bind-Value="Project.Name" Label="Name" />
         </MudStack>
     </DialogContent>
     <DialogActions>
@@ -23,7 +23,7 @@
 
     private void Submit() 
     {
-        MudDialog?.Close(DialogResult.Ok(Model));
+        MudDialog?.Close(DialogResult.Ok(Project));
     }
     
     private void Cancel() 

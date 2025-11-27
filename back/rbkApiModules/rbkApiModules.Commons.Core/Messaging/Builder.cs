@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Components;
+using rbkApiModules.Commons.Core;
 using System.Diagnostics;
 using System.Reflection;
+using Dispatcher = rbkApiModules.Commons.Core.Dispatcher;
 
-namespace rbkApiModules.Commons.Core;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class Builder
 {

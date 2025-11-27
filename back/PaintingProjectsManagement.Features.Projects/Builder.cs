@@ -1,4 +1,6 @@
-namespace PaintingProjectsManagement.Features.Projects;
+using PaintingProjectsManagement.Features.Projects;
+
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class Builder
 {

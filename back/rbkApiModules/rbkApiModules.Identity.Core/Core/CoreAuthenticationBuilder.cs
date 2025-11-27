@@ -8,8 +8,9 @@ using rbkApiModules.Commons.Core.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using rbkApiModules.Commons.Core.Authentication;
+using rbkApiModules.Identity.Core;
 
-namespace rbkApiModules.Identity.Core;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class CoreAuthenticationBuilder
 {
@@ -287,9 +288,3 @@ public static class CoreAuthenticationBuilder
     } 
 }
 
-public enum LoginMode
-{
-    Credentials = 0,
-    WindowsAuthentication = 1,
-    Custom = 2
-}

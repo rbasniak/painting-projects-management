@@ -4,13 +4,13 @@ namespace PaintingProjectsManagement.UI.Modules.Projects;
 
 public interface IProjectsService
 {
-    Task<IReadOnlyCollection<ProjectsDetails>> GetAllAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<ProjectDetails>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<ProjectsDetails> CreateAsync(
+    Task<ProjectDetails> CreateAsync(
       CreateProjectRequest request,
       CancellationToken cancellationToken);
 
-    Task<ProjectsDetails> UpdateAsync(
+    Task<ProjectDetails> UpdateAsync(
       UpdateProjectRequest request,
       CancellationToken cancellationToken);
 
@@ -23,21 +23,21 @@ public class ProjectsService : IProjectsService
 
     public ProjectsService(HttpClient httpClient) => this._httpClient = httpClient;
 
-    public async Task<IReadOnlyCollection<ProjectsDetails>> GetAllAsync(
+    public async Task<IReadOnlyCollection<ProjectDetails>> GetAllAsync(
       CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync("api/projects", cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<ProjectsDetails>>();
-            return result ?? Array.Empty<ProjectsDetails>();
+            var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<ProjectDetails>>();
+            return result ?? Array.Empty<ProjectDetails>();
         }
 
-        return Array.Empty<ProjectsDetails>();
+        return Array.Empty<ProjectDetails>();
     }
 
-    public async Task<ProjectsDetails> CreateAsync(
+    public async Task<ProjectDetails> CreateAsync(
       CreateProjectRequest request,
       CancellationToken cancellationToken)
     {
@@ -45,14 +45,14 @@ public class ProjectsService : IProjectsService
 
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadFromJsonAsync<ProjectsDetails>();
-            return result ?? new ProjectsDetails();
+            var result = await response.Content.ReadFromJsonAsync<ProjectDetails>();
+            return result ?? new ProjectDetails();
         }
 
-        return new ProjectsDetails();
+        return new ProjectDetails();
     }
 
-    public async Task<ProjectsDetails> UpdateAsync(
+    public async Task<ProjectDetails> UpdateAsync(
       UpdateProjectRequest request,
       CancellationToken cancellationToken)
     {
@@ -60,11 +60,11 @@ public class ProjectsService : IProjectsService
 
         if (response.IsSuccessStatusCode)
         {
-            var result = await response.Content.ReadFromJsonAsync<ProjectsDetails>();
-            return result ?? new ProjectsDetails();
+            var result = await response.Content.ReadFromJsonAsync<ProjectDetails>();
+            return result ?? new ProjectDetails();
         }
 
-        return new ProjectsDetails();
+        return new ProjectDetails();
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)

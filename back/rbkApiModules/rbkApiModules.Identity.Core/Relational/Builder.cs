@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Core;
+using rbkApiModules.Identity.Relational;
 using System.Diagnostics;
 
-namespace rbkApiModules.Identity.Relational;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class Builder
 {

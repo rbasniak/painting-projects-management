@@ -1,7 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
 using PaintingProjectsManagement.Features.Materials.Abstractions;
+using PaintingProjectsManagement.Features.Projects;
 
-namespace PaintingProjectsManagement.Features.Projects;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ProjectsIntegrationBuilder
 {

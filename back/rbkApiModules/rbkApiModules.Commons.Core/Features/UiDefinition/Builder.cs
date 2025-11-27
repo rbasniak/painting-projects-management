@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using rbkApiModules.Commons.Core.UiDefinitions;
 using System.Reflection;
 
-namespace rbkApiModules.Commons.Core.UiDefinitions;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class CoreUiDefinitionsBuilder
 {

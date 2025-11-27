@@ -1,6 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
 
-namespace PaintingProjectsManagement.Features.Currency;
+using PaintingProjectsManagement.Features.Currency;
+
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class CurrencyServiceCollectionExtensions
 {

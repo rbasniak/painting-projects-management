@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿
+using PaintingProjectsManagement.Features.Materials;
 
-namespace PaintingProjectsManagement.Features.Materials;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class Builder
 {

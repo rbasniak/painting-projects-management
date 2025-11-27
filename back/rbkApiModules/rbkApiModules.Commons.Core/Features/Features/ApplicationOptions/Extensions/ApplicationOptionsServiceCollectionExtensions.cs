@@ -1,7 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
+using rbkApiModules.Commons.Core;
 using rbkApiModules.Commons.Core.Features.ApplicationOptions;
 
-namespace rbkApiModules.Commons.Core;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ApplicationOptionsServiceCollectionExtensions
 {

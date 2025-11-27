@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using PaintingProjectsManagement.Features.Models;
 
-namespace PaintingProjectsManagement.Features.Models;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class Builder
 {

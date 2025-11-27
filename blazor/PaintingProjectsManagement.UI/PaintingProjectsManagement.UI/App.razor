@@ -23,11 +23,12 @@
     {
         try
         {
-            var materialsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Materials.Builder));
-            var modelsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Models.Builder));
-            var authAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.Blazor.Modules.Authentication.Builder));
+            var materialsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Materials.MaterialDetails))!;
+            var modelsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Models.ModelDetails))!;
+            var authAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.Blazor.Modules.Authentication.AuthenticationService))!;
+            var projectsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Projects.ProjectDetails))!;
 
-            return new[] { materialsAssembly, modelsAssembly, authAssembly };
+            return new[] { materialsAssembly, modelsAssembly, authAssembly, projectsAssembly };
         }
         catch (Exception ex)
         {

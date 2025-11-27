@@ -2,7 +2,7 @@ using PaintingProjectsManagement.UI.Modules.Shared;
 
 namespace PaintingProjectsManagement.UI.Modules.Projects;
 
-public record ProjectsDetails
+public record ProjectDetails
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty; 

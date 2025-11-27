@@ -1,8 +1,8 @@
 using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
+using rbkApiModules.Commons.Core;
 using System.Reflection;
 
-namespace rbkApiModules.Commons.Core;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServicesCollectionExtensions
 {
