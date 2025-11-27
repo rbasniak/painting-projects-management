@@ -3,9 +3,9 @@
 	<!-- Common test properties and packages are now in Directory.Build.props -->
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -18,6 +18,11 @@
 
 	<ItemGroup>
 	  <Folder Include="Integrations\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="Microsoft.Testing.Extensions.TrxReport" Version="2.0.2" />
+	  <PackageReference Update="TUnit" Version="1.2.11" />
 	</ItemGroup>
 
 </Project>

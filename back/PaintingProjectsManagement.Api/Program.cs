@@ -202,7 +202,7 @@ public class Program
             .AllowUserSelfRegistration()
         );
 
-        builder.Services.AddRbkUIDefinitions(Assembly.GetAssembly(typeof(Program)));
+        builder.Services.AddRbkUIDefinitions(typeof(Program).Assembly);
 
         // Application modules
         builder.Services.AddMaterialsFeature();

@@ -43,7 +43,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialCreatedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialCreatedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialCreatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == materialDetails.Id &&
             envelope.Event.Name == materialName &&
             envelope.Event.PackageContentAmount == packageContent.Amount &&
@@ -78,7 +78,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialUpdatedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == "Updated Name" &&
             envelope.Event.PackageContentAmount == material.PackageContent.Amount &&
@@ -114,7 +114,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialUpdatedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == material.Name &&
             envelope.Event.PackageContentAmount == newPackageContent.Amount &&
@@ -150,7 +150,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialUpdatedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == material.Name &&
             envelope.Event.PackageContentAmount == material.PackageContent.Amount &&
@@ -187,7 +187,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialUpdatedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == "Updated Name 2" &&
             envelope.Event.PackageContentAmount == newPackageContent.Amount &&
@@ -212,7 +212,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialDeletedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialDeletedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialDeletedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.TenantId == "RODRIGO.BASNIAK" &&
             envelope.Username == TestUser);
