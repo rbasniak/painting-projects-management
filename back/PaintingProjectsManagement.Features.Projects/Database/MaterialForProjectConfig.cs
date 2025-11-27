@@ -17,6 +17,17 @@ public class MaterialForProjectConfig : IEntityTypeConfiguration<MaterialForProj
         builder.Property(x => x.MaterialId)
             .IsRequired();
 
+        builder.ComplexProperty(x => x.Quantity, owned =>
+        {
+            owned.Property(p => p.Value)
+                .HasColumnName("Quantity_Value")
+                .IsRequired();
+
+            owned.Property(p => p.Unit)
+                .HasColumnName("Quantity_Unit")
+                .IsRequired();
+        });
+
         // Foreign key relationships
         builder.HasOne<Project>()
             .WithMany(x => x.Materials)

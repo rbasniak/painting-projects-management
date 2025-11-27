@@ -2,6 +2,10 @@ namespace PaintingProjectsManagement.Features.Projects;
 
 public class MaterialForProject
 {
+    private MaterialForProject() 
+    { 
+    }
+
     public MaterialForProject(Guid projectId, Guid materialId, double quantity, MaterialUnit unit)
     {
         MaterialId = materialId;

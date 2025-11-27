@@ -14,7 +14,7 @@ public class MaterialConfig : IEntityTypeConfiguration<Material>
             .IsRequired()
             .HasMaxLength(100);
         
-        builder.OwnsOne(x => x.PackageContent, owned =>
+        builder.ComplexProperty(x => x.PackageContent, owned =>
         {
             owned.Property(p => p.Amount)
                 .HasColumnName("PackageContent_Amount")
@@ -24,7 +24,7 @@ public class MaterialConfig : IEntityTypeConfiguration<Material>
                 .IsRequired();
         });
         
-        builder.OwnsOne(x => x.PackagePrice, owned =>
+        builder.ComplexProperty(x => x.PackagePrice, owned =>
         {
             owned.Property(p => p.Amount)
                 .HasColumnName("PackagePrice_Amount")
