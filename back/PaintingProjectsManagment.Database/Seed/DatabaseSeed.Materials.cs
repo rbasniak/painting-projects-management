@@ -10,6 +10,7 @@ public partial class DatabaseSeed
     private string _materialGswVarnish = "Green Stuff World varnish";
     private string _materialTamiyaTS80 = "Tamiya matt varnish TS-80";
     private string _materialBiltemaMatteVarnish = "Biltema matt varnish";
+    private string _materialBiltemaGlossVarnish = "Biltema gloss varnish";
 
     private string _materialGswPrimer = "Green Stuff World primer";
     private string _materialVallejoPrimer = "Vallejo primer";
@@ -72,7 +73,7 @@ public partial class DatabaseSeed
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialGswVarnish, new Quantity(60, PackageContentUnit.Milliliter), new Money(7.5, "EUR")));
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialTamiyaTS80, new Quantity(100, PackageContentUnit.Milliliter), new Money(89, "DKK")));
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialBiltemaMatteVarnish, new Quantity(400, PackageContentUnit.Milliliter), new Money(49, "DKK")));
-        context.Set<Material>().Add(new Material("rodrigo.basniak", _materialModellingPutty, new Quantity(400, PackageContentUnit.Milliliter), new Money(49, "DKK")));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", _materialBiltemaGlossVarnish, new Quantity(400, PackageContentUnit.Milliliter), new Money(49, "DKK")));
 
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialGswPrimer, new Quantity(60, PackageContentUnit.Milliliter), new Money(7.5, "EUR")));
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialVallejoPrimer, new Quantity(200, PackageContentUnit.Milliliter), new Money(15, "EUR")));
@@ -125,6 +126,7 @@ public partial class DatabaseSeed
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialMaskingTapeTamiya10mm, new Quantity(18, PackageContentUnit.Meter), new Money(24, "USD")));
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialMaskingTapeTamiya20mm, new Quantity(18, PackageContentUnit.Meter), new Money(32, "DKK")));
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialMaskingTape3m25mm, new Quantity(41, PackageContentUnit.Meter), new Money(4.1, "EUR")));
+        context.SaveChanges();
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialVallejoLiquidMask, new Quantity(85, PackageContentUnit.Milliliter), new Money(11, "EUR")));
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialMaskingPutty, new Quantity(80, PackageContentUnit.Gram), new Money(120, "DKK")));
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialModellingPutty, new Quantity(100, PackageContentUnit.Gram), new Money(120, "DKK")));

@@ -14,7 +14,7 @@ public partial class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatab
         AddSeed("2025-07-20 08:15: Development models seed", new SeedInfo<DatabaseContext>(DevelopmentModelsSeed, EnvironmentUsage.Development));
         AddSeed("2025-07-22 23:15: Admin claims seed", new SeedInfo<DatabaseContext>(AdminClaimsSeed));
         AddSeed("2025-08-11 23:15: Example materials", new SeedInfo<DatabaseContext>(MaterialsSeed, EnvironmentUsage.Development));
-        AddSeed("2025-11-11 22:30: Example projects", new SeedInfo<DatabaseContext>(ProjectsSeed, EnvironmentUsage.Development));
+        // AddSeed("2025-11-11 22:30: Example projects", new SeedInfo<DatabaseContext>(ProjectsSeed, EnvironmentUsage.Development));
         // AddSeed("2025-07-20: Army Painter Seed", new SeedInfo<DatabaseContext>(ArmyPainterFanaticsSeed));
     }
      
