@@ -1,28 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<OutputType>Exe</OutputType>
-		<IsPackable>false</IsPackable>
-		<LangVersion>latest</LangVersion>
-	</PropertyGroup>
-
+	<!-- Common test properties and packages are now in Directory.Build.props -->
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.10" />
-		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.1.0" />
-		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" Version="2.0.1" />
-		<PackageReference Include="Moq" Version="4.20.72" />
-		<PackageReference Include="Shouldly" Version="4.3.0" />
-		<PackageReference Include="TUnit" Version="0.77.3" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Using Include="Shouldly" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Common properties are now in Directory.Build.props -->
     <UserSecretsId>258fe57d-8fff-4fb6-ab4a-f7db8c35bc64</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <!-- DockerDefaultTargetOS is now in Directory.Build.props for API projects -->
   </PropertyGroup>
 
   <ItemGroup>

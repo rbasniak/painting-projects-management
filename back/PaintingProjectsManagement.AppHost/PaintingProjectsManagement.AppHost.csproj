@@ -3,10 +3,8 @@
   <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
 
   <PropertyGroup>
+    <!-- Common properties are now in Directory.Build.props -->
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <IsAspireHost>true</IsAspireHost>
     <UserSecretsId>aa049ac7-f768-4b96-9c7d-e3f5a102b583</UserSecretsId>
   </PropertyGroup>
