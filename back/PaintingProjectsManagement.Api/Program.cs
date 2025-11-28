@@ -208,14 +208,11 @@ public class Program
         builder.Services.AddMaterialsFeature();
         builder.Services.AddModelsFeature();
 
-        // Configure OpenAPI with custom schema naming for nested classes
-        builder.Services.AddOpenApi(config =>
+        // Configure Swagger/OpenAPI with custom schema naming for nested classes
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(options =>
         {
-            //
-            // with .NET 9 OpenApi, to support fully qualified type names for nested types in the schema, use the
-            // CustomSchemaIds extension method (but from our own extension method :) )
-            //
-            config.CustomSchemaIds(x => x.FullName?.Split('.').Last().Replace("+", ".", StringComparison.Ordinal));
+            options.CustomSchemaIds(x => x.FullName?.Split('.').Last().Replace("+", ".", StringComparison.Ordinal));
         });
 
         // Register file storage service
