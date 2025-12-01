@@ -12,8 +12,9 @@ public class ProjectDetails
     public UrlReference[] References { get; set; } = Array.Empty<UrlReference>();
     public UrlReference[] Pictures { get; set; } = Array.Empty<UrlReference>();
     public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();
+    public ProjectCostDetails CostBreakdown { get; set; } = ProjectCostDetails.Empty;
 
-    public static ProjectDetails FromModel(Project project)
+    public static ProjectDetails FromModel(Project project, ProjectCostBreakdown projectCostBreakdown)
     {
         ArgumentNullException.ThrowIfNull(project);
 
@@ -38,7 +39,8 @@ public class ProjectDetails
             }).ToArray(),
             Groups = project.ColorGroups
                 .Select(ColorGroupDetails.FromModel)
-                .ToArray()
+                .ToArray(),
+            
         };
     }
 }

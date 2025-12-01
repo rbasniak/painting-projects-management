@@ -4,7 +4,7 @@ public class ProjectCostBreakdown : BaseEntity
 {
     public required Guid ProjectId { get; init; }
     public required ElectricityCost Electricity { get; init; }
-    public required LaborCost Labor { get; init; }
+    public required Dictionary<string, LaborCost>  Labor { get; init; }
     public Dictionary<string, IReadOnlyCollection<MaterialsCost>> Materials { get; init; }
 }
 
@@ -40,6 +40,7 @@ public class MaterialsCost
 {
     public required Guid MaterialId { get; init; }
     public required string Description { get; init; } = string.Empty;
+    public required string Category { get; init; } = string.Empty;
     public required Quantity Quantity { get; init; }
     public required Money CostPerUnit { get; init; }
     public Money TotalCost => new(CostPerUnit.Amount * Quantity.Value, CostPerUnit.Currency);

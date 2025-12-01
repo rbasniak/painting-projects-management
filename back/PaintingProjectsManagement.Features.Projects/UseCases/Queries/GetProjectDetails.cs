@@ -21,7 +21,7 @@ public class GetProjectDetails : IEndpoint
         public Guid Id { get; set; }
     }
 
-    public class Validator : SmartValidator<Request, Project>
+    internal class Validator : SmartValidator<Request, Project>
     {
         public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
@@ -32,12 +32,12 @@ public class GetProjectDetails : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context, IDispatcher _dispatcher) : IQueryHandler<Request>
+    internal class Handler(DbContext context, ProjectCostCalculator projectCostCalculator) : IQueryHandler<Request>
     {
 
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var project = await _context.Set<Project>()
+            var project = await context.Set<Project>()
                 .Include(x => x.Steps)
                 .Include(x => x.References)
                 .Include(x => x.Pictures)
@@ -45,6 +45,9 @@ public class GetProjectDetails : IEndpoint
                 .Include(x => x.ColorGroups)
                     .ThenInclude(x => x.Sections)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
+
+            // TODO: Get from proper projection table in the future
+            var projectCostBreakdown = await projectCostCalculator.CalculateCostAsync(project.Id, "DKK", cancellationToken);
 
             if (project.Materials.Any())
             {
@@ -69,11 +72,9 @@ public class GetProjectDetails : IEndpoint
                 //        return MaterialDetails.FromModel(materialData, projectMaterial);
                 //    })
                 //    .ToArray();
-
-                return QueryResponse.Success(ProjectDetails.FromModel(project));
             }
 
-            return QueryResponse.Success(ProjectDetails.FromModel(project));
+            return QueryResponse.Success(ProjectDetails.FromModel(project, projectCostBreakdown));
         }
     }
 }
