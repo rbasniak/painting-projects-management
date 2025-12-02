@@ -171,9 +171,6 @@ public class Program
         builder.Services.AddScoped<IIntegrationOutbox, IntegrationOutbox>();
         builder.Services.AddSingleton<IBrokerSubscriber, RabbitMqSubscriber>();
 
-        // Register domain-to-integration event handlers for Materials and integration consumers for Projects
-        builder.Services.AddProjectsIntegrationHandlers();
-
         builder.Services.AddRbkApiCoreSetup(options => options
              .EnableBasicAuthenticationHandler()
              .UseDefaultCompression()
@@ -207,6 +204,10 @@ public class Program
         // Application modules
         builder.Services.AddMaterialsFeature();
         builder.Services.AddModelsFeature();
+        builder.Services.AddProjectsFeature();
+
+        // Common features
+        builder.Services.AddCurrencyConverter();
 
         // Configure Swagger/OpenAPI with custom schema naming for nested classes
         builder.Services.AddEndpointsApiExplorer();

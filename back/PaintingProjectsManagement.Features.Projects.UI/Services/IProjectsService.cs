@@ -6,13 +6,11 @@ public interface IProjectsService
 {
     Task<IReadOnlyCollection<ProjectDetails>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<ProjectDetails> CreateAsync(
-      CreateProjectRequest request,
-      CancellationToken cancellationToken);
+    Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken);
 
-    Task<ProjectDetails> UpdateAsync(
-      UpdateProjectRequest request,
-      CancellationToken cancellationToken);
+    Task<ProjectDetails> CreateAsync(CreateProjectRequest request, CancellationToken cancellationToken);
+
+    Task<ProjectDetails> UpdateAsync(UpdateProjectRequest request, CancellationToken cancellationToken);
 
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 }
@@ -70,5 +68,24 @@ public class ProjectsService : IProjectsService
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         await _httpClient.DeleteAsync($"api/materials/{id}", cancellationToken);
+    }
+
+    public async Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.GetAsync($"api/projects/{projectId}", cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception($"Failed to get project details for project ID {projectId}. Status code: {response.StatusCode}");
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<ProjectDetails>();
+
+        if (result == null)
+        {
+            throw new Exception($"Project details for project ID {projectId} not found in the response.");
+        }
+
+        return result;
     }
 }

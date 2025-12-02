@@ -20,6 +20,6 @@ public class CostCalculationOptions : IApplicationOptions
     [DisplayName("Markup Coefficient (%)")]
     public double MarkupPercentage { get; set; } = 1.15;
 
-    [DisplayName("Milliliters per drop of paint")]
-    public double MillilitersPerPaintDrop { get; set; } = 0.09;
+    [DisplayName("Mililiters per drop of paint")]
+    public double MililitersPerPaintDrop { get; set; } = 0.09;
 }

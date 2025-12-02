@@ -2,12 +2,17 @@
 
 namespace PaintingProjectsManagement.Features.Projects;
 
+public interface IProjectCostCalculator
+{
+    Task<ProjectCostBreakdown> CalculateCostAsync(Guid projectId, string currency, CancellationToken cancellationToken);
+}
+
 internal class ProjectCostCalculator(
     DbContext context,
     ProjectSettings projectSettings,
     ICurrencyConverter currencyConverter,
     IUnitsConverter unitsConverter
-)
+) : IProjectCostCalculator
 {
     public async Task<ProjectCostBreakdown> CalculateCostAsync(Guid projectId, string currency, CancellationToken cancellationToken)
     {
@@ -15,7 +20,6 @@ internal class ProjectCostCalculator(
             .AsNoTracking()
             .Include(x => x.Materials)
             .Include(x => x.Steps)
-            .ThenInclude(x => x.Step)
             .First(p => p.Id == projectId);
 
         var projectMaterialsById = project.Materials.ToDictionary(x => x.MaterialId);

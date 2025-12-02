@@ -23,7 +23,7 @@
             <MudTd DataLabel="Name" Style="width: 50%">@context.Name</MudTd>
             <MudTd Style="width: 100px">
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
-                <MudIconButton Icon="@Icons.Material.Filled.Money" OnClick="() => GetProjectCost(context)" Color="Color.Primary" />
+                <MudIconButton Icon="@Icons.Material.Filled.CurrencyExchange" OnClick="() => GetProjectCost(context)" Color="Color.Primary" />
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
             </MudTd>
         </RowTemplate>
@@ -63,7 +63,7 @@
 
     private async Task LoadAsync()
     {
-        projects = (await ProjectsService.GetAllAsync(CancellationToken.None)).ToList();
+        projects = (await ProjectsService.GetAllAsync(default)).ToList();
     }
 
     private async Task Add()
@@ -77,15 +77,17 @@
             {
                 Name = input.Name,
             };
-            var created = await ProjectsService.CreateAsync(request, CancellationToken.None);
+            var created = await ProjectsService.CreateAsync(request, default);
             projects.Add(created);
         }
     }
 
     private async Task GetProjectCost(ProjectDetails project)
     {
-        var parameters = new DialogParameters { ["Model"] = new ProjectDetails() };
-        var dialog = DialogService.Show<ProjectsDialog>("Project", parameters);
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var dialog = DialogService.Show<ProjectCostBreakdownDialog>("Project", parameters);
     }
 
     private async Task Edit(ProjectDetails project)
@@ -110,7 +112,7 @@
                 Id = updatedInput.Id,
                 Name = updatedInput.Name,
             };
-            var updated = await ProjectsService.UpdateAsync(request, CancellationToken.None);
+            var updated = await ProjectsService.UpdateAsync(request, default);
             var index = projects.FindIndex(m => m.Id == updated.Id);
             if (index >= 0)
             {
@@ -129,7 +131,7 @@
 
         if (confirm == true)
         {
-            await ProjectsService.DeleteAsync(project.Id, CancellationToken.None);
+            await ProjectsService.DeleteAsync(project.Id, default);
             projects.Remove(project);
         }
     }

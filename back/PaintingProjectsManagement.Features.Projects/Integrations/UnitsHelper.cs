@@ -23,7 +23,7 @@ internal static class UnitsHelper
                 return MaterialUnit.Kilogram;
             case "mililiter":
             case "mililiters":
-                return MaterialUnit.Milliliter;
+                return MaterialUnit.Mililiter;
             case "liter":
             case "liters":
                 return MaterialUnit.Liter;

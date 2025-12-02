@@ -5,9 +5,7 @@ internal interface IUnitsConverter
     public Quantity Convert(Quantity quantity, MaterialUnit targetUnit);
 }
 
-internal class UnitsConverter 
-    (ProjectSettings projectSettings)
-    : IUnitsConverter
+internal class UnitsConverter (ProjectSettings projectSettings): IUnitsConverter
 {
     public Quantity Convert(Quantity quantity, MaterialUnit targetUnit)
     {
@@ -35,8 +33,7 @@ internal class UnitsConverter
         }
 
         // Count units (Drop, Unit) cannot be converted to each other or to other types
-        throw new InvalidOperationException(
-            $"Cannot convert from {quantity.Unit} to {targetUnit}. These units are incompatible.");
+        throw new InvalidOperationException($"Cannot convert from {quantity.Unit} to {targetUnit}. These units are incompatible.");
     }
 
     private bool IsLengthUnit(MaterialUnit unit) =>
@@ -46,7 +43,7 @@ internal class UnitsConverter
         unit is MaterialUnit.Gram or MaterialUnit.Kilogram;
 
     private bool IsVolumeUnit(MaterialUnit unit) =>
-        unit is MaterialUnit.Milliliter or MaterialUnit.Liter or MaterialUnit.Drop;
+        unit is MaterialUnit.Mililiter or MaterialUnit.Liter or MaterialUnit.Drop or MaterialUnit.Spray;
 
     private Quantity ConvertLength(Quantity quantity, MaterialUnit targetUnit)
     {
@@ -92,20 +89,21 @@ internal class UnitsConverter
 
     private Quantity ConvertVolume(Quantity quantity, MaterialUnit targetUnit)
     {
-        // Convert to base unit (milliliters)
-        double milliliters = quantity.Unit switch
+        // Convert to base unit (mililiters)
+        double mililiters = quantity.Unit switch
         {
-            MaterialUnit.Milliliter => quantity.Value,
+            MaterialUnit.Mililiter => quantity.Value,
             MaterialUnit.Liter => quantity.Value * 1000,
-            MaterialUnit.Drop => projectSettings.MililiterPerDrop,
+            MaterialUnit.Drop => quantity.Value * projectSettings.MililiterPerDrop,
+            MaterialUnit.Spray => quantity.Value * projectSettings.MililiterPerSpray,
             _ => throw new InvalidOperationException($"Unsupported volume unit: {quantity.Unit}")
         };
 
         // Convert from base unit to target
         double result = targetUnit switch
         {
-            MaterialUnit.Milliliter => milliliters,
-            MaterialUnit.Liter => milliliters / 1000,
+            MaterialUnit.Mililiter => mililiters,
+            MaterialUnit.Liter => mililiters / 1000,
             _ => throw new InvalidOperationException($"Unsupported volume unit: {targetUnit}")
         };
 

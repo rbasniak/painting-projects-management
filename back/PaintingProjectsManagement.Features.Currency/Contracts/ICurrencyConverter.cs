@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PaintingProjectsManagement.Features.Currency;
 
@@ -32,7 +33,10 @@ internal class CurrencyConverter : ICurrencyConverter
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<FrankfurterResponse>(content);
+            var result = JsonSerializer.Deserialize<FrankfurterResponse>(content, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
 
             if (result?.Rates != null && result.Rates.TryGetValue(toCurrency.ToUpper(), out var rate))
             {
@@ -67,6 +71,16 @@ internal class CurrencyConverter : ICurrencyConverter
 
     private class FrankfurterResponse
     {
+        [JsonPropertyName("amount")]
+        public double Amount { get; set; }
+
+        [JsonPropertyName("base")]
+        public string Base { get; set; } = string.Empty;
+
+        [JsonPropertyName("date")]
+        public string Date { get; set; } = string.Empty;
+
+        [JsonPropertyName("rates")]
         public Dictionary<string, double>? Rates { get; set; }
     }
 }

@@ -3,12 +3,25 @@ using System.Linq.Expressions;
 
 namespace rbkApiModules.Commons.Relational;
 
-public class NullableDateTimeWithoutKindConverter : ValueConverter<DateTime?, DateTime?>
+public class NullableDateTimeWithoutKindConverter
+    : ValueConverter<DateTime?, DateTime?>
 {
-    public NullableDateTimeWithoutKindConverter() : base(Serialize, Deserialize, null)
+    public NullableDateTimeWithoutKindConverter()
+        : base(ToProvider, FromProvider, null)
     {
     }
 
-    static Expression<Func<DateTime?, DateTime?>> Deserialize = date => date.HasValue ? DateTime.SpecifyKind(date.Value, DateTimeKind.Utc) : null;
-    static Expression<Func<DateTime?, DateTime?>> Serialize = date => date;
+    static readonly Expression<Func<DateTime?, DateTime?>> ToProvider =
+        date => !date.HasValue
+            ? (DateTime?)null
+            : date.Value.Kind == DateTimeKind.Unspecified
+                ? DateTime.SpecifyKind(date.Value, DateTimeKind.Utc)
+                : date.Value.Kind == DateTimeKind.Local
+                    ? date.Value.ToUniversalTime()
+                    : date.Value;
+
+    static readonly Expression<Func<DateTime?, DateTime?>> FromProvider =
+        date => !date.HasValue
+            ? (DateTime?)null
+            : DateTime.SpecifyKind(date.Value, DateTimeKind.Utc);
 }

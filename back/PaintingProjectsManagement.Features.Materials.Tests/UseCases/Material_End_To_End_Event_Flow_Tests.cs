@@ -25,7 +25,7 @@ public class Material_End_To_End_Event_Flow_Tests
 
         // Arrange
         var materialName = "End-to-End Test Material";
-        var packageContent = new Quantity(100.0, PackageContentUnit.Milliliter);
+        var packageContent = new Quantity(100.0, PackageContentUnit.Mililiter);
         var packagePrice = new Money(25.50, "USD");
 
         // Act - Create material through API (triggers domain event → integration event → consumer)
@@ -57,7 +57,7 @@ public class Material_End_To_End_Event_Flow_Tests
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe(materialName);
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.255); // 25.50 / 100
-        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
         readOnlyMaterial.UpdatedUtc.ShouldNotBe(default(DateTime));
     }
 
@@ -75,7 +75,7 @@ public class Material_End_To_End_Event_Flow_Tests
             Id = material.Id,
             Name = "Updated Material",
             PackageContentAmount = 200.0,
-            PackageContentUnit = (int)PackageContentUnit.Milliliter,
+            PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 35.75,
             PackagePriceCurrency = "USD"
         };
@@ -98,7 +98,7 @@ public class Material_End_To_End_Event_Flow_Tests
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.17875); // 35.75 / 200
-        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 4)]
@@ -153,7 +153,7 @@ public class Material_End_To_End_Event_Flow_Tests
             Id = material1.Id,
             Name = "Updated Material 1",
             PackageContentAmount = 150.0,
-            PackageContentUnit = (int)PackageContentUnit.Milliliter,
+            PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 30.00,
             PackagePriceCurrency = "USD"
         };
@@ -167,7 +167,7 @@ public class Material_End_To_End_Event_Flow_Tests
         {
             Name = "Material 3",
             PackageContentAmount = 75.0,
-            PackageContentUnit = (int)PackageContentUnit.Milliliter,
+            PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 15.00,
             PackagePriceCurrency = "USD"
         };
@@ -232,7 +232,7 @@ public class Material_End_To_End_Event_Flow_Tests
             Id = material.Id,
             Name = "Update 2",
             PackageContentAmount = 300.0,
-            PackageContentUnit = (int)PackageContentUnit.Milliliter,
+            PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = update1.PackagePriceAmount,
             PackagePriceCurrency = update1.PackagePriceCurrency
         };
@@ -258,7 +258,7 @@ public class Material_End_To_End_Event_Flow_Tests
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Update 2");
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(40.0 / 300.0); // 40.00 / 300
-        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 99)]
@@ -275,7 +275,7 @@ public class Material_End_To_End_Event_Flow_Tests
         {
             Name = name,
             PackageContentAmount = 100.0,
-            PackageContentUnit = (int)PackageContentUnit.Milliliter,
+            PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 25.50,
             PackagePriceCurrency = "USD"
         };

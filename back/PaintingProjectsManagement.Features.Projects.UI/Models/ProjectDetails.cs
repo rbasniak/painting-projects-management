@@ -1,12 +1,59 @@
+using PaintingProjectsManagement.Features.Projects.UI;
 using PaintingProjectsManagement.UI.Modules.Shared;
 
 namespace PaintingProjectsManagement.UI.Modules.Projects;
 
-public record ProjectDetails
+public record ProjectHeader
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty; 
 }
+
+public class ProjectDetails
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string PictureUrl { get; set; } = string.Empty;
+    public DateTime? StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
+
+    //public ProjectStepDataDetails[] Steps { get; set; } = Array.Empty<ProjectStepDataDetails>();
+    //// public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();
+    //public UrlReference[] References { get; set; } = Array.Empty<UrlReference>();
+    //public UrlReference[] Pictures { get; set; } = Array.Empty<UrlReference>();
+    //public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();
+    public ProjectCostDetails CostBreakdown { get; set; }  
+}
+
+public class ProjectCostDetails
+{
+    public required Guid Id { get; init; }
+    public required ElectricityCostDetails Electricity { get; init; }
+    public Dictionary<string, LaborCostDetails> Labor { get; init; }
+    public Dictionary<string, IReadOnlyCollection<MaterialsCostDetails>> Materials { get; init; }
+}
+
+public class MaterialsCostDetails
+{
+    public required Guid MaterialId { get; init; }
+    public required string Description { get; init; }
+    public required double Quantity { get; init; }
+    public required string Category { get; init; }
+    public required MoneyDetails TotalCost { get; init; } 
+}
+
+public class LaborCostDetails
+{
+    public required double SpentHours { get; init; }
+    public required MoneyDetails TotalCost { get; init; } 
+}
+
+public class ElectricityCostDetails
+{
+    public required MoneyDetails CostPerKWh { get; init; }
+    public required double PrintingTimeInHours { get; init; }
+    public required MoneyDetails TotalCost { get; init; } 
+} 
 
 public record MoneyDetails
 {
@@ -23,7 +70,7 @@ public record QuantityDetails
 public enum MaterialUnit
 {
     Gram = 10,
-    Milliliter = 20,
+    Mililiter = 20,
     Meter = 30,
     Each = 40
 } 

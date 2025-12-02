@@ -29,7 +29,7 @@ public class Material_Integration_Event_Handlers_Tests
             materialId,
             "Test Material",
             100.0,
-            "Milliliters",
+            "Mililiters",
             25.50,
             "USD"
         );
@@ -52,7 +52,7 @@ public class Material_Integration_Event_Handlers_Tests
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Test Material");
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.255); // 25.50 / 100
-        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
         readOnlyMaterial.UpdatedUtc.ShouldNotBe(default(DateTime));
     }
 
@@ -67,7 +67,7 @@ public class Material_Integration_Event_Handlers_Tests
             materialId,
             "Original Material",
             100.0,
-            "Milliliters",
+            "Mililiters",
             25.50,
             "USD"
         );
@@ -85,7 +85,7 @@ public class Material_Integration_Event_Handlers_Tests
             materialId,
             "Updated Material",
             200.0,
-            "Milliliters",
+            "Mililiters",
             35.75,
             "USD"
         );
@@ -104,7 +104,7 @@ public class Material_Integration_Event_Handlers_Tests
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.17875); // 35.75 / 200
-        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 4)]
@@ -118,7 +118,7 @@ public class Material_Integration_Event_Handlers_Tests
             materialId,
             "New Material",
             150.0,
-            "Milliliters",
+            "Mililiters",
             30.00,
             "USD"
         );
@@ -138,7 +138,7 @@ public class Material_Integration_Event_Handlers_Tests
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("New Material");
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.2); // 30.00 / 150
-        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 5)]
@@ -152,7 +152,7 @@ public class Material_Integration_Event_Handlers_Tests
             materialId,
             "Material To Delete",
             100.0,
-            "Milliliters",
+            "Mililiters",
             25.50,
             "USD"
         );
@@ -226,7 +226,7 @@ public class Material_Integration_Event_Handlers_Tests
             materialId,
             "Test Material",
             0.0, // Zero package content
-            "Milliliters",
+            "Mililiters",
             25.50,
             "USD"
         );
@@ -246,7 +246,7 @@ public class Material_Integration_Event_Handlers_Tests
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Test Material");
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0); // Should be 0 when package content is 0
-        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 8)]
@@ -260,7 +260,7 @@ public class Material_Integration_Event_Handlers_Tests
             materialId,
             "Original Material",
             100.0,
-            "Milliliters",
+            "Mililiters",
             25.50,
             "USD"
         );
@@ -278,7 +278,7 @@ public class Material_Integration_Event_Handlers_Tests
             materialId,
             "Updated Material",
             0.0, // Zero package content
-            "Milliliters",
+            "Mililiters",
             35.75,
             "USD"
         );
@@ -297,7 +297,7 @@ public class Material_Integration_Event_Handlers_Tests
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0); // Should be 0 when package content is 0
-        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Milliliter);
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 9)]
@@ -309,10 +309,10 @@ public class Material_Integration_Event_Handlers_Tests
         var materialId = Guid.NewGuid();
 
         // Act - Publish events in sequence
-        var createEvent = new MaterialCreatedV1(materialId, "Material", 100.0, "Milliliters", 25.50, "USD");
+        var createEvent = new MaterialCreatedV1(materialId, "Material", 100.0, "Mililiters", 25.50, "USD");
         await TestingServer.PublishIntegrationEventAsync(createEvent, "RODRIGO.BASNIAK", TestUser);
 
-        var updateEvent = new MaterialUpdatedV1(materialId, "Updated Material", 200.0, "Milliliters", 35.75, "USD");
+        var updateEvent = new MaterialUpdatedV1(materialId, "Updated Material", 200.0, "Mililiters", 35.75, "USD");
         await TestingServer.PublishIntegrationEventAsync(updateEvent, "RODRIGO.BASNIAK", TestUser);
 
         var deleteEvent = new MaterialDeletedV1(materialId);

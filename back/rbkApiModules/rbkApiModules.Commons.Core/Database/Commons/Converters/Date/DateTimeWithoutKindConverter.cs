@@ -5,10 +5,21 @@ namespace rbkApiModules.Commons.Relational;
 
 public class DateTimeWithoutKindConverter : ValueConverter<DateTime, DateTime>
 {
-    public DateTimeWithoutKindConverter() : base(Serialize, Deserialize, null)
+    public DateTimeWithoutKindConverter()
+        : base(ToProvider, FromProvider, null)
     {
     }
-            
-    static Expression<Func<DateTime, DateTime>> Deserialize = date => DateTime.SpecifyKind(date, DateTimeKind.Utc);
-    static Expression<Func<DateTime, DateTime>> Serialize = date => date;
+
+    // write to DB
+    static readonly Expression<Func<DateTime, DateTime>> ToProvider =
+        date =>
+            date.Kind == DateTimeKind.Unspecified
+                ? DateTime.SpecifyKind(date, DateTimeKind.Utc)     // assume unspecified = UTC
+                : date.Kind == DateTimeKind.Local
+                    ? date.ToUniversalTime()                       // normalize local -> UTC
+                    : date;                                        // already UTC
+
+    // read from DB
+    static readonly Expression<Func<DateTime, DateTime>> FromProvider =
+        date => DateTime.SpecifyKind(date, DateTimeKind.Utc);
 }

@@ -21,7 +21,8 @@ public enum MaterialUnit
     Gram = 5,
     Kilogram = 6,
     Liter = 7,
-    Milliliter = 8 
+    Mililiter = 8,
+    Spray = 9
 }
 
 public readonly record struct Quantity(double Value, MaterialUnit Unit);

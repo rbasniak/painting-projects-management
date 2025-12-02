@@ -14,12 +14,17 @@ public partial class DatabaseSeed
 
             var timeout = DateTime.UtcNow.AddSeconds(60);
 
-            while (material == null)
+            do
             {
-                await Task.Delay(500);
-
                 material = context.Set<ReadOnlyMaterial>().FirstOrDefault(x => x.Name == materialName);
-            }
+
+                if (material == null)
+                {
+                    // This seed depends on events from the Materials module to be processed before proceeding
+                    // This delays is meant to solve this when database is first created and seeded
+                    await Task.Delay(500);
+                }
+            } while (material == null && DateTime.UtcNow < timeout);
 
             if (material == null)
             {
@@ -37,8 +42,7 @@ public partial class DatabaseSeed
 
         ConsumeMaterial(archangelProject, _materialMagnet10x5, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(archangelProject, _materialMagnet5x3, 3, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(archangelProject, _materialSunluWaterWashableStandardResin, 160 + 120, MaterialUnit.Gram).GetAwaiter().GetResult();
-        ConsumeMaterial(archangelProject, _materialSunluWaterWashableStandardResin, 75 + 25 + 95 + 60, MaterialUnit.Gram).GetAwaiter().GetResult();
+        ConsumeMaterial(archangelProject, _materialSunluWaterWashableStandardResin, 160 + 120 + 75 + 25 + 95 + 60, MaterialUnit.Gram).GetAwaiter().GetResult();
         ConsumeMaterial(archangelProject, _materialVallejoPrimer, 200, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(archangelProject, _materialGswPrimer, 200, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(archangelProject, _materialGswChrome, 375 + 50, MaterialUnit.Drop).GetAwaiter().GetResult();
@@ -48,7 +52,7 @@ public partial class DatabaseSeed
 
         archangelProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 06, 24), 4);
         archangelProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 06, 26), 1.5);
-        archangelProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 3.5);
+        archangelProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 3.5); 
         archangelProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5 + 2 + 13);
         archangelProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 28), 15);
         archangelProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 08, 10), 8);
@@ -69,7 +73,7 @@ public partial class DatabaseSeed
         
         ConsumeMaterial(illidanProject, _materialPaintMixingCupCorrugated, 10, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(illidanProject, _materialMaskingTape3m25mm, 3, MaterialUnit.Meter).GetAwaiter().GetResult();
-        ConsumeMaterial(illidanProject, _materialVallejoLiquidMask, 2, MaterialUnit.Milliliter).GetAwaiter().GetResult();
+        ConsumeMaterial(illidanProject, _materialVallejoLiquidMask, 2, MaterialUnit.Mililiter).GetAwaiter().GetResult();
         ConsumeMaterial(illidanProject, _materialDisposableBrush, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
 
         ConsumeMaterial(illidanProject, _materialSunluWaterWashableStandardResin, (210 + 160 + 205) * 1.5, MaterialUnit.Gram).GetAwaiter().GetResult();

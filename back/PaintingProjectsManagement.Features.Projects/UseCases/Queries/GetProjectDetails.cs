@@ -4,9 +4,9 @@ public class GetProjectDetails : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/projects/{id}", async (Guid id, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/projects/{projectId}", async (Guid projectId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.SendAsync(new Request { Id = id }, cancellationToken);
+            var result = await dispatcher.SendAsync(new Request { Id = projectId }, cancellationToken);
             
             return ResultsMapper.FromResponse(result);
         })
@@ -32,9 +32,8 @@ public class GetProjectDetails : IEndpoint
         }
     }
 
-    internal class Handler(DbContext context, ProjectCostCalculator projectCostCalculator) : IQueryHandler<Request>
+    public class Handler(DbContext context, IProjectCostCalculator projectCostCalculator) : IQueryHandler<Request>
     {
-
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var project = await context.Set<Project>()

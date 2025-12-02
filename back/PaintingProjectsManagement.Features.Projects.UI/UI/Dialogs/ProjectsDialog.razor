@@ -7,7 +7,7 @@
 <MudDialog>
     <DialogContent>
         <MudStack Spacing="3">
-            <MudTextField @bind-Value="Project.Name" Label="Name" />
+            <MudTextField @bind-Value="Model.Name" Label="Name" />
         </MudStack>
     </DialogContent>
     <DialogActions>
@@ -17,13 +17,13 @@
 </MudDialog>
 
 @code {
-    [Parameter] public ProjectDetails Project { get; set; } = new();
+    [Parameter] public ProjectDetails Model { get; set; } = new();
 
     [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
 
     private void Submit() 
     {
-        MudDialog?.Close(DialogResult.Ok(Project));
+        MudDialog?.Close(DialogResult.Ok(Model));
     }
     
     private void Cancel() 

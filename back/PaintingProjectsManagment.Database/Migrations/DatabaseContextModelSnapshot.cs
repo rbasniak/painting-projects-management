@@ -18,7 +18,7 @@ namespace PaintingProjectsManagment.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.10")
+                .HasAnnotation("ProductVersion", "10.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -38,7 +38,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.ComplexProperty<Dictionary<string, object>>("PackageContent", "PaintingProjectsManagement.Features.Materials.Material.PackageContent#Quantity", b1 =>
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "PackageContent", "PaintingProjectsManagement.Features.Materials.Material.PackageContent#Quantity", b1 =>
                         {
                             b1.IsRequired();
 
@@ -51,7 +51,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                                 .HasColumnName("PackageContent_Unit");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("PackagePrice", "PaintingProjectsManagement.Features.Materials.Material.PackagePrice#Money", b1 =>
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "PackagePrice", "PaintingProjectsManagement.Features.Materials.Material.PackagePrice#Money", b1 =>
                         {
                             b1.IsRequired();
 
@@ -327,8 +327,10 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<Guid>("MaterialId")
                         .HasColumnType("uuid");
 
-                    b.ComplexProperty<Dictionary<string, object>>("Quantity", "PaintingProjectsManagement.Features.Projects.MaterialForProject.Quantity#Quantity", b1 =>
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "Quantity", "PaintingProjectsManagement.Features.Projects.MaterialForProject.Quantity#Quantity", b1 =>
                         {
+                            b1.IsRequired();
+
                             b1.Property<int>("Unit")
                                 .HasColumnType("integer")
                                 .HasColumnName("Quantity_Unit");
@@ -484,8 +486,10 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<DateTime>("UpdatedUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.ComplexProperty<Dictionary<string, object>>("PricePerUnit", "PaintingProjectsManagement.Features.Projects.ReadOnlyMaterial.PricePerUnit#Money", b1 =>
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "PricePerUnit", "PaintingProjectsManagement.Features.Projects.ReadOnlyMaterial.PricePerUnit#Money", b1 =>
                         {
+                            b1.IsRequired();
+
                             b1.Property<double>("Amount")
                                 .HasColumnType("double precision")
                                 .HasColumnName("PricePerUnit_Amount");

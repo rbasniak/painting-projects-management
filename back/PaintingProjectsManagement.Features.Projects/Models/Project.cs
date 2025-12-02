@@ -50,7 +50,9 @@ public class Project : TenantEntity
 
     public void ConsumeMaterial(Guid materialId, double quantity, MaterialUnit unit)
     {
-        // TODO: make it idempotent
+        // TODO: make it idempotent, also:
+        // User can send the same material multiple times, we should aggregate it
+        // How to handle different units for the same material?
 
         _materials.Add(new MaterialForProject(Id, materialId, quantity, unit));
 
