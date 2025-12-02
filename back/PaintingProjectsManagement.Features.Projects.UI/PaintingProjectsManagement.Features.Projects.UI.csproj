@@ -9,6 +9,7 @@
 </PropertyGroup>
 
 <ItemGroup>
+  <Content Include="UI\Dialogs\ProjectCostBreakdownDialog.razor.AntiGravity" />
   <Content Include="UI\Dialogs\ProjectCostBreakdownDialog.razor.cursor" />
 </ItemGroup>
 
