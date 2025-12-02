@@ -27,8 +27,8 @@ public class MaterialCreatedConsumer : IIntegrationEventHandler<MaterialCreatedV
                 Tenant = envelope.TenantId,
                 Id = @event.MaterialId,
                 Name = @event.Name,
-                CategoryId = "10",
-                CategoryName = "Test Category",
+                CategoryId = @event.CategoryId,
+                CategoryName = @event.CategoryName,
                 PricePerUnit = new Money(@event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount, "USD"),
                 Unit = UnitsHelper.Convert(@event.PackageContentUnit),
                 UpdatedUtc = DateTime.UtcNow

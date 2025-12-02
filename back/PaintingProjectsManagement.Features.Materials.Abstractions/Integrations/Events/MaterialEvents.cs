@@ -5,6 +5,8 @@
 public sealed record MaterialCreatedV1(
     Guid MaterialId,
     string Name,
+    int CategoryId,
+    string CategoryName,
     double PackageContentAmount,
     string PackageContentUnit,
     double PackagePriceAmount,
@@ -22,6 +24,8 @@ public sealed record MaterialDeletedV1(
 public sealed record MaterialUpdatedV1(
     Guid MaterialId,
     string Name,
+    int CategoryId,
+    string CategoryName,
     double PackageContentAmount,
     string PackageContentUnit,
     double PackagePriceAmount,

@@ -23,6 +23,8 @@ internal sealed class MaterialCreatedHandler : IDomainEventHandler<MaterialCreat
         var integrationEvent = new MaterialCreatedV1(
             domainEvent.MaterialId,
             domainEvent.Name,
+            (int)domainEvent.Category,
+            domainEvent.Category.ToString(),
             domainEvent.PackageContent.Amount,
             domainEvent.PackageContent.Unit.ToString(),
             domainEvent.PackagePrice.Amount,

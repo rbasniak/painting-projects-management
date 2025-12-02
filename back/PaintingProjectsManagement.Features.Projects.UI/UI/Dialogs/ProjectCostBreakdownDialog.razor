@@ -5,10 +5,10 @@
 
 <MudDialog>
     <DialogContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="pa-0">
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="pa-0">
             <MudGrid> 
                 <!-- Electricity Cost -->
-                <MudItem xs="12" md="6">
+                <MudItem xs="12" md="4">
                     <MudCard Elevation="3" Class="h-100">
                         <MudCardHeader>
                             <CardHeaderContent>
@@ -23,20 +23,14 @@
                                 <MudListItem>
                                     <div class="d-flex justify-space-between">
                                         <MudText>Printing Time:</MudText>
-                                        <MudText>@Model.CostBreakdown.Electricity.PrintingTimeInHours.ToString("N2") hours</MudText>
-                                    </div>
-                                </MudListItem>
-                                <MudListItem>
-                                    <div class="d-flex justify-space-between">
-                                        <MudText>Cost / kWh:</MudText>
-                                        <MudText>@Model.CostBreakdown.Electricity.CostPerKWh</MudText>
+                                        <MudText>@Model.CostBreakdown.Electricity.PrintingTimeInHours.ToString("N1") hours</MudText>
                                     </div>
                                 </MudListItem>
                                 <MudDivider Class="my-2" />
                                 <MudListItem>
                                     <div class="d-flex justify-space-between">
                                         <MudText Typo="Typo.subtitle1"><b>Total:</b></MudText>
-                                        <MudText Typo="Typo.subtitle1" Color="Color.Success"><b>@Model.CostBreakdown.Electricity.TotalCost</b></MudText>
+                                        <MudText Typo="Typo.subtitle1" Color="Color.Success"><b>@Model.CostBreakdown.Electricity.TotalCost.ToString()</b></MudText>
                                     </div>
                                 </MudListItem>
                             </MudList>
@@ -45,7 +39,7 @@
                 </MudItem>
 
                 <!-- Labor Cost -->
-                <MudItem xs="12" md="6">
+                <MudItem xs="12" md="4">
                     <MudCard Elevation="3" Class="h-100">
                         <MudCardHeader>
                             <CardHeaderContent>
@@ -61,6 +55,7 @@
                                 <MudList T="string" Dense="true">
                                     <MudListItem>
                                         <div class="d-flex justify-space-between">
+                                            <MudText>@item.Key</MudText>
                                             <MudText>Spent Hours:</MudText>
                                             <MudText>@item.Value.SpentHours.ToString("N2") hours</MudText>
                                         </div>
@@ -79,7 +74,7 @@
                 </MudItem>
 
                 <!-- Materials Cost -->
-                <MudItem xs="12">
+                <MudItem xs="12" md="4">
                     <MudCard Elevation="3">
                         <MudCardHeader>
                             <CardHeaderContent>
@@ -100,8 +95,7 @@
                                                 <HeaderContent>
                                                     <MudTh>Description</MudTh>
                                                     <MudTh>Quantity</MudTh>
-                                                    <MudTh>Cost / Unit</MudTh>
-                                                    <MudTh>Total</MudTh>
+                                                    <MudTh>Total Cost</MudTh>
                                                 </HeaderContent>
                                                 <RowTemplate Context="material">
                                                     <MudTd DataLabel="Description">@material.Description</MudTd>

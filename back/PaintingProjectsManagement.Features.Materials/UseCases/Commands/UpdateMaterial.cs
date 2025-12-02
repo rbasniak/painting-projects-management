@@ -20,6 +20,7 @@ public class UpdateMaterial : IEndpoint
     {
         public Guid Id { get; set; } 
         public string Name { get; set; } = string.Empty;
+        public int CategoryId { get; set; } // TODO: validate enum range
         public double PackageContentAmount { get; set; }
         public int PackageContentUnit { get; set; }
         public double PackagePriceAmount { get; set; }
@@ -67,6 +68,7 @@ public class UpdateMaterial : IEndpoint
 
             material.UpdateDetails(
                 request.Name,
+                (MaterialCategory)request.CategoryId,
                 new Quantity(request.PackageContentAmount, (PackageContentUnit)request.PackageContentUnit),
                 new Money(request.PackagePriceAmount, request.PackagePriceCurrency)
             );

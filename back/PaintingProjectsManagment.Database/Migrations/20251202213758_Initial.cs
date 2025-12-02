@@ -147,7 +147,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                     Tenant = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    CategoryId = table.Column<string>(type: "text", nullable: false),
+                    CategoryId = table.Column<int>(type: "integer", nullable: false),
                     CategoryName = table.Column<string>(type: "text", nullable: false),
                     Unit = table.Column<int>(type: "integer", maxLength: 50, nullable: false),
                     UpdatedUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -197,6 +197,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Category = table.Column<int>(type: "integer", nullable: false),
                     PackageContent_Amount = table.Column<double>(type: "double precision", nullable: false),
                     PackageContent_Unit = table.Column<int>(type: "integer", nullable: false),
                     PackagePrice_Amount = table.Column<double>(type: "double precision", nullable: false),

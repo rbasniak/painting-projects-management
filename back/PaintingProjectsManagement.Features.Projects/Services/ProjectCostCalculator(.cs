@@ -56,7 +56,7 @@ internal class ProjectCostCalculator(
             costBreakdown.Labor.Add(stepGroup.Key.ToString(), laborCost);
         }
 
-        foreach (var categoryGroup in projectMaterials.GroupBy(x => x.Value.MaterialDefinition.CategoryId))
+        foreach (var categoryGroup in projectMaterials.GroupBy(x => x.Value.MaterialDefinition.CategoryName))
         {
             var materialsCosts = new List<MaterialsCost>();
 

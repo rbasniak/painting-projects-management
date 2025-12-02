@@ -57,6 +57,8 @@ internal sealed class MaterialUpdatedHandler :
         var integrationEvent = new MaterialUpdatedV1(
             material.Id,
             material.Name,
+            (int)material.Category,
+            material.Category.ToString(),
             material.PackageContent.Amount,
             material.PackageContent.Unit.ToString(),
             material.PackagePrice.Amount,

@@ -17,6 +17,7 @@ public class ProjectDetails
     public static ProjectDetails FromModel(Project project, ProjectCostBreakdown projectCostBreakdown)
     {
         ArgumentNullException.ThrowIfNull(project);
+        ArgumentNullException.ThrowIfNull(projectCostBreakdown);
 
         return new ProjectDetails
         {
@@ -27,6 +28,7 @@ public class ProjectDetails
             EndDate = project.EndDate,
             Steps = project.Steps.Select(x => ProjectStepDataDetails.FromModel(x)).ToArray(),
             // Materials = materialDetails ?? Array.Empty<MaterialDetails>(),
+            CostBreakdown = ProjectCostDetails.FromModel(projectCostBreakdown),
             References = project.References.Select(r => new UrlReference
             {
                 Id = r.Id,

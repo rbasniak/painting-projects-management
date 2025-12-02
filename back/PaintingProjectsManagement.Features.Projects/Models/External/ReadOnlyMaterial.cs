@@ -5,7 +5,7 @@ public sealed record ReadOnlyMaterial
     public required string Tenant { get; init; } = string.Empty!;
     public required Guid Id { get; init; }
     public required string Name { get; set; } = string.Empty;
-    public required string CategoryId { get; set; } = string.Empty;
+    public required int CategoryId { get; set; }  
     public required string CategoryName { get; set; } = string.Empty!;
     public required Money PricePerUnit { get; set; }
     public required MaterialUnit Unit { get; set; } = default!;

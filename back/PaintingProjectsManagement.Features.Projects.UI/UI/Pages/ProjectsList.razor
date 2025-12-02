@@ -87,7 +87,8 @@
         var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
 
         var parameters = new DialogParameters { ["Model"] = projectDetails };
-        var dialog = DialogService.Show<ProjectCostBreakdownDialog>("Project", parameters);
+        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+        var dialog = DialogService.Show<ProjectCostBreakdownDialog>("Project", parameters, options);
     }
 
     private async Task Edit(ProjectDetails project)

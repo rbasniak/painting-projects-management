@@ -28,6 +28,8 @@ public class Material_Integration_Event_Handlers_Tests
         var integrationEvent = new MaterialCreatedV1(
             materialId,
             "Test Material",
+            (int)MaterialCategory.Paints,
+            MaterialCategory.Paints.ToString(),
             100.0,
             "Mililiters",
             25.50,
@@ -53,6 +55,8 @@ public class Material_Integration_Event_Handlers_Tests
         readOnlyMaterial.Name.ShouldBe("Test Material");
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.255); // 25.50 / 100
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
+        readOnlyMaterial.CategoryId.ShouldBe(((int)MaterialCategory.Paints));
+        readOnlyMaterial.CategoryName.ShouldBe(MaterialCategory.Paints.ToString());
         readOnlyMaterial.UpdatedUtc.ShouldNotBe(default(DateTime));
     }
 
@@ -66,6 +70,8 @@ public class Material_Integration_Event_Handlers_Tests
         var createEvent = new MaterialCreatedV1(
             materialId,
             "Original Material",
+            (int)MaterialCategory.Varnishes,
+            MaterialCategory.Varnishes.ToString(),
             100.0,
             "Mililiters",
             25.50,
@@ -84,6 +90,8 @@ public class Material_Integration_Event_Handlers_Tests
         var updateEvent = new MaterialUpdatedV1(
             materialId,
             "Updated Material",
+            (int)MaterialCategory.Primers,
+            MaterialCategory.Primers.ToString(),
             200.0,
             "Mililiters",
             35.75,
@@ -117,6 +125,8 @@ public class Material_Integration_Event_Handlers_Tests
         var updateEvent = new MaterialUpdatedV1(
             materialId,
             "New Material",
+            (int)MaterialCategory.Primers,
+            MaterialCategory.Primers.ToString(),
             150.0,
             "Mililiters",
             30.00,
@@ -137,6 +147,8 @@ public class Material_Integration_Event_Handlers_Tests
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("New Material");
+        readOnlyMaterial.CategoryId.ShouldBe(((int)MaterialCategory.Primers));
+        readOnlyMaterial.CategoryName.ShouldBe(MaterialCategory.Primers.ToString());
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.2); // 30.00 / 150
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
@@ -151,6 +163,8 @@ public class Material_Integration_Event_Handlers_Tests
         var createEvent = new MaterialCreatedV1(
             materialId,
             "Material To Delete",
+            (int)MaterialCategory.Paints,
+            MaterialCategory.Paints.ToString(),
             100.0,
             "Mililiters",
             25.50,
@@ -225,6 +239,8 @@ public class Material_Integration_Event_Handlers_Tests
         var integrationEvent = new MaterialCreatedV1(
             materialId,
             "Test Material",
+            (int)MaterialCategory.Masking,
+            MaterialCategory.Masking.ToString(),
             0.0, // Zero package content
             "Mililiters",
             25.50,
@@ -259,6 +275,8 @@ public class Material_Integration_Event_Handlers_Tests
         var createEvent = new MaterialCreatedV1(
             materialId,
             "Original Material",
+            (int)MaterialCategory.Masking,
+            MaterialCategory.Masking.ToString(),
             100.0,
             "Mililiters",
             25.50,
@@ -277,6 +295,8 @@ public class Material_Integration_Event_Handlers_Tests
         var updateEvent = new MaterialUpdatedV1(
             materialId,
             "Updated Material",
+            (int)MaterialCategory.Masking,
+            MaterialCategory.Masking.ToString(),
             0.0, // Zero package content
             "Mililiters",
             35.75,
@@ -309,10 +329,10 @@ public class Material_Integration_Event_Handlers_Tests
         var materialId = Guid.NewGuid();
 
         // Act - Publish events in sequence
-        var createEvent = new MaterialCreatedV1(materialId, "Material", 100.0, "Mililiters", 25.50, "USD");
+        var createEvent = new MaterialCreatedV1(materialId, "Material", (int)MaterialCategory.Masking, MaterialCategory.Masking.ToString(), 100.0, "Mililiters", 25.50, "USD");
         await TestingServer.PublishIntegrationEventAsync(createEvent, "RODRIGO.BASNIAK", TestUser);
 
-        var updateEvent = new MaterialUpdatedV1(materialId, "Updated Material", 200.0, "Mililiters", 35.75, "USD");
+        var updateEvent = new MaterialUpdatedV1(materialId, "Updated Material", (int)MaterialCategory.Masking, MaterialCategory.Masking.ToString(), 200.0, "Mililiters", 35.75, "USD");
         await TestingServer.PublishIntegrationEventAsync(updateEvent, "RODRIGO.BASNIAK", TestUser);
 
         var deleteEvent = new MaterialDeletedV1(materialId);

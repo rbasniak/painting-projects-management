@@ -9,10 +9,10 @@ public class List_Materials_Tests
     public async Task Seed()
     {
         // Create test materials for different users
-        var rodrigoMaterial1 = new Material("rodrigo.basniak", "Rodrigo Material 1", new Quantity(1, PackageContentUnit.Each), new Money(10.0, "USD"));
-        var rodrigoMaterial2 = new Material("rodrigo.basniak", "Rodrigo Material 2", new Quantity(1, PackageContentUnit.Each), new Money(5.0, "USD"));
-        var ricardoMaterial1 = new Material("ricardo.smarzaro", "Ricardo Material 1", new Quantity(1, PackageContentUnit.Each), new Money(15.0, "USD"));
-        var ricardoMaterial2 = new Material("ricardo.smarzaro", "Ricardo Material 2", new Quantity(1, PackageContentUnit.Each), new Money(8.0, "USD"));
+        var rodrigoMaterial1 = new Material("rodrigo.basniak", "Rodrigo Material 1", MaterialCategory.Paints, new Quantity(1, PackageContentUnit.Each), new Money(10.0, "USD"));
+        var rodrigoMaterial2 = new Material("rodrigo.basniak", "Rodrigo Material 2", MaterialCategory.Paints, new Quantity(1, PackageContentUnit.Each), new Money(5.0, "USD"));
+        var ricardoMaterial1 = new Material("ricardo.smarzaro", "Ricardo Material 1", MaterialCategory.Paints, new Quantity(1, PackageContentUnit.Each), new Money(15.0, "USD"));
+        var ricardoMaterial2 = new Material("ricardo.smarzaro", "Ricardo Material 2", MaterialCategory.Paints, new Quantity(1, PackageContentUnit.Each), new Money(8.0, "USD"));
 
         using (var context = TestingServer.CreateContext())
         {
