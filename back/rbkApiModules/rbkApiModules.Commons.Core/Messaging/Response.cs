@@ -2,6 +2,9 @@
 
 namespace rbkApiModules.Commons.Core;
 
+/// <summary>
+/// Base response class for all <see cref="IDispatcher"/> responses.
+/// </summary>
 public abstract class BaseResponse
 {
     private ProblemDetails _error = default!;
@@ -44,6 +47,10 @@ public abstract class BaseResponse
     }
 }
 
+
+/// <summary>
+/// Response class for command type requests.
+/// </summary>
 public sealed class CommandResponse : BaseResponse
 {
     internal CommandResponse()
@@ -79,6 +86,59 @@ public sealed class CommandResponse : BaseResponse
     }
 }
 
+/// <summary>
+/// Response class for typed command type requests.
+/// </summary>
+public sealed class CommandResponse<T> : BaseResponse
+{
+    private T _data = default!;
+
+    internal CommandResponse()
+    {
+    }
+
+    public static CommandResponse<T> Success(T result)
+    {
+        return new CommandResponse<T>()
+        {
+            Error = null,
+            IsValid = true,
+            Data = result
+        };
+    }
+
+    public static CommandResponse<T> Failure(ProblemDetails problem)
+    {
+        return new CommandResponse<T>()
+        {
+            Error = problem,
+            IsValid = false,
+            Data = default!
+        };
+    }
+
+    public new T Data
+    {
+        get
+        {
+            if (!IsValid)
+            {
+                throw new InvalidOperationException("Cannot access Data when response is not valid.");
+            }
+
+            return _data;
+        }
+        private set
+        {
+            _data = value;
+        }
+    }
+}
+
+
+/// <summary>
+/// Response class for query type requests.
+/// </summary>
 public sealed class QueryResponse : BaseResponse
 {
     internal QueryResponse()
@@ -114,7 +174,9 @@ public sealed class QueryResponse : BaseResponse
     }
 }
 
-// New typed query response for module-to-module communication
+/// <summary>
+/// Response class for typed query type requests.
+/// </summary>
 public sealed class QueryResponse<T> : BaseResponse
 {
     private T _data = default!;
@@ -159,4 +221,5 @@ public sealed class QueryResponse<T> : BaseResponse
             _data = value;
         }
     }
+
 }
