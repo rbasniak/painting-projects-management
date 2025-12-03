@@ -1,6 +1,6 @@
 using PaintingProjectsManagement.Features.Materials.Abstractions;
 
-namespace PaintingProjectsManagement.Features.Materials;
+namespace PaintingProjectsManagement.Features.Materials.UseCases.Integrations;
 
 internal sealed class MaterialDeletedHandler : IDomainEventHandler<MaterialDeleted>
 {

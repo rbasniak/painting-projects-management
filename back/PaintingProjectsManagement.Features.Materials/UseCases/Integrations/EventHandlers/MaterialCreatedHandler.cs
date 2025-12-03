@@ -1,7 +1,6 @@
 using PaintingProjectsManagement.Features.Materials.Abstractions;
-using System.Diagnostics;
 
-namespace PaintingProjectsManagement.Features.Materials;
+namespace PaintingProjectsManagement.Features.Materials.UseCases.Integrations;
 
 internal sealed class MaterialCreatedHandler : IDomainEventHandler<MaterialCreated>
 {

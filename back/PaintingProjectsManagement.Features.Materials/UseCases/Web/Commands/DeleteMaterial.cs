@@ -1,4 +1,4 @@
-﻿namespace PaintingProjectsManagement.Features.Materials;
+﻿namespace PaintingProjectsManagement.Features.Materials.UseCases.Web;
 
 public class DeleteMaterial : IEndpoint
 {

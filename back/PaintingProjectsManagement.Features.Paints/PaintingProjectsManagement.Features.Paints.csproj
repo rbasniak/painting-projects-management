@@ -3,6 +3,12 @@
 	<!-- Common properties are now in Directory.Build.props -->
 
 	<ItemGroup>
+	  <Compile Remove="Events\**" />
+	  <EmbeddedResource Remove="Events\**" />
+	  <None Remove="Events\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\PaintingProjectsManagement.Features.Authorization\PaintingProjectsManagement.Features.Authorization.csproj" />
 		<ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagement.FeatureDependencies\PaintingProjectsManagement.FeatureDependencies.csproj" />
@@ -10,10 +16,5 @@
 
 
 	<!-- Analyzer reference is now centralized in Directory.Build.props -->
-
-
-	<ItemGroup>
-	  <Folder Include="Events\" />
-	</ItemGroup>
 	
 </Project>

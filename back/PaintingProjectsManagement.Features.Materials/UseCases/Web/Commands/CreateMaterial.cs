@@ -1,10 +1,10 @@
-﻿namespace PaintingProjectsManagement.Features.Materials;
+﻿namespace PaintingProjectsManagement.Features.Materials.UseCases.Web;
 
-public class UpdateMaterial : IEndpoint
+public class CreateMaterial : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/api/materials", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/materials", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(request, cancellationToken);
 
@@ -12,13 +12,12 @@ public class UpdateMaterial : IEndpoint
         })
         .Produces<MaterialDetails>(StatusCodes.Status200OK)
         .RequireAuthorization()
-        .WithName("Update Material")
+        .WithName("Create Material")
         .WithTags("Materials");
     }
 
-    public class Request : AuthenticatedRequest, ICommand
+    public class Request : AuthenticatedRequest, ICommand // TODO: migrate to IAuthenticationContext
     {
-        public Guid Id { get; set; } 
         public string Name { get; set; } = string.Empty;
         public int CategoryId { get; set; } // TODO: validate enum range
         public double PackageContentAmount { get; set; }
@@ -29,21 +28,29 @@ public class UpdateMaterial : IEndpoint
 
     public class Validator : SmartValidator<Request, Material>
     {
-        public Validator(DbContext context) : base(context)
+        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
         }
 
         protected override void ValidateBusinessRules()
         {
             RuleFor(x => x.Name)
-                .MustAsync(async (request, name, cancellationToken) => 
+                .MustAsync(async (request, name, cancellationToken) =>
                 {
-                    return !await Context.Set<Material>().AnyAsync(x => x.Name == name && x.Id != request.Id && x.TenantId == request.Identity.Tenant, cancellationToken);
+                    return !await Context.Set<Material>().AnyAsync(x => x.Name == name && x.TenantId == request.Identity.Tenant, cancellationToken);
                 })
-                .WithMessage("A material with this name already exists.");
+                .WithMessage(LocalizationService?.LocalizeString(MaterialsMessages.Create.MaterialWithNameAlreadyExists) ?? "A material with this name already exists.");
 
             RuleFor(x => x.PackageContentAmount)
                 .GreaterThan(0)
+                .WithMessage("Package amount must be greater than zero.");
+
+            RuleFor(x => x.PackageContentUnit)
+                .Must((value) =>
+                {
+                    // TODO: must be a valid enum value. Create in the library
+                    return true;
+                })
                 .WithMessage("Package amount must be greater than zero.");
 
             RuleFor(x => x.PackagePriceAmount)
@@ -52,30 +59,35 @@ public class UpdateMaterial : IEndpoint
 
             RuleFor(x => x.PackagePriceCurrency)
                 .NotEmpty()
+                // TODO: lenght is validades in the model, can we pass that exceptin oto the validation pipeline somehow?
                 .Length(3)
-                .WithMessage("Currency must be a 3-letter ISO code.");
+                .WithMessage("Currency must be a 3-letter ISO code.")
+                .Must(value =>
+                {
+                    // TODO: Check if valid currency value from external service
+                    return true;
+                })
+                .WithMessage("Invalid currency value.");
         }
     }
 
     public class Handler(DbContext _context) : ICommandHandler<Request>
-    {
-
+    { 
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var material = await _context.Set<Material>()
-                .Where(x => x.TenantId == request.Identity.Tenant)
-                .FirstAsync(x => x.Id == request.Id, cancellationToken);
-
-            material.UpdateDetails(
+            var material = new Material(
+                request.Identity.Tenant,
                 request.Name,
                 (MaterialCategory)request.CategoryId,
                 new Quantity(request.PackageContentAmount, (PackageContentUnit)request.PackageContentUnit),
                 new Money(request.PackagePriceAmount, request.PackagePriceCurrency)
             );
 
+            await _context.AddAsync(material, cancellationToken);
+
             await _context.SaveChangesAsync(cancellationToken);
 
-            var result = MaterialDetails.FromModel(material);  
+            var result = MaterialDetails.FromModel(material);
 
             return CommandResponse.Success(result);
         } 

@@ -1,5 +1,7 @@
 ﻿
 using PaintingProjectsManagement.Features.Materials;
+using PaintingProjectsManagement.Features.Materials.UseCases.Integrations;
+using PaintingProjectsManagement.Features.Materials.UseCases.Web;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
