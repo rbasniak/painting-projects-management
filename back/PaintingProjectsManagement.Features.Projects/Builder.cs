@@ -16,7 +16,8 @@ public static class Builder
             ElectricityCostPerKwh = new Money(2, "DKK"),
             LaborCostPerHour = new Money(150, "DKK"),
             MililiterPerDrop = 0.05,
-            PrinterConsumptioninKwh = 0.18
+            PrinterConsumptioninKwh = 0.18,
+            MililiterPerSpray = 0.5
         });
         
         services.AddProjectsIntegrationHandlers();

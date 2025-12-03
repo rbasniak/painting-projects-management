@@ -29,7 +29,7 @@ public class MaterialCreatedConsumer : IIntegrationEventHandler<MaterialCreatedV
                 Name = @event.Name,
                 CategoryId = @event.CategoryId,
                 CategoryName = @event.CategoryName,
-                PricePerUnit = new Money(@event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount, "USD"),
+                PricePerUnit = new Money(@event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount, @event.PackagePriceCurrency),
                 Unit = UnitsHelper.Convert(@event.PackageContentUnit),
                 UpdatedUtc = DateTime.UtcNow
             };

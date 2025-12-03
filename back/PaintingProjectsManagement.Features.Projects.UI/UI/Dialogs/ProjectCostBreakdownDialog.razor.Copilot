@@ -10,7 +10,7 @@
             <MudPaper Elevation="0" Class="pa-4 mb-4" Style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                 <MudGrid>
                     <MudItem xs="12">
-                        <MudText Typo="Typo.h5" Class="mb-3" Style="color: white; font-weight: 500;">Cost Breakdown Summary: @Model.Name</MudText>
+                        <MudText Typo="Typo.h5" Class="mb-3" Style="color: white; font-weight: 500;">Cost Breakdown Summary</MudText>
                     </MudItem>
                     <MudItem xs="12" sm="6" md="3">
                         <MudPaper Elevation="2" Class="pa-3" Style="background: rgba(255,255,255,0.95);">
@@ -124,7 +124,7 @@
                                             <TitleContent>
                                                 <div class="d-flex justify-space-between align-center" style="width: 100%;">
                                                     <MudText Typo="Typo.subtitle2" Style="font-weight: 600;">@category.Key</MudText>
-                                                    <MudChip T="string" Size="Size.Small" Color="Color.Success">@GetCategoryCost(category.Value)</MudChip>
+                                                    <MudChip T="string" Size="Size.Small" Color="Color.Primary">@category.Value.Count items</MudChip>
                                                 </div>
                                             </TitleContent>
                                             <ChildContent>
@@ -197,17 +197,10 @@
         var electricityCost = Model.CostBreakdown.Electricity.TotalCost.Amount;
         var laborCost = Model.CostBreakdown.Labor?.Sum(x => x.Value.TotalCost.Amount) ?? 0;
         var materialsCost = Model.CostBreakdown.Materials?.SelectMany(x => x.Value).Sum(x => x.TotalCost.Amount) ?? 0;
-
+        
         var total = electricityCost + laborCost + materialsCost;
         var currency = Model.CostBreakdown.Electricity.TotalCost.Currency;
-
-        return new MoneyDetails { Amount = total, Currency = currency }.ToString();
-    }
-
-    private string GetCategoryCost(IReadOnlyCollection<MaterialsCostDetails> materials)
-    {
-        var total = materials.Sum(x => x.TotalCost.Amount);
-        var currency = materials.First().TotalCost.Currency;
+        
         return new MoneyDetails { Amount = total, Currency = currency }.ToString();
     }
 }

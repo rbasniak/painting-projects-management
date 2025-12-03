@@ -79,7 +79,7 @@ public partial class DatabaseSeed
         ConsumeMaterial(illidanProject, _materialSunluWaterWashableStandardResin, (210 + 160 + 205) * 1.5, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         ConsumeMaterial(illidanProject, _materialVallejoPrimer, 150, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(illidanProject, _materialBiltemaMatteVarnish, 68+19+30, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(illidanProject, _materialBiltemaMatteVarnish, 68+19+30, MaterialUnit.Spray).GetAwaiter().GetResult();
         ConsumeMaterial(illidanProject, _materialGswVarnish, 50, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         ConsumeMaterial(illidanProject, _materialArmyPainterAcrylic, 345+50+25+115+50+75, MaterialUnit.Drop).GetAwaiter().GetResult();
@@ -109,10 +109,10 @@ public partial class DatabaseSeed
         ConsumeMaterial(sylvanasProject, _materialSunluWaterWashableStandardResin, (200 + 235 + 150) * 1.5, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         ConsumeMaterial(sylvanasProject, _materialVallejoPrimer, 225, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(sylvanasProject, _materialBiltemaMatteVarnish, 75, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(sylvanasProject, _materialBiltemaMatteVarnish, 75, MaterialUnit.Spray).GetAwaiter().GetResult();
         ConsumeMaterial(sylvanasProject, _materialGswAcrylic, 125+50+5+15, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(sylvanasProject, _materialGswChrome, 100, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(sylvanasProject, _materialTamiyaTS80, 15, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(sylvanasProject, _materialTamiyaTS80, 15, MaterialUnit.Spray).GetAwaiter().GetResult();
         ConsumeMaterial(sylvanasProject, _materialArmyPainterAcrylic, 10+20+50+10+15+25+50+50+10, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         sylvanasProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (223.0 + 200.0 + 115.0) / 20.0);
@@ -136,7 +136,7 @@ public partial class DatabaseSeed
         ConsumeMaterial(laraProject, _materialMagnet8x4, 14, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(laraProject, _materialMagnet6x4, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(laraProject, _materialTamiyaTS80, 70+5+15+50, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(laraProject, _materialTamiyaTS80, 70+5+15+50, MaterialUnit.Spray).GetAwaiter().GetResult();
 
         ConsumeMaterial(laraProject, _materialMaskingTapeTamiya10mm, 30, MaterialUnit.Centimeter).GetAwaiter().GetResult();
 
@@ -168,7 +168,7 @@ public partial class DatabaseSeed
         ConsumeMaterial(camusProject, _materialMagnet8x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(camusProject, _materialMagnet6x4, 10, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(camusProject, _materialBiltemaMatteVarnish, 92+65+35, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(camusProject, _materialBiltemaMatteVarnish, 92+65+35, MaterialUnit.Spray).GetAwaiter().GetResult();
 
         ConsumeMaterial(camusProject, _materialVallejoPrimer, 100+100+100, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(camusProject, _materialArmyPainterAcrylic, 100+75+15+25+25+125+50+50, MaterialUnit.Drop).GetAwaiter().GetResult();
@@ -208,7 +208,7 @@ public partial class DatabaseSeed
         ConsumeMaterial(kratosProject, _materialVallejoPrimer, 175+375+50+15, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(kratosProject, _materialVallejoVarnish, 500+25+25, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(kratosProject, _materialGswVarnish, 50, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(kratosProject, _materialBiltemaMatteVarnish, 110+40+105, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(kratosProject, _materialBiltemaMatteVarnish, 110+40+105, MaterialUnit.Spray).GetAwaiter().GetResult();
 
         ConsumeMaterial(kratosProject, _materialArmyPainterAcrylic, 245+640, MaterialUnit.Drop).GetAwaiter().GetResult();
 
@@ -232,9 +232,9 @@ public partial class DatabaseSeed
         ConsumeMaterial(starligtProject, _materialMagnet6x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(starligtProject, _materialMagnet3x2, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(starligtProject, _materialTamiyaTS80, 25+25+25+20, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(starligtProject, _materialTamiyaTS80, 25+25+25+20, MaterialUnit.Spray).GetAwaiter().GetResult();
 
-        ConsumeMaterial(starligtProject, _materialDisposableBrush, 2, MaterialUnit.Centimeter).GetAwaiter().GetResult();
+        ConsumeMaterial(starligtProject, _materialDisposableBrush, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
 
         starligtProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (115.0 + 85.0) / 20.0);
         ConsumeMaterial(starligtProject, _materialJayoAbsResin, (150+90+40) * 1.5, MaterialUnit.Gram).GetAwaiter().GetResult();
@@ -265,10 +265,10 @@ public partial class DatabaseSeed
         ConsumeMaterial(harleyProject, _materialVallejoPrimer, 150, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(harleyProject, _materialArmyPainterAcrylic, 40+75+40+425+45, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(harleyProject, _materialTamiyaTS80, 25 + 25 + 25 + 20, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(harleyProject, _materialBiltemaMatteVarnish, 25, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(harleyProject, _materialTamiyaTS80, 25 + 25 + 25 + 20, MaterialUnit.Spray).GetAwaiter().GetResult();
+        ConsumeMaterial(harleyProject, _materialBiltemaMatteVarnish, 25, MaterialUnit.Spray).GetAwaiter().GetResult();
 
-        ConsumeMaterial(harleyProject, _materialDisposableBrush, 2, MaterialUnit.Centimeter).GetAwaiter().GetResult();
+        ConsumeMaterial(harleyProject, _materialDisposableBrush, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
         
         ConsumeMaterial(harleyProject, _materialMaskingTape3m25mm, 60, MaterialUnit.Centimeter).GetAwaiter().GetResult();
         ConsumeMaterial(harleyProject, _materialMaskingTapeGeneric25mm, 40, MaterialUnit.Centimeter).GetAwaiter().GetResult();
@@ -303,8 +303,8 @@ public partial class DatabaseSeed
         ConsumeMaterial(sadieProject, _materialVallejoAcrylic, 45, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(sadieProject, _materialAtomAcrylic, 10+7+25+2+5+20+30, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(sadieProject, _materialDisposableBrush, 1, MaterialUnit.Centimeter).GetAwaiter().GetResult();
-        ConsumeMaterial(sadieProject, _materialDspiaeSandingDisk, 1, MaterialUnit.Centimeter).GetAwaiter().GetResult();
+        ConsumeMaterial(sadieProject, _materialDisposableBrush, 1, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(sadieProject, _materialDspiaeSandingDisk, 1, MaterialUnit.Unit).GetAwaiter().GetResult();
 
         ConsumeMaterial(sadieProject, _materialMaskingTapeTamiya10mm, 20, MaterialUnit.Centimeter).GetAwaiter().GetResult();
         ConsumeMaterial(sadieProject, _materialMaskingTapeGeneric25mm, 20, MaterialUnit.Centimeter).GetAwaiter().GetResult();
@@ -348,7 +348,7 @@ public partial class DatabaseSeed
         //ConsumeMaterial(hulkbusterProject, _materialVallejoPrimer, 175375 + 50 + 15, MaterialUnit.Drop).GetAwaiter().GetResult();
         //ConsumeMaterial(hulkbusterProject, _materialVallejoVarnish, 500 + 25 + 25, MaterialUnit.Drop).GetAwaiter().GetResult();
         //ConsumeMaterial(hulkbusterProject, _materialGswVarnish, 50, MaterialUnit.Drop).GetAwaiter().GetResult();
-        //ConsumeMaterial(hulkbusterProject, _materialBiltemaMatteVarnish, 110 + 40 + 105, MaterialUnit.Unit).GetAwaiter().GetResult();
+        //ConsumeMaterial(hulkbusterProject, _materialBiltemaMatteVarnish, 110 + 40 + 105, MaterialUnit.Spray).GetAwaiter().GetResult();
 
         //ConsumeMaterial(hulkbusterProject, _materialArmyPainterAcrylic, 245 + 640, MaterialUnit.Drop).GetAwaiter().GetResult();
 
