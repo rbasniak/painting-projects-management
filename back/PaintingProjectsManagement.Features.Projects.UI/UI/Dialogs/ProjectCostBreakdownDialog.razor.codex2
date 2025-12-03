@@ -5,18 +5,18 @@
 @namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 
 <MudDialog Class="cost-dialog">
-    <DialogContent>
-        <MudPaper Class="pa-5">
-            <MudStack Spacing="3">
-                <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween">
-                    <div>
-                        <MudText Typo="Typo.h5">Project Cost Breakdown</MudText>
-                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@Model?.Name</MudText>
-                    </div>
-                    <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Class="px-4" Icon="@Icons.Material.Filled.Payments">
-                        Total: @OverallTotal.ToString()
-                    </MudChip>
-                </MudStack>
+<DialogContent>
+    <MudPaper Class="pa-5">
+        <MudStack Spacing="3">
+            <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween">
+                <div>
+                    <MudText Typo="Typo.h5">Project Cost Breakdown</MudText>
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@Model?.Name</MudText>
+                </div>
+                <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Class="px-4" Icon="@Icons.Material.Filled.Payments">
+                    Total: @OverallTotal.ToString()
+                </MudChip>
+            </MudStack>
 
                 <MudGrid GutterSize="3">
                     <MudItem xs="12" md="4">
