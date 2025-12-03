@@ -19,4 +19,10 @@ public class ProjectSettings : IApplicationOptions
 
     [DefaultValue(1)]
     public double MililiterPerSpray { get; set; }
+
+    [DefaultValue(1.55)]
+    public double ResinWasteFactor { get; set; }
+
+    [DefaultValue(1.5)]
+    public double MaterialMarkup { get; set; }
 }

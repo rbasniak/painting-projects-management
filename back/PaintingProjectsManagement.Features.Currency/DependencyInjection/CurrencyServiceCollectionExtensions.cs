@@ -7,8 +7,9 @@ public static class CurrencyServiceCollectionExtensions
 {
     public static IServiceCollection AddCurrencyConverter(this IServiceCollection services)
     {
+        services.AddMemoryCache();
         services.AddHttpClient<ICurrencyConverter, CurrencyConverter>();
         
-     return services;
+        return services;
     }
 }

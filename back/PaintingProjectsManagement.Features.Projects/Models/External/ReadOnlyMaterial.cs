@@ -25,4 +25,15 @@ public enum MaterialUnit
     Spray = 9
 }
 
-public readonly record struct Quantity(double Value, MaterialUnit Unit);
+public readonly record struct Quantity(double Value, MaterialUnit Unit)
+{
+    public static Quantity operator *(Quantity quantity, double multiplier)
+    {
+        return new Quantity(quantity.Value * multiplier, quantity.Unit);
+    }
+
+    public static Quantity operator *(double multiplier, Quantity quantity)
+    {
+        return quantity * multiplier;
+    }
+}

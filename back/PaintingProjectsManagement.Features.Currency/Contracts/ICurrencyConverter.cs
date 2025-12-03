@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace PaintingProjectsManagement.Features.Currency;
 
@@ -12,11 +13,14 @@ public interface ICurrencyConverter
 internal class CurrencyConverter : ICurrencyConverter
 {
     private readonly HttpClient _httpClient;
+    private readonly IMemoryCache _cache;
     private const string ApiBaseUrl = "https://api.frankfurter.app";
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(1);
 
-    public CurrencyConverter(HttpClient httpClient)
+    public CurrencyConverter(HttpClient httpClient, IMemoryCache cache)
     {
         _httpClient = httpClient;
+        _cache = cache;
         _httpClient.BaseAddress = new Uri(ApiBaseUrl);
     }
 
@@ -25,6 +29,13 @@ internal class CurrencyConverter : ICurrencyConverter
         if (fromCurrency.Equals(toCurrency, StringComparison.InvariantCultureIgnoreCase))
         {
             return 1.0;
+        }
+
+        var cacheKey = $"conversion_rate_{fromCurrency.ToUpper()}_{toCurrency.ToUpper()}";
+        
+        if (_cache.TryGetValue(cacheKey, out double cachedRate))
+        {
+            return cachedRate;
         }
 
         try
@@ -40,6 +51,7 @@ internal class CurrencyConverter : ICurrencyConverter
 
             if (result?.Rates != null && result.Rates.TryGetValue(toCurrency.ToUpper(), out var rate))
             {
+                _cache.Set(cacheKey, rate, CacheDuration);
                 return rate;
             }
 
@@ -53,15 +65,23 @@ internal class CurrencyConverter : ICurrencyConverter
 
     public async Task<Dictionary<string, string>> GetAvailableCurrencies()
     {
+        const string cacheKey = "available_currencies";
+        
+        if (_cache.TryGetValue(cacheKey, out Dictionary<string, string>? cachedCurrencies))
+        {
+            return cachedCurrencies!;
+        }
+
         try
         {
             var response = await _httpClient.GetAsync("/currencies");
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            var currencies = JsonSerializer.Deserialize<Dictionary<string, string>>(content);
+            var currencies = JsonSerializer.Deserialize<Dictionary<string, string>>(content) ?? new Dictionary<string, string>();
 
-            return currencies ?? new Dictionary<string, string>();
+            _cache.Set(cacheKey, currencies, CacheDuration);
+            return currencies;
         }
         catch (HttpRequestException ex)
         {

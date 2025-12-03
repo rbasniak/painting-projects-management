@@ -17,7 +17,9 @@ public static class Builder
             LaborCostPerHour = new Money(150, "DKK"),
             MililiterPerDrop = 0.05,
             PrinterConsumptioninKwh = 0.18,
-            MililiterPerSpray = 0.5
+            MililiterPerSpray = 0.5,
+            ResinWasteFactor = 1.55,
+            MaterialMarkup = 1.0
         });
         
         services.AddProjectsIntegrationHandlers();

@@ -65,6 +65,8 @@ internal class ProjectCostCalculator(
         {
             var materialsCosts = new List<MaterialsCost>();
 
+            var resinWasteFactor = categoryGroup.Key == "Resins" ? projectSettings.ResinWasteFactor : 1.0; // TODO: Dangerous hardcoded value
+
             foreach (var pm in categoryGroup)
             {
                 var projectMaterial = pm.Value.ProjectMaterial;
@@ -75,7 +77,8 @@ internal class ProjectCostCalculator(
                     MaterialId = pm.Key,
                     Description = materiaDefinition.Name,
                     Category = materiaDefinition.CategoryName,
-                    Quantity = unitsConverter.Convert(projectMaterial.Quantity, materiaDefinition.Unit),
+                    Quantity = unitsConverter.Convert(projectMaterial.Quantity * resinWasteFactor, materiaDefinition.Unit),
+                    Markup = projectSettings.MaterialMarkup,
                     CostPerUnit = await materiaDefinition.PricePerUnit.Convert(currency, currencyConverter)
                 });
             }

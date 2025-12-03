@@ -43,6 +43,7 @@ public class MaterialsCost
     public required string Category { get; init; } = string.Empty;
     public required Quantity Quantity { get; init; }
     public required Money CostPerUnit { get; init; }
-    public Money TotalCost => new(CostPerUnit.Amount * Quantity.Value, CostPerUnit.Currency);
+    public required double Markup { get; init; }
+    public Money TotalCost => new(CostPerUnit.Amount * Quantity.Value * Markup, CostPerUnit.Currency);
 }
 

@@ -7,7 +7,6 @@ public enum MaterialCategory
     Primers = 2,
     Varnishes = 3,
     Masking = 4,
-    Sandpapers = 5,
-    Resins = 6,
-    Magnets = 7,
+    Resins = 5,
+    Magnets = 6,
 }
