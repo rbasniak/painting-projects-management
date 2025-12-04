@@ -100,4 +100,66 @@ public class Project : TenantEntity
             .Where(x => x.Step is ProjectStepDefinition.Printing)
             .Sum(step => step.Duration);
     }
+
+    public void UpdateMaterialQuantity(Guid materialId, double quantity, MaterialUnit unit)
+    {
+        if (quantity <= 0)
+        {
+            RemoveMaterial(materialId);
+            return;
+        }
+
+        var material = _materials.FirstOrDefault(m => m.MaterialId == materialId);
+        if (material != null)
+        {
+            var oldQuantity = material.Quantity.Value;
+            material.UpdateQuantity(quantity, unit);
+            RaiseDomainEvent(new ProjectMaterialQuantityChanged(Id, materialId, quantity));
+        }
+        else
+        {
+            // Material doesn't exist, add it
+            ConsumeMaterial(materialId, quantity, unit);
+        }
+    }
+
+    public void RemoveMaterial(Guid materialId)
+    {
+        var material = _materials.FirstOrDefault(m => m.MaterialId == materialId);
+        if (material != null)
+        {
+            _materials.Remove(material);
+            RaiseDomainEvent(new ProjectMaterialRemoved(Id, materialId));
+        }
+    }
+
+    public void UpdateStep(Guid stepId, DateTime? date, double? duration)
+    {
+        var step = _steps.FirstOrDefault(s => s.Id == stepId);
+        if (step == null)
+        {
+            throw new InvalidOperationException($"Step with id {stepId} not found");
+        }
+
+        var oldDate = step.Date;
+        var oldDuration = step.Duration;
+        
+        step.Update(date, duration);
+        
+        var newDate = date ?? oldDate;
+        var newDuration = duration ?? oldDuration;
+        var endDate = newDate.AddHours(newDuration);
+        
+        RaiseDomainEvent(new BuildingStepUpdated(Id, stepId, newDate, endDate));
+    }
+
+    public void RemoveStep(Guid stepId)
+    {
+        var step = _steps.FirstOrDefault(s => s.Id == stepId);
+        if (step != null)
+        {
+            _steps.Remove(step);
+            RaiseDomainEvent(new BuildingStepRemoved(Id, stepId));
+        }
+    }
 }

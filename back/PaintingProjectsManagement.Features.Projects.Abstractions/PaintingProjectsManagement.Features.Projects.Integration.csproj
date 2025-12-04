@@ -4,4 +4,7 @@
 	<ItemGroup>
 		<PackageReference Include="rbkApiModules.Commons.Core" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Events\" />
+	</ItemGroup>
 </Project> 

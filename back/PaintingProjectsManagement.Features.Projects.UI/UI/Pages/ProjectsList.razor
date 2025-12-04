@@ -1,4 +1,4 @@
-﻿@page "/projects/my-projects"
+@page "/projects/my-projects"
 @using MudBlazor
 @using PaintingProjectsManagement.UI.Modules.Projects 
 @using PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
@@ -21,8 +21,9 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name" Style="width: 50%">@context.Name</MudTd>
-            <MudTd Style="width: 100px">
+            <MudTd Style="width: 150px">
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
+                <MudIconButton Icon="@Icons.Material.Filled.PlayArrow" OnClick="() => NavigateToExecution(context)" Color="Color.Success" Title="Execution" />
                 <MudIconButton Icon="@Icons.Material.Filled.CurrencyExchange" OnClick="() => GetProjectCost(context)" Color="Color.Primary" />
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
             </MudTd>
@@ -36,6 +37,7 @@
 @code {
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
     [Inject] public IDialogService DialogService { get; set; } = default!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
 
     private List<ProjectDetails> projects = new();
     private string searchString = string.Empty;
@@ -135,5 +137,10 @@
             await ProjectsService.DeleteAsync(project.Id, default);
             projects.Remove(project);
         }
+    }
+
+    private void NavigateToExecution(ProjectDetails project)
+    {
+        NavigationManager.NavigateTo($"/projects/{project.Id}/execution");
     }
 } 

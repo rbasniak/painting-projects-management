@@ -1,0 +1,159 @@
+@page "/projects/{ProjectId}/execution/materials"
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Projects
+@using PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
+@using PaintingProjectsManagement.UI.Modules.Shared
+
+<MudPaper Class="pa-4">
+    <MudStack Spacing="3">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+            <MudText Typo="Typo.h5">Project Materials</MudText>
+            <MudButton Variant="Variant.Filled" 
+                      Color="Color.Primary" 
+                      Size="Size.Large"
+                      StartIcon="@Icons.Material.Filled.Add"
+                      OnClick="AddMaterial">
+                Add Material
+            </MudButton>
+        </MudStack>
+
+        @if (isLoading)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-4" />
+        }
+        else if (materials.Any())
+        {
+            <MudTable Items="materials" Hover="true" Dense="false" Striped="true">
+                <HeaderContent>
+                    <MudTh>Material Name</MudTh>
+                    <MudTh>Category</MudTh>
+                    <MudTh>Price Per Unit</MudTh>
+                    <MudTh>Quantity</MudTh>
+                    <MudTh Style="width: 150px;">Actions</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context.MaterialName</MudTd>
+                    <MudTd>@context.CategoryName</MudTd>
+                    <MudTd>@context.PricePerUnitFormatted</MudTd>
+                    <MudTd>@context.QuantityFormatted</MudTd>
+                    <MudTd>
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                      OnClick="() => EditQuantity(context)" 
+                                      Color="Color.Primary" 
+                                      Size="Size.Small" />
+                        <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                      OnClick="() => DeleteMaterial(context)" 
+                                      Color="Color.Error" 
+                                      Size="Size.Small" />
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
+        else
+        {
+            <MudAlert Severity="Severity.Info">No materials added to this project yet.</MudAlert>
+        }
+
+        <MudButton Variant="Variant.Text" 
+                  Color="Color.Default" 
+                  StartIcon="@Icons.Material.Filled.ArrowBack"
+                  OnClick="NavigateBack">
+            Back to Execution
+        </MudButton>
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Parameter] public Guid ProjectId { get; set; }
+    
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public IDialogService DialogService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+
+    private List<ProjectMaterialDetails> materials = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMaterialsAsync();
+    }
+
+    private async Task LoadMaterialsAsync()
+    {
+        try
+        {
+            isLoading = true;
+            materials = (await ProjectsService.GetProjectMaterialsAsync(ProjectId, default)).ToList();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error loading materials: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task AddMaterial()
+    {
+        var parameters = new DialogParameters 
+        { 
+            ["ProjectId"] = ProjectId
+        };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var dialog = DialogService.Show<AddMaterialWizardDialog>("Add Material", parameters, options);
+        var result = await dialog.Result;
+        
+        if (!result.Canceled)
+        {
+            await LoadMaterialsAsync();
+        }
+    }
+
+    private async Task EditQuantity(ProjectMaterialDetails material)
+    {
+        var parameters = new DialogParameters 
+        { 
+            ["Material"] = material,
+            ["ProjectId"] = ProjectId
+        };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<AdjustMaterialQuantityDialog>("Adjust Quantity", parameters, options);
+        var result = await dialog.Result;
+        
+        if (!result.Canceled)
+        {
+            await LoadMaterialsAsync();
+        }
+    }
+
+    private async Task DeleteMaterial(ProjectMaterialDetails material)
+    {
+        bool? confirm = await DialogService.ShowMessageBox(
+            "Delete Material",
+            $"Remove '{material.MaterialName}' from this project?",
+            yesText: "Delete",
+            cancelText: "Cancel");
+
+        if (confirm == true)
+        {
+            try
+            {
+                await ProjectsService.DeleteProjectMaterialAsync(ProjectId, material.MaterialId, default);
+                Snackbar.Add("Material removed successfully", Severity.Success);
+                await LoadMaterialsAsync();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Error deleting material: {ex.Message}", Severity.Error);
+            }
+        }
+    }
+
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo($"/projects/{ProjectId}/execution");
+    }
+}
