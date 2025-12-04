@@ -12,6 +12,7 @@ public class Create_Material_Tests
         var existingMaterial = new Material(
             "rodrigo.basniak",
             "Existing Material",
+            MaterialCategory.Paints,
             new Quantity(1, PackageContentUnit.Each),
             new Money(10.0, "USD")
         );

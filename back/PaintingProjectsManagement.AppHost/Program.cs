@@ -4,7 +4,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var postgres = builder.AddPostgres("ppm-db", 
         userName: builder.AddParameter("PostgresUser", value: "admin"),
-        password: builder.AddParameter("PostgresPassword", value: "admin", true))
+        password: builder.AddParameter("PostgresPassword", value: "admin", publishValueAsDefault: true))
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataVolume()
     .WithPgAdmin(pg =>
@@ -15,7 +15,11 @@ var postgres = builder.AddPostgres("ppm-db",
         pg.WithEnvironment("PGADMIN_DEFAULT_PASSWORD", "admin");
     });
 
-var database = postgres.AddDatabase("ppm-database");
+var database = postgres.AddDatabase("ppm-postgress");
+
+var pgConnectionString = builder.AddConnectionString(
+    "ppm-database",
+    ReferenceExpression.Create($"{database};Include Error Detail=true"));
 
 var broker = builder
     .AddRabbitMQ("ppm-rabbitmq", 
@@ -26,9 +30,9 @@ var broker = builder
     .WithDataVolume();
 
 var apiService = builder.AddProject<Projects.PaintingProjectsManagement_Api>("ppm-api")
-    .WithReference(database)
+    .WithReference(pgConnectionString)
     .WithReference(broker)
-    .WaitFor(database)
+    .WaitFor(pgConnectionString)
     .WaitFor(broker)
     .WithScalarUI()
     .WithSwaggerUI()

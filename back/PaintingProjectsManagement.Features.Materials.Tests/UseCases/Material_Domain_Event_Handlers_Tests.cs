@@ -23,7 +23,7 @@ public class Material_Domain_Event_Handlers_Tests
     {
         // Arrange
         var materialName = "Test Material 1";
-        var packageContent = new Quantity(100.0, PackageContentUnit.Milliliter);
+        var packageContent = new Quantity(100.0, PackageContentUnit.Mililiter);
         var packagePrice = new Money(25.50, "USD");
 
         // Act - Create material (this will raise MaterialCreated domain event)
@@ -43,7 +43,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialCreatedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialCreatedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialCreatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == materialDetails.Id &&
             envelope.Event.Name == materialName &&
             envelope.Event.PackageContentAmount == packageContent.Amount &&
@@ -78,7 +78,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialUpdatedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == "Updated Name" &&
             envelope.Event.PackageContentAmount == material.PackageContent.Amount &&
@@ -96,7 +96,7 @@ public class Material_Domain_Event_Handlers_Tests
         var material = await CreateTestMaterialAsync("Test Material 2");
 
         // Act - Update package content (this will raise MaterialPackageContentChanged domain event)
-        var newPackageContent = new Quantity(200.0, PackageContentUnit.Milliliter);
+        var newPackageContent = new Quantity(200.0, PackageContentUnit.Mililiter);
         var updateRequest = new UpdateMaterial.Request
         {
             Id = material.Id,
@@ -114,7 +114,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialUpdatedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == material.Name &&
             envelope.Event.PackageContentAmount == newPackageContent.Amount &&
@@ -150,7 +150,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialUpdatedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == material.Name &&
             envelope.Event.PackageContentAmount == material.PackageContent.Amount &&
@@ -168,7 +168,7 @@ public class Material_Domain_Event_Handlers_Tests
         var material = await CreateTestMaterialAsync("Original Name 2");
 
         // Act - Update multiple properties (this will raise multiple domain events)
-        var newPackageContent = new Quantity(150.0, PackageContentUnit.Milliliter);
+        var newPackageContent = new Quantity(150.0, PackageContentUnit.Mililiter);
         var newPackagePrice = new Money(30.00, "USD");
         var updateRequest = new UpdateMaterial.Request
         {
@@ -187,7 +187,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialUpdatedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == "Updated Name 2" &&
             envelope.Event.PackageContentAmount == newPackageContent.Amount &&
@@ -212,7 +212,7 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.WaitForAllDomainEventsProcessedAsync();
 
         // Assert - Verify MaterialDeletedV1 integration event was published to outbox
-        await TestingServer.AssertOutboxMessageAfterAsync<MaterialDeletedV1>(TestContext.Current.TestStart.Value.UtcDateTime, envelope =>
+        await TestingServer.AssertOutboxMessageAfterAsync<MaterialDeletedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.TenantId == "RODRIGO.BASNIAK" &&
             envelope.Username == TestUser);
@@ -264,7 +264,7 @@ public class Material_Domain_Event_Handlers_Tests
         {
             Name = name,
             PackageContentAmount = 100.0,
-            PackageContentUnit = (int)PackageContentUnit.Milliliter,
+            PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 25.50,
             PackagePriceCurrency = "USD"
         };

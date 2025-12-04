@@ -1,14 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk"><!-- Common properties are now in Directory.Build.props -->
 
-	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\PaintingProjectsManagement.FeatureDependencies\PaintingProjectsManagement.FeatureDependencies.csproj" />
-		<ProjectReference Include="..\rbkApiModules\rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj" />
-	</ItemGroup>
 
 </Project>

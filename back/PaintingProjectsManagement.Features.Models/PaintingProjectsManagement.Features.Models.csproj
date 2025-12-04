@@ -1,19 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+  <!-- Common properties are now in Directory.Build.props -->
 
   <ItemGroup>
-    <ProjectReference Include="..\PaintingProjectsManagement.Features.Models.Abstractions\PaintingProjectsManagement.Features.Models.Abstractions.csproj" />
-    <ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
-    <ProjectReference Include="..\PaintingProjectsManagement.FeatureDependencies\PaintingProjectsManagement.FeatureDependencies.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.Features.Models.Abstractions\PaintingProjectsManagement.Features.Models.Integration.csproj" />
   </ItemGroup>
 
 	<ItemGroup>
-		<Analyzer Include="..\rbkApiModules\rbkApiModules.Analysers\rbkApiModules.Analysers\bin\$(Configuration)\netstandard2.0\rbkApiModules.Analysers.dll" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+		<PackageReference Include="rbkApiModules.Commons.Core" />
 	</ItemGroup>
 
 </Project>

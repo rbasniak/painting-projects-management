@@ -1,0 +1,230 @@
+@using System.Linq
+@using MudBlazor
+@using PaintingProjectsManagement.Features.Projects.UI
+
+@namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
+
+<MudDialog Class="cost-dialog">
+<DialogContent>
+    <MudPaper Class="pa-5">
+        <MudStack Spacing="3">
+            <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween">
+                <div>
+                    <MudText Typo="Typo.h5">Project Cost Breakdown</MudText>
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@Model?.Name</MudText>
+                </div>
+                <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Class="px-4" Icon="@Icons.Material.Filled.Payments">
+                    Total: @OverallTotal.ToString()
+                </MudChip>
+            </MudStack>
+
+                <MudGrid GutterSize="3">
+                    <MudItem xs="12" md="4">
+                        <MudPaper Class="stat-card" Elevation="1">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudAvatar Icon="@Icons.Material.Filled.ElectricBolt" Color="Color.Warning" Size="Size.Medium" />
+                                <div>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Electricity</MudText>
+                                    <MudText Typo="Typo.h6">@Model?.CostBreakdown.Electricity.TotalCost</MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">@Model?.CostBreakdown.Electricity.PrintingTimeInHours.ToString("N1") hours</MudText>
+                                </div>
+                            </MudStack>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="12" md="4">
+                        <MudPaper Class="stat-card" Elevation="1">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudAvatar Icon="@Icons.Material.Filled.Engineering" Color="Color.Info" Size="Size.Medium" />
+                                <div>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Labor Total</MudText>
+                                    <MudText Typo="Typo.h6">@LaborTotal.ToString()</MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">@TotalLaborHours.ToString("N2") hours</MudText>
+                                </div>
+                            </MudStack>
+                        </MudPaper>
+                    </MudItem>
+                    <MudItem xs="12" md="4">
+                        <MudPaper Class="stat-card" Elevation="1">
+                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                <MudAvatar Icon="@Icons.Material.Filled.Inventory2" Color="Color.Secondary" Size="Size.Medium" />
+                                <div>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">Materials Total</MudText>
+                                    <MudText Typo="Typo.h6">@MaterialsTotal.ToString()</MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">@TotalMaterialLines materials</MudText>
+                                </div>
+                            </MudStack>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+
+                <MudGrid Spacing="3">
+                    <MudItem xs="12" md="4">
+                        <MudPaper Class="section-card pa-4" Elevation="1">
+                            <MudStack Spacing="2">
+                                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                    <MudIcon Icon="@Icons.Material.Filled.ElectricBolt" Color="Color.Warning" Size="Size.Medium" />
+                                    <MudText Typo="Typo.h6">Electricity</MudText>
+                                </MudStack>
+                                <MudText Color="Color.Secondary">
+                                    Detailed usage information for the printing process.
+                                </MudText>
+                                <MudList T="string" Dense="true">
+                                    <MudListItem T="string">
+                                        <MudText Typo="Typo.body2">Printing Time</MudText>
+                                        <MudSpacer />
+                                        <MudText Typo="Typo.body2">@Model?.CostBreakdown.Electricity.PrintingTimeInHours.ToString("N1") h</MudText>
+                                    </MudListItem>
+                                    <MudListItem T="string">
+                                        <MudText Typo="Typo.body2">Cost per kWh</MudText>
+                                        <MudSpacer />
+                                        <MudText Typo="Typo.body2">@Model?.CostBreakdown.Electricity.CostPerKWh</MudText>
+                                    </MudListItem>
+                                    <MudDivider Class="my-2" />
+                                    <MudListItem T="string">
+                                        <MudText Typo="Typo.subtitle2" Class="font-weight-bold">Total Electricity Cost</MudText>
+                                        <MudSpacer />
+                                        <MudText Typo="Typo.subtitle2" Color="Color.Success" Class="font-weight-bold">@Model?.CostBreakdown.Electricity.TotalCost</MudText>
+                                    </MudListItem>
+                                </MudList>
+                            </MudStack>
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" md="4">
+                        <MudPaper Class="section-card pa-4" Elevation="1">
+                            <MudStack Spacing="2">
+                                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                    <MudIcon Icon="@Icons.Material.Filled.Engineering" Color="Color.Info" Size="Size.Medium" />
+                                    <MudText Typo="Typo.h6">Labor</MudText>
+                                </MudStack>
+                                @if (Model?.CostBreakdown.Labor?.Any() == true)
+                                {
+                                    <MudTable Dense="true" Hover="true" Elevation="0" Items="@Model!.CostBreakdown.Labor">
+                                        <HeaderContent>
+                                            <MudTh>Role</MudTh>
+                                            <MudTh Align="Right">Hours</MudTh>
+                                            <MudTh Align="Right">Cost</MudTh>
+                                        </HeaderContent>
+                                        <RowTemplate Context="roleCost">
+                                            <MudTd DataLabel="Role">@roleCost.Key</MudTd>
+                                            <MudTd DataLabel="Hours" Align="Right">@roleCost.Value.SpentHours.ToString("N2")</MudTd>
+                                            <MudTd DataLabel="Cost" Align="Right">@roleCost.Value.TotalCost</MudTd>
+                                        </RowTemplate>
+                                        <FooterContent>
+                                            <MudTd Class="font-weight-bold">Total</MudTd>
+                                            <MudTd Align="Right" Class="font-weight-bold">@TotalLaborHours.ToString("N2")</MudTd>
+                                            <MudTd Align="Right" Class="font-weight-bold">@LaborTotal</MudTd>
+                                        </FooterContent>
+                                    </MudTable>
+                                }
+                                else
+                                {
+                                    <MudAlert Severity="Severity.Info" Dense="true">No labor entries recorded.</MudAlert>
+                                }
+                            </MudStack>
+                        </MudPaper>
+                    </MudItem>
+
+                    <MudItem xs="12" md="4">
+                        <MudPaper Class="section-card pa-4" Elevation="1">
+                            <MudStack Spacing="2">
+                                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                    <MudIcon Icon="@Icons.Material.Filled.Inventory2" Color="Color.Secondary" Size="Size.Medium" />
+                                    <MudText Typo="Typo.h6">Materials</MudText>
+                                </MudStack>
+                                @if (Model?.CostBreakdown.Materials?.Any() == true)
+                                {
+                                    <MudExpansionPanels Elevation="0" Dense="true">
+                                        @foreach (var category in Model!.CostBreakdown.Materials)
+                                        {
+                                            <MudExpansionPanel Text="@category.Key" DisableRipple="true">
+                                                <MudTable Dense="true" Hover="true" Elevation="0" Items="@category.Value">
+                                                    <HeaderContent>
+                                                        <MudTh>Description</MudTh>
+                                                        <MudTh Align="Right">Quantity</MudTh>
+                                                        <MudTh Align="Right">Total Cost</MudTh>
+                                                    </HeaderContent>
+                                                    <RowTemplate Context="material">
+                                                        <MudTd DataLabel="Description">@material.Description</MudTd>
+                                                        <MudTd DataLabel="Quantity" Align="Right">@material.Quantity.ToString("N2")</MudTd>
+                                                        <MudTd DataLabel="Total Cost" Align="Right">@material.TotalCost</MudTd>
+                                                    </RowTemplate>
+                                                </MudTable>
+                                            </MudExpansionPanel>
+                                        }
+                                    </MudExpansionPanels>
+                                    <MudDivider Class="my-2" />
+                                    <MudStack Row="true" JustifyContent="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                                        <MudText Typo="Typo.subtitle2" Class="font-weight-bold">Materials Total</MudText>
+                                        <MudChip T="string" Color="Color.Secondary" Variant="Variant.Outlined" Class="font-weight-bold">@MaterialsTotal</MudChip>
+                                    </MudStack>
+                                }
+                                else
+                                {
+                                    <MudAlert Severity="Severity.Info" Dense="true">No materials used.</MudAlert>
+                                }
+                            </MudStack>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+            </MudStack>
+        </MudPaper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] public IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public ProjectDetails Model { get; set; }
+
+    private MoneyDetails LaborTotal => new()
+    {
+        Amount = Model?.CostBreakdown.Labor?.Values.Sum(x => x.TotalCost.Amount) ?? 0,
+        Currency = Model?.CostBreakdown.Labor?.Values.FirstOrDefault()?.TotalCost.Currency ?? DefaultCurrency
+    };
+
+    private MoneyDetails MaterialsTotal => new()
+    {
+        Amount = Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).Sum(x => x.TotalCost.Amount) ?? 0,
+        Currency = Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).FirstOrDefault()?.TotalCost.Currency ?? DefaultCurrency
+    };
+
+    private MoneyDetails OverallTotal => new()
+    {
+        Amount = (Model?.CostBreakdown.Electricity.TotalCost.Amount ?? 0)
+                 + (Model?.CostBreakdown.Labor?.Values.Sum(x => x.TotalCost.Amount) ?? 0)
+                 + (Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).Sum(x => x.TotalCost.Amount) ?? 0),
+        Currency = DefaultCurrency
+    };
+
+    private string DefaultCurrency => Model?.CostBreakdown.Electricity.TotalCost.Currency
+                                      ?? Model?.CostBreakdown.Labor?.Values.FirstOrDefault()?.TotalCost.Currency
+                                      ?? Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).FirstOrDefault()?.TotalCost.Currency
+                                      ?? string.Empty;
+
+    private double TotalLaborHours => Model?.CostBreakdown.Labor?.Values.Sum(x => x.SpentHours) ?? 0;
+
+    private int TotalMaterialLines => Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).Count() ?? 0;
+
+    private void Close() => MudDialog.Close(DialogResult.Ok(true));
+}
+
+<style>
+    .cost-dialog .stat-card {
+        padding: 16px;
+        border-radius: 12px;
+        border: 1px solid var(--mud-palette-divider);
+    }
+
+    .cost-dialog .section-card {
+        border-radius: 12px;
+        border: 1px solid var(--mud-palette-divider);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+</style>

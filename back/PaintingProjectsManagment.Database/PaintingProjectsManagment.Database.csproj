@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+  <!-- Common properties are now in Directory.Build.props -->
 
   <ItemGroup>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="rbkApiModules.Identity.Core" />
+	<PackageReference Include="rbkApiModules.Commons.Core" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,8 +16,6 @@
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Models\PaintingProjectsManagement.Features.Models.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Paints\PaintingProjectsManagement.Features.Paints.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Projects\PaintingProjectsManagement.Features.Projects.csproj" />
-    <ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
-    <ProjectReference Include="..\rbkApiModules\rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,7 @@
 global using Shouldly;
 global using PaintingProjectsManagement.Features.Materials;
+global using PaintingProjectsManagement.Features.Materials.UseCases.Web;
+global using PaintingProjectsManagement.Features.Materials.UseCases.Integrations;
 global using PaintingProjectsManagement.Api;
 global using Microsoft.Extensions.DependencyInjection;
 global using rbkApiModules.Commons.Testing;

@@ -25,7 +25,7 @@ public class Material_End_To_End_Event_Flow_Tests
 
         // Arrange
         var materialName = "End-to-End Test Material";
-        var packageContent = new Quantity(100.0, PackageContentUnit.Milliliter);
+        var packageContent = new Quantity(100.0, PackageContentUnit.Mililiter);
         var packagePrice = new Money(25.50, "USD");
 
         // Act - Create material through API (triggers domain event → integration event → consumer)
@@ -51,13 +51,13 @@ public class Material_End_To_End_Event_Flow_Tests
         // Assert - Verify read-only material was created in the Projects module
         using var context = TestingServer.CreateContext();
 
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialDetails.Id);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe(materialName);
-        readOnlyMaterial.PricePerUnit.ShouldBe(0.255); // 25.50 / 100
-        readOnlyMaterial.Unit.ShouldBe(packageContent.Unit.ToString());
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.255); // 25.50 / 100
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
         readOnlyMaterial.UpdatedUtc.ShouldNotBe(default(DateTime));
     }
 
@@ -75,7 +75,7 @@ public class Material_End_To_End_Event_Flow_Tests
             Id = material.Id,
             Name = "Updated Material",
             PackageContentAmount = 200.0,
-            PackageContentUnit = (int)PackageContentUnit.Milliliter,
+            PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 35.75,
             PackagePriceCurrency = "USD"
         };
@@ -92,13 +92,13 @@ public class Material_End_To_End_Event_Flow_Tests
 
         // Assert - Verify read-only material was updated in the Projects module
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material.Id);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0.17875); // 35.75 / 200
-        readOnlyMaterial.Unit.ShouldBe("Milliliter");
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.17875); // 35.75 / 200
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 4)]
@@ -112,7 +112,7 @@ public class Material_End_To_End_Event_Flow_Tests
         // Verify material exists in read-only store
         using (var context = TestingServer.CreateContext())
         {
-            var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            var readOnlyMaterial = await context.Set<Material>()
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material.Id);
             readOnlyMaterial.ShouldBeNull();
         }
@@ -131,7 +131,7 @@ public class Material_End_To_End_Event_Flow_Tests
         // Assert - Verify read-only material was deleted from the Projects module
         using (var context = TestingServer.CreateContext())
         {
-            var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            var readOnlyMaterial = await context.Set<Material>()
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material.Id);
             readOnlyMaterial.ShouldBeNull();
         }
@@ -153,7 +153,7 @@ public class Material_End_To_End_Event_Flow_Tests
             Id = material1.Id,
             Name = "Updated Material 1",
             PackageContentAmount = 150.0,
-            PackageContentUnit = (int)PackageContentUnit.Milliliter,
+            PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 30.00,
             PackagePriceCurrency = "USD"
         };
@@ -167,7 +167,7 @@ public class Material_End_To_End_Event_Flow_Tests
         {
             Name = "Material 3",
             PackageContentAmount = 75.0,
-            PackageContentUnit = (int)PackageContentUnit.Milliliter,
+            PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 15.00,
             PackagePriceCurrency = "USD"
         };
@@ -187,23 +187,23 @@ public class Material_End_To_End_Event_Flow_Tests
         using var context = TestingServer.CreateContext();
 
         // Material 1 should be updated
-        var readOnlyMaterial1 = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial1 = await context.Set<Material>()
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material1.Id);
         readOnlyMaterial1.ShouldNotBeNull();
         readOnlyMaterial1.Name.ShouldBe("Updated Material 1");
-        readOnlyMaterial1.PricePerUnit.ShouldBe(0.2); // 30.00 / 150
+        readOnlyMaterial1.PricePerUnit.Amount.ShouldBe(0.2); // 30.00 / 150
 
         // Material 2 should be deleted
-        var readOnlyMaterial2 = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial2 = await context.Set<Material>()
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material2.Id);
         readOnlyMaterial2.ShouldBeNull();
 
         // Material 3 should be created
-        var readOnlyMaterial3 = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial3 = await context.Set<Material>()
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material3.Id);
         readOnlyMaterial3.ShouldNotBeNull();
         readOnlyMaterial3.Name.ShouldBe("Material 3");
-        readOnlyMaterial3.PricePerUnit.ShouldBe(0.2); // 15.00 / 75
+        readOnlyMaterial3.PricePerUnit.Amount.ShouldBe(0.2); // 15.00 / 75
     }
 
     [Test, NotInParallel(Order = 6)]
@@ -232,7 +232,7 @@ public class Material_End_To_End_Event_Flow_Tests
             Id = material.Id,
             Name = "Update 2",
             PackageContentAmount = 300.0,
-            PackageContentUnit = (int)PackageContentUnit.Milliliter,
+            PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = update1.PackagePriceAmount,
             PackagePriceCurrency = update1.PackagePriceCurrency
         };
@@ -252,13 +252,13 @@ public class Material_End_To_End_Event_Flow_Tests
 
         // Assert - Verify final state reflects the last update
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == material.Id);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Update 2");
-        readOnlyMaterial.PricePerUnit.ShouldBe(40.0 / 300.0); // 40.00 / 300
-        readOnlyMaterial.Unit.ShouldBe("Milliliter");
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(40.0 / 300.0); // 40.00 / 300
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 99)]
@@ -275,7 +275,7 @@ public class Material_End_To_End_Event_Flow_Tests
         {
             Name = name,
             PackageContentAmount = 100.0,
-            PackageContentUnit = (int)PackageContentUnit.Milliliter,
+            PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 25.50,
             PackagePriceCurrency = "USD"
         };

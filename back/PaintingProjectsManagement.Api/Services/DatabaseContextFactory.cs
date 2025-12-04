@@ -13,7 +13,7 @@ public class DatabaseContextFactory : IDesignTimeDbContextFactory<DatabaseContex
     {
 		try
 		{
-            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=ppm";
+            var connectionString = "Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=ppm;Include Error Detail=true;Log Parameters=true";
 
             var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
             optionsBuilder

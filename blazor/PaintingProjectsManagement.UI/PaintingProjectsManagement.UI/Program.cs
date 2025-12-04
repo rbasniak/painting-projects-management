@@ -1,10 +1,15 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using MudBlazor.Services;
 using PaintingProjectsManagement.Blazor.Modules.Authentication;
 using PaintingProjectsManagement.UI.Modules.Materials;
 using PaintingProjectsManagement.UI.Modules.Models;
 using PaintingProjectsManagement.UI.Modules.Shared;
+using System;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PaintingProjectsManagement.UI
 {
@@ -20,6 +25,7 @@ namespace PaintingProjectsManagement.UI
 
             builder.Services.AddMaterialsModule();
             builder.Services.AddModelsModule();
+            builder.Services.AddProjectsModule();
             builder.Services.AddAuthenticationModule();
 
             // Register storage service

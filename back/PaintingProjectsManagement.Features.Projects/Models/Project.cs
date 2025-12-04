@@ -48,9 +48,11 @@ public class Project : TenantEntity
         EndDate = endDate;
     }
 
-    public void ConsumeMaterial(Guid materialId, double quantity, PackageContentUnit unit)
+    public void ConsumeMaterial(Guid materialId, double quantity, MaterialUnit unit)
     {
-        // TODO: make it idempotent
+        // TODO: make it idempotent, also:
+        // User can send the same material multiple times, we should aggregate it
+        // How to handle different units for the same material?
 
         _materials.Add(new MaterialForProject(Id, materialId, quantity, unit));
 
@@ -70,9 +72,32 @@ public class Project : TenantEntity
         RaiseDomainEvent(new BuildingStepAddedToTheProject(Id, (int)step, start, end));
     }
 
-    public void SetTotalPrintingHeight(int v)
+    internal double GetTotalWorkingHours()
     {
-        throw new NotImplementedException();
+        if (_steps == null)
+        {
+            throw new InvalidOperationException($"Property {nameof(Steps)} is not loaded from the database");
+        }
+
+        return _steps
+            .Where(x => x.Step is
+                ProjectStepDefinition.Planning or
+                ProjectStepDefinition.Supporting or
+                ProjectStepDefinition.PostProcessing or 
+                ProjectStepDefinition.Cleaning or 
+                ProjectStepDefinition.Painting)
+            .Sum(step => step.Duration);
     }
-    } 
+
+    internal double GetTotalPrintingTimeInHours()
+    {
+        if (_steps == null)
+        {
+            throw new InvalidOperationException($"Property {nameof(Steps)} is not loaded from the database");
+        }
+
+        return _steps
+            .Where(x => x.Step is ProjectStepDefinition.Printing)
+            .Sum(step => step.Duration);
+    }
 }

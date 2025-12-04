@@ -1,0 +1,36 @@
+<Project>
+
+  <!-- Common properties for all projects -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn> <!-- Missing XML comment warnings -->
+  </PropertyGroup>
+
+  <!-- Properties specific to test projects -->
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Tests'))">
+    <IsPackable>false</IsPackable>
+    <OutputType>Exe</OutputType>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <!-- Properties specific to UI/Blazor projects -->
+  <PropertyGroup Condition="$(MSBuildProjectName.Contains('.UI'))">
+    <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+  </PropertyGroup>
+
+  <!-- Properties specific to API projects -->
+  <PropertyGroup Condition="$(MSBuildProjectName.Contains('.Api')) or $(MSBuildProjectName.Contains('.AppHost'))">
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+ 
+  <ItemGroup>
+    <PackageReference Include="rbkApiModules.Analysers" />
+  </ItemGroup>
+
+</Project>

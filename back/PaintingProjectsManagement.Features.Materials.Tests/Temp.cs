@@ -53,9 +53,9 @@ public class ServiceIntegrationTests
     {
         var context = TestContext.Current;
 
-        Debug.WriteLine($"*** Starting Test: {context.ClassContext.ClassType.Name}.{context.TestName}");
+        Debug.WriteLine($"*** Starting Test: {context.ClassContext.ClassType.Name}.{context.Metadata.TestName}");
 
-        File.AppendAllLines("C:\\temp\\text.log", [$"    >>>  TEST {context.ClassContext.ClassType.Name}.{context.TestName}"]);
+        File.AppendAllLines("C:\\temp\\text.log", [$"    >>>  TEST {context.ClassContext.ClassType.Name}.{context.Metadata.TestName}"]);
     }
 
     [BeforeEvery(HookType.Assembly)]
@@ -82,14 +82,14 @@ public class ServiceIntegrationTests
     {
         var context = TestContext.Current;
 
-        var message1 = $"    <<<  TEST {context.ClassContext.ClassType.Name}.{context.TestName}";
-        var message2 = $"            Result={context.Result.State}";
+        var message1 = $"    <<<  TEST {context.ClassContext.ClassType.Name}.{context.Metadata.TestName}";
+        var message2 = $"            Result={context.Execution.Result.State}";
 
         var messages = new string[] { message1, message2 };
 
-        if (TestContext.Current.ObjectBag.ContainsKey("db_name"))
+        if (TestContext.Current.StateBag.ContainsKey("db_name"))
         {
-            var message3 = $"            DB={TestContext.Current.ObjectBag["db_name"]}";
+            var message3 = $"            DB={TestContext.Current.StateBag["db_name"]}";
             messages = new string[] { message1, message3, message2 };
         }
 

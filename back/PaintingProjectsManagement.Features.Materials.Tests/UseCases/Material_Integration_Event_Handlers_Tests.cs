@@ -28,8 +28,10 @@ public class Material_Integration_Event_Handlers_Tests
         var integrationEvent = new MaterialCreatedV1(
             materialId,
             "Test Material",
+            (int)MaterialCategory.Paints,
+            MaterialCategory.Paints.ToString(),
             100.0,
-            "Milliliters",
+            "Mililiters",
             25.50,
             "USD"
         );
@@ -46,13 +48,15 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was created
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Test Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0.255); // 25.50 / 100
-        readOnlyMaterial.Unit.ShouldBe("Milliliters");
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.255); // 25.50 / 100
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
+        readOnlyMaterial.CategoryId.ShouldBe(((int)MaterialCategory.Paints));
+        readOnlyMaterial.CategoryName.ShouldBe(MaterialCategory.Paints.ToString());
         readOnlyMaterial.UpdatedUtc.ShouldNotBe(default(DateTime));
     }
 
@@ -66,8 +70,10 @@ public class Material_Integration_Event_Handlers_Tests
         var createEvent = new MaterialCreatedV1(
             materialId,
             "Original Material",
+            (int)MaterialCategory.Varnishes,
+            MaterialCategory.Varnishes.ToString(),
             100.0,
-            "Milliliters",
+            "Mililiters",
             25.50,
             "USD"
         );
@@ -84,8 +90,10 @@ public class Material_Integration_Event_Handlers_Tests
         var updateEvent = new MaterialUpdatedV1(
             materialId,
             "Updated Material",
+            (int)MaterialCategory.Primers,
+            MaterialCategory.Primers.ToString(),
             200.0,
-            "Milliliters",
+            "Mililiters",
             35.75,
             "USD"
         );
@@ -98,13 +106,13 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was updated
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0.17875); // 35.75 / 200
-        readOnlyMaterial.Unit.ShouldBe("Milliliters");
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.17875); // 35.75 / 200
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 4)]
@@ -117,8 +125,10 @@ public class Material_Integration_Event_Handlers_Tests
         var updateEvent = new MaterialUpdatedV1(
             materialId,
             "New Material",
+            (int)MaterialCategory.Primers,
+            MaterialCategory.Primers.ToString(),
             150.0,
-            "Milliliters",
+            "Mililiters",
             30.00,
             "USD"
         );
@@ -132,13 +142,15 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was created
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("New Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0.2); // 30.00 / 150
-        readOnlyMaterial.Unit.ShouldBe("Milliliters");
+        readOnlyMaterial.CategoryId.ShouldBe(((int)MaterialCategory.Primers));
+        readOnlyMaterial.CategoryName.ShouldBe(MaterialCategory.Primers.ToString());
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.2); // 30.00 / 150
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 5)]
@@ -151,8 +163,10 @@ public class Material_Integration_Event_Handlers_Tests
         var createEvent = new MaterialCreatedV1(
             materialId,
             "Material To Delete",
+            (int)MaterialCategory.Paints,
+            MaterialCategory.Paints.ToString(),
             100.0,
-            "Milliliters",
+            "Mililiters",
             25.50,
             "USD"
         );
@@ -166,7 +180,7 @@ public class Material_Integration_Event_Handlers_Tests
         // Verify material exists
         using (var context = TestingServer.CreateContext())
         {
-            var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            var readOnlyMaterial = await context.Set<Material>()
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
             readOnlyMaterial.ShouldNotBeNull();
         }
@@ -185,7 +199,7 @@ public class Material_Integration_Event_Handlers_Tests
         // Assert - Verify read-only material was deleted
         using (var context = TestingServer.CreateContext())
         {
-            var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            var readOnlyMaterial = await context.Set<Material>()
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
             readOnlyMaterial.ShouldBeNull();
         }
@@ -210,7 +224,7 @@ public class Material_Integration_Event_Handlers_Tests
         // Assert - Should not throw exception and complete successfully
         // (The handler should handle the case where the material doesn't exist gracefully)
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
         readOnlyMaterial.ShouldBeNull();
     }
@@ -225,8 +239,10 @@ public class Material_Integration_Event_Handlers_Tests
         var integrationEvent = new MaterialCreatedV1(
             materialId,
             "Test Material",
+            (int)MaterialCategory.Masking,
+            MaterialCategory.Masking.ToString(),
             0.0, // Zero package content
-            "Milliliters",
+            "Mililiters",
             25.50,
             "USD"
         );
@@ -240,13 +256,13 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was created with zero unit price
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Test Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0); // Should be 0 when package content is 0
-        readOnlyMaterial.Unit.ShouldBe("Milliliters");
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0); // Should be 0 when package content is 0
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 8)]
@@ -259,8 +275,10 @@ public class Material_Integration_Event_Handlers_Tests
         var createEvent = new MaterialCreatedV1(
             materialId,
             "Original Material",
+            (int)MaterialCategory.Masking,
+            MaterialCategory.Masking.ToString(),
             100.0,
-            "Milliliters",
+            "Mililiters",
             25.50,
             "USD"
         );
@@ -277,8 +295,10 @@ public class Material_Integration_Event_Handlers_Tests
         var updateEvent = new MaterialUpdatedV1(
             materialId,
             "Updated Material",
+            (int)MaterialCategory.Masking,
+            MaterialCategory.Masking.ToString(),
             0.0, // Zero package content
-            "Milliliters",
+            "Mililiters",
             35.75,
             "USD"
         );
@@ -291,13 +311,13 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was updated with zero unit price
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
-        readOnlyMaterial.PricePerUnit.ShouldBe(0); // Should be 0 when package content is 0
-        readOnlyMaterial.Unit.ShouldBe("Milliliters");
+        readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0); // Should be 0 when package content is 0
+        readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
 
     [Test, NotInParallel(Order = 9)]
@@ -309,10 +329,10 @@ public class Material_Integration_Event_Handlers_Tests
         var materialId = Guid.NewGuid();
 
         // Act - Publish events in sequence
-        var createEvent = new MaterialCreatedV1(materialId, "Material", 100.0, "Milliliters", 25.50, "USD");
+        var createEvent = new MaterialCreatedV1(materialId, "Material", (int)MaterialCategory.Masking, MaterialCategory.Masking.ToString(), 100.0, "Mililiters", 25.50, "USD");
         await TestingServer.PublishIntegrationEventAsync(createEvent, "RODRIGO.BASNIAK", TestUser);
 
-        var updateEvent = new MaterialUpdatedV1(materialId, "Updated Material", 200.0, "Milliliters", 35.75, "USD");
+        var updateEvent = new MaterialUpdatedV1(materialId, "Updated Material", (int)MaterialCategory.Masking, MaterialCategory.Masking.ToString(), 200.0, "Mililiters", 35.75, "USD");
         await TestingServer.PublishIntegrationEventAsync(updateEvent, "RODRIGO.BASNIAK", TestUser);
 
         var deleteEvent = new MaterialDeletedV1(materialId);
@@ -327,7 +347,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify final state (material should be deleted)
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldBeNull();

@@ -32,7 +32,7 @@ public class DatabaseContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DomainOutboxMessagesConfig).Assembly);
 
         modelBuilder.Entity<MaterialForProject>()
-            .HasOne<Material>()
+            .HasOne<PaintingProjectsManagement.Features.Materials.Material>()
             .WithMany()
             .HasForeignKey(x => x.MaterialId)
             .OnDelete(DeleteBehavior.Restrict);

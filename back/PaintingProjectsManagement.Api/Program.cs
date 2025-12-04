@@ -171,9 +171,6 @@ public class Program
         builder.Services.AddScoped<IIntegrationOutbox, IntegrationOutbox>();
         builder.Services.AddSingleton<IBrokerSubscriber, RabbitMqSubscriber>();
 
-        // Register domain-to-integration event handlers for Materials and integration consumers for Projects
-        builder.Services.AddProjectsIntegrationHandlers();
-
         builder.Services.AddRbkApiCoreSetup(options => options
              .EnableBasicAuthenticationHandler()
              .UseDefaultCompression()
@@ -202,20 +199,21 @@ public class Program
             .AllowUserSelfRegistration()
         );
 
-        builder.Services.AddRbkUIDefinitions(Assembly.GetAssembly(typeof(Program)));
+        builder.Services.AddRbkUIDefinitions(typeof(Program).Assembly);
 
         // Application modules
         builder.Services.AddMaterialsFeature();
         builder.Services.AddModelsFeature();
+        builder.Services.AddProjectsFeature();
 
-        // Configure OpenAPI with custom schema naming for nested classes
-        builder.Services.AddOpenApi(config =>
+        // Common features
+        builder.Services.AddCurrencyConverter();
+
+        // Configure Swagger/OpenAPI with custom schema naming for nested classes
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(options =>
         {
-            //
-            // with .NET 9 OpenApi, to support fully qualified type names for nested types in the schema, use the
-            // CustomSchemaIds extension method (but from our own extension method :) )
-            //
-            config.CustomSchemaIds(x => x.FullName?.Split('.').Last().Replace("+", ".", StringComparison.Ordinal));
+            options.CustomSchemaIds(x => x.FullName?.Split('.').Last().Replace("+", ".", StringComparison.Ordinal));
         });
 
         // Register file storage service

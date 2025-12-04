@@ -1,8 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using PaintingProjectsManagement.Blazor.Modules.Authentication;
+using PaintingProjectsManagement.UI.Modules.Materials;
 using PaintingProjectsManagement.UI.Modules.Shared;
 
-namespace PaintingProjectsManagement.UI.Modules.Materials;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class Builder
 {

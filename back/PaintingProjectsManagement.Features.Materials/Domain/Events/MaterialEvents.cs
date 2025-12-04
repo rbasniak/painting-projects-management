@@ -5,6 +5,7 @@
 public sealed record MaterialCreated(
     Guid MaterialId,
     string Name,
+    MaterialCategory Category,
     Quantity PackageContent,
     Money PackagePrice
 ) : IDomainEvent;
@@ -36,4 +37,12 @@ public sealed record MaterialPackagePriceChanged(
 public sealed record MaterialNameChanged(
     Guid MaterialId,
     string newName
+) : IDomainEvent;
+
+// Fired when material category is changed
+[EventName("Materials.MaterialCategoryChanged", 1)]
+public sealed record MaterialCategoryChanged(
+    Guid MaterialId,
+    MaterialCategory OldCategory,
+    MaterialCategory NewCategory
 ) : IDomainEvent;
