@@ -1,7 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <DisableImplicitAspNetCoreFrameworkReference>true</DisableImplicitAspNetCoreFrameworkReference>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,3 +21,4 @@
   </ItemGroup>
 
 </Project>
+

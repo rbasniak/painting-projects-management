@@ -7,12 +7,15 @@
   </ItemGroup>
 
   <ItemGroup>
+	<PackageReference Include="rbkApiModules.Identity.Core" Version="10.0.0"/>
+	<PackageReference Include="rbkApiModules.Commons.Core" Version="10.0.0"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Materials\PaintingProjectsManagement.Features.Materials.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Models\PaintingProjectsManagement.Features.Models.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Paints\PaintingProjectsManagement.Features.Paints.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Projects\PaintingProjectsManagement.Features.Projects.csproj" />
-    <ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
-    <ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj" />
   </ItemGroup>
 
 </Project>

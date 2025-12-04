@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- Common properties are now in Directory.Build.props -->
-
 	<ItemGroup>
-		<ProjectReference Include="..\PaintingProjectsManagement.FeatureDependencies\PaintingProjectsManagement.FeatureDependencies.csproj" />
-		<ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
+		<PackageReference Include="FluentValidation" Version="12.1.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
+		<PackageReference Include="rbkApiModules.Commons.Core" Version="10.0.0"/>
 	</ItemGroup>
 </Project>

@@ -4,10 +4,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Models.Abstractions\PaintingProjectsManagement.Features.Models.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
-    <ProjectReference Include="..\PaintingProjectsManagement.FeatureDependencies\PaintingProjectsManagement.FeatureDependencies.csproj" />
   </ItemGroup>
 
-	<!-- Analyzer reference is now centralized in Directory.Build.props -->
+	<ItemGroup>
+		<PackageReference Include="FluentValidation" Version="12.1.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
+		<PackageReference Include="rbkApiModules.Commons.Core" Version="10.0.0"/>
+	</ItemGroup>
 
 </Project>

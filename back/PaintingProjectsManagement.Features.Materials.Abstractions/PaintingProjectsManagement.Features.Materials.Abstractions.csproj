@@ -2,10 +2,10 @@
 
   <!-- Common properties are now in Directory.Build.props -->
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
-  </ItemGroup>
-
+	<ItemGroup>
+		<PackageReference Include="rbkApiModules.Commons.Core" Version="10.0.0"/>
+	</ItemGroup>
+	
   <ItemGroup>
     <Folder Include="Enums\" />
   </ItemGroup>

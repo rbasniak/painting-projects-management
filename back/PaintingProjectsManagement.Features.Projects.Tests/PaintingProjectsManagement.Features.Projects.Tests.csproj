@@ -3,20 +3,19 @@
 	<!-- Common test properties and packages are now in Directory.Build.props -->
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.1.0" />
+		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" Version="2.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0" />
+		<PackageReference Include="TUnit" Version="1.3.25" />
+		<PackageReference Include="Shouldly" Version="4.3.0" />
+		<PackageReference Include="Moq" Version="4.20.72" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagement.Testing.Core\PaintingProjectsManagement.Testing.Core.csproj" />
-		<ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Update="Microsoft.Testing.Extensions.TrxReport" Version="2.0.2" />
-	  <PackageReference Update="TUnit" Version="1.2.11" />
 	</ItemGroup>
 
 </Project>

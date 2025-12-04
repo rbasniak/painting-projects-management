@@ -4,12 +4,11 @@
 
 	<!-- Common test packages are now in Directory.Build.props -->
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj" />
+		<PackageReference Include="rbkApiModules.Testing.Core" Version="10.0.0"/>
 	</ItemGroup>
 	
 </Project>
