@@ -4,7 +4,7 @@
 	
   <ItemGroup>
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Materials.Abstractions\PaintingProjectsManagement.Features.Materials.Abstractions.csproj" />
-    <ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
+    <ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.FeatureDependencies\PaintingProjectsManagement.FeatureDependencies.csproj" />
   </ItemGroup>
 

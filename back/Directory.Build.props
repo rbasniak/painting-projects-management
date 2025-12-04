@@ -46,7 +46,7 @@
 
   <!-- Common analyzers for feature projects (excluding tests and rbkApiModules) -->
   <ItemGroup Condition="$(MSBuildProjectName.StartsWith('PaintingProjectsManagement.Features.')) and !$(MSBuildProjectName.EndsWith('.Tests')) and !$(MSBuildProjectName.EndsWith('.UI'))">
-    <Analyzer Include="..\rbkApiModules\rbkApiModules.Analysers\rbkApiModules.Analysers\bin\$(Configuration)\netstandard2.0\rbkApiModules.Analysers.dll" />
+    <Analyzer Include="..\..\..\rbk-api-modules\rbkApiModules.Analysers\rbkApiModules.Analysers\bin\$(Configuration)\netstandard2.0\rbkApiModules.Analysers.dll" />
   </ItemGroup>
 
 </Project>

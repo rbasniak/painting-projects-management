@@ -2,11 +2,12 @@
 
 public enum MaterialCategory
 {
-    Others = 0,
-    Paints = 1,
-    Primers = 2,
-    Varnishes = 3,
-    Masking = 4,
-    Resins = 5,
-    Magnets = 6,
+    Unknown = 0,
+    Resins = 10, // DO NOT CHANGE, there's hardcoded references to this value
+    Magnets = 20,
+    Primers = 30,
+    Paints = 40,
+    Varnishes = 50,
+    Masking = 60,
+    Others = 70,
 }

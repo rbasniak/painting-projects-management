@@ -9,16 +9,16 @@
         <MudPaper Class="pa-5">
             <MudStack Spacing="3">
                 <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween">
-                    <div>
-                        <MudText Typo="Typo.h5">Project Cost Breakdown</MudText>
-                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">@Model?.Name</MudText>
+                    <div style="flex: 1;">
+                        <MudText Typo="Typo.h4">@Model?.Name</MudText>
+                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Project Cost Breakdown</MudText>
                     </div>
-                    <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Class="px-4" Icon="@Icons.Material.Filled.Payments">
+                    <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Class="px-5 py-4" Icon="@Icons.Material.Filled.Payments" Style="font-size: 1.1rem;">
                         Total: @OverallTotal.ToString()
                     </MudChip>
                 </MudStack>
 
-                <MudGrid GutterSize="3">
+                <MudGrid Spacing="3">
                     <MudItem xs="12" md="4">
                         <MudPaper Class="stat-card" Elevation="1">
                             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
@@ -65,9 +65,6 @@
                                     <MudIcon Icon="@Icons.Material.Filled.ElectricBolt" Color="Color.Warning" Size="Size.Medium" />
                                     <MudText Typo="Typo.h6">Electricity</MudText>
                                 </MudStack>
-                                <MudText Color="Color.Secondary">
-                                    Detailed usage information for the printing process.
-                                </MudText>
                                 <MudList T="string" Dense="true">
                                     <MudListItem T="string">
                                         <MudText Typo="Typo.body2">Printing Time</MudText>
@@ -95,26 +92,21 @@
                             <MudStack Spacing="2">
                                 <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
                                     <MudIcon Icon="@Icons.Material.Filled.Engineering" Color="Color.Info" Size="Size.Medium" />
-                                    <MudText Typo="Typo.h6">Labor</MudText>
+                                    <MudText Typo="Typo.h6">Duration</MudText>
                                 </MudStack>
                                 @if (Model?.CostBreakdown.Labor?.Any() == true)
                                 {
                                     <MudTable Dense="true" Hover="true" Elevation="0" Items="@Model!.CostBreakdown.Labor">
                                         <HeaderContent>
-                                            <MudTh>Role</MudTh>
-                                            <MudTh Align="Right">Hours</MudTh>
+                                            <MudTh>Step</MudTh>
+                                            <MudTh Align="Right">Duration</MudTh>
                                             <MudTh Align="Right">Cost</MudTh>
                                         </HeaderContent>
                                         <RowTemplate Context="roleCost">
-                                            <MudTd DataLabel="Role">@roleCost.Key</MudTd>
-                                            <MudTd DataLabel="Hours" Align="Right">@roleCost.Value.SpentHours.ToString("N2")</MudTd>
+                                            <MudTd DataLabel="Step">@roleCost.Key</MudTd>
+                                            <MudTd DataLabel="Duration" Align="Right">@roleCost.Value.SpentHours.ToString("N1") h</MudTd>
                                             <MudTd DataLabel="Cost" Align="Right">@roleCost.Value.TotalCost</MudTd>
                                         </RowTemplate>
-                                        <FooterContent>
-                                            <MudTd Class="font-weight-bold">Total</MudTd>
-                                            <MudTd Align="Right" Class="font-weight-bold">@TotalLaborHours.ToString("N2")</MudTd>
-                                            <MudTd Align="Right" Class="font-weight-bold">@LaborTotal</MudTd>
-                                        </FooterContent>
                                     </MudTable>
                                 }
                                 else
@@ -137,27 +129,30 @@
                                     <MudExpansionPanels Elevation="0" Dense="true">
                                         @foreach (var category in Model!.CostBreakdown.Materials)
                                         {
-                                            <MudExpansionPanel Text="@category.Key" DisableRipple="true">
-                                                <MudTable Dense="true" Hover="true" Elevation="0" Items="@category.Value">
-                                                    <HeaderContent>
-                                                        <MudTh>Description</MudTh>
-                                                        <MudTh Align="Right">Quantity</MudTh>
-                                                        <MudTh Align="Right">Total Cost</MudTh>
-                                                    </HeaderContent>
-                                                    <RowTemplate Context="material">
-                                                        <MudTd DataLabel="Description">@material.Description</MudTd>
-                                                        <MudTd DataLabel="Quantity" Align="Right">@material.Quantity.ToString("N2")</MudTd>
-                                                        <MudTd DataLabel="Total Cost" Align="Right">@material.TotalCost</MudTd>
-                                                    </RowTemplate>
-                                                </MudTable>
+                                            <MudExpansionPanel DisableRipple="true">
+                                                <TitleContent>
+                                                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                                        <MudText>@category.Key</MudText>
+                                                        <MudChip T="string" Color="Color.Secondary" Variant="Variant.Text" Size="Size.Small">@GetCategoryTotal(category.Value)</MudChip>
+                                                    </div>
+                                                </TitleContent>
+                                                <ChildContent>
+                                                    <MudTable Dense="true" Hover="true" Elevation="0" Items="@category.Value">
+                                                        <HeaderContent>
+                                                            <MudTh>Description</MudTh>
+                                                            <MudTh Align="Right">Quantity</MudTh>
+                                                            <MudTh Align="Right">Total Cost</MudTh>
+                                                        </HeaderContent>
+                                                        <RowTemplate Context="material">
+                                                            <MudTd DataLabel="Description">@material.Description</MudTd>
+                                                            <MudTd DataLabel="Quantity" Align="Right">@material.Quantity.ToString("N2")</MudTd>
+                                                            <MudTd DataLabel="Total Cost" Align="Right">@material.TotalCost</MudTd>
+                                                        </RowTemplate>
+                                                    </MudTable>
+                                                </ChildContent>
                                             </MudExpansionPanel>
                                         }
                                     </MudExpansionPanels>
-                                    <MudDivider Class="my-2" />
-                                    <MudStack Row="true" JustifyContent="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                                        <MudText Typo="Typo.subtitle2" Class="font-weight-bold">Materials Total</MudText>
-                                        <MudChip T="string" Color="Color.Secondary" Variant="Variant.Outlined" Class="font-weight-bold">@MaterialsTotal</MudChip>
-                                    </MudStack>
                                 }
                                 else
                                 {
@@ -208,6 +203,16 @@
     private double TotalLaborHours => Model?.CostBreakdown.Labor?.Values.Sum(x => x.SpentHours) ?? 0;
 
     private int TotalMaterialLines => Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).Count() ?? 0;
+
+    private string GetCategoryTotal(IReadOnlyCollection<MaterialsCostDetails> materials)
+    {
+        var total = new MoneyDetails
+        {
+            Amount = materials.Sum(x => x.TotalCost.Amount),
+            Currency = materials.FirstOrDefault()?.TotalCost.Currency ?? DefaultCurrency
+        };
+        return total.ToString();
+    }
 
     private void Close() => MudDialog.Close(DialogResult.Ok(true));
 }

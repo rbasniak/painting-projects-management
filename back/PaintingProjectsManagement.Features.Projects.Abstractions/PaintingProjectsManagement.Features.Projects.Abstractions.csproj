@@ -3,7 +3,7 @@
   <!-- Common properties are now in Directory.Build.props -->
 
   <ItemGroup>
-    <ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
+    <ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Commons.Core\rbkApiModules.Commons.Core.csproj" />
   </ItemGroup>
 
 </Project> 

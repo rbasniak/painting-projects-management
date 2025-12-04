@@ -4,7 +4,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\PaintingProjectsManagement.FeatureDependencies\PaintingProjectsManagement.FeatureDependencies.csproj" />
-		<ProjectReference Include="..\rbkApiModules\rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj" />
+		<ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Identity.Core\rbkApiModules.Identity.Core.csproj" />
 	</ItemGroup>
 
 </Project>

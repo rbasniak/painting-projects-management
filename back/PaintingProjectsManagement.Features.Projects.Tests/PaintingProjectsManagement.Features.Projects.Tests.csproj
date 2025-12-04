@@ -11,7 +11,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagement.Testing.Core\PaintingProjectsManagement.Testing.Core.csproj" />
-		<ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj" />
+		<ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

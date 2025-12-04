@@ -9,7 +9,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\rbkApiModules\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj" />
+	  <ProjectReference Include="..\..\..\rbk-api-modules\rbkApiModules.Commons.Testing\rbkApiModules.Testing.Core.csproj" />
 	</ItemGroup>
 	
 </Project>

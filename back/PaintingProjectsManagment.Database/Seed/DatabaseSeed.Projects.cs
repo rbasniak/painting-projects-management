@@ -12,7 +12,7 @@ public partial class DatabaseSeed
         {
             ReadOnlyMaterial? material = null;
 
-            var timeout = DateTime.UtcNow.AddSeconds(60);
+            var timeout = DateTime.UtcNow.AddSeconds(5);
 
             do
             {

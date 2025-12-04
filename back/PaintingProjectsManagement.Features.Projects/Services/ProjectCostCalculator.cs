@@ -1,4 +1,5 @@
 ﻿using PaintingProjectsManagement.Features.Currency;
+using System.Text.RegularExpressions;
 
 namespace PaintingProjectsManagement.Features.Projects;
 
@@ -45,7 +46,7 @@ internal class ProjectCostCalculator(
             Materials = new Dictionary<string, IReadOnlyCollection<MaterialsCost>>()
         };
 
-        foreach (var stepGroup in project.Steps.GroupBy(x => x.Step))
+        foreach (var stepGroup in project.Steps.GroupBy(x => x.Step).OrderBy(x => (int)x.Key))
         {
             if (stepGroup.Key == ProjectStepDefinition.Printing)
             {
@@ -61,11 +62,11 @@ internal class ProjectCostCalculator(
             costBreakdown.Labor.Add(stepGroup.Key.ToString(), laborCost);
         }
 
-        foreach (var categoryGroup in projectMaterials.GroupBy(x => x.Value.MaterialDefinition.CategoryName))
+        foreach (var categoryGroup in projectMaterials.GroupBy(x => x.Value.MaterialDefinition.CategoryId).OrderBy(x => x.Key))
         {
             var materialsCosts = new List<MaterialsCost>();
 
-            var resinWasteFactor = categoryGroup.Key == "Resins" ? projectSettings.ResinWasteFactor : 1.0; // TODO: Dangerous hardcoded value
+            var resinWasteFactor = categoryGroup.Key == 10 ? projectSettings.ResinWasteFactor : 1.0; // TODO: Dangerous hardcoded value (resins)
 
             foreach (var pm in categoryGroup)
             {
@@ -83,7 +84,7 @@ internal class ProjectCostCalculator(
                 });
             }
 
-            costBreakdown.Materials[categoryGroup.Key] = materialsCosts.AsReadOnly();
+            costBreakdown.Materials.Add(categoryGroup.First().Value.MaterialDefinition.CategoryName, materialsCosts.AsReadOnly());
         }
 
         return costBreakdown;
