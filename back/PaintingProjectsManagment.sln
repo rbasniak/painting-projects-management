@@ -67,7 +67,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.UI", "..\blazor\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj", "{82D445C4-8530-2F07-F8AB-2D04C4D86344}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Projects.Abstractions", "PaintingProjectsManagement.Features.Projects.Abstractions\PaintingProjectsManagement.Features.Projects.Abstractions.csproj", "{21010993-786F-DB15-7AEA-1A1F2858729F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Projects.Integration", "PaintingProjectsManagement.Features.Projects.Abstractions\PaintingProjectsManagement.Features.Projects.Integration.csproj", "{21010993-786F-DB15-7AEA-1A1F2858729F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Authorization.UI", "..\blazor\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj", "{4FD0EFFC-2EE4-DC52-6424-3F2CD1E15E12}"
 EndProject
@@ -79,7 +79,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{C3758D4C-6DAA-471C-BCA3-AC782E7BD78C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Models.Abstractions", "PaintingProjectsManagement.Features.Models.Abstractions\PaintingProjectsManagement.Features.Models.Abstractions.csproj", "{965CF002-9D20-4C6B-BD89-BC6CAE84EBF8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Models.Integration", "PaintingProjectsManagement.Features.Models.Abstractions\PaintingProjectsManagement.Features.Models.Integration.csproj", "{965CF002-9D20-4C6B-BD89-BC6CAE84EBF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Models.UI", "..\blazor\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.Modules.Models\PaintingProjectsManagement.Features.Models.UI.csproj", "{36C9B331-48E4-D506-98B8-26A9118B2979}"
 EndProject

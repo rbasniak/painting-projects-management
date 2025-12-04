@@ -13,7 +13,7 @@ public class MaterialDeletedConsumer : IIntegrationEventHandler<MaterialDeletedV
 
     public async Task HandleAsync(EventEnvelope<MaterialDeletedV1> envelope, CancellationToken cancellationToken)
     {
-        var entity = await _context.Set<ReadOnlyMaterial>().FindAsync([envelope.TenantId, envelope.Event.MaterialId], cancellationToken);
+        var entity = await _context.Set<Material>().FindAsync([envelope.TenantId, envelope.Event.MaterialId], cancellationToken);
 
         if (entity != null)
         {

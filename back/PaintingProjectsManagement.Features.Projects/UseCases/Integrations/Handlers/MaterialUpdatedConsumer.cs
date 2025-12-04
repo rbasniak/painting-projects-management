@@ -15,13 +15,13 @@ public class MaterialUpdatedConsumer : IIntegrationEventHandler<MaterialUpdatedV
     {
         var @event = envelope.Event;
 
-        var entity = await _context.Set<ReadOnlyMaterial>()
+        var entity = await _context.Set<Material>()
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Tenant == envelope.TenantId && x.Id == @event.MaterialId, cancellationToken);
 
         if (entity == null)
         {
-            entity = new ReadOnlyMaterial
+            entity = new Material
             {
                 Tenant = envelope.TenantId,
                 Id = @event.MaterialId,

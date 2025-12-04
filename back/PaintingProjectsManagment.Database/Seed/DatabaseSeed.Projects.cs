@@ -10,13 +10,13 @@ public partial class DatabaseSeed
     {
         async Task ConsumeMaterial(Project project, string materialName, double quantity, MaterialUnit unit)
         {
-            ReadOnlyMaterial? material = null;
+            Material? material = null;
 
             var timeout = DateTime.UtcNow.AddSeconds(5);
 
             do
             {
-                material = context.Set<ReadOnlyMaterial>().FirstOrDefault(x => x.Name == materialName);
+                material = context.Set<Material>().FirstOrDefault(x => x.Name == materialName);
 
                 if (material == null)
                 {

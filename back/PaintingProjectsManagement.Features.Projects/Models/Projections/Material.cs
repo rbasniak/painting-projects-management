@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Projects;
 
-public sealed record ReadOnlyMaterial
+public sealed record Material
 {
     public required string Tenant { get; init; } = string.Empty!;
     public required Guid Id { get; init; }

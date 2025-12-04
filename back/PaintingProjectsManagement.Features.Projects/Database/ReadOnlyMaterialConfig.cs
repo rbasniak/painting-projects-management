@@ -2,11 +2,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace PaintingProjectsManagement.Features.Projects;
 
-public class ReadOnlyMaterialConfig : IEntityTypeConfiguration<ReadOnlyMaterial>
+public class ReadOnlyMaterialConfig : IEntityTypeConfiguration<Material>
 {
-    public void Configure(EntityTypeBuilder<ReadOnlyMaterial> builder)
+    public void Configure(EntityTypeBuilder<Material> builder)
     {
-        builder.ToTable("ReadOnlyMaterials");
+        builder.ToTable("projects.projections.materials");
         builder.HasKey(x => new { x.Tenant, x.Id });
         builder.Property(x => x.Tenant).IsRequired().HasMaxLength(100);
         builder.Property(x => x.Name).IsRequired().HasMaxLength(200);

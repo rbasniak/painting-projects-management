@@ -25,7 +25,7 @@ internal class ProjectCostCalculator(
 
         var projectMaterialsById = project.Materials.ToDictionary(x => x.MaterialId);
 
-        var projectMaterials = context.Set<ReadOnlyMaterial>()
+        var projectMaterials = context.Set<Material>()
             .AsNoTracking()
             .Where(material => project.Materials.Select(projectMaterial => projectMaterial.MaterialId).Contains(material.Id))
             .ToDictionary(

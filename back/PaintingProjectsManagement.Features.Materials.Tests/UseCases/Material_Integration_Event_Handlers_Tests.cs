@@ -48,7 +48,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was created
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
@@ -106,7 +106,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was updated
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
@@ -142,7 +142,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was created
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
@@ -180,7 +180,7 @@ public class Material_Integration_Event_Handlers_Tests
         // Verify material exists
         using (var context = TestingServer.CreateContext())
         {
-            var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            var readOnlyMaterial = await context.Set<Material>()
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
             readOnlyMaterial.ShouldNotBeNull();
         }
@@ -199,7 +199,7 @@ public class Material_Integration_Event_Handlers_Tests
         // Assert - Verify read-only material was deleted
         using (var context = TestingServer.CreateContext())
         {
-            var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            var readOnlyMaterial = await context.Set<Material>()
                 .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
             readOnlyMaterial.ShouldBeNull();
         }
@@ -224,7 +224,7 @@ public class Material_Integration_Event_Handlers_Tests
         // Assert - Should not throw exception and complete successfully
         // (The handler should handle the case where the material doesn't exist gracefully)
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
         readOnlyMaterial.ShouldBeNull();
     }
@@ -256,7 +256,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was created with zero unit price
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
@@ -311,7 +311,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was updated with zero unit price
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
@@ -347,7 +347,7 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify final state (material should be deleted)
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+        var readOnlyMaterial = await context.Set<Material>()
             .FirstOrDefaultAsync(m => m.Tenant == "RODRIGO.BASNIAK" && m.Id == materialId);
 
         readOnlyMaterial.ShouldBeNull();
