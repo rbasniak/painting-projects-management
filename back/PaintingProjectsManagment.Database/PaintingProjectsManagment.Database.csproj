@@ -3,12 +3,12 @@
   <!-- Common properties are now in Directory.Build.props -->
 
   <ItemGroup>
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="rbkApiModules.Identity.Core" Version="10.0.0"/>
-	<PackageReference Include="rbkApiModules.Commons.Core" Version="10.0.0"/>
+	<PackageReference Include="rbkApiModules.Identity.Core" />
+	<PackageReference Include="rbkApiModules.Commons.Core" />
   </ItemGroup>
 
   <ItemGroup>

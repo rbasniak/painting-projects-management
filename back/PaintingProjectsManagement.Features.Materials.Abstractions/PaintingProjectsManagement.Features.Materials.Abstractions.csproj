@@ -3,7 +3,7 @@
   <!-- Common properties are now in Directory.Build.props -->
 
 	<ItemGroup>
-		<PackageReference Include="rbkApiModules.Commons.Core" Version="10.0.0"/>
+		<PackageReference Include="rbkApiModules.Commons.Core" />
 	</ItemGroup>
 	
   <ItemGroup>

@@ -29,9 +29,8 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
  
-  <!-- Common analyzers for feature projects (excluding tests and rbkApiModules) -->
-  <ItemGroup Condition="$(MSBuildProjectName.StartsWith('PaintingProjectsManagement.Features.')) and !$(MSBuildProjectName.EndsWith('.Tests')) and !$(MSBuildProjectName.EndsWith('.UI'))">
-    <PackageReference Include="rbkApiModules.Analysers" Version="1.0.0"/>
+  <ItemGroup>
+    <PackageReference Include="rbkApiModules.Analysers" />
   </ItemGroup>
 
 </Project>

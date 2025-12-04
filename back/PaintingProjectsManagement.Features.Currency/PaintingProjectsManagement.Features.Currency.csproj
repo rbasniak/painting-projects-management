@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk"><!-- Common properties are now in Directory.Build.props -->
 
   <ItemGroup>
-	  <PackageReference Include="FluentValidation" Version="12.1.1" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
-	  <PackageReference Include="rbkApiModules.Commons.Core" Version="10.0.0"/>
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+	  <PackageReference Include="rbkApiModules.Commons.Core" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
   </ItemGroup>
 
 </Project>
