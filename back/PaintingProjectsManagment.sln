@@ -59,7 +59,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		validator_ideas.txt = validator_ideas.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Materials.Abstractions", "PaintingProjectsManagement.Features.Materials.Abstractions\PaintingProjectsManagement.Features.Materials.Abstractions.csproj", "{14DC397B-CCB8-452B-A435-EA7F32A62AE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Materials.Integration", "PaintingProjectsManagement.Features.Materials.Abstractions\PaintingProjectsManagement.Features.Materials.Integration.csproj", "{14DC397B-CCB8-452B-A435-EA7F32A62AE8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Authorization", "PaintingProjectsManagement.Features.Authorization\PaintingProjectsManagement.Features.Authorization.csproj", "{91A6FD4C-F4FD-4328-8BA4-78FD2B2F245E}"
 EndProject
