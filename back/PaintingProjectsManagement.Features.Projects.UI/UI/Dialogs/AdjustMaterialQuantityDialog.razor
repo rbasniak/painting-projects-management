@@ -1,0 +1,154 @@
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Projects
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="4">
+            <MudTextField 
+                @bind-Value="quantity" 
+                Label="Quantity" 
+                Variant="Variant.Outlined"
+                InputType="InputType.Number"
+                Adornment="Adornment.End"
+                AdornmentText="@GetUnitText()"
+                Style="font-size: 1.5rem;" />
+
+            <MudText Typo="Typo.body2" Class="mb-2">Quick Adjustments:</MudText>
+            
+            <MudGrid>
+                <MudItem xs="4">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Error" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustQuantity(-100)">
+                        -100
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Error" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustQuantity(-10)">
+                        -10
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Error" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustQuantity(-1)">
+                        -1
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Success" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustQuantity(1)">
+                        +1
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Success" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustQuantity(10)">
+                        +10
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="4">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Success" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustQuantity(100)">
+                        +100
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Size="Size.Large">Cancel</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Save" Size="Size.Large">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public Guid MaterialId { get; set; }
+    [Parameter] public string CurrentQuantity { get; set; } = string.Empty;
+    [Parameter] public int Unit { get; set; }
+
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+
+    private double quantity = 0;
+
+    protected override void OnInitialized()
+    {
+        // Parse current quantity from string like "50 centimeters"
+        if (!string.IsNullOrEmpty(CurrentQuantity))
+        {
+            var parts = CurrentQuantity.Split(' ');
+            if (parts.Length > 0 && double.TryParse(parts[0], out var parsed))
+            {
+                quantity = parsed;
+            }
+        }
+    }
+
+    private string GetUnitText()
+    {
+        // Map unit enum values to text
+        return Unit switch
+        {
+            1 => "drop",
+            2 => "unit",
+            3 => "centimeter",
+            4 => "meter",
+            5 => "gram",
+            6 => "kilogram",
+            7 => "liter",
+            8 => "mililiter",
+            9 => "spray",
+            _ => "unit"
+        };
+    }
+
+    private void AdjustQuantity(double delta)
+    {
+        quantity = Math.Max(0, quantity + delta);
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            await ProjectsService.UpdateProjectMaterialAsync(ProjectId, MaterialId, quantity, Unit, default);
+            MudDialog.Close(DialogResult.Ok(true));
+            Snackbar.Add("Quantity updated successfully", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error updating quantity: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

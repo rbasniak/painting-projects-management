@@ -1,0 +1,267 @@
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Projects
+@using PaintingProjectsManagement.UI.Modules.Materials
+
+<MudDialog>
+    <DialogContent>
+        <MudStepper @bind-ActiveStep="activeStep" Color="Color.Primary">
+            <MudStep Title="Material">
+                <MudStack Spacing="3" Class="mt-4">
+                    @if (!useMaterialIdInput && materials.Any())
+                    {
+                        <MudAutocomplete 
+                            @bind-Value="selectedMaterial"
+                            @bind-Items="materials"
+                            SearchFunc="SearchMaterials"
+                            ToStringFunc="@(m => m?.Name ?? string.Empty)"
+                            Label="Select Material"
+                            Variant="Variant.Outlined"
+                            Required="true"
+                            RequiredError="Material is required" />
+                    }
+                    else
+                    {
+                        <MudTextField 
+                            @bind-Value="materialIdInput"
+                            Label="Material ID"
+                            Variant="Variant.Outlined"
+                            Required="true"
+                            RequiredError="Material ID is required"
+                            HelperText="Enter the Material GUID" />
+                    }
+                </MudStack>
+            </MudStep>
+            
+            <MudStep Title="Unit">
+                <MudStack Spacing="3" Class="mt-4">
+                    <MudSelect 
+                        @bind-Value="selectedUnit"
+                        Label="Unit"
+                        Variant="Variant.Outlined"
+                        Required="true">
+                        @foreach (var unit in availableUnits)
+                        {
+                            <MudSelectItem Value="@unit.Key">@unit.Value</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudStack>
+            </MudStep>
+            
+            <MudStep Title="Quantity">
+                <MudStack Spacing="3" Class="mt-4">
+                    <MudTextField 
+                        @bind-Value="quantity" 
+                        Label="Quantity" 
+                        Variant="Variant.Outlined"
+                        InputType="InputType.Number"
+                        Required="true"
+                        RequiredError="Quantity is required" />
+                    
+                    <MudText Typo="Typo.body2" Class="mb-2">Quick Adjustments:</MudText>
+                    
+                    <MudGrid>
+                        <MudItem xs="4">
+                            <MudButton 
+                                Variant="Variant.Outlined" 
+                                Color="Color.Error" 
+                                Size="Size.Large"
+                                FullWidth="true"
+                                OnClick="() => AdjustQuantity(-100)">
+                                -100
+                            </MudButton>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudButton 
+                                Variant="Variant.Outlined" 
+                                Color="Color.Error" 
+                                Size="Size.Large"
+                                FullWidth="true"
+                                OnClick="() => AdjustQuantity(-10)">
+                                -10
+                            </MudButton>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudButton 
+                                Variant="Variant.Outlined" 
+                                Color="Color.Error" 
+                                Size="Size.Large"
+                                FullWidth="true"
+                                OnClick="() => AdjustQuantity(-1)">
+                                -1
+                            </MudButton>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudButton 
+                                Variant="Variant.Outlined" 
+                                Color="Color.Success" 
+                                Size="Size.Large"
+                                FullWidth="true"
+                                OnClick="() => AdjustQuantity(1)">
+                                +1
+                            </MudButton>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudButton 
+                                Variant="Variant.Outlined" 
+                                Color="Color.Success" 
+                                Size="Size.Large"
+                                FullWidth="true"
+                                OnClick="() => AdjustQuantity(10)">
+                                +10
+                            </MudButton>
+                        </MudItem>
+                        <MudItem xs="4">
+                            <MudButton 
+                                Variant="Variant.Outlined" 
+                                Color="Color.Success" 
+                                Size="Size.Large"
+                                FullWidth="true"
+                                OnClick="() => AdjustQuantity(100)">
+                                +100
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudStack>
+            </MudStep>
+        </MudStepper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Size="Size.Large">Cancel</MudButton>
+        @if (activeStep > 0)
+        {
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="PreviousStep" Size="Size.Large">Previous</MudButton>
+        }
+        @if (activeStep < 2)
+        {
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="NextStep" Size="Size.Large">Next</MudButton>
+        }
+        else
+        {
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Save" Size="Size.Large">Add Material</MudButton>
+        }
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public Guid ProjectId { get; set; }
+
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+    [Inject] public IServiceProvider ServiceProvider { get; set; } = default!;
+
+    private int activeStep = 0;
+    private MaterialDetails? selectedMaterial;
+    private List<MaterialDetails> materials = new();
+    private string materialIdInput = string.Empty;
+    private bool useMaterialIdInput = false;
+    private int selectedUnit = 2; // Default to Unit
+    private double quantity = 0;
+
+    private Dictionary<int, string> availableUnits = new()
+    {
+        { 1, "Drop" },
+        { 2, "Unit" },
+        { 3, "Centimeter" },
+        { 4, "Meter" },
+        { 5, "Gram" },
+        { 6, "Kilogram" },
+        { 7, "Liter" },
+        { 8, "Mililiter" },
+        { 9, "Spray" }
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var materialsService = ServiceProvider.GetService<IMaterialsService>();
+            if (materialsService != null)
+            {
+                materials = (await materialsService.GetAllAsync(default)).ToList();
+            }
+            else
+            {
+                useMaterialIdInput = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error loading materials: {ex.Message}", Severity.Warning);
+            useMaterialIdInput = true;
+        }
+    }
+
+    private async Task<IEnumerable<MaterialDetails>> SearchMaterials(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return materials;
+
+        return materials.Where(m => m.Name.Contains(value, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private void NextStep()
+    {
+        if (activeStep == 0)
+        {
+            if (!useMaterialIdInput && selectedMaterial == null)
+                return;
+            if (useMaterialIdInput && (string.IsNullOrEmpty(materialIdInput) || !Guid.TryParse(materialIdInput, out _)))
+                return;
+        }
+        if (activeStep == 1 && selectedUnit == 0)
+            return;
+        
+        activeStep++;
+    }
+
+    private void PreviousStep()
+    {
+        if (activeStep > 0)
+            activeStep--;
+    }
+
+    private void AdjustQuantity(double delta)
+    {
+        quantity = Math.Max(0, quantity + delta);
+    }
+
+    private async Task Save()
+    {
+        Guid materialId;
+        if (!useMaterialIdInput)
+        {
+            if (selectedMaterial == null || quantity <= 0)
+            {
+                Snackbar.Add("Please fill in all required fields", Severity.Warning);
+                return;
+            }
+            materialId = selectedMaterial.Id;
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(materialIdInput) || !Guid.TryParse(materialIdInput, out var parsedId) || quantity <= 0)
+            {
+                Snackbar.Add("Please fill in all required fields with valid values", Severity.Warning);
+                return;
+            }
+            materialId = parsedId;
+        }
+
+        try
+        {
+            await ProjectsService.AddProjectMaterialAsync(ProjectId, materialId, quantity, selectedUnit, default);
+            MudDialog.Close(DialogResult.Ok(true));
+            Snackbar.Add("Material added successfully", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error adding material: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

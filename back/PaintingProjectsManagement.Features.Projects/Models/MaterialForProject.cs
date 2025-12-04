@@ -16,4 +16,9 @@ public class MaterialForProject
     public Guid MaterialId { get; private set; }
     public Guid ProjectId { get; private set; }
     public Quantity Quantity { get; private set; }
+
+    public void UpdateQuantity(double quantity, MaterialUnit unit)
+    {
+        Quantity = new Quantity(quantity, unit);
+    }
 }

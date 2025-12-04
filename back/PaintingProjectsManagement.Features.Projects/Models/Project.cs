@@ -59,6 +59,56 @@ public class Project : TenantEntity
         RaiseDomainEvent(new ProjectMaterialAdded(Id, materialId, quantity));
     }
 
+    public void UpdateMaterialQuantity(Guid materialId, double quantity, MaterialUnit unit)
+    {
+        var material = _materials.FirstOrDefault(m => m.MaterialId == materialId);
+        
+        if (material == null)
+        {
+            throw new InvalidOperationException($"Material {materialId} not found in project {Id}");
+        }
+
+        if (quantity <= 0)
+        {
+            RemoveMaterial(materialId);
+            return;
+        }
+
+        material.UpdateQuantity(quantity, unit);
+    }
+
+    public void RemoveMaterial(Guid materialId)
+    {
+        var material = _materials.FirstOrDefault(m => m.MaterialId == materialId);
+        
+        if (material != null)
+        {
+            _materials.Remove(material);
+        }
+    }
+
+    public void UpdateStep(Guid stepId, DateTime? date, double? duration)
+    {
+        var step = _steps.FirstOrDefault(s => s.Id == stepId);
+        
+        if (step == null)
+        {
+            throw new InvalidOperationException($"Step {stepId} not found in project {Id}");
+        }
+
+        step.Update(date, duration);
+    }
+
+    public void RemoveStep(Guid stepId)
+    {
+        var step = _steps.FirstOrDefault(s => s.Id == stepId);
+        
+        if (step != null)
+        {
+            _steps.Remove(step);
+        }
+    }
+
     public void AddExecutionWindow(ProjectStepDefinition step, DateTime start, DateTime end)
     {
         _steps.Add(new ProjectStepData(Id, step, start, end));

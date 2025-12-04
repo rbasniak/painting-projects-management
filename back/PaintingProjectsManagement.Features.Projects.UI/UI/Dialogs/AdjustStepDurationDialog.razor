@@ -1,0 +1,149 @@
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Projects
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="4">
+            <MudDatePicker 
+                @bind-Date="stepDate" 
+                Label="Date" 
+                Variant="Variant.Outlined"
+                Required="true" />
+
+            <MudTimePicker 
+                @bind-Time="stepTime" 
+                Label="Time" 
+                Variant="Variant.Outlined" />
+
+            <MudTextField 
+                @bind-Value="duration" 
+                Label="Duration (hours)" 
+                Variant="Variant.Outlined"
+                InputType="InputType.Number"
+                Adornment="Adornment.End"
+                AdornmentText="hours"
+                Style="font-size: 1.5rem;" />
+
+            <MudText Typo="Typo.body2" Class="mb-2">Quick Adjustments:</MudText>
+            
+            <MudGrid>
+                <MudItem xs="3">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Error" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustDuration(-1)">
+                        -1h
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="3">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Error" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustDuration(-0.5)">
+                        -30m
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="3">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Error" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustDuration(-0.25)">
+                        -15m
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="3">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Success" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustDuration(0.25)">
+                        +15m
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="3">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Success" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustDuration(0.5)">
+                        +30m
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="3">
+                    <MudButton 
+                        Variant="Variant.Outlined" 
+                        Color="Color.Success" 
+                        Size="Size.Large"
+                        FullWidth="true"
+                        OnClick="() => AdjustDuration(1)">
+                        +1h
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Size="Size.Large">Cancel</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Save" Size="Size.Large">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public Guid StepId { get; set; }
+    [Parameter] public DateTime CurrentDate { get; set; }
+    [Parameter] public double CurrentDuration { get; set; }
+
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+
+    private DateTime? stepDate = null;
+    private TimeSpan? stepTime = null;
+    private double duration = 0;
+
+    protected override void OnInitialized()
+    {
+        stepDate = CurrentDate.Date;
+        stepTime = CurrentDate.TimeOfDay;
+        duration = CurrentDuration;
+    }
+
+    private void AdjustDuration(double delta)
+    {
+        duration = Math.Max(0, duration + delta);
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            DateTime? date = null;
+            if (stepDate.HasValue && stepTime.HasValue)
+            {
+                date = stepDate.Value.Date.Add(stepTime.Value);
+            }
+
+            await ProjectsService.UpdateProjectStepAsync(ProjectId, StepId, date, duration, default);
+            MudDialog.Close(DialogResult.Ok(true));
+            Snackbar.Add("Step updated successfully", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error updating step: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+}

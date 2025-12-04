@@ -1,0 +1,47 @@
+@page "/projects/{ProjectId:guid}/execution"
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Projects
+@using Microsoft.AspNetCore.Components
+
+<MudPaper Class="pa-4">
+    <MudStack Spacing="4">
+        <MudText Typo="Typo.h5">Project Execution</MudText>
+        
+        <MudButton 
+            Variant="Variant.Filled" 
+            Color="Color.Primary" 
+            Size="Size.Large"
+            FullWidth="true"
+            StartIcon="@Icons.Material.Filled.Inventory"
+            OnClick="NavigateToMaterials"
+            Style="min-height: 80px; font-size: 1.2rem;">
+            Materials
+        </MudButton>
+
+        <MudButton 
+            Variant="Variant.Filled" 
+            Color="Color.Secondary" 
+            Size="Size.Large"
+            FullWidth="true"
+            StartIcon="@Icons.Material.Filled.List"
+            OnClick="NavigateToSteps"
+            Style="min-height: 80px; font-size: 1.2rem;">
+            Execution Steps
+        </MudButton>
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Parameter] public Guid ProjectId { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+
+    private void NavigateToMaterials()
+    {
+        NavigationManager.NavigateTo($"/projects/{ProjectId}/execution/materials");
+    }
+
+    private void NavigateToSteps()
+    {
+        NavigationManager.NavigateTo($"/projects/{ProjectId}/execution/steps");
+    }
+}
