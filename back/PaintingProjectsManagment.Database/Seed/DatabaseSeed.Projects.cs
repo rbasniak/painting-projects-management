@@ -1,4 +1,5 @@
-﻿using PaintingProjectsManagement.Features.Projects;
+﻿using Microsoft.EntityFrameworkCore;
+using PaintingProjectsManagement.Features.Projects;
 using System.Diagnostics;
 
 namespace PaintingProjectsManagment.Database;

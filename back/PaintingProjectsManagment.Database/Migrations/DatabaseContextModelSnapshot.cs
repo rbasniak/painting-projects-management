@@ -322,6 +322,54 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.ToTable("project.project_color_sections", (string)null);
                 });
 
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.Material", b =>
+                {
+                    b.Property<string>("Tenant")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("Unit")
+                        .HasMaxLength(50)
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "PricePerUnit", "PaintingProjectsManagement.Features.Projects.Material.PricePerUnit#Money", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<double>("Amount")
+                                .HasColumnType("double precision")
+                                .HasColumnName("PricePerUnit_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("character varying(3)")
+                                .HasColumnName("PricePerUnit_Currency");
+                        });
+
+                    b.HasKey("Tenant", "Id");
+
+                    b.ToTable("projects.projections.materials", (string)null);
+                });
+
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.MaterialForProject", b =>
                 {
                     b.Property<Guid>("ProjectId")
@@ -458,54 +506,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectStepData");
-                });
-
-            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ReadOnlyMaterial", b =>
-                {
-                    b.Property<string>("Tenant")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("Unit")
-                        .HasMaxLength(50)
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.ComplexProperty(typeof(Dictionary<string, object>), "PricePerUnit", "PaintingProjectsManagement.Features.Projects.ReadOnlyMaterial.PricePerUnit#Money", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<double>("Amount")
-                                .HasColumnType("double precision")
-                                .HasColumnName("PricePerUnit_Amount");
-
-                            b1.Property<string>("Currency")
-                                .IsRequired()
-                                .HasMaxLength(3)
-                                .HasColumnType("character varying(3)")
-                                .HasColumnName("PricePerUnit_Currency");
-                        });
-
-                    b.HasKey("Tenant", "Id");
-
-                    b.ToTable("ReadOnlyMaterials", (string)null);
                 });
 
             modelBuilder.Entity("rbkApiModules.Commons.Core.DomainOutboxMessage", b =>

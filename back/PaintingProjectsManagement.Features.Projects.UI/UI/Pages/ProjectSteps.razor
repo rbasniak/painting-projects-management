@@ -67,7 +67,7 @@
 </MudPaper>
 
 @code {
-    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public string ProjectId { get; set; }
     
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
     [Inject] public IDialogService DialogService { get; set; } = default!;
@@ -87,7 +87,7 @@
         try
         {
             isLoading = true;
-            stepsGrouped = await ProjectsService.GetProjectStepsAsync(ProjectId, default);
+            stepsGrouped = await ProjectsService.GetProjectStepsAsync(new Guid(ProjectId), default);
         }
         catch (Exception ex)
         {
@@ -144,7 +144,7 @@
         {
             try
             {
-                await ProjectsService.DeleteProjectStepAsync(ProjectId, step.Id, default);
+                await ProjectsService.DeleteProjectStepAsync(new Guid(ProjectId), step.Id, default);
                 Snackbar.Add("Step deleted successfully", Severity.Success);
                 await LoadStepsAsync();
             }

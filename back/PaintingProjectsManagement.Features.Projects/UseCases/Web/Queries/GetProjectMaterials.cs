@@ -54,7 +54,7 @@ public class GetProjectMaterials : IEndpoint
             var materials = await _context.Set<Material>()
                 .Where(m => m.Tenant == request.Identity.Tenant && materialIds.Contains(m.Id))
                 .ToDictionaryAsync(m => m.Id, cancellationToken);
-
+            
             var results = project.Materials
                 .Select(pm =>
                 {

@@ -3,6 +3,7 @@
 @using PaintingProjectsManagement.UI.Modules.Projects 
 @using PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 @using PaintingProjectsManagement.UI.Modules.Shared
+@using System.Text.Json
 
 <MudPaper Class="pa-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
@@ -141,6 +142,8 @@
 
     private void NavigateToExecution(ProjectDetails project)
     {
+        Console.WriteLine(JsonSerializer.Serialize(project));
+
         NavigationManager.NavigateTo($"/projects/{project.Id}/execution");
     }
 } 

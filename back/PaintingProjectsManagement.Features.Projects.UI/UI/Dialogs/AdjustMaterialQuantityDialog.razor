@@ -55,7 +55,7 @@
 
 @code {
     [Parameter] public ProjectMaterialDetails Material { get; set; } = default!;
-    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public string ProjectId { get; set; }
     
     [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
@@ -79,7 +79,7 @@
         {
             var request = new UpdateProjectMaterialRequest
             {
-                ProjectId = ProjectId,
+                ProjectId = new Guid(ProjectId),
                 MaterialId = Material.MaterialId,
                 Quantity = quantity,
                 Unit = Material.Unit

@@ -64,7 +64,7 @@
 </MudPaper>
 
 @code {
-    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public string ProjectId { get; set; }
     
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
     [Inject] public IDialogService DialogService { get; set; } = default!;
@@ -84,7 +84,7 @@
         try
         {
             isLoading = true;
-            materials = (await ProjectsService.GetProjectMaterialsAsync(ProjectId, default)).ToList();
+            materials = (await ProjectsService.GetProjectMaterialsAsync(new Guid(ProjectId), default)).ToList();
         }
         catch (Exception ex)
         {
@@ -141,7 +141,7 @@
         {
             try
             {
-                await ProjectsService.DeleteProjectMaterialAsync(ProjectId, material.MaterialId, default);
+                await ProjectsService.DeleteProjectMaterialAsync(new Guid(ProjectId), material.MaterialId, default);
                 Snackbar.Add("Material removed successfully", Severity.Success);
                 await LoadMaterialsAsync();
             }
