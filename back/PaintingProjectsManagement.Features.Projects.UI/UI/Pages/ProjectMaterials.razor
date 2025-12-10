@@ -25,16 +25,14 @@
         {
             <MudTable Items="materials" Hover="true" Dense="false" Striped="true">
                 <HeaderContent>
-                    <MudTh>Material Name</MudTh>
                     <MudTh>Category</MudTh>
-                    <MudTh>Price Per Unit</MudTh>
+                    <MudTh>Material</MudTh>
                     <MudTh>Quantity</MudTh>
                     <MudTh Style="width: 150px;">Actions</MudTh>
                 </HeaderContent>
                 <RowTemplate>
-                    <MudTd>@context.MaterialName</MudTd>
                     <MudTd>@context.CategoryName</MudTd>
-                    <MudTd>@context.PricePerUnitFormatted</MudTd>
+                    <MudTd>@context.MaterialName</MudTd>
                     <MudTd>@context.QuantityFormatted</MudTd>
                     <MudTd>
                         <MudIconButton Icon="@Icons.Material.Filled.Edit" 
@@ -64,8 +62,8 @@
 </MudPaper>
 
 @code {
-    [Parameter] public string ProjectId { get; set; }
-    
+    [Parameter] public string ProjectId { get; set; } = string.Empty;
+
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
     [Inject] public IDialogService DialogService { get; set; } = default!;
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
@@ -76,6 +74,11 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (string.IsNullOrWhiteSpace(ProjectId))
+        {
+            throw new ArgumentNullException(ProjectId);
+        }
+
         await LoadMaterialsAsync();
     }
 

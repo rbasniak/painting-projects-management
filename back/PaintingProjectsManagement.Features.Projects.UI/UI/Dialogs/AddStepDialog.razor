@@ -74,7 +74,7 @@
 </MudDialog>
 
 @code {
-    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public string ProjectId { get; set; }
     
     [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
@@ -110,7 +110,7 @@
 
             var request = new AddProjectStepRequest
             {
-                ProjectId = ProjectId,
+                ProjectId = new Guid(ProjectId),
                 Step = selectedStepId.Value,
                 Date = dateTime,
                 DurationInHours = durationInHours

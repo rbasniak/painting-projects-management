@@ -71,18 +71,39 @@ public class GetProjectMaterials : IEndpoint
                         MaterialId = pm.MaterialId,
                         MaterialName = material.Name,
                         CategoryName = material.CategoryName,
-                        PricePerUnitFormatted = $"{pricePerUnit.Amount:F2} {pricePerUnit.Currency}/{GetUnitDisplayName(quantity.Unit)}",
+                        CategoryId = material.CategoryId,
                         Quantity = quantity.Value,
-                        QuantityFormatted = $"{quantity.Value:F2} {GetUnitDisplayName(quantity.Unit)}",
+                        QuantityFormatted = GetFormatedQuantity(pm.Quantity),
                         Unit = quantity.Unit,
-                        UnitDisplayName = GetUnitDisplayName(quantity.Unit)
                     };
                 })
-                .Where(x => x != null)
+                .Where(x => x is not null)
+                .OrderBy(x => x!.CategoryId)
+                .ThenBy(x => x!.MaterialName)
                 .Cast<ProjectMaterialDetails>()
                 .ToList();
 
             return QueryResponse.Success(results.ToArray());
+        }
+
+        private static string GetFormatedQuantity(Quantity quantity)
+        {
+            switch (quantity.Unit)
+            {
+                case MaterialUnit.Meter:
+                case MaterialUnit.Kilogram:
+                case MaterialUnit.Liter:
+                    return $"{quantity.Value:F2} {GetUnitDisplayName(quantity.Unit)}";
+                case MaterialUnit.Drop:
+                case MaterialUnit.Centimeter:
+                case MaterialUnit.Unit:
+                case MaterialUnit.Gram:
+                case MaterialUnit.Mililiter:
+                case MaterialUnit.Spray:
+                    return $"{quantity.Value:F0} {GetUnitDisplayName(quantity.Unit)}";
+                default:
+                    throw new NotImplementedException($"Unknown quantity unit: {quantity.Unit}");
+            }
         }
 
         private static string GetUnitDisplayName(MaterialUnit unit)
@@ -91,14 +112,14 @@ public class GetProjectMaterials : IEndpoint
             {
                 MaterialUnit.Drop => "drops",
                 MaterialUnit.Unit => "units",
-                MaterialUnit.Centimeter => "centimeters",
-                MaterialUnit.Meter => "meters",
-                MaterialUnit.Gram => "grams",
-                MaterialUnit.Kilogram => "kilograms",
-                MaterialUnit.Liter => "liters",
-                MaterialUnit.Mililiter => "milliliters",
-                MaterialUnit.Spray => "sprays",
-                _ => unit.ToString().ToLower()
+                MaterialUnit.Centimeter => "cm",
+                MaterialUnit.Meter => "m",
+                MaterialUnit.Gram => "g",
+                MaterialUnit.Kilogram => "kg",
+                MaterialUnit.Liter => "l",
+                MaterialUnit.Mililiter => "ml",
+                MaterialUnit.Spray => "spray presses",
+                _ => throw new NotImplementedException($"Unknown quantity unit: {unit}")
             };
         }
     }
