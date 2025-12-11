@@ -38,13 +38,7 @@ public class DeleteProjectMaterial : IEndpoint
                 .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(p => p.Id == id && p.TenantId == request.Identity.Tenant, ct))
                 .WithMessage("Project not found");
             RuleFor(x => x.MaterialId)
-                .MustAsync(async (request, materialId, ct) =>
-                {
-                    var project = await Context.Set<Project>()
-                        .Include(p => p.Materials)
-                        .FirstAsync(p => p.Id == request.ProjectId && p.TenantId == request.Identity.Tenant, ct);
-                    return project.Materials.Any(m => m.MaterialId == materialId);
-                })
+                .MustAsync(async (request, id, ct) => await Context.Set<MaterialForProject>().AnyAsync(m => m.ProjectId == request.ProjectId && m.MaterialId == id, ct))
                 .WithMessage("Material not found in project");
         }
     }
@@ -55,7 +49,7 @@ public class DeleteProjectMaterial : IEndpoint
         {
             var project = await _context.Set<Project>()
                 .Include(x => x.Materials)
-                .FirstAsync(x => x.Id == request.ProjectId && x.TenantId == request.Identity.Tenant, cancellationToken);
+                .FirstAsync(x => x.Id == request.ProjectId, cancellationToken);
 
             project.RemoveMaterial(request.MaterialId);
 

@@ -37,15 +37,8 @@ public class DeleteProjectStep : IEndpoint
             RuleFor(x => x.ProjectId)
                 .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(p => p.Id == id && p.TenantId == request.Identity.Tenant, ct))
                 .WithMessage("Project not found");
-
             RuleFor(x => x.StepId)
-                .MustAsync(async (request, stepId, ct) =>
-                {
-                    var project = await Context.Set<Project>()
-                        .Include(p => p.Steps)
-                        .FirstAsync(p => p.Id == request.ProjectId && p.TenantId == request.Identity.Tenant, ct);
-                    return project.Steps.Any(s => s.Id == stepId);
-                })
+                .MustAsync(async (request, id, ct) => await Context.Set<ProjectStepData>().AnyAsync(s => s.ProjectId == request.ProjectId && s.Id == id, ct))
                 .WithMessage("Step not found in project");
         }
     }
@@ -56,7 +49,7 @@ public class DeleteProjectStep : IEndpoint
         {
             var project = await _context.Set<Project>()
                 .Include(x => x.Steps)
-                .FirstAsync(x => x.Id == request.ProjectId && x.TenantId == request.Identity.Tenant, cancellationToken);
+                .FirstAsync(x => x.Id == request.ProjectId, cancellationToken);
 
             project.RemoveStep(request.StepId);
 

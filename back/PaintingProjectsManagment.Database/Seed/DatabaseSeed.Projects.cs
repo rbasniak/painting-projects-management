@@ -345,14 +345,18 @@ public partial class DatabaseSeed
         ConsumeMaterial(hulkbusterProject, _materialGswChrome, 50+100+100+100+39+100+100+100+75, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(hulkbusterProject, _materialVallejoAcrylic, 10, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(hulkbusterProject, _materialTamiyaClear, 75+50+40+200+6+20+250+250, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(hulkbusterProject, _materialAmmoCandy, 75, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(hulkbusterProject, _materialArmyPainterAcrylic, 45+50+40+10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialAmmoCandy, 75+10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialArmyPainterAcrylic, 45+50+40+10+30+50+20+10+10+50+75+10+20, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialGswVarnish, 200+100+50+75, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialAmmoTransparator, 20, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialAmmoDrybrush, 50, MaterialUnit.Drop).GetAwaiter().GetResult();
+
 
         hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 12), 4);
         hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 12), 2+2+3.5+1.5+12+4);
         hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 11, 12), 6);
         hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 11, 12), 7.5);
-        hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 12), 3+1+6+4.5+2+5+12+2+1.5+1);
+        hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 12), 3+1+6+4.5+2+5+12+2+1.5+1+1.5+3+4);
 
         context.Add(hulkbusterProject);
 
@@ -479,21 +483,31 @@ public partial class DatabaseSeed
         aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 2);
         aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 18);
         aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 11, 01), 4.5);
-        aphroditeProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 11, 01), 1); // must be updated
+        aphroditeProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 11, 01), 3); 
 
         ConsumeMaterial(aphroditeProject, _materialMagnet10x5, 12, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(aphroditeProject, _materialMagnet8x4, 7, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(aphroditeProject, _materialMagnet6x4, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialMagnet6x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(aphroditeProject, _materialVallejoPrimer, 0, MaterialUnit.Drop).GetAwaiter().GetResult(); // must be updated
-        ConsumeMaterial(aphroditeProject, _materialGswPrimer, 0, MaterialUnit.Drop).GetAwaiter().GetResult(); // must be updated
-        ConsumeMaterial(aphroditeProject, _materialTamiyaClear, 0, MaterialUnit.Drop).GetAwaiter().GetResult(); // must be updated
-        ConsumeMaterial(aphroditeProject, _materialAmmoCandy, 0, MaterialUnit.Drop).GetAwaiter().GetResult(); // must be updated
-        ConsumeMaterial(aphroditeProject, _materialArmyPainterAcrylic, 0, MaterialUnit.Drop).GetAwaiter().GetResult(); // must be updated
+        ConsumeMaterial(aphroditeProject, _materialVallejoPrimer, 125+30+35+30+15, MaterialUnit.Drop).GetAwaiter().GetResult();  
+        ConsumeMaterial(aphroditeProject, _materialGswPrimer, 350, MaterialUnit.Drop).GetAwaiter().GetResult();  
+        ConsumeMaterial(aphroditeProject, _materialTamiyaClear, 180+60+20+50+10, MaterialUnit.Drop).GetAwaiter().GetResult();  
+        ConsumeMaterial(aphroditeProject, _materialAmmoCandy, 40+80+10+30, MaterialUnit.Drop).GetAwaiter().GetResult();  
+        ConsumeMaterial(aphroditeProject, _materialArmyPainterAcrylic, 20+60+10+25+40+10, MaterialUnit.Drop).GetAwaiter().GetResult(); 
+        ConsumeMaterial(aphroditeProject, _materialGswVarnish, 50, MaterialUnit.Drop).GetAwaiter().GetResult(); 
+        ConsumeMaterial(aphroditeProject, _materialAtomAcrylic, 30, MaterialUnit.Drop).GetAwaiter().GetResult(); 
+        ConsumeMaterial(aphroditeProject, _materialGswChrome, 220, MaterialUnit.Drop).GetAwaiter().GetResult(); 
+        ConsumeMaterial(aphroditeProject, _materialAmmoDrybrush, 50, MaterialUnit.Drop).GetAwaiter().GetResult(); 
+        ConsumeMaterial(aphroditeProject, _materialGswAcrylic, 30, MaterialUnit.Drop).GetAwaiter().GetResult(); 
 
-        ConsumeMaterial(aphroditeProject, _materialBiltemaGlossVarnish, 30+70+30+67, MaterialUnit.Spray).GetAwaiter().GetResult(); // must be updated
+        ConsumeMaterial(aphroditeProject, _materialBiltemaGlossVarnish, 30+70+30+67+35+55+40+55, MaterialUnit.Spray).GetAwaiter().GetResult();  
+        ConsumeMaterial(aphroditeProject, _materialTamiyaTS80, 40, MaterialUnit.Spray).GetAwaiter().GetResult();  
+        
+        ConsumeMaterial(aphroditeProject, _materialPaintMixingCupCorrugated, 3, MaterialUnit.Unit).GetAwaiter().GetResult();  
+        ConsumeMaterial(aphroditeProject, _materialNailWoodSwab, 40, MaterialUnit.Unit).GetAwaiter().GetResult();  
+        ConsumeMaterial(aphroditeProject, _materialDisposableBrush, 10, MaterialUnit.Unit).GetAwaiter().GetResult();  
 
-        aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 0.0); // must be updated
+        aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 12, 12), 1.5+0.5+1+1+3+2+2+1.5+1+3+1+2+1);  
 
         context.Add(aphroditeProject);
 

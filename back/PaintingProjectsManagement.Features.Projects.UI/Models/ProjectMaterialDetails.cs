@@ -1,4 +1,4 @@
-namespace PaintingProjectsManagement.Features.Projects;
+namespace PaintingProjectsManagement.UI.Modules.Projects;
 
 public class ProjectMaterialDetails
 {
@@ -7,5 +7,5 @@ public class ProjectMaterialDetails
     public string CategoryName { get; set; } = string.Empty;
     public string PricePerUnit { get; set; } = string.Empty;
     public string Quantity { get; set; } = string.Empty;
-    public MaterialUnit Unit { get; set; }
+    public int Unit { get; set; }
 }
