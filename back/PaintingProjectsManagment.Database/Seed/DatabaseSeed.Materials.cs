@@ -99,7 +99,7 @@ public partial class DatabaseSeed
 
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialSunluWaterWashableStandardResin, MaterialCategory.Resins, new Quantity(1000, PackageContentUnit.Gram), new Money(1082 / 6, "DKK")));
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialSunluAbsResin, MaterialCategory.Resins, new Quantity(1000, PackageContentUnit.Gram), new Money(1082 / 6, "DKK")));
-        context.Set<Material>().Add(new Material("rodrigo.basniak", _materialJayoAbsResin, MaterialCategory.Resins, new Quantity(1000, PackageContentUnit.Gram), new Money(188 / 15, "USD")));
+        context.Set<Material>().Add(new Material("rodrigo.basniak", _materialJayoAbsResin, MaterialCategory.Resins, new Quantity(1000, PackageContentUnit.Gram), new Money((188 + 55) / 15, "USD"))); // 55 from alcohol wash
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialAnycubricClearResin, MaterialCategory.Resins, new Quantity(1000, PackageContentUnit.Gram), new Money(75/5, "EUR")));
 
         context.Set<Material>().Add(new Material("rodrigo.basniak", _materialSuperGlue1g, MaterialCategory.Others, new Quantity(50, PackageContentUnit.Each), new Money(8, "USD")));
