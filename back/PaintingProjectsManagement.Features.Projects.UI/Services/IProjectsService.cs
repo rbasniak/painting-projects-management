@@ -14,21 +14,22 @@ public interface IProjectsService
 
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 
+    // Execution management
     Task<IReadOnlyCollection<ProjectMaterialDetails>> GetProjectMaterialsAsync(Guid projectId, CancellationToken cancellationToken);
 
     Task<ProjectStepsGrouped> GetProjectStepsAsync(Guid projectId, CancellationToken cancellationToken);
 
-    Task UpdateProjectMaterialAsync(Guid projectId, Guid materialId, double quantity, int unit, CancellationToken cancellationToken);
+    Task UpdateProjectMaterialAsync(UpdateProjectMaterialRequest request, CancellationToken cancellationToken);
 
     Task DeleteProjectMaterialAsync(Guid projectId, Guid materialId, CancellationToken cancellationToken);
 
-    Task AddProjectStepAsync(Guid projectId, int step, DateTime date, double duration, CancellationToken cancellationToken);
+    Task AddProjectMaterialAsync(AddProjectMaterialRequest request, CancellationToken cancellationToken);
 
-    Task UpdateProjectStepAsync(Guid projectId, Guid stepId, DateTime? date, double? duration, CancellationToken cancellationToken);
+    Task AddProjectStepAsync(AddProjectStepRequest request, CancellationToken cancellationToken);
+
+    Task UpdateProjectStepAsync(UpdateProjectStepRequest request, CancellationToken cancellationToken);
 
     Task DeleteProjectStepAsync(Guid projectId, Guid stepId, CancellationToken cancellationToken);
-
-    Task AddProjectMaterialAsync(Guid projectId, Guid materialId, double quantity, int unit, CancellationToken cancellationToken);
 }
 
 public class ProjectsService : IProjectsService
@@ -115,7 +116,6 @@ public class ProjectsService : IProjectsService
         }
 
         var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<ProjectMaterialDetails>>();
-
         return result ?? Array.Empty<ProjectMaterialDetails>();
     }
 
@@ -129,76 +129,42 @@ public class ProjectsService : IProjectsService
         }
 
         var result = await response.Content.ReadFromJsonAsync<ProjectStepsGrouped>();
-
-        if (result == null)
-        {
-            throw new Exception($"Project steps for project ID {projectId} not found in the response.");
-        }
-
-        return result;
+        return result ?? new ProjectStepsGrouped();
     }
 
-    public async Task UpdateProjectMaterialAsync(Guid projectId, Guid materialId, double quantity, int unit, CancellationToken cancellationToken)
+    public async Task UpdateProjectMaterialAsync(UpdateProjectMaterialRequest request, CancellationToken cancellationToken)
     {
-        var request = new { Quantity = quantity, Unit = unit };
-        var response = await _httpClient.PutAsJsonAsync($"api/projects/{projectId}/materials/{materialId}", request, cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Failed to update project material. Status code: {response.StatusCode}");
-        }
+        var response = await _httpClient.PutAsJsonAsync($"api/projects/{request.ProjectId}/materials/{request.MaterialId}", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
     }
 
     public async Task DeleteProjectMaterialAsync(Guid projectId, Guid materialId, CancellationToken cancellationToken)
     {
         var response = await _httpClient.DeleteAsync($"api/projects/{projectId}/materials/{materialId}", cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Failed to delete project material. Status code: {response.StatusCode}");
-        }
+        response.EnsureSuccessStatusCode();
     }
 
-    public async Task AddProjectStepAsync(Guid projectId, int step, DateTime date, double duration, CancellationToken cancellationToken)
+    public async Task AddProjectMaterialAsync(AddProjectMaterialRequest request, CancellationToken cancellationToken)
     {
-        var request = new { Step = step, Date = date, Duration = duration };
-        var response = await _httpClient.PostAsJsonAsync($"api/projects/{projectId}/steps", request, cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Failed to add project step. Status code: {response.StatusCode}");
-        }
+        var response = await _httpClient.PostAsJsonAsync("api/projects/materials", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
     }
 
-    public async Task UpdateProjectStepAsync(Guid projectId, Guid stepId, DateTime? date, double? duration, CancellationToken cancellationToken)
+    public async Task AddProjectStepAsync(AddProjectStepRequest request, CancellationToken cancellationToken)
     {
-        var request = new { Date = date, Duration = duration };
-        var response = await _httpClient.PutAsJsonAsync($"api/projects/{projectId}/steps/{stepId}", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync($"api/projects/{request.ProjectId}/steps", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Failed to update project step. Status code: {response.StatusCode}");
-        }
+    public async Task UpdateProjectStepAsync(UpdateProjectStepRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.PutAsJsonAsync($"api/projects/{request.ProjectId}/steps/{request.StepId}", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
     }
 
     public async Task DeleteProjectStepAsync(Guid projectId, Guid stepId, CancellationToken cancellationToken)
     {
         var response = await _httpClient.DeleteAsync($"api/projects/{projectId}/steps/{stepId}", cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Failed to delete project step. Status code: {response.StatusCode}");
-        }
-    }
-
-    public async Task AddProjectMaterialAsync(Guid projectId, Guid materialId, double quantity, int unit, CancellationToken cancellationToken)
-    {
-        var request = new { ProjectId = projectId, MaterialId = materialId, Quantity = quantity, Unit = unit };
-        var response = await _httpClient.PostAsJsonAsync("api/projects/materials", request, cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            throw new Exception($"Failed to add project material. Status code: {response.StatusCode}");
-        }
+        response.EnsureSuccessStatusCode();
     }
 }

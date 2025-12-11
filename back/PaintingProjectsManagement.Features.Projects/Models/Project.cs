@@ -59,28 +59,6 @@ public class Project : TenantEntity
         RaiseDomainEvent(new ProjectMaterialAdded(Id, materialId, quantity));
     }
 
-    public void UpdateStep(Guid stepId, DateTime? date, double? duration)
-    {
-        var step = _steps.FirstOrDefault(s => s.Id == stepId);
-        
-        if (step == null)
-        {
-            throw new InvalidOperationException($"Step {stepId} not found in project {Id}");
-        }
-
-        step.Update(date, duration);
-    }
-
-    public void RemoveStep(Guid stepId)
-    {
-        var step = _steps.FirstOrDefault(s => s.Id == stepId);
-        
-        if (step != null)
-        {
-            _steps.Remove(step);
-        }
-    }
-
     public void AddExecutionWindow(ProjectStepDefinition step, DateTime start, DateTime end)
     {
         _steps.Add(new ProjectStepData(Id, step, start, end));
@@ -152,6 +130,36 @@ public class Project : TenantEntity
         {
             _materials.Remove(material);
             RaiseDomainEvent(new ProjectMaterialRemoved(Id, materialId));
+        }
+    }
+
+    public void UpdateStep(Guid stepId, DateTime? date, double? duration)
+    {
+        var step = _steps.FirstOrDefault(s => s.Id == stepId);
+        if (step == null)
+        {
+            throw new InvalidOperationException($"Step with id {stepId} not found");
+        }
+
+        var oldDate = step.Date;
+        var oldDuration = step.Duration;
+        
+        step.Update(date, duration);
+        
+        var newDate = date ?? oldDate;
+        var newDuration = duration ?? oldDuration;
+        var endDate = newDate.AddHours(newDuration);
+        
+        RaiseDomainEvent(new BuildingStepUpdated(Id, stepId, newDate, endDate));
+    }
+
+    public void RemoveStep(Guid stepId)
+    {
+        var step = _steps.FirstOrDefault(s => s.Id == stepId);
+        if (step != null)
+        {
+            _steps.Remove(step);
+            RaiseDomainEvent(new BuildingStepRemoved(Id, stepId));
         }
     }
 }

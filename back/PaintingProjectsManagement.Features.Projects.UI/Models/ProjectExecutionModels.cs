@@ -2,7 +2,17 @@ using PaintingProjectsManagement.UI.Modules.Shared;
 
 namespace PaintingProjectsManagement.UI.Modules.Projects;
 
-
+public class ProjectMaterialDetails
+{
+    public Guid MaterialId { get; set; }
+    public string MaterialName { get; set; } = string.Empty;
+    public string CategoryName { get; set; } = string.Empty;
+    public string PricePerUnitFormatted { get; set; } = string.Empty;
+    public double Quantity { get; set; }
+    public string QuantityFormatted { get; set; } = string.Empty;
+    public int Unit { get; set; }
+    public string UnitDisplayName { get; set; } = string.Empty;
+}
 
 public class ProjectStepDetails
 {

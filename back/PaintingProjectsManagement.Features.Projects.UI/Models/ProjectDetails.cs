@@ -60,8 +60,6 @@ public record MoneyDetails
     public double Amount { get; set; }
     public string Currency { get; set; } = string.Empty;
 
-    public static MoneyDetails Empty => new MoneyDetails { Amount = 0, Currency = "-" };
-
     public override string ToString()
     {
         return $"{Amount:N1} {Currency}";
@@ -72,8 +70,6 @@ public record QuantityDetails
 {
     public double Amount { get; set; }
     public EnumReference Unit { get; set; } = new(0, string.Empty);
-
-    public static QuantityDetails Empty => new QuantityDetails { Amount = 0, Unit = new EnumReference(0, "-") };
 }
 
 public enum MaterialUnit

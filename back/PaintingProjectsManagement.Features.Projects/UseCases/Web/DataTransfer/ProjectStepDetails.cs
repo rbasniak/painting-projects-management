@@ -7,5 +7,7 @@ public class ProjectStepDetails
     public Guid Id { get; set; }
     public EnumReference Step { get; set; } = default!;
     public DateTime Date { get; set; }
-    public double Duration { get; set; }
+    public string DateFormatted { get; set; } = string.Empty;
+    public double DurationInHours { get; set; }
+    public string DurationFormatted { get; set; } = string.Empty;
 }

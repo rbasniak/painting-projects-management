@@ -22,7 +22,7 @@ public class UpdateProjectStep : IEndpoint
         public Guid ProjectId { get; set; }
         public Guid StepId { get; set; }
         public DateTime? Date { get; set; }
-        public double? Duration { get; set; }
+        public double? DurationInHours { get; set; }
     }
 
     public class Validator : SmartValidator<Request, Project>
@@ -33,16 +33,26 @@ public class UpdateProjectStep : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
-            RuleFor(x => x.Duration)
-                .GreaterThan(0)
-                .When(x => x.Duration.HasValue)
-                .WithMessage("Duration must be greater than 0");
             RuleFor(x => x.ProjectId)
                 .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(p => p.Id == id && p.TenantId == request.Identity.Tenant, ct))
                 .WithMessage("Project not found");
+
             RuleFor(x => x.StepId)
-                .MustAsync(async (request, id, ct) => await Context.Set<ProjectStepData>().AnyAsync(s => s.ProjectId == request.ProjectId && s.Id == id, ct))
+                .MustAsync(async (request, stepId, ct) =>
+                {
+                    var project = await Context.Set<Project>()
+                        .Include(p => p.Steps)
+                        .FirstAsync(p => p.Id == request.ProjectId && p.TenantId == request.Identity.Tenant, ct);
+                    return project.Steps.Any(s => s.Id == stepId);
+                })
                 .WithMessage("Step not found in project");
+
+            When(x => x.DurationInHours.HasValue, () =>
+            {
+                RuleFor(x => x.DurationInHours!.Value)
+                    .GreaterThan(0)
+                    .WithMessage("Duration must be greater than 0");
+            });
         }
     }
 
@@ -52,9 +62,9 @@ public class UpdateProjectStep : IEndpoint
         {
             var project = await _context.Set<Project>()
                 .Include(x => x.Steps)
-                .FirstAsync(x => x.Id == request.ProjectId, cancellationToken);
+                .FirstAsync(x => x.Id == request.ProjectId && x.TenantId == request.Identity.Tenant, cancellationToken);
 
-            project.UpdateStep(request.StepId, request.Date, request.Duration);
+            project.UpdateStep(request.StepId, request.Date, request.DurationInHours);
 
             await _context.SaveChangesAsync(cancellationToken);
 

@@ -1,3 +1,5 @@
+using rbkApiModules.Commons.Core.Abstractions;
+
 namespace PaintingProjectsManagement.Features.Projects;
 
 public class GetProjectMaterials : IEndpoint
@@ -38,32 +40,66 @@ public class GetProjectMaterials : IEndpoint
     {
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var projectMaterials = await _context.Set<MaterialForProject>()
-                .Where(m => m.ProjectId == request.ProjectId)
-                .Join(
-                    _context.Set<Material>().Where(m => m.Tenant == request.Identity.Tenant),
-                    pm => pm.MaterialId,
-                    m => m.Id,
-                    (pm, m) => new { ProjectMaterial = pm, Material = m }
-                )
-                .ToListAsync(cancellationToken);
+            var project = await _context.Set<Project>()
+                .Include(x => x.Materials)
+                .FirstAsync(x => x.Id == request.ProjectId && x.TenantId == request.Identity.Tenant, cancellationToken);
 
-            var result = projectMaterials.Select(x =>
+            if (!project.Materials.Any())
             {
-                var pm = x.ProjectMaterial;
-                var m = x.Material;
-                return new ProjectMaterialDetails
-                {
-                    MaterialId = m.Id,
-                    MaterialName = m.Name,
-                    CategoryName = m.CategoryName,
-                    PricePerUnit = $"{m.PricePerUnit.Amount:F2} {m.PricePerUnit.Currency}/{m.Unit}",
-                    Quantity = $"{pm.Quantity.Value} {pm.Quantity.Unit.ToString().ToLower()}",
-                    Unit = m.Unit
-                };
-            }).ToArray();
+                return QueryResponse.Success(Array.Empty<ProjectMaterialDetails>());
+            }
 
-            return QueryResponse.Success(result);
+            var materialIds = project.Materials.Select(m => m.MaterialId).ToArray();
+
+            var materials = await _context.Set<Material>()
+                .Where(m => m.Tenant == request.Identity.Tenant && materialIds.Contains(m.Id))
+                .ToDictionaryAsync(m => m.Id, cancellationToken);
+            
+            var results = project.Materials
+                .Select(pm =>
+                {
+                    if (!materials.TryGetValue(pm.MaterialId, out var material))
+                    {
+                        return null;
+                    }
+
+                    var pricePerUnit = material.PricePerUnit;
+                    var quantity = pm.Quantity;
+
+                    return new ProjectMaterialDetails
+                    {
+                        MaterialId = pm.MaterialId,
+                        MaterialName = material.Name,
+                        CategoryName = material.CategoryName,
+                        PricePerUnitFormatted = $"{pricePerUnit.Amount:F2} {pricePerUnit.Currency}/{GetUnitDisplayName(quantity.Unit)}",
+                        Quantity = quantity.Value,
+                        QuantityFormatted = $"{quantity.Value:F2} {GetUnitDisplayName(quantity.Unit)}",
+                        Unit = quantity.Unit,
+                        UnitDisplayName = GetUnitDisplayName(quantity.Unit)
+                    };
+                })
+                .Where(x => x != null)
+                .Cast<ProjectMaterialDetails>()
+                .ToList();
+
+            return QueryResponse.Success(results.ToArray());
+        }
+
+        private static string GetUnitDisplayName(MaterialUnit unit)
+        {
+            return unit switch
+            {
+                MaterialUnit.Drop => "drops",
+                MaterialUnit.Unit => "units",
+                MaterialUnit.Centimeter => "centimeters",
+                MaterialUnit.Meter => "meters",
+                MaterialUnit.Gram => "grams",
+                MaterialUnit.Kilogram => "kilograms",
+                MaterialUnit.Liter => "liters",
+                MaterialUnit.Mililiter => "milliliters",
+                MaterialUnit.Spray => "sprays",
+                _ => unit.ToString().ToLower()
+            };
         }
     }
 }

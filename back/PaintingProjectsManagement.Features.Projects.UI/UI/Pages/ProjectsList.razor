@@ -3,6 +3,7 @@
 @using PaintingProjectsManagement.UI.Modules.Projects 
 @using PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 @using PaintingProjectsManagement.UI.Modules.Shared
+@using System.Text.Json
 
 <MudPaper Class="pa-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
@@ -21,10 +22,10 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name" Style="width: 50%">@context.Name</MudTd>
-            <MudTd Style="width: 100px">
+            <MudTd Style="width: 150px">
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
+                <MudIconButton Icon="@Icons.Material.Filled.PlayArrow" OnClick="() => NavigateToExecution(context)" Color="Color.Success" Title="Execution" />
                 <MudIconButton Icon="@Icons.Material.Filled.CurrencyExchange" OnClick="() => GetProjectCost(context)" Color="Color.Primary" />
-                <MudIconButton Icon="@Icons.Material.Filled.PlayArrow" OnClick="() => NavigateToExecution(context)" Color="Color.Success" />
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
             </MudTd>
         </RowTemplate>
@@ -141,6 +142,8 @@
 
     private void NavigateToExecution(ProjectDetails project)
     {
+        Console.WriteLine(JsonSerializer.Serialize(project));
+
         NavigationManager.NavigateTo($"/projects/{project.Id}/execution");
     }
 } 

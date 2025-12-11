@@ -21,7 +21,7 @@ public class AddProjectStep : IEndpoint
         public Guid ProjectId { get; set; }
         public ProjectStepDefinition Step { get; set; }
         public DateTime Date { get; set; }
-        public double Duration { get; set; }
+        public double DurationInHours { get; set; }
     }
 
     public class Validator : SmartValidator<Request, Project>
@@ -32,13 +32,17 @@ public class AddProjectStep : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
-            RuleFor(x => x.Duration).GreaterThan(0).WithMessage("Duration must be greater than 0");
-            RuleFor(x => x.Step)
-                .Must(step => Enum.IsDefined(typeof(ProjectStepDefinition), step))
-                .WithMessage("Invalid step type");
             RuleFor(x => x.ProjectId)
                 .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(p => p.Id == id && p.TenantId == request.Identity.Tenant, ct))
                 .WithMessage("Project not found");
+
+            RuleFor(x => x.Step)
+                .IsInEnum()
+                .WithMessage("Invalid step type");
+
+            RuleFor(x => x.DurationInHours)
+                .GreaterThan(0)
+                .WithMessage("Duration must be greater than 0");
         }
     }
 
@@ -46,10 +50,9 @@ public class AddProjectStep : IEndpoint
     {
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var project = await _context.Set<Project>()
-                .FirstAsync(x => x.Id == request.ProjectId, cancellationToken);
+            var project = await _context.Set<Project>().FirstAsync(x => x.Id == request.ProjectId && x.TenantId == request.Identity.Tenant, cancellationToken);
 
-            project.AddExecutionWindow(request.Step, request.Date, request.Duration);
+            project.AddExecutionWindow(request.Step, request.Date, request.DurationInHours);
 
             await _context.SaveChangesAsync(cancellationToken);
 

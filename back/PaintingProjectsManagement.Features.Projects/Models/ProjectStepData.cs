@@ -29,16 +29,6 @@ public class ProjectStepData
     public DateTime Date { get; private set; }
     public double Duration { get; private set; }
 
-    public void UpdateDate(DateTime date)
-    {
-        Date = date;
-    }
-
-    public void UpdateDuration(double duration)
-    {
-        Duration = duration;
-    }
-
     public void Update(DateTime? date, double? duration)
     {
         if (date.HasValue)

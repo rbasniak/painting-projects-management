@@ -40,22 +40,23 @@ public class GetProjectSteps : IEndpoint
     {
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var steps = await _context.Set<ProjectStepData>()
-                .Where(s => s.ProjectId == request.ProjectId)
-                .OrderBy(s => s.Date)
-                .ToListAsync(cancellationToken);
+            var project = await _context.Set<Project>()
+                .Include(x => x.Steps)
+                .FirstAsync(x => x.Id == request.ProjectId && x.TenantId == request.Identity.Tenant, cancellationToken);
 
-            var stepsByType = steps
+            var stepsByType = project.Steps
                 .GroupBy(s => s.Step)
                 .ToDictionary(
                     g => new EnumReference(g.Key),
-                    g => g.Select(s => new ProjectStepDetails
+                    g => g.Select(step => new ProjectStepDetails
                     {
-                        Id = s.Id,
-                        Step = new EnumReference(s.Step),
-                        Date = s.Date,
-                        Duration = s.Duration
-                    }).ToList()
+                        Id = step.Id,
+                        Step = new EnumReference(step.Step),
+                        Date = step.Date,
+                        DateFormatted = step.Date.ToString("yyyy-MM-dd HH:mm"),
+                        DurationInHours = step.Duration,
+                        DurationFormatted = FormatDuration(step.Duration)
+                    }).OrderBy(s => s.Date).ToList()
                 );
 
             var result = new ProjectStepsGrouped
@@ -64,6 +65,26 @@ public class GetProjectSteps : IEndpoint
             };
 
             return QueryResponse.Success(result);
+        }
+
+        private static string FormatDuration(double hours)
+        {
+            var totalMinutes = (int)(hours * 60);
+            var h = totalMinutes / 60;
+            var m = totalMinutes % 60;
+
+            if (h > 0 && m > 0)
+            {
+                return $"{h}h {m}m";
+            }
+            else if (h > 0)
+            {
+                return $"{h}h";
+            }
+            else
+            {
+                return $"{m}m";
+            }
         }
     }
 }

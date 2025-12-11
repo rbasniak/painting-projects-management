@@ -1,161 +1,133 @@
 @using MudBlazor
 @using PaintingProjectsManagement.UI.Modules.Projects
+@using PaintingProjectsManagement.UI.Modules.Shared
 
 @namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 
 <MudDialog>
     <DialogContent>
-        <MudStack Spacing="4">
-            <MudSelect 
-                @bind-Value="selectedStepType"
-                Label="Step Type"
-                Variant="Variant.Outlined"
-                Required="true">
+        <MudStack Spacing="3">
+            <MudText Typo="Typo.h6">Add Execution Step</MudText>
+            
+            <MudSelect @bind-Value="selectedStepId" 
+                      Label="Step Type" 
+                      Variant="Variant.Outlined"
+                      Required="true">
                 <MudSelectItem Value="10">Planning</MudSelectItem>
                 <MudSelectItem Value="20">Supporting</MudSelectItem>
                 <MudSelectItem Value="30">Printing</MudSelectItem>
                 <MudSelectItem Value="40">Cleaning</MudSelectItem>
-                <MudSelectItem Value="50">Post Processing</MudSelectItem>
+                <MudSelectItem Value="50">PostProcessing</MudSelectItem>
                 <MudSelectItem Value="60">Painting</MudSelectItem>
             </MudSelect>
-
-            <MudDatePicker 
-                @bind-Date="stepDate" 
-                Label="Date" 
-                Variant="Variant.Outlined"
-                Required="true" />
-
-            <MudTimePicker 
-                @bind-Time="stepTime" 
-                Label="Time" 
-                Variant="Variant.Outlined" />
-
-            <MudTextField 
-                @bind-Value="duration" 
-                Label="Duration (hours)" 
-                Variant="Variant.Outlined"
-                InputType="InputType.Number"
-                Adornment="Adornment.End"
-                AdornmentText="hours"
-                Style="font-size: 1.5rem;" />
-
-            <MudText Typo="Typo.body2" Class="mb-2">Quick Adjustments:</MudText>
             
-            <MudGrid>
-                <MudItem xs="3">
-                    <MudButton 
-                        Variant="Variant.Outlined" 
-                        Color="Color.Error" 
-                        Size="Size.Large"
-                        FullWidth="true"
-                        OnClick="() => AdjustDuration(-1)">
-                        -1h
-                    </MudButton>
-                </MudItem>
-                <MudItem xs="3">
-                    <MudButton 
-                        Variant="Variant.Outlined" 
-                        Color="Color.Error" 
-                        Size="Size.Large"
-                        FullWidth="true"
-                        OnClick="() => AdjustDuration(-0.5)">
-                        -30m
-                    </MudButton>
-                </MudItem>
-                <MudItem xs="3">
-                    <MudButton 
-                        Variant="Variant.Outlined" 
-                        Color="Color.Error" 
-                        Size="Size.Large"
-                        FullWidth="true"
-                        OnClick="() => AdjustDuration(-0.25)">
-                        -15m
-                    </MudButton>
-                </MudItem>
-                <MudItem xs="3">
-                    <MudButton 
-                        Variant="Variant.Outlined" 
-                        Color="Color.Success" 
-                        Size="Size.Large"
-                        FullWidth="true"
-                        OnClick="() => AdjustDuration(0.25)">
-                        +15m
-                    </MudButton>
-                </MudItem>
-                <MudItem xs="3">
-                    <MudButton 
-                        Variant="Variant.Outlined" 
-                        Color="Color.Success" 
-                        Size="Size.Large"
-                        FullWidth="true"
-                        OnClick="() => AdjustDuration(0.5)">
-                        +30m
-                    </MudButton>
-                </MudItem>
-                <MudItem xs="3">
-                    <MudButton 
-                        Variant="Variant.Outlined" 
-                        Color="Color.Success" 
-                        Size="Size.Large"
-                        FullWidth="true"
-                        OnClick="() => AdjustDuration(1)">
-                        +1h
-                    </MudButton>
-                </MudItem>
-            </MudGrid>
+            <MudDatePicker @bind-Date="stepDate" 
+                          Label="Date" 
+                          Variant="Variant.Outlined"
+                          Required="true" />
+            
+            <MudTimePicker @bind-Time="stepTime" 
+                          Label="Time" 
+                          Variant="Variant.Outlined"
+                          Required="true" />
+            
+            <MudNumericField @bind-Value="durationInHours" 
+                            Label="Duration (hours)" 
+                            Variant="Variant.Outlined"
+                            Min="0.01"
+                            Step="0.25"
+                            HelperText="Duration in decimal hours (e.g., 1.5 = 1h 30m)"
+                            Immediate="true" />
+            
+            <MudStack Row="true" Spacing="2" Justify="Justify.Center">
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustDuration(-1)">-1h</MudButton>
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustDuration(-0.5)">-30m</MudButton>
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustDuration(-0.25)">-15m</MudButton>
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustDuration(0.25)">+15m</MudButton>
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustDuration(0.5)">+30m</MudButton>
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustDuration(1)">+1h</MudButton>
+            </MudStack>
         </MudStack>
     </DialogContent>
     <DialogActions>
+        <MudButton OnClick="Submit" Color="Color.Primary" Size="Size.Large" Variant="Variant.Filled">Add</MudButton>
         <MudButton OnClick="Cancel" Size="Size.Large">Cancel</MudButton>
-        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Save" Size="Size.Large">Add Step</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
-    [CascadingParameter] IMudDialogInstance MudDialog { get; set; } = default!;
     [Parameter] public Guid ProjectId { get; set; }
-
+    
+    [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
-    private int? selectedStepType = null;
+    private int? selectedStepId;
     private DateTime? stepDate = DateTime.Now.Date;
     private TimeSpan? stepTime = DateTime.Now.TimeOfDay;
-    private double duration = 0;
+    private double durationInHours = 1.0;
 
     private void AdjustDuration(double delta)
     {
-        duration = Math.Max(0, duration + delta);
+        durationInHours = Math.Max(0.01, durationInHours + delta);
     }
 
-    private async Task Save()
+    private async Task Submit()
     {
-        if (!selectedStepType.HasValue || !stepDate.HasValue || duration <= 0)
-        {
-            Snackbar.Add("Please fill in all required fields", Severity.Warning);
-            return;
-        }
-
         try
         {
-            var date = stepDate.Value.Date;
-            if (stepTime.HasValue)
+            if (!selectedStepId.HasValue)
             {
-                date = date.Add(stepTime.Value);
+                Snackbar.Add("Please select a step type", Severity.Warning);
+                return;
             }
 
-            await ProjectsService.AddProjectStepAsync(ProjectId, selectedStepType.Value, date, duration, default);
-            MudDialog.Close(DialogResult.Ok(true));
+            if (!stepDate.HasValue || !stepTime.HasValue)
+            {
+                Snackbar.Add("Please select both date and time", Severity.Warning);
+                return;
+            }
+
+            var dateTime = stepDate.Value.Date.Add(stepTime.Value);
+
+            var request = new AddProjectStepRequest
+            {
+                ProjectId = ProjectId,
+                Step = selectedStepId.Value,
+                Date = dateTime,
+                DurationInHours = durationInHours
+            };
+
+            await ProjectsService.AddProjectStepAsync(request, default);
             Snackbar.Add("Step added successfully", Severity.Success);
+            MudDialog?.Close(DialogResult.Ok(true));
         }
         catch (Exception ex)
         {
             Snackbar.Add($"Error adding step: {ex.Message}", Severity.Error);
         }
     }
-
+    
     private void Cancel()
     {
-        MudDialog.Cancel();
+        MudDialog?.Cancel();
     }
 }
