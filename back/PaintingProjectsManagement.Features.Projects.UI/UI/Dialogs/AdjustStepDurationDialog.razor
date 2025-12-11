@@ -64,7 +64,7 @@
 
 @code {
     [Parameter] public ProjectStepDetails Step { get; set; } = default!;
-    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public string ProjectId { get; set; }
     
     [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
@@ -100,7 +100,7 @@
 
             var request = new UpdateProjectStepRequest
             {
-                ProjectId = ProjectId,
+                ProjectId = new Guid(ProjectId),
                 StepId = Step.Id,
                 Date = dateTime,
                 DurationInHours = durationInHours

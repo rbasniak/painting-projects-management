@@ -24,30 +24,38 @@
         else if (stepsGrouped.StepsByType.Any())
         {
             <MudExpansionPanels MultiExpansion="true">
-                @foreach (var group in stepsGrouped.StepsByType.OrderBy(x => x.Key.Id))
+                @foreach (var group in stepsGrouped.StepsByType.OrderBy(x => x.Key))
                 {
-                    <MudExpansionPanel Text="@group.Key.Value" Icon="@Icons.Material.Filled.List">
-                        <MudTable Items="group.Value" Hover="true" Dense="false" Striped="true">
-                            <HeaderContent>
-                                <MudTh>Date</MudTh>
-                                <MudTh>Duration</MudTh>
-                                <MudTh Style="width: 150px;">Actions</MudTh>
-                            </HeaderContent>
-                            <RowTemplate>
-                                <MudTd>@context.DateFormatted</MudTd>
-                                <MudTd>@context.DurationFormatted</MudTd>
-                                <MudTd>
-                                    <MudIconButton Icon="@Icons.Material.Filled.Edit" 
-                                                  OnClick="() => EditStep(context)" 
-                                                  Color="Color.Primary" 
-                                                  Size="Size.Small" />
-                                    <MudIconButton Icon="@Icons.Material.Filled.Delete" 
-                                                  OnClick="() => DeleteStep(context)" 
-                                                  Color="Color.Error" 
-                                                  Size="Size.Small" />
-                                </MudTd>
-                            </RowTemplate>
-                        </MudTable>
+                    <MudExpansionPanel Icon="@Icons.Material.Filled.KeyboardArrowDown">
+                        <TitleContent>
+                            <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+                                <MudText>@group.Value.First().Step.Value</MudText>
+                                <MudChip T="string" Color="Color.Default" Variant="Variant.Outlined" Size="Size.Small">@FormatDuration(group.Value.Sum(s => s.DurationInHours))</MudChip>
+                            </div>
+                        </TitleContent>
+                        <ChildContent>
+                            <MudTable Items="group.Value" Hover="true" Dense="false" Striped="true">
+                                <HeaderContent>
+                                    <MudTh>Date</MudTh>
+                                    <MudTh>Duration</MudTh>
+                                    <MudTh Style="width: 150px;">Actions</MudTh>
+                                </HeaderContent>
+                                <RowTemplate>
+                                    <MudTd>@FormatDate(context.Date)</MudTd>
+                                    <MudTd>@FormatDuration(context.DurationInHours)</MudTd>
+                                    <MudTd>
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                                      OnClick="() => EditStep(context)" 
+                                                      Color="Color.Primary" 
+                                                      Size="Size.Small" />
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                                      OnClick="() => DeleteStep(context)" 
+                                                      Color="Color.Error" 
+                                                      Size="Size.Small" />
+                                    </MudTd>
+                                </RowTemplate>
+                            </MudTable>
+                        </ChildContent>
                     </MudExpansionPanel>
                 }
             </MudExpansionPanels>
@@ -158,5 +166,22 @@
     private void NavigateBack()
     {
         NavigationManager.NavigateTo($"/projects/{ProjectId}/execution");
+    }
+
+    private static string FormatDuration(double hours)
+    {
+        var wholeHours = (int)Math.Floor(hours);
+        var minutes = (int)Math.Round((hours - wholeHours) * 60);
+        if (minutes == 60)
+        {
+            wholeHours += 1;
+            minutes = 0;
+        }
+        return $"{wholeHours}h {(minutes > 0 ? $"{minutes}min" : "0min")}";
+    }
+
+    private static string FormatDate(DateTime date)
+    {
+        return $"{date:dd MMM yyyy HH}h{date:mm}min";
     }
 }
