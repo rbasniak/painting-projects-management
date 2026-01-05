@@ -44,21 +44,14 @@
                         <!-- Left Column: Image Viewer -->
                         <MudItem xs="12" md="8">
                             <MudPaper Elevation="1" Class="image-viewer-container" Style="height: 100%; position: relative; overflow: hidden;">
-                                <div style="width: 100%; height: 100%; position: relative; overflow: hidden; cursor: crosshair;" 
-                                     @onmousemove="OnImageMouseMove"
-                                     @onmousemove:stopPropagation="true">
+                                <div style="width: 100%; height: 100%; position: relative; overflow: hidden; cursor: crosshair; touch-action: none;" 
+                                     id="image-container">
                                     <img id="zoomable-image"
                                          @ref="zoomableImageRef"
                                          src="@CurrentImageUrl" 
                                          crossorigin="anonymous"
                                          alt="Reference Image"
                                          style="display: block; max-width: none; user-select: none; transform-origin: 0 0;"
-                                         @onmousedown="OnImageMouseDown"
-                                         @onmouseup="OnImageMouseUp"
-                                         @onmousemove="OnImageMouseMovePan"
-                                         @onwheel="OnImageWheel"
-                                         @onwheel:preventDefault="true"
-                                         @oncontextmenu="OnContextMenu"
                                          @oncontextmenu:preventDefault="true" />
                                     <div id="pixel-magnifier"
                                          @ref="magnifierRef" 
@@ -122,12 +115,6 @@
         : null;
 
     private SelectedColor? selectedColor;
-    private double imageScale = 1.0;
-    private double imageOffsetX = 0;
-    private double imageOffsetY = 0;
-    private bool isPanning = false;
-    private double panStartX = 0;
-    private double panStartY = 0;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -136,17 +123,12 @@
             try
             {
                 jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/PaintingProjectsManagement.Features.Projects.UI/js/imageViewer.js");
-                await jsModule.InvokeVoidAsync("initializeImageViewer", "zoomable-image", "pixel-magnifier", DotNetObjectReference.Create(this));
+                await jsModule.InvokeVoidAsync("initializeImageViewer", "image-container", "zoomable-image", "pixel-magnifier", DotNetObjectReference.Create(this));
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to load image viewer JS module: {ex.Message}");
             }
-        }
-        
-        if (jsModule != null && CurrentImageUrl != null)
-        {
-            await jsModule.InvokeVoidAsync("updateImageTransform", "zoomable-image", imageScale, imageOffsetX, imageOffsetY);
         }
     }
 
@@ -156,88 +138,23 @@
         if (index >= 0)
         {
             selectedImageIndex = index;
-            imageScale = 1.0;
-            imageOffsetX = 0;
-            imageOffsetY = 0;
             selectedColor = null;
             StateHasChanged();
             
-            // Wait for the image to load, then update transform
-            await Task.Delay(100); // Small delay to ensure image element is updated
-            if (jsModule != null && CurrentImageUrl != null)
-            {
-                await jsModule.InvokeVoidAsync("updateImageTransform", "zoomable-image", imageScale, imageOffsetX, imageOffsetY);
-            }
-        }
-    }
-
-    private async Task OnImageMouseMove(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)
-    {
-        if (CurrentImageUrl == null || jsModule == null) return;
-
-        try
-        {
-            await jsModule.InvokeVoidAsync("handleMouseMove", "zoomable-image", "pixel-magnifier", e.ClientX, e.ClientY, imageScale, imageOffsetX, imageOffsetY);
-        }
-        catch (Exception ex)
-        { 
-        }
-    }
-
-    private async Task OnImageMouseDown(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)
-    {
-        if (e.Button == 2) // Right button
-        {
-            isPanning = true;
-            panStartX = e.ClientX - imageOffsetX;
-            panStartY = e.ClientY - imageOffsetY;
-        }
-        else if (e.Button == 0 && jsModule != null) // Left button
-        {
-            try
-            {
-                var color = await jsModule.InvokeAsync<SelectedColor>("getPixelColor", "zoomable-image", e.ClientX, e.ClientY, imageScale, imageOffsetX, imageOffsetY);
-                if (color != null)
-                {
-                    selectedColor = color;
-                    StateHasChanged();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-    }
-
-    private void OnImageMouseUp(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)
-    {
-        if (e.Button == 2)
-        {
-            isPanning = false;
-        }
-    }
-
-    private async Task OnImageMouseMovePan(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)
-    {
-        if (isPanning)
-        {
-            imageOffsetX = e.ClientX - panStartX;
-            imageOffsetY = e.ClientY - panStartY;
+            // Wait for the image to load, then reset transform
+            await Task.Delay(100); 
             if (jsModule != null)
             {
-                await jsModule.InvokeVoidAsync("updateImageTransform", "zoomable-image", imageScale, imageOffsetX, imageOffsetY);
+                await jsModule.InvokeVoidAsync("resetImageViewer");
             }
         }
     }
 
-    private async Task OnImageWheel(Microsoft.AspNetCore.Components.Web.WheelEventArgs e)
+    [JSInvokable]
+    public void SetSelectedColor(int r, int g, int b)
     {
-        var delta = e.DeltaY > 0 ? 0.9 : 1.1;
-        imageScale = Math.Max(0.5, Math.Min(5.0, imageScale * delta));
-        if (jsModule != null)
-        {
-            await jsModule.InvokeVoidAsync("updateImageTransform", "zoomable-image", imageScale, imageOffsetX, imageOffsetY);
-        }
+        selectedColor = new SelectedColor { R = r, G = g, B = b };
+        StateHasChanged();
     }
 
     private void OnContextMenu(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)
