@@ -129,18 +129,26 @@ function showPixelMagnifier(img, magnifier, clientX, clientY, localX, localY, sc
     
     // Position magnifier near cursor (avoid going off screen)
     const offset = 20;
-    let left = clientX + offset;
-    let top = clientY + offset;
+    let targetX = clientX + offset;
+    let targetY = clientY + offset;
     
-    if (left + magnifierSize > window.innerWidth) {
-        left = clientX - magnifierSize - offset;
+    if (targetX + magnifierSize > window.innerWidth) {
+        targetX = clientX - magnifierSize - offset;
     }
-    if (top + magnifierSize > window.innerHeight) {
-        top = clientY - magnifierSize - offset;
+    if (targetY + magnifierSize > window.innerHeight) {
+        targetY = clientY - magnifierSize - offset;
     }
     
-    magnifier.style.left = `${left}px`;
-    magnifier.style.top = `${top}px`;
+    // Convert to coordinates relative to the container
+    // The magnifier is absolutely positioned within a relative container
+    const container = img.parentElement;
+    const containerRect = container.getBoundingClientRect();
+    
+    const relativeLeft = targetX - containerRect.left;
+    const relativeTop = targetY - containerRect.top;
+    
+    magnifier.style.left = `${relativeLeft}px`;
+    magnifier.style.top = `${relativeTop}px`;
 }
 
 export function getPixelColor(imageElementId, clientX, clientY, scale, offsetX, offsetY) {
