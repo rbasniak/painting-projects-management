@@ -19,7 +19,11 @@ public class ProjectDetails
 
     //public ProjectStepDataDetails[] Steps { get; set; } = Array.Empty<ProjectStepDataDetails>();
     //// public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();
-    //public UrlReference[] References { get; set; } = Array.Empty<UrlReference>();
+    public UrlReference[] References => [
+        new UrlReference { Id = Guid.NewGuid(), Url = "http://localhost:5191/uploads/samples/image1.png" },
+        new UrlReference { Id = Guid.NewGuid(), Url = "http://localhost:5191/uploads/samples/image2.png" },
+        new UrlReference { Id = Guid.NewGuid(), Url = "http://localhost:5191/uploads/samples/image3.png" }
+    ];
     //public UrlReference[] Pictures { get; set; } = Array.Empty<UrlReference>();
     //public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();
     public ProjectCostDetails CostBreakdown { get; set; }  
@@ -78,4 +82,10 @@ public enum MaterialUnit
     Mililiter = 20,
     Meter = 30,
     Each = 40
+}
+
+public class UrlReference
+{
+    public Guid Id { get; set; }
+    public string Url { get; set; } = string.Empty;
 } 

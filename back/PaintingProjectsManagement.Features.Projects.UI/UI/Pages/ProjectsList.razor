@@ -25,7 +25,21 @@
             <MudTd Style="width: 150px">
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
                 <MudIconButton Icon="@Icons.Material.Filled.PlayArrow" OnClick="() => NavigateToExecution(context)" Color="Color.Success" Title="Execution" />
-                <MudIconButton Icon="@Icons.Material.Filled.CurrencyExchange" OnClick="() => GetProjectCost(context)" Color="Color.Primary" />
+                <MudMenu>
+                    <ActivatorContent>
+                        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Primary" />
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem OnClick="() => GetProjectCost(context)">
+                            <MudIcon Icon="@Icons.Material.Filled.CurrencyExchange" Class="mr-3" />
+                            Costs
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="() => OpenColorZones(context)">
+                            <MudIcon Icon="@Icons.Material.Filled.Palette" Class="mr-3" />
+                            Color Zones
+                        </MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
             </MudTd>
         </RowTemplate>
@@ -92,6 +106,15 @@
         var parameters = new DialogParameters { ["Model"] = projectDetails };
         var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
         var dialog = DialogService.Show<ProjectCostBreakdownDialog>(title: null, parameters, options);
+    }
+
+    private async Task OpenColorZones(ProjectDetails project)
+    {
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+        var dialog = DialogService.Show<ColorZonesDialog>(title: null, parameters, options);
     }
 
     private async Task Edit(ProjectDetails project)
