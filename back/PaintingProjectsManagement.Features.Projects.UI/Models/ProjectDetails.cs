@@ -20,9 +20,9 @@ public class ProjectDetails
     //public ProjectStepDataDetails[] Steps { get; set; } = Array.Empty<ProjectStepDataDetails>();
     //// public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();
     public UrlReference[] References => [
-        new UrlReference { Id = Guid.NewGuid(), Url = "http://localhost:5191/uploads/samples/image1.png" },
-        new UrlReference { Id = Guid.NewGuid(), Url = "http://localhost:5191/uploads/samples/image2.png" },
-        new UrlReference { Id = Guid.NewGuid(), Url = "http://localhost:5191/uploads/samples/image3.png" }
+        new UrlReference { Id = Guid.NewGuid(), Url = "https://localhost:7236/uploads/sample/image1.png" },
+        new UrlReference { Id = Guid.NewGuid(), Url = "https://localhost:7236/uploads/sample/image2.png" },
+        new UrlReference { Id = Guid.NewGuid(), Url = "https://localhost:7236/uploads/sample/image3.png" }
     ];
     //public UrlReference[] Pictures { get; set; } = Array.Empty<UrlReference>();
     //public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();

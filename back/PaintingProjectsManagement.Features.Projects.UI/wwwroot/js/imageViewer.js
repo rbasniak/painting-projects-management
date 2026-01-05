@@ -117,10 +117,15 @@ function showPixelMagnifier(img, magnifier, clientX, clientY, localX, localY, sc
     magnifiedCtx.strokeRect(centerX, centerY, gridSize, gridSize);
     
     // Set magnifier content
-    magnifier.style.backgroundImage = `url(${magnifiedCanvas.toDataURL()})`;
-    magnifier.style.backgroundSize = 'cover';
-    magnifier.style.backgroundPosition = 'center';
-    magnifier.style.display = 'block';
+    try {
+        magnifier.style.backgroundImage = `url(${magnifiedCanvas.toDataURL()})`;
+        magnifier.style.backgroundSize = 'cover';
+        magnifier.style.backgroundPosition = 'center';
+        magnifier.style.display = 'block';
+    } catch (e) {
+        // Canvas is tainted, likely due to CORS issues
+        magnifier.style.display = 'none';
+    }
     
     // Position magnifier near cursor (avoid going off screen)
     const offset = 20;
@@ -163,13 +168,18 @@ export function getPixelColor(imageElementId, clientX, clientY, scale, offsetX, 
     ctx.drawImage(img, 0, 0);
     
     // Get pixel color
-    const imageData = ctx.getImageData(localX, localY, 1, 1);
-    const [r, g, b] = imageData.data;
-    
-    return {
-        r: r,
-        g: g,
-        b: b
-    };
+    try {
+        const imageData = ctx.getImageData(localX, localY, 1, 1);
+        const [r, g, b] = imageData.data;
+        
+        return {
+            r: r,
+            g: g,
+            b: b
+        };
+    } catch (e) {
+        // Canvas is tainted
+        return null;
+    }
 }
 

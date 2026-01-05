@@ -50,6 +50,7 @@
                                     <img id="zoomable-image"
                                          @ref="zoomableImageRef"
                                          src="@CurrentImageUrl" 
+                                         crossorigin="anonymous"
                                          alt="Reference Image"
                                          style="display: block; max-width: none; user-select: none; transform-origin: 0 0;"
                                          @onmousedown="OnImageMouseDown"
@@ -117,7 +118,7 @@
 
     private int selectedImageIndex = 0;
     private string? CurrentImageUrl => Model?.References?.Length > 0 && selectedImageIndex >= 0 && selectedImageIndex < Model.References.Length
-        ? Model.References[selectedImageIndex].Url
+        ? Model.References[selectedImageIndex].Url + "?cors=true"
         : null;
 
     private SelectedColor? selectedColor;
@@ -130,8 +131,6 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Console.WriteLine(JsonSerializer.Serialize(Model));
-
         if (firstRender)
         {
             try
@@ -180,7 +179,9 @@
         {
             await jsModule.InvokeVoidAsync("handleMouseMove", "zoomable-image", "pixel-magnifier", e.ClientX, e.ClientY, imageScale, imageOffsetX, imageOffsetY);
         }
-        catch { }
+        catch (Exception ex)
+        { 
+        }
     }
 
     private async Task OnImageMouseDown(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)
@@ -202,7 +203,9 @@
                     StateHasChanged();
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+            }
         }
     }
 
