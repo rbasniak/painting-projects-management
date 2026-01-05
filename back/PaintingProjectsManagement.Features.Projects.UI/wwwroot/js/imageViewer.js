@@ -44,8 +44,8 @@ export function handleMouseMove(imageElementId, magnifierElementId, clientX, cli
     const rect = img.getBoundingClientRect();
     
     // Calculate local coordinates
-    const localX = (clientX - rect.left - offsetX) / scale;
-    const localY = (clientY - rect.top - offsetY) / scale;
+    const localX = (clientX - rect.left) / scale;
+    const localY = (clientY - rect.top) / scale;
     
     // Check if mouse is over the image
     if (localX >= 0 && localX < img.naturalWidth && localY >= 0 && localY < img.naturalHeight) {
@@ -160,8 +160,8 @@ export function getPixelColor(imageElementId, clientX, clientY, scale, offsetX, 
     const rect = img.getBoundingClientRect();
     
     // Calculate image coordinates
-    const localX = Math.floor((clientX - rect.left - offsetX) / scale);
-    const localY = Math.floor((clientY - rect.top - offsetY) / scale);
+    const localX = Math.floor((clientX - rect.left) / scale);
+    const localY = Math.floor((clientY - rect.top) / scale);
     
     // Check bounds
     if (localX < 0 || localX >= img.naturalWidth || localY < 0 || localY >= img.naturalHeight) {
