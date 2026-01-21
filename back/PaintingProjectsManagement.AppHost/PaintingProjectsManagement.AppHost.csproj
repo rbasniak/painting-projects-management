@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj" />
-    <ProjectReference Include="..\..\blazor\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <DisableImplicitAspNetCoreFrameworkReference>true</DisableImplicitAspNetCoreFrameworkReference>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" PrivateAssets="all" />
+    <PackageReference Include="MudBlazor" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PaintingProjectsManagement.Features.Projects.UI\PaintingProjectsManagement.Features.Projects.UI.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.UI.Modules.Models\PaintingProjectsManagement.Features.Models.UI.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.UI.Modules.Materials\PaintingProjectsManagement.Features.Materials.UI.csproj" />
+  </ItemGroup>
+
+</Project>
+

@@ -1,0 +1,292 @@
+@page "/models/library"
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Models 
+@using PaintingProjectsManagement.UI.Modules.Models.UI.Dialogs
+@using PaintingProjectsManagement.UI.Modules.Shared
+
+<MudPaper Class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
+        <MudText Typo="Typo.h5">Models Library</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Add">Add</MudButton>
+    </MudStack>
+
+    <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" Class="mb-2" />
+
+    <MudTable Items="sortedModels" Hover="true" Dense="true" RowsPerPage="10" SortLabel="Sort by" @bind-TableState="tableState">
+        <HeaderContent>
+            <MudTh Style="width: 20%">
+                <MudTableSortLabel SortBy="new Func<ModelDetails, object>(x => x.Name)">Name</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 15%">
+                <MudTableSortLabel SortBy="new Func<ModelDetails, object>(x => x.Franchise)">Franchise</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 15%">
+                <MudTableSortLabel SortBy="new Func<ModelDetails, object>(x => x.Category.Name)">Category</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 10%">
+                <MudTableSortLabel SortBy="new Func<ModelDetails, object>(x => x.Type.Value)">Type</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 10%">
+                <MudTableSortLabel SortBy="new Func<ModelDetails, object>(x => x.Artist)">Artist</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 10%">
+                <MudTableSortLabel SortBy="new Func<ModelDetails, object>(x => x.Score)">Score</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 10%">
+                <MudTableSortLabel SortBy="new Func<ModelDetails, object>(x => x.Size)">Size (MB)</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 10%">
+                <MudTableSortLabel SortBy="new Func<ModelDetails, object>(x => x.MustHave)">Must Have</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 200px; min-width: 200px"></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name" Style="width: 20%">@context.Name</MudTd>
+            <MudTd DataLabel="Franchise" Style="width: 15%">@context.Franchise</MudTd>
+            <MudTd DataLabel="Category" Style="width: 15%">@context.Category.Name</MudTd>
+            <MudTd DataLabel="Type" Style="width: 10%">@context.Type.Value</MudTd>
+            <MudTd DataLabel="Artist" Style="width: 10%">@context.Artist</MudTd>
+            <MudTd DataLabel="Score" Style="width: 10%">@context.Score</MudTd>
+            <MudTd DataLabel="Size" Style="width: 10%">@context.Size</MudTd>
+            <MudTd DataLabel="Must Have" Style="width: 10%">
+                <MudCheckBox T="bool" @bind-Checked="context.MustHave" />
+            </MudTd>
+            <MudTd Style="width: 200px; min-width: 200px">
+                <MudIconButton Icon="@Icons.Material.Filled.Image" OnClick="() => ManagePictures(context)" Color="Color.Secondary" />
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
+
+@code {
+    [Inject] public IModelsService ModelsService { get; set; } = default!;
+    [Inject] public IDialogService DialogService { get; set; } = default!;
+
+    private List<ModelDetails> models = new();
+    private string searchString = string.Empty;
+    private TableState tableState = new();
+
+    private IEnumerable<ModelDetails> sortedModels
+    {
+        get
+        {
+            var filtered = models.Where(m => string.IsNullOrWhiteSpace(searchString) ||
+                m.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                m.Franchise.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                m.Category.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                (m.Artist?.Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? false));
+
+            if (tableState.SortLabel == "Name")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(m => m.Name)
+                    : filtered.OrderByDescending(m => m.Name);
+            }
+            else if (tableState.SortLabel == "Franchise")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(m => m.Franchise)
+                    : filtered.OrderByDescending(m => m.Franchise);
+            }
+            else if (tableState.SortLabel == "Category")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(m => m.Category.Name)
+                    : filtered.OrderByDescending(m => m.Category.Name);
+            }
+            else if (tableState.SortLabel == "Type")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(m => m.Type.Value)
+                    : filtered.OrderByDescending(m => m.Type.Value);
+            }
+            else if (tableState.SortLabel == "Artist")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(m => m.Artist)
+                    : filtered.OrderByDescending(m => m.Artist);
+            }
+            else if (tableState.SortLabel == "Score")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(m => m.Score)
+                    : filtered.OrderByDescending(m => m.Score);
+            }
+            else if (tableState.SortLabel == "Size (MB)")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(m => m.Size)
+                    : filtered.OrderByDescending(m => m.Size);
+            }
+            else if (tableState.SortLabel == "Must Have")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(m => m.MustHave)
+                    : filtered.OrderByDescending(m => m.MustHave);
+            }
+
+            return filtered;
+        }
+    }
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        models = (await ModelsService.GetAllAsync(CancellationToken.None)).ToList();
+    }
+
+    private async Task Add()
+    {
+        var parameters = new DialogParameters 
+        { 
+            ["Model"] = new ModelDetails(),
+            ["AllModels"] = models
+        };
+
+        var dialog = await DialogService.ShowAsync<ModelsDialog>("Model", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled && result.Data is ModelDetails input)
+        {
+            var request = new CreateModelRequest
+            {
+                Name = input.Name,
+                Franchise = input.Franchise,
+                Characters = input.Characters,
+                CategoryId = input.Category.Id,
+                Type = (ModelType)input.Type.Id,
+                Artist = input.Artist,
+                Tags = input.Tags,
+                CoverPicture = input.CoverPicture,
+                BaseSize = BaseSize.Unknown,
+                FigureSize = FigureSize.Unknown,
+                NumberOfFigures = 1,
+                SizeInMb = 0
+            };
+            var created = await ModelsService.CreateAsync(request, CancellationToken.None);
+
+            // Set MustHave separately if needed
+            if (input.MustHave)
+            {
+                await ModelsService.SetMustHaveAsync(created.Id, true, CancellationToken.None);
+                created.MustHave = true;
+            }
+
+            models.Add(created);
+        }
+    }
+
+    private async Task Edit(ModelDetails model)
+    {
+        var input = new ModelDetails
+        {
+            Id = model.Id,
+            Name = model.Name,
+            Franchise = model.Franchise,
+            Characters = model.Characters,
+            Category = model.Category,
+            Type = model.Type,
+            Artist = model.Artist,
+            Tags = model.Tags,
+            CoverPicture = model.CoverPicture,
+            BaseSize = model.BaseSize,
+            FigureSize = model.FigureSize,
+            NumberOfFigures = model.NumberOfFigures,
+            Size = model.Size,
+            MustHave = model.MustHave
+        };
+        var parameters = new DialogParameters 
+        { 
+            ["Model"] = input,
+            ["AllModels"] = models
+        };
+        var dialog = await DialogService.ShowAsync<ModelsDialog>("Model", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled && result.Data is ModelDetails updatedInput)
+        {
+            if (updatedInput.Id == Guid.Empty)
+            {
+                return;
+            }
+
+            var request = new UpdateModelRequest
+            {
+                Id = updatedInput.Id,
+                Name = updatedInput.Name,
+                Franchise = updatedInput.Franchise,
+                Characters = updatedInput.Characters,
+                CategoryId = updatedInput.Category.Id,
+                Type = (ModelType)updatedInput.Type.Id,
+                Artist = updatedInput.Artist,
+                Tags = updatedInput.Tags,
+                CoverPicture = updatedInput.CoverPicture,
+                BaseSize = BaseSize.Unknown,
+                FigureSize = FigureSize.Unknown,
+                NumberOfFigures = 1,
+                SizeInMb = 0
+            };
+            var updated = await ModelsService.UpdateAsync(request, CancellationToken.None);
+
+            // Update MustHave separately if it changed
+            if (updatedInput.MustHave != model.MustHave)
+            {
+                await ModelsService.SetMustHaveAsync(updatedInput.Id, updatedInput.MustHave, CancellationToken.None);
+                updated.MustHave = updatedInput.MustHave;
+            }
+
+            var index = models.FindIndex(m => m.Id == updated.Id);
+            if (index >= 0)
+                models[index] = updated;
+        }
+    }
+
+    private async Task ManagePictures(ModelDetails model)
+    {
+        var parameters = new DialogParameters
+        {
+            ["Model"] = model
+        };
+
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.ExtraLarge,
+            FullWidth = true,
+            CloseButton = true,
+            CloseOnEscapeKey = true
+        };
+
+        var dialogTitle = model.Name;
+
+        if (!string.IsNullOrEmpty(model.Artist))
+        {
+            dialogTitle += $" ({model.Artist})";
+        } 
+
+        await DialogService.ShowAsync<ModelPicturesDialog>(dialogTitle, parameters, options);
+    }
+
+    private async Task Delete(ModelDetails model)
+    {
+        bool? confirm = await DialogService.ShowMessageBox(
+            "Delete Model",
+            $"Delete '{model.Name}'?",
+            yesText: "Delete",
+            cancelText: "Cancel");
+
+        if (confirm == true)
+        {
+            await ModelsService.DeleteAsync(model.Id, CancellationToken.None);
+            models.Remove(model);
+        }
+    }
+
+    private async Task ToggleMustHave(ModelDetails model)
+    {
+        await ModelsService.SetMustHaveAsync(model.Id, model.MustHave, CancellationToken.None);
+    }
+}
