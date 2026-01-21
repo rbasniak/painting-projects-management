@@ -162,4 +162,28 @@ public class Project : TenantEntity
             RaiseDomainEvent(new BuildingStepRemoved(Id, stepId));
         }
     }
+
+    public void AddColorGroup(ColorGroup group)
+    {
+        if (group == null)
+        {
+            throw new ArgumentNullException(nameof(group));
+        }
+
+        if (group.ProjectId != Id)
+        {
+            throw new InvalidOperationException("ColorGroup's ProjectId does not match this Project's Id.");
+        }
+
+        _groups.Add(group);
+    }
+
+    public void RemoveColorGroup(Guid colorGroupId)
+    {
+        var group = _groups.FirstOrDefault(g => g.Id == colorGroupId);
+        if (group != null)
+        {
+            _groups.Remove(group);
+        }
+    }
 }

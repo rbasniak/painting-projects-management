@@ -1,5 +1,7 @@
 @using MudBlazor
 @using PaintingProjectsManagement.Features.Projects.UI
+@using PaintingProjectsManagement.Features.Projects
+@using PaintingProjectsManagement.UI.Modules.Projects
 @using System.Text.Json
 
 @namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
@@ -60,31 +62,97 @@
                             </MudPaper>
                         </MudItem>
 
-                        <!-- Right Column: Color Display -->
+                        <!-- Right Column: Color Groups Management -->
                         <MudItem xs="12" md="4">
-                            <MudPaper Elevation="1" Class="pa-4" Style="height: 100%;">
-                                <MudStack Spacing="3">
-                                    <MudText Typo="Typo.h6">Selected Color</MudText>
+                            <MudPaper Elevation="1" Class="pa-4" Style="height: 100%; display: flex; flex-direction: column; overflow: hidden;">
+                                <MudStack Spacing="2" Style="flex: 1; min-height: 0; overflow-y: auto;">
+                                    <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween">
+                                        <MudText Typo="Typo.h6">Color Groups</MudText>
+                                        <MudButton OnClick="CreateNewGroup" 
+                                                 Color="Color.Primary" 
+                                                 Variant="Variant.Filled" 
+                                                 Size="Size.Small"
+                                                 StartIcon="@Icons.Material.Filled.Add">
+                                            New Group
+                                        </MudButton>
+                                    </MudStack>
+
                                     @if (selectedColor != null)
                                     {
-                                        <MudPaper Elevation="2" Class="pa-4" Style="@($"background-color: {selectedColor.Hex};")">
-                                            <MudStack Spacing="2">
-                                                <MudText Typo="Typo.body1" Style="@($"color: {GetContrastColor(selectedColor.Hex)};")">
-                                                    HEX: @selectedColor.Hex
-                                                </MudText>
+                                        <MudPaper Elevation="2" Class="pa-3" Style="@($"background-color: {selectedColor.Hex};")">
+                                            <MudStack Spacing="1">
                                                 <MudText Typo="Typo.body2" Style="@($"color: {GetContrastColor(selectedColor.Hex)};")">
-                                                    RGB: @selectedColor.R, @selectedColor.G, @selectedColor.B
+                                                    Picked: @selectedColor.Hex
+                                                </MudText>
+                                                <MudText Typo="Typo.caption" Style="@($"color: {GetContrastColor(selectedColor.Hex)};")">
+                                                    @if (selectedSectionId.HasValue)
+                                                    {
+                                                        <text>Click image to update selected section</text>
+                                                    }
+                                                    else
+                                                    {
+                                                        <text>Select a section below to update its color</text>
+                                                    }
                                                 </MudText>
                                             </MudStack>
                                         </MudPaper>
-                                        <MudDivider />
-                                        <MudText Typo="Typo.caption" Color="Color.Secondary">
-                                            Click on the image to select a color
-                                        </MudText>
+                                    }
+
+                                    @if (colorGroups.Count == 0)
+                                    {
+                                        <MudAlert Severity="Severity.Info">No color groups yet. Create one to get started.</MudAlert>
                                     }
                                     else
                                     {
-                                        <MudAlert Severity="Severity.Info">Click on the image to select a color</MudAlert>
+                                        <MudExpansionPanels MultiExpansion="true">
+                                            @foreach (var group in colorGroups)
+                                            {
+                                                <MudExpansionPanel>
+                                                    <TitleContent>
+                                                        <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween" Style="width: 100%;">
+                                                            <MudText Typo="Typo.subtitle1">@group.Name</MudText>
+                                                            <MudStack Row="true" Spacing="1">
+                                                                <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                                                              Size="Size.Small" 
+                                                                              Color="Color.Primary"
+                                                                              OnClick="() => EditGroup(group)"
+                                                                              OnClick:StopPropagation="true" />
+                                                                <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                                                              Size="Size.Small" 
+                                                                              Color="Color.Error"
+                                                                              OnClick="() => DeleteGroup(group)"
+                                                                              OnClick:StopPropagation="true" />
+                                                            </MudStack>
+                                                        </MudStack>
+                                                    </TitleContent>
+                                                    <ChildContent>
+                                                        <MudStack Spacing="2" Class="mt-2">
+                                                            @foreach (var section in group.Sections)
+                                                            {
+                                                                var isSelected = selectedSectionId == section.Id;
+                                                                var borderStyle = isSelected ? "2px solid var(--mud-palette-primary)" : "1px solid var(--mud-palette-divider)";
+                                                                <MudPaper Elevation="0" 
+                                                                        Class="pa-2" 
+                                                                        Style="@($"border: {borderStyle}; border-radius: 4px; cursor: pointer;")"
+                                                                        @onclick="() => SelectSectionForUpdate(section.Id)">
+                                                                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                                                                        <div style="@($"width: 40px; height: 40px; background-color: {section.Color}; border-radius: 4px; border: 1px solid #ccc;")"></div>
+                                                                        <MudStack Spacing="0" Style="flex: 1;">
+                                                                            <MudText Typo="Typo.body2">@GetZoneLabel(section.Zone)</MudText>
+                                                                            <MudText Typo="Typo.caption" Color="Color.Secondary">@section.Color</MudText>
+                                                                        </MudStack>
+                                                                        @if (isSelected)
+                                                                        {
+                                                                            <MudChip Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled">Selected</MudChip>
+                                                                        }
+                                                                    </MudStack>
+                                                                </MudPaper>
+                                                            }
+                                                        </MudStack>
+                                                    </ChildContent>
+                                                </MudExpansionPanel>
+                                            }
+                                        </MudExpansionPanels>
                                     }
                                 </MudStack>
                             </MudPaper>
@@ -102,8 +170,11 @@
 @code {
     [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = default!;
     [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public IDialogService DialogService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
-    [Parameter] public ProjectDetails Model { get; set; } = default!;
+    [Parameter] public PaintingProjectsManagement.Features.Projects.ProjectDetails Model { get; set; } = default!;
 
     private ElementReference zoomableImageRef;
     private ElementReference magnifierRef;
@@ -115,6 +186,8 @@
         : null;
 
     private SelectedColor? selectedColor;
+    private List<ColorGroupDetails> colorGroups = new();
+    private Guid? selectedSectionId;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -124,12 +197,19 @@
             {
                 jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/PaintingProjectsManagement.Features.Projects.UI/js/imageViewer.js");
                 await jsModule.InvokeVoidAsync("initializeImageViewer", "image-container", "zoomable-image", "pixel-magnifier", DotNetObjectReference.Create(this));
+                
+                LoadColorGroups();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to load image viewer JS module: {ex.Message}");
             }
         }
+    }
+
+    private void LoadColorGroups()
+    {
+        colorGroups = Model?.Groups?.ToList() ?? new List<ColorGroupDetails>();
     }
 
     private async Task SelectImage(UrlReference reference)
@@ -151,10 +231,144 @@
     }
 
     [JSInvokable]
-    public void SetSelectedColor(int r, int g, int b)
+    public async Task SetSelectedColor(int r, int g, int b)
     {
         selectedColor = new SelectedColor { R = r, G = g, B = b };
+        
+        // If a section is selected, update it with the picked color
+        if (selectedSectionId.HasValue)
+        {
+            await UpdateSelectedSectionColor(selectedColor.Hex);
+        }
+        
         StateHasChanged();
+    }
+
+    private async Task UpdateSelectedSectionColor(string hexColor)
+    {
+        try
+        {
+            var request = new UpdateColorSectionRequest
+            {
+                SectionId = selectedSectionId.Value,
+                ReferenceColor = hexColor
+            };
+
+            await ProjectsService.UpdateColorSectionAsync(request, default);
+            
+            // Update local state
+            var section = colorGroups
+                .SelectMany(g => g.Sections)
+                .FirstOrDefault(s => s.Id == selectedSectionId.Value);
+            
+            if (section != null)
+            {
+                section.Color = hexColor;
+            }
+            
+            selectedSectionId = null; // Clear selection after update
+            Snackbar.Add("Color updated successfully", Severity.Success);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error updating color: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private void SelectSectionForUpdate(Guid sectionId)
+    {
+        selectedSectionId = sectionId;
+        StateHasChanged();
+    }
+
+    private async Task CreateNewGroup()
+    {
+        var parameters = new DialogParameters { ["ProjectId"] = Model.Id };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = false };
+        var dialog = DialogService.Show<CreateColorGroupDialog>("Create Color Group", parameters, options);
+        var result = await dialog.Result;
+        
+        if (!result.Canceled)
+        {
+            await RefreshGroups();
+        }
+    }
+
+    private async Task EditGroup(ColorGroupDetails group)
+    {
+        var parameters = new DialogParameters 
+        { 
+            ["ProjectId"] = Model.Id,
+            ["Group"] = group
+        };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = false };
+        var dialog = DialogService.Show<EditColorGroupDialog>("Edit Color Group", parameters, options);
+        var result = await dialog.Result;
+        
+        if (!result.Canceled)
+        {
+            await RefreshGroups();
+        }
+    }
+
+    private async Task DeleteGroup(ColorGroupDetails group)
+    {
+        var parameters = new DialogParameters
+        {
+            { "ContentText", $"Are you sure you want to delete the color group '{group.Name}'? This action cannot be undone." },
+            { "ButtonText", "Delete" },
+            { "Color", Color.Error }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var confirmDialog = DialogService.Show<MudDialog>("Confirm Delete", parameters, options);
+        var confirmResult = await confirmDialog.Result;
+        
+        if (!confirmResult.Canceled)
+        {
+            try
+            {
+                var request = new DeleteColorGroupRequest
+                {
+                    ProjectId = Model.Id,
+                    ColorGroupId = group.Id
+                };
+
+                await ProjectsService.DeleteColorGroupAsync(request, default);
+                Snackbar.Add("Color group deleted successfully", Severity.Success);
+                await RefreshGroups();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Error deleting color group: {ex.Message}", Severity.Error);
+            }
+        }
+    }
+
+    private async Task RefreshGroups()
+    {
+        try
+        {
+            var projectDetails = await ProjectsService.GetDetailsAsync(Model.Id, default);
+            Model = projectDetails;
+            LoadColorGroups();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error refreshing groups: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private string GetZoneLabel(ColorZone zone)
+    {
+        return zone switch
+        {
+            ColorZone.Highlight => "Highlights",
+            ColorZone.Midtone => "Midtones",
+            ColorZone.Shadow => "Shadows",
+            _ => zone.ToString()
+        };
     }
 
     private void OnContextMenu(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)

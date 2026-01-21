@@ -1,0 +1,120 @@
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Projects
+@using PaintingProjectsManagement.Features.Projects
+
+@namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="3">
+            <MudText Typo="Typo.h6">Edit Color Group</MudText>
+            
+            <MudTextField @bind-Value="name" 
+                         Label="Name" 
+                         Variant="Variant.Outlined"
+                         Required="true"
+                         HelperText="Enter a name for this color group" />
+            
+            <MudText Typo="Typo.subtitle2">Select Zones</MudText>
+            <MudText Typo="Typo.caption" Color="Color.Secondary">
+                Select at least one zone (Highlights, Midtones, Shadows) for this color group.
+            </MudText>
+            
+            <MudStack Spacing="2">
+                <MudCheckBox @bind-Selected="selectedZones[ColorZone.Highlight]" 
+                            Label="Highlights" />
+                <MudCheckBox @bind-Selected="selectedZones[ColorZone.Midtone]" 
+                            Label="Midtones" />
+                <MudCheckBox @bind-Selected="selectedZones[ColorZone.Shadow]" 
+                            Label="Shadows" />
+            </MudStack>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Submit" 
+                  Color="Color.Primary" 
+                  Size="Size.Medium" 
+                  Variant="Variant.Filled"
+                  Disabled="!CanSubmit">Update</MudButton>
+        <MudButton OnClick="Cancel" 
+                  Size="Size.Medium">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public ColorGroupDetails Group { get; set; } = default!;
+    
+    [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+
+    private string name = string.Empty;
+    private Dictionary<ColorZone, bool> selectedZones = new()
+    {
+        { ColorZone.Highlight, false },
+        { ColorZone.Midtone, false },
+        { ColorZone.Shadow, false }
+    };
+
+    protected override void OnInitialized()
+    {
+        if (Group != null)
+        {
+            name = Group.Name;
+            
+            // Pre-select zones that exist in the group
+            var existingZones = Group.Sections.Select(s => s.Zone).ToHashSet();
+            foreach (var zone in selectedZones.Keys.ToList())
+            {
+                selectedZones[zone] = existingZones.Contains(zone);
+            }
+        }
+    }
+
+    private bool CanSubmit => !string.IsNullOrWhiteSpace(name) && selectedZones.Values.Any(v => v);
+
+    private async Task Submit()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Snackbar.Add("Please enter a name", Severity.Warning);
+                return;
+            }
+
+            var zones = selectedZones
+                .Where(kvp => kvp.Value)
+                .Select(kvp => kvp.Key)
+                .ToArray();
+
+            if (zones.Length == 0)
+            {
+                Snackbar.Add("Please select at least one zone", Severity.Warning);
+                return;
+            }
+
+            var request = new UpdateColorGroupRequest
+            {
+                ProjectId = ProjectId,
+                ColorGroupId = Group.Id,
+                Name = name,
+                Zones = zones
+            };
+
+            await ProjectsService.UpdateColorGroupAsync(request, default);
+            Snackbar.Add("Color group updated successfully", Severity.Success);
+            MudDialog?.Close(DialogResult.Ok(true));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error updating color group: {ex.Message}", Severity.Error);
+        }
+    }
+    
+    private void Cancel()
+    {
+        MudDialog?.Cancel();
+    }
+}

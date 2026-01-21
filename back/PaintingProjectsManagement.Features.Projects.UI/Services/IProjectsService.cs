@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using PaintingProjectsManagement.UI.Modules.Projects;
 
 namespace PaintingProjectsManagement.UI.Modules.Projects;
 
@@ -6,7 +7,7 @@ public interface IProjectsService
 {
     Task<IReadOnlyCollection<ProjectDetails>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken);
+    Task<ProjectDetailsResponse> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken);
 
     Task<ProjectDetails> CreateAsync(CreateProjectRequest request, CancellationToken cancellationToken);
 
@@ -30,6 +31,15 @@ public interface IProjectsService
     Task UpdateProjectStepAsync(UpdateProjectStepRequest request, CancellationToken cancellationToken);
 
     Task DeleteProjectStepAsync(Guid projectId, Guid stepId, CancellationToken cancellationToken);
+
+    // Color groups management
+    Task<ColorGroupDetails> CreateColorGroupAsync(CreateColorGroupRequest request, CancellationToken cancellationToken);
+
+    Task<ColorGroupDetails> UpdateColorGroupAsync(UpdateColorGroupRequest request, CancellationToken cancellationToken);
+
+    Task DeleteColorGroupAsync(DeleteColorGroupRequest request, CancellationToken cancellationToken);
+
+    Task<ColorSectionDetails> UpdateColorSectionAsync(UpdateColorSectionRequest request, CancellationToken cancellationToken);
 }
 
 public class ProjectsService : IProjectsService
@@ -87,7 +97,7 @@ public class ProjectsService : IProjectsService
         await _httpClient.DeleteAsync($"api/materials/{id}", cancellationToken);
     }
 
-    public async Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken)
+    public async Task<ProjectDetailsResponse> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken)
     {
         var response = await _httpClient.GetAsync($"api/projects/{projectId}", cancellationToken);
 
@@ -96,7 +106,7 @@ public class ProjectsService : IProjectsService
             throw new Exception($"Failed to get project details for project ID {projectId}. Status code: {response.StatusCode}");
         }
 
-        var result = await response.Content.ReadFromJsonAsync<ProjectDetails>();
+        var result = await response.Content.ReadFromJsonAsync<ProjectDetailsResponse>();
 
         if (result == null)
         {
@@ -166,5 +176,40 @@ public class ProjectsService : IProjectsService
     {
         var response = await _httpClient.DeleteAsync($"api/projects/{projectId}/steps/{stepId}", cancellationToken);
         response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<ColorGroupDetails> CreateColorGroupAsync(CreateColorGroupRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/projects/color-groups", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<ColorGroupDetails>();
+        return result ?? throw new Exception("Failed to deserialize ColorGroupDetails from response.");
+    }
+
+    public async Task<ColorGroupDetails> UpdateColorGroupAsync(UpdateColorGroupRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.PutAsJsonAsync("api/projects/color-groups", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<ColorGroupDetails>();
+        return result ?? throw new Exception("Failed to deserialize ColorGroupDetails from response.");
+    }
+
+    public async Task DeleteColorGroupAsync(DeleteColorGroupRequest request, CancellationToken cancellationToken)
+    {
+        // For DELETE with body, we need to use a custom request
+        var httpRequest = new HttpRequestMessage(HttpMethod.Delete, "api/projects/color-groups")
+        {
+            Content = JsonContent.Create(request)
+        };
+        var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<ColorSectionDetails> UpdateColorSectionAsync(UpdateColorSectionRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.PutAsJsonAsync("api/projects/color-sections/reference-color", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<ColorSectionDetails>();
+        return result ?? throw new Exception("Failed to deserialize ColorSectionDetails from response.");
     }
 }

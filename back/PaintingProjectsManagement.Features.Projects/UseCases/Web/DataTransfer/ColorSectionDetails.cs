@@ -25,13 +25,17 @@ public class ColorGroupDetails
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
+    public ColorSectionDetails[] Sections { get; set; } = Array.Empty<ColorSectionDetails>();
 
     public static ColorGroupDetails FromModel(ColorGroup group)
     {
         return new ColorGroupDetails
         {
             Id = group.Id,
-            Name = group.Name
+            Name = group.Name,
+            Sections = group.Sections
+                .Select(ColorSectionDetails.FromModel)
+                .ToArray()
         };
     }
 }
