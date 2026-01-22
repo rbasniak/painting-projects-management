@@ -333,9 +333,11 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasMaxLength(7)
                         .HasColumnType("character varying(7)");
 
-                    b.Property<string>("SuggestedColorIds")
+                    b.Property<string>("SuggestedColorsJson")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("jsonb")
+                        .HasDefaultValue("[]");
 
                     b.Property<Guid>("UsedColorId")
                         .HasColumnType("uuid");

@@ -68,20 +68,16 @@ public class MatchPaints : IEndpoint
                     // goes through IDispatcher, based on the current authenticated user context
 
                     // Use typed dispatcher - doesn't return object, returns typed response
-                    var matchesResponse = await _dispatcher.SendAsync<FindColorMatchesCommandRequest, IReadOnlyCollection<ColorMatchResult>>(
+                    var matchesResponse = await _dispatcher.SendAsync(
                         findMatchesCommand,
                         cancellationToken);
 
-                    if (matchesResponse.IsSuccess && matchesResponse.Data != null)
+                    if (!matchesResponse.IsValid || matchesResponse.Data is null)
                     {
-                        // Serialize matches to JSON with camelCase property names
-                        var options = new JsonSerializerOptions
-                        {
-                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                        };
-                        var json = JsonSerializer.Serialize(matchesResponse.Data, options);
-                        section.UpdateSuggestedColors(json);
+                        throw new ExpectedInternalException("Error finding color matches");
                     }
+
+                    section.UpdateSuggestedColors(matchesResponse.Data);
                 }
             }
 
@@ -89,17 +85,5 @@ public class MatchPaints : IEndpoint
 
             return CommandResponse.Success();
         }
-    }
-
-    // Command request class that implements the integration interface
-    public class FindColorMatchesCommandRequest : AuthenticatedRequest, ICommand, IFindColorMatchesCommand
-    {
-        public string ReferenceColor { get; set; } = string.Empty;
-        public int MaxResults { get; set; } = 10;
-
-        // Explicit interface implementation
-        string IFindColorMatchesCommand.ReferenceColor => ReferenceColor;
-        int IFindColorMatchesCommand.MaxResults => MaxResults;
-        string IFindColorMatchesCommand.Tenant => Identity.Tenant ?? string.Empty;
     }
 }

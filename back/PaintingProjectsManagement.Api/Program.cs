@@ -203,6 +203,7 @@ public class Program
 
         // Application modules
         builder.Services.AddMaterialsFeature();
+        builder.Services.AddInventoryFeature();
         builder.Services.AddModelsFeature();
         builder.Services.AddProjectsFeature();
 
@@ -270,7 +271,7 @@ public class Program
 
         app.UseMaterialsFeature();
         app.MapPrintingModelsFeature();
-        app.MapInventoryFeature();
+        Features.Inventory.Builder.MapInventoryFeature(app);
         app.MapProjectsFeature();
 
         app.Run();

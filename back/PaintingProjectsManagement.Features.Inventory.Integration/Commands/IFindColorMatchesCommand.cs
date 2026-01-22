@@ -1,8 +1,13 @@
 namespace PaintingProjectsManagement.Features.Inventory.Integration;
 
-public interface IFindColorMatchesCommand
+public interface IFindColorMatchesCommand: IQuery<IReadOnlyCollection<ColorMatchResult>>
 {
-    string ReferenceColor { get; } // Hex color
+    string ReferenceColor { get; }  
     int MaxResults { get; }
-    string Tenant { get; } // User tenant for filtering paints
+}
+
+public class FindColorMatchesCommandRequest : AuthenticatedRequest, IFindColorMatchesCommand
+{
+    public string ReferenceColor { get; set; } = string.Empty;
+    public int MaxResults { get; set; } = 10;
 }

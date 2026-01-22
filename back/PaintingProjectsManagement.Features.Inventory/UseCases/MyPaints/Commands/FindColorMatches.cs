@@ -8,9 +8,9 @@ public class FindColorMatches : IEndpoint
     {
         // Note: This endpoint is optional since the command is primarily called via IDispatcher
         // But we can expose it as an HTTP endpoint for direct API access if needed
-        endpoints.MapPost("/api/inventory/my-paints/match", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/inventory/my-paints/match", async (FindColorMatchesCommandRequest request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.SendAsync<Request, IReadOnlyCollection<ColorMatchResult>>(request, cancellationToken);
+            var result = await dispatcher.SendAsync(request, cancellationToken);
             return ResultsMapper.FromResponse(result);
         })
         .Produces<IReadOnlyCollection<ColorMatchResult>>(StatusCodes.Status200OK)
@@ -19,18 +19,10 @@ public class FindColorMatches : IEndpoint
         .WithTags("Inventory");
     }
 
-    public class Request : AuthenticatedRequest, ICommand, IFindColorMatchesCommand
-    {
-        public string ReferenceColor { get; set; } = string.Empty;
-        public int MaxResults { get; set; } = 10;
+    // TODO: reorganize folder, it is an integration command, not web
+    // TODO: explore possibilities of getting handler based on interface
 
-        // Explicit interface implementation
-        string IFindColorMatchesCommand.ReferenceColor => ReferenceColor;
-        int IFindColorMatchesCommand.MaxResults => MaxResults;
-        string IFindColorMatchesCommand.Tenant => Identity.Tenant ?? string.Empty;
-    }
-
-    public class Validator : SmartValidator<Request, UserPaint>
+    public class Validator : SmartValidator<FindColorMatchesCommandRequest, UserPaint>
     {
         public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
         {
@@ -68,9 +60,9 @@ public class FindColorMatches : IEndpoint
         }
     }
 
-    public class Handler(DbContext _context) : ICommandHandler<Request, IReadOnlyCollection<ColorMatchResult>>
+    public class Handler(DbContext _context) : IQueryHandler<FindColorMatchesCommandRequest, IReadOnlyCollection<ColorMatchResult>>
     {
-        public async Task<CommandResponse<IReadOnlyCollection<ColorMatchResult>>> HandleAsync(Request request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<ColorMatchResult>>> HandleAsync(FindColorMatchesCommandRequest request, CancellationToken cancellationToken)
         {
             var username = request.Identity.Tenant ?? string.Empty;
 
@@ -100,7 +92,7 @@ public class FindColorMatches : IEndpoint
                 })
                 .ToList();
 
-            return CommandResponse<IReadOnlyCollection<ColorMatchResult>>.Success(matches);
+            return QueryResponse<IReadOnlyCollection<ColorMatchResult>>.Success(matches);
         }
     }
 }

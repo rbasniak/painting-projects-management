@@ -1,3 +1,6 @@
+using PaintingProjectsManagement.Features.Inventory.Integration;
+using System.Text.Json;
+
 namespace PaintingProjectsManagement.Features.Projects;
 
 public class ColorSection : BaseEntity
@@ -33,9 +36,15 @@ public class ColorSection : BaseEntity
         ReferenceColor = referenceColor;
     }
 
-    public void UpdateSuggestedColors(string suggestedColorsJson)
+    public void UpdateSuggestedColors(IReadOnlyCollection<ColorMatchResult> suggestedColors)
     {
-        SuggestedColorsJson = suggestedColorsJson ?? "[]";
+        var options = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+        var json = JsonSerializer.Serialize(suggestedColors, options);
+
+        SuggestedColorsJson = json ?? "[]";
     }
 
     public void SetPickedColor(Guid paintColorId)
