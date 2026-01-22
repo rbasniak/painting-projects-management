@@ -22,12 +22,11 @@ public class ColorSectionConfig : IEntityTypeConfiguration<ColorSection>
         builder.Property(x => x.ColorGroupId)
             .IsRequired();
 
-        // Store array of Guids as comma-separated string
-        builder.Property(x => x.SuggestedColorIds)
-            .HasConversion(
-                v => string.Join(',', v),
-                v => string.IsNullOrEmpty(v) ? Array.Empty<Guid>() : 
-                    v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Guid.Parse).ToArray());
+        // Store suggested colors as JSONB column
+        builder.Property(x => x.SuggestedColorsJson)
+            .HasColumnType("jsonb")
+            .HasDefaultValue("[]")
+            .IsRequired();
 
         // Relationship with ColorGroup
         builder.HasOne(x => x.ColorGroup)
