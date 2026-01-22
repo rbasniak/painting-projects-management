@@ -1,4 +1,5 @@
 @page "/inventory/my-paints"
+@using System.Linq
 @using MudBlazor
 @using PaintingProjectsManagement.UI.Modules.Inventory
 @using PaintingProjectsManagement.UI.Modules.Inventory.UI.Dialogs
@@ -18,27 +19,103 @@
     }
     else if (_paints.Count > 0)
     {
-        <MudGrid Spacing="3">
-            @foreach (var paint in _paints)
+        var byBrand = _paints
+            .GroupBy(p => string.IsNullOrWhiteSpace(p.BrandName) ? "(No brand)" : p.BrandName)
+            .OrderBy(g => g.Key);
+
+        <MudExpansionPanels MultiExpansion="true" Elevation="1">
+            @foreach (var group in byBrand)
             {
-                <MudItem xs="12" sm="6" md="4" lg="3">
-                    <div class="d-flex flex-column align-center position-relative">
+                <MudExpansionPanel IsInitiallyExpanded="true">
+                    <TitleContent>
                         <div class="d-flex align-center">
-                            <div style="width: 48px; height: 48px; border-radius: 50%; background-color: @paint.HexColor; border: 1px solid #ccc; box-shadow: 0 1px 3px rgba(0,0,0,0.2);" title="@paint.Name"></div>
-                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="() => Remove(paint)" Class="ms-1" Title="Remove from inventory" />
+                            <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">@group.Key</MudText>
+                            <MudBadge Content="@group.Count()" Color="Color.Primary" Class="ml-3" />
                         </div>
-                        <MudText Typo="Typo.caption" Class="mt-1 text-center" Style="max-width: 100px;">@paint.Name</MudText>
-                        <MudText Typo="Typo.caption" Class="text-center" Color="Color.Secondary" Style="max-width: 100px;">@paint.BrandName / @paint.LineName</MudText>
-                    </div>
-                </MudItem>
+                    </TitleContent>
+                    <ChildContent>
+                        <MudGrid Spacing="3" Class="pt-2">
+                            @foreach (var paint in group.OrderBy(p => p.HexColor))
+                            {
+                                <MudItem xs="12" sm="6" md="3" lg="3">
+                                    <div class="d-flex flex-column align-center">
+                                        <div class="paint-container">
+                                            <div class="paint-swatch" style="background-color: @paint.HexColor;" title="@paint.Name"></div>
+                                            <div class="paint-delete-overlay">
+                                                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                              Size="Size.Small"
+                                                              OnClick="() => Remove(paint)"
+                                                              title="Remove from inventory"
+                                                              Class="paint-delete-btn" />
+                                            </div>
+                                        </div>
+                                        <MudText Typo="Typo.body2" Class="mt-2 text-center" Style="max-width: 140px; font-weight: 500;">@paint.Name</MudText>
+                                        <MudText Typo="Typo.caption" Class="text-center" Color="Color.Secondary" Style="max-width: 140px;">@paint.LineName</MudText>
+                                    </div>
+                                </MudItem>
+                            }
+                        </MudGrid>
+                    </ChildContent>
+                </MudExpansionPanel>
             }
-        </MudGrid>
+        </MudExpansionPanels>
     }
     else
     {
         <MudText Typo="Typo.body1" Color="Color.Secondary">You have no paints in your inventory. Click Add to add some.</MudText>
     }
 </MudPaper>
+
+<style>
+    .paint-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .paint-swatch {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s ease;
+    }
+
+    .paint-container:hover .paint-swatch {
+        transform: scale(1.05);
+    }
+
+    .paint-delete-overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    .paint-container:hover .paint-delete-overlay {
+        opacity: 1;
+    }
+
+    .paint-delete-btn {
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+        background: rgba(211, 47, 47, 0.9) !important;
+        color: white !important;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    }
+
+    .paint-delete-btn:hover {
+        background: rgba(198, 40, 40, 1) !important;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4) !important;
+    }
+
+    .paint-delete-btn .mud-icon-root {
+        font-size: 1.1rem;
+    }
+</style>
 
 @code {
     [Inject] public IInventoryService InventoryService { get; set; } = default!;

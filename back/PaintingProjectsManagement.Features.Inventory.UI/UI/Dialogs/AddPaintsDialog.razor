@@ -32,11 +32,18 @@
                                                     @foreach (var paint in line.Paints)
                                                     {
                                                         var id = paint.Id;
-                                                        <MudItem xs="12" sm="6" md="4" lg="3">
-                                                            <MudCheckBox T="bool" Checked="@_selectedIds.Contains(id)" CheckedChanged="(v) => Toggle(id, v)" Color="Color.Primary">
+
+                                                        <MudItem xs="12" sm="6" md="4" lg="3" @key="id">
+                                                            <MudCheckBox T="bool"
+                                                                         Value="@_selectedIds.Contains(id)"
+                                                                         ValueChanged="@(v => Toggle(id, v))"
+                                                                         Color="Color.Primary">
                                                                 <div class="d-flex flex-column align-center">
-                                                                    <div style="width: 40px; height: 40px; border-radius: 50%; background-color: @paint.HexColor; border: 1px solid #ccc; box-shadow: 0 1px 2px rgba(0,0,0,0.2);" title="@paint.Name"></div>
-                                                                    <MudText Typo="Typo.caption" Class="mt-1 text-center" Style="max-width: 70px;">@paint.Name</MudText>
+                                                                    <div style="width: 40px; height: 40px; border-radius: 50%; background-color: @paint.HexColor; border: 1px solid #ccc; box-shadow: 0 1px 2px rgba(0,0,0,0.2);"
+                                                                         title="@paint.Name"></div>
+                                                                    <MudText Typo="Typo.caption" Class="mt-1 text-center" Style="max-width: 70px;">
+                                                                        @paint.Name
+                                                                    </MudText>
                                                                 </div>
                                                             </MudCheckBox>
                                                         </MudItem>
@@ -99,10 +106,15 @@
     private void Toggle(Guid id, bool selected)
     {
         if (selected)
+        {
             _selectedIds.Add(id);
+        }
         else
+        {
             _selectedIds.Remove(id);
-        StateHasChanged();
+        }
+
+        // No need to call StateHasChanged() here
     }
 
     private async Task Submit()
