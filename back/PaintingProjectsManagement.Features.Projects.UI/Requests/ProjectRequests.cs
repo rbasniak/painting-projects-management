@@ -45,4 +45,10 @@ public class UpdateColorSectionRequest
 {
     public Guid SectionId { get; init; }
     public string ReferenceColor { get; init; } = string.Empty;
+}
+
+public class UpdatePickedColorRequest
+{
+    public Guid SectionId { get; init; }
+    public Guid PaintColorId { get; init; }
 } 

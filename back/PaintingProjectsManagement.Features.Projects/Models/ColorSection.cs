@@ -12,12 +12,12 @@ public class ColorSection : BaseEntity
         ColorGroupId = colorGroupId;
         Zone = zone;
         ReferenceColor = referenceColor;
-        SuggestedColorIds = Array.Empty<Guid>();
+        SuggestedColorsJson = "[]";
     }
 
     public ColorZone Zone { get; private set; }
     public string ReferenceColor { get; private set; } = string.Empty;
-    public Guid[] SuggestedColorIds { get; private set; } = Array.Empty<Guid>();
+    public string SuggestedColorsJson { get; private set; } = "[]";
     public Guid UsedColorId { get; private set; } 
 
     public Guid ColorGroupId { get; private set; }
@@ -31,5 +31,15 @@ public class ColorSection : BaseEntity
         }
 
         ReferenceColor = referenceColor;
+    }
+
+    public void UpdateSuggestedColors(string suggestedColorsJson)
+    {
+        SuggestedColorsJson = suggestedColorsJson ?? "[]";
+    }
+
+    public void SetPickedColor(Guid paintColorId)
+    {
+        UsedColorId = paintColorId;
     }
 }

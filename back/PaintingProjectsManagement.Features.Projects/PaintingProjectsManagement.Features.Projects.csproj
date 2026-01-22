@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<!-- Common properties are now in Directory.Build.props -->
 
@@ -6,6 +6,7 @@
 		<ProjectReference Include="..\PaintingProjectsManagement.Features.Currency\PaintingProjectsManagement.Features.Currency.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagement.Features.Materials.Abstractions\PaintingProjectsManagement.Features.Materials.Integration.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagement.Features.Projects.Abstractions\PaintingProjectsManagement.Features.Projects.Integration.csproj" />
+		<ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory.Integration\PaintingProjectsManagement.Features.Inventory.Integration.csproj" />
 	</ItemGroup>
 
 

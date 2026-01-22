@@ -38,6 +38,10 @@
                             <MudIcon Icon="@Icons.Material.Filled.Palette" Class="mr-3" />
                             Color Zones
                         </MudMenuItem>
+                        <MudMenuItem OnClick="() => OpenMatchPaints(context)">
+                            <MudIcon Icon="@Icons.Material.Filled.Colorize" Class="mr-3" />
+                            Match Paints
+                        </MudMenuItem>
                     </ChildContent>
                 </MudMenu>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
@@ -115,6 +119,15 @@
         var parameters = new DialogParameters { ["Model"] = projectDetails };
         var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
         var dialog = DialogService.Show<ColorGroupsDialog>(title: null, parameters, options);
+    }
+
+    private async Task OpenMatchPaints(ProjectDetails project)
+    {
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+        var dialog = DialogService.Show<MatchPaintsDialog>(title: null, parameters, options);
     }
 
     private async Task Edit(ProjectDetails project)

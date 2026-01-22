@@ -49,6 +49,8 @@ public static class Builder
         UpdateColorGroup.MapEndpoint(app);
         DeleteColorGroup.MapEndpoint(app);
         UpdateReferenceColor.MapEndpoint(app);
+        MatchPaints.MapEndpoint(app);
+        UpdatePickedColor.MapEndpoint(app);
 
 
         return app;

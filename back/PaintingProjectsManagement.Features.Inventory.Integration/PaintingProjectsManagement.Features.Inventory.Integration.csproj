@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Common properties are now in Directory.Build.props -->
+
+	<ItemGroup>
+		<PackageReference Include="rbkApiModules.Commons.Core" />
+	</ItemGroup>
+	
+  <ItemGroup>
+    <Folder Include="Commands\" />
+  </ItemGroup>
+
+</Project>

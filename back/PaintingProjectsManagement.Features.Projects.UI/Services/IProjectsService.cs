@@ -40,6 +40,10 @@ public interface IProjectsService
     Task DeleteColorGroupAsync(DeleteColorGroupRequest request, CancellationToken cancellationToken);
 
     Task UpdateColorSectionAsync(UpdateColorSectionRequest request, CancellationToken cancellationToken);
+
+    // Color matching
+    Task MatchPaintsAsync(Guid projectId, CancellationToken cancellationToken);
+    Task UpdatePickedColorAsync(UpdatePickedColorRequest request, CancellationToken cancellationToken);
 }
 
 public class ProjectsService : IProjectsService
@@ -209,6 +213,18 @@ public class ProjectsService : IProjectsService
     {
         var response = await _httpClient.PutAsJsonAsync("api/projects/color-sections/reference-color", request, cancellationToken);
                                                         
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task MatchPaintsAsync(Guid projectId, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.PostAsync($"api/projects/{projectId}/color-sections/match-paints", null, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task UpdatePickedColorAsync(UpdatePickedColorRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.PutAsJsonAsync("api/projects/color-sections/picked-color", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 }
