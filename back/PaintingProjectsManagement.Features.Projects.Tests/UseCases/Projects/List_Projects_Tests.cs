@@ -149,8 +149,8 @@ public class List_Projects_Tests
         projects[2].EndDate!.Value.ShouldBeGreaterThan(projects[3].EndDate!.Value);
         
         // Within each group (unfinished/finished), projects should be ordered alphabetically by name
-        var unfinishedProjects = projects.Where(p => p.EndDate == null).ToList();
-        var finishedProjects = projects.Where(p => p.EndDate != null).ToList();
+        var unfinishedProjects = projects.Where(x => x.EndDate == null).ToList();
+        var finishedProjects = projects.Where(x => x.EndDate != null).ToList();
         
         // Check alphabetical ordering within unfinished projects
         unfinishedProjects[0].Name.ShouldBe("Rodrigo Unfinished Project 1");

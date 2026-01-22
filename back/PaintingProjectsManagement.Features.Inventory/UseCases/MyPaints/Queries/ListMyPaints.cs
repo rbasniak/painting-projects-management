@@ -33,8 +33,8 @@ public class ListMyPaints : IEndpoint
             var userPaints = await _context.Set<UserPaint>()
                 .Where(up => up.Username == username)
                 .Include(up => up.PaintColor)
-                .ThenInclude(p => p.Line)
-                .ThenInclude(l => l!.Brand)
+                .ThenInclude(x => x.Line)
+                .ThenInclude(x => x!.Brand)
                 .OrderBy(up => up.PaintColor.Name)
                 .ToListAsync(cancellationToken);
 

@@ -84,7 +84,7 @@
         {
             _catalog = await InventoryService.GetCatalogAsync(default);
             var myPaints = await InventoryService.GetMyPaintsAsync(default);
-            _selectedIds = myPaints.Select(p => p.PaintColorId).ToHashSet();
+            _selectedIds = myPaints.Select(x => x.PaintColorId).ToHashSet();
         }
         catch (Exception ex)
         {

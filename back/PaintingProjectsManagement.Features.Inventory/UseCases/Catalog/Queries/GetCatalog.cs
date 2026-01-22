@@ -31,26 +31,26 @@ public class GetCatalog : IEndpoint
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var brands = await _context.Set<PaintBrand>()
-                .OrderBy(b => b.Name)
+                .OrderBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
             var lines = await _context.Set<PaintLine>()
-                .Include(l => l.Brand)
-                .OrderBy(l => l.Name)
+                .Include(x => x.Brand)
+                .OrderBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
             var paints = await _context.Set<PaintColor>()
-                .Include(p => p.Line)
-                .ThenInclude(l => l!.Brand)
-                .OrderBy(p => p.Name)
+                .Include(x => x.Line)
+                .ThenInclude(x => x!.Brand)
+                .OrderBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
             var brandDetails = brands.Select(brand =>
             {
-                var brandLines = lines.Where(l => l.BrandId == brand.Id).ToList();
+                var brandLines = lines.Where(x => x.BrandId == brand.Id).ToList();
                 var lineDetails = brandLines.Select(line =>
                 {
-                    var linePaints = paints.Where(p => p.LineId == line.Id).ToList();
+                    var linePaints = paints.Where(x => x.LineId == line.Id).ToList();
                     return new PaintLineDetails
                     {
                         Id = line.Id,

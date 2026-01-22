@@ -31,7 +31,7 @@ public class GetProjectSteps : IEndpoint
         protected override void ValidateBusinessRules()
         {
             RuleFor(x => x.ProjectId)
-                .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(p => p.Id == id && p.TenantId == request.Identity.Tenant, ct))
+                .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(x => x.Id == id && x.TenantId == request.Identity.Tenant, ct))
                 .WithMessage("Project not found");
         }
     }
@@ -45,16 +45,16 @@ public class GetProjectSteps : IEndpoint
                 .FirstAsync(x => x.Id == request.ProjectId && x.TenantId == request.Identity.Tenant, cancellationToken);
 
             var stepsByType = project.Steps
-                .GroupBy(s => s.Step)
+                .GroupBy(x => x.Step)
                 .ToDictionary(
-                    g => (int)g.Key,
-                    g => g.Select(step => new ProjectStepDetails
+                    x => (int)x.Key,
+                    x => x.Select(step => new ProjectStepDetails
                     {
                         Id = step.Id,
                         Step = new EnumReference(step.Step),
                         Date = step.Date,
                         DurationInHours = step.Duration,
-                    }).OrderBy(s => s.Date).ToList()
+                    }).OrderBy(x => x.Date).ToList()
                 );
 
             var result = new ProjectStepsGrouped

@@ -1,4 +1,4 @@
-﻿using PaintingProjectsManagement.Features.Currency;
+using PaintingProjectsManagement.Features.Currency;
 using System.Text.RegularExpressions;
 
 namespace PaintingProjectsManagement.Features.Projects;
@@ -21,16 +21,16 @@ internal class ProjectCostCalculator(
             .AsNoTracking()
             .Include(x => x.Materials)
             .Include(x => x.Steps)
-            .First(p => p.Id == projectId);
+            .First(x => x.Id == projectId);
 
         var projectMaterialsById = project.Materials.ToDictionary(x => x.MaterialId);
 
         var projectMaterials = context.Set<Material>()
             .AsNoTracking()
-            .Where(material => project.Materials.Select(projectMaterial => projectMaterial.MaterialId).Contains(material.Id))
+            .Where(x => project.Materials.Select(x => x.MaterialId).Contains(x.Id))
             .ToDictionary(
-                material => material.Id,
-                material => (MaterialDefinition: material, ProjectMaterial: projectMaterialsById[material.Id])
+                x => x.Id,
+                x => (MaterialDefinition: x, ProjectMaterial: projectMaterialsById[x.Id])
             );
 
         var costBreakdown = new ProjectCostBreakdown

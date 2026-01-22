@@ -17,7 +17,7 @@
 @code {
     private Assembly[] AdditionalAssemblies => GetAdditionalAssemblies();
     
-    private string DebugInfo => $"Loaded assemblies: {string.Join(", ", GetAdditionalAssemblies().Select(a => a.GetName().Name))}";
+    private string DebugInfo => $"Loaded assemblies: {string.Join(", ", GetAdditionalAssemblies().Select(x => x.GetName().Name))}";
     
     private Assembly[] GetAdditionalAssemblies()
     {

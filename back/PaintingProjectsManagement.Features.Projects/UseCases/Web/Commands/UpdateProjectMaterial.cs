@@ -36,15 +36,15 @@ public class UpdateProjectMaterial : IEndpoint
             RuleFor(x => x.Quantity).GreaterThanOrEqualTo(0).WithMessage("Quantity must be greater than or equal to 0");
             RuleFor(x => x.Unit).IsInEnum();
             RuleFor(x => x.ProjectId)
-                .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(p => p.Id == id && p.TenantId == request.Identity.Tenant, ct))
+                .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(x => x.Id == id && x.TenantId == request.Identity.Tenant, ct))
                 .WithMessage("Project not found");
             RuleFor(x => x.MaterialId)
                 .MustAsync(async (request, materialId, ct) =>
                 {
                     var project = await Context.Set<Project>()
-                        .Include(p => p.Materials)
-                        .FirstAsync(p => p.Id == request.ProjectId && p.TenantId == request.Identity.Tenant, ct);
-                    return project.Materials.Any(m => m.MaterialId == materialId);
+                        .Include(x => x.Materials)
+                        .FirstAsync(x => x.Id == request.ProjectId && x.TenantId == request.Identity.Tenant, ct);
+                    return project.Materials.Any(x => x.MaterialId == materialId);
                 })
                 .WithMessage("Material not found in project");
         }

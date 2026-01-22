@@ -109,7 +109,7 @@ public class Project : TenantEntity
             return;
         }
 
-        var material = _materials.FirstOrDefault(m => m.MaterialId == materialId);
+        var material = _materials.FirstOrDefault(x => x.MaterialId == materialId);
         if (material != null)
         {
             var oldQuantity = material.Quantity.Value;
@@ -125,7 +125,7 @@ public class Project : TenantEntity
 
     public void RemoveMaterial(Guid materialId)
     {
-        var material = _materials.FirstOrDefault(m => m.MaterialId == materialId);
+        var material = _materials.FirstOrDefault(x => x.MaterialId == materialId);
         if (material != null)
         {
             _materials.Remove(material);
@@ -135,7 +135,7 @@ public class Project : TenantEntity
 
     public void UpdateStep(Guid stepId, DateTime? date, double? duration)
     {
-        var step = _steps.FirstOrDefault(s => s.Id == stepId);
+        var step = _steps.FirstOrDefault(x => x.Id == stepId);
         if (step == null)
         {
             throw new InvalidOperationException($"Step with id {stepId} not found");
@@ -155,7 +155,7 @@ public class Project : TenantEntity
 
     public void RemoveStep(Guid stepId)
     {
-        var step = _steps.FirstOrDefault(s => s.Id == stepId);
+        var step = _steps.FirstOrDefault(x => x.Id == stepId);
         if (step != null)
         {
             _steps.Remove(step);
@@ -180,7 +180,7 @@ public class Project : TenantEntity
 
     public void RemoveColorGroup(Guid colorGroupId)
     {
-        var group = _colorGroups.FirstOrDefault(g => g.Id == colorGroupId);
+        var group = _colorGroups.FirstOrDefault(x => x.Id == colorGroupId);
         if (group != null)
         {
             _colorGroups.Remove(group);

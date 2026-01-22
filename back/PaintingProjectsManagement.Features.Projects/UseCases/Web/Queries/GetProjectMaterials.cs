@@ -31,7 +31,7 @@ public class GetProjectMaterials : IEndpoint
         protected override void ValidateBusinessRules()
         {
             RuleFor(x => x.ProjectId)
-                .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(p => p.Id == id && p.TenantId == request.Identity.Tenant, ct))
+                .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(x => x.Id == id && x.TenantId == request.Identity.Tenant, ct))
                 .WithMessage("Project not found");
         }
     }
@@ -49,11 +49,11 @@ public class GetProjectMaterials : IEndpoint
                 return QueryResponse.Success(Array.Empty<ProjectMaterialDetails>());
             }
 
-            var materialIds = project.Materials.Select(m => m.MaterialId).ToArray();
+            var materialIds = project.Materials.Select(x => x.MaterialId).ToArray();
 
             var materials = await _context.Set<Material>()
-                .Where(m => m.Tenant == request.Identity.Tenant && materialIds.Contains(m.Id))
-                .ToDictionaryAsync(m => m.Id, cancellationToken);
+                .Where(x => x.Tenant == request.Identity.Tenant && materialIds.Contains(x.Id))
+                .ToDictionaryAsync(x => x.Id, cancellationToken);
             
             var results = project.Materials
                 .Select(pm =>

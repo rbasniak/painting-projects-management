@@ -12,7 +12,7 @@ public class ModelCategoryConfig : IEntityTypeConfiguration<ModelCategory>
             .IsRequired()
             .HasMaxLength(100);
 
-        builder.HasIndex(e => new { e.TenantId, e.Name})
+        builder.HasIndex(x => new { x.TenantId, x.Name})
             .IsUnique();
     }
 }

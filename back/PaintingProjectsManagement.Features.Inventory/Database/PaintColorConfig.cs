@@ -36,10 +36,10 @@ public class PaintColorConfig : IEntityTypeConfiguration<PaintColor>
         builder.HasIndex(x => x.LineId);
         builder.HasIndex(x => x.Type);
         
-        builder.HasIndex(p => new { p.LineId, p.Name })
+        builder.HasIndex(x => new { x.LineId, x.Name })
             .IsUnique();
 
-        builder.HasIndex(p => new { p.LineId, p.HexColor })
+        builder.HasIndex(x => new { x.LineId, x.HexColor })
             .IsUnique();
     }
 }

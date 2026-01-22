@@ -75,59 +75,59 @@
     {
         get
         {
-            var filtered = models.Where(m => string.IsNullOrWhiteSpace(searchString) ||
-                m.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-                m.Franchise.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-                m.Category.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
-                (m.Artist?.Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? false));
+            var filtered = models.Where(x => string.IsNullOrWhiteSpace(searchString) ||
+                x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                x.Franchise.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                x.Category.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                (x.Artist?.Contains(searchString, StringComparison.OrdinalIgnoreCase) ?? false));
 
             if (tableState.SortLabel == "Name")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.Name)
-                    : filtered.OrderByDescending(m => m.Name);
+                    ? filtered.OrderBy(x => x.Name)
+                    : filtered.OrderByDescending(x => x.Name);
             }
             else if (tableState.SortLabel == "Franchise")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.Franchise)
-                    : filtered.OrderByDescending(m => m.Franchise);
+                    ? filtered.OrderBy(x => x.Franchise)
+                    : filtered.OrderByDescending(x => x.Franchise);
             }
             else if (tableState.SortLabel == "Category")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.Category.Name)
-                    : filtered.OrderByDescending(m => m.Category.Name);
+                    ? filtered.OrderBy(x => x.Category.Name)
+                    : filtered.OrderByDescending(x => x.Category.Name);
             }
             else if (tableState.SortLabel == "Type")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.Type.Value)
-                    : filtered.OrderByDescending(m => m.Type.Value);
+                    ? filtered.OrderBy(x => x.Type.Value)
+                    : filtered.OrderByDescending(x => x.Type.Value);
             }
             else if (tableState.SortLabel == "Artist")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.Artist)
-                    : filtered.OrderByDescending(m => m.Artist);
+                    ? filtered.OrderBy(x => x.Artist)
+                    : filtered.OrderByDescending(x => x.Artist);
             }
             else if (tableState.SortLabel == "Score")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.Score)
-                    : filtered.OrderByDescending(m => m.Score);
+                    ? filtered.OrderBy(x => x.Score)
+                    : filtered.OrderByDescending(x => x.Score);
             }
             else if (tableState.SortLabel == "Size (MB)")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.Size)
-                    : filtered.OrderByDescending(m => m.Size);
+                    ? filtered.OrderBy(x => x.Size)
+                    : filtered.OrderByDescending(x => x.Size);
             }
             else if (tableState.SortLabel == "Must Have")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.MustHave)
-                    : filtered.OrderByDescending(m => m.MustHave);
+                    ? filtered.OrderBy(x => x.MustHave)
+                    : filtered.OrderByDescending(x => x.MustHave);
             }
 
             return filtered;
@@ -239,7 +239,7 @@
                 updated.MustHave = updatedInput.MustHave;
             }
 
-            var index = models.FindIndex(m => m.Id == updated.Id);
+            var index = models.FindIndex(x => x.Id == updated.Id);
             if (index >= 0)
                 models[index] = updated;
         }

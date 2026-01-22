@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Text;
 
@@ -50,12 +50,12 @@ public static class ModelsSeeder
                         allPreviews.Add(file);
 
                         var imageFiles = Directory.GetFiles(modelFolderPath, "*.*", SearchOption.AllDirectories)
-                            .Where(f => f.ToLower().EndsWith(".jpg") || f.ToLower().EndsWith(".jpeg") || f.ToLower().EndsWith(".png") || f.ToLower().EndsWith(".gif") || f.EndsWith(".webp"))
-                            .Select(f => Path.GetRelativePath(path, f).ToLower())
+                            .Where(x => x.ToLower().EndsWith(".jpg") || x.ToLower().EndsWith(".jpeg") || x.ToLower().EndsWith(".png") || x.ToLower().EndsWith(".gif") || x.EndsWith(".webp"))
+                            .Select(x => Path.GetRelativePath(path, x).ToLower())
                             .ToArray();
 
                         var stlFiles = Directory.GetFiles(modelFolderPath, "*.stl", SearchOption.AllDirectories)
-                            .Select(f => Path.GetRelativePath(path, f).ToLower())
+                            .Select(x => Path.GetRelativePath(path, x).ToLower())
                             .ToArray();
 
                         // Calculate total size of all STL files in megabytes

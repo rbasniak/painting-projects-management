@@ -52,26 +52,26 @@
     {
         get
         {
-            var filtered = materials.Where(m => string.IsNullOrWhiteSpace(searchString) ||
-                m.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+            var filtered = materials.Where(x => string.IsNullOrWhiteSpace(searchString) ||
+                x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
 
             if (tableState.SortLabel == "Name")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.Name)
-                    : filtered.OrderByDescending(m => m.Name);
+                    ? filtered.OrderBy(x => x.Name)
+                    : filtered.OrderByDescending(x => x.Name);
             }
             else if (tableState.SortLabel == "Package Price")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.PackagePrice.Amount)
-                    : filtered.OrderByDescending(m => m.PackagePrice.Amount);
+                    ? filtered.OrderBy(x => x.PackagePrice.Amount)
+                    : filtered.OrderByDescending(x => x.PackagePrice.Amount);
             }
             else if (tableState.SortLabel == "Package Content")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.PackageContent.Amount)
-                    : filtered.OrderByDescending(m => m.PackageContent.Amount);
+                    ? filtered.OrderBy(x => x.PackageContent.Amount)
+                    : filtered.OrderByDescending(x => x.PackageContent.Amount);
             }
 
             return filtered;
@@ -142,7 +142,7 @@
                 PackagePriceCurrency = updatedInput.PackagePrice.CurrencyCode
             };
             var updated = await MaterialsService.UpdateAsync(request, CancellationToken.None);
-            var index = materials.FindIndex(m => m.Id == updated.Id);
+            var index = materials.FindIndex(x => x.Id == updated.Id);
             if (index >= 0)
                 materials[index] = updated;
         }

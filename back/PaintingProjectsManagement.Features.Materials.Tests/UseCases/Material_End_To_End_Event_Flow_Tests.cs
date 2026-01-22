@@ -52,7 +52,7 @@ public class Material_End_To_End_Event_Flow_Tests
         using var context = TestingServer.CreateContext();
 
         var readOnlyMaterial = await context.Set<Material>()
-            .FirstOrDefaultAsync(m => m.TenantId == "RODRIGO.BASNIAK" && m.Id == materialDetails.Id);
+            .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == materialDetails.Id);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe(materialName);
@@ -93,7 +93,7 @@ public class Material_End_To_End_Event_Flow_Tests
         // Assert - Verify read-only material was updated in the Projects module
         using var context = TestingServer.CreateContext();
         var readOnlyMaterial = await context.Set<Material>()
-            .FirstOrDefaultAsync(m => m.TenantId == "RODRIGO.BASNIAK" && m.Id == material.Id);
+            .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == material.Id);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
@@ -113,7 +113,7 @@ public class Material_End_To_End_Event_Flow_Tests
         using (var context = TestingServer.CreateContext())
         {
             var readOnlyMaterial = await context.Set<Material>()
-                .FirstOrDefaultAsync(m => m.TenantId == "RODRIGO.BASNIAK" && m.Id == material.Id);
+                .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == material.Id);
             readOnlyMaterial.ShouldBeNull();
         }
 
@@ -132,7 +132,7 @@ public class Material_End_To_End_Event_Flow_Tests
         using (var context = TestingServer.CreateContext())
         {
             var readOnlyMaterial = await context.Set<Material>()
-                .FirstOrDefaultAsync(m => m.TenantId == "RODRIGO.BASNIAK" && m.Id == material.Id);
+                .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == material.Id);
             readOnlyMaterial.ShouldBeNull();
         }
     }
@@ -188,19 +188,19 @@ public class Material_End_To_End_Event_Flow_Tests
 
         // Material 1 should be updated
         var readOnlyMaterial1 = await context.Set<Material>()
-                .FirstOrDefaultAsync(m => m.TenantId == "RODRIGO.BASNIAK" && m.Id == material1.Id);
+                .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == material1.Id);
         readOnlyMaterial1.ShouldNotBeNull();
         readOnlyMaterial1.Name.ShouldBe("Updated Material 1");
         readOnlyMaterial1.PricePerUnit.Amount.ShouldBe(0.2); // 30.00 / 150
 
         // Material 2 should be deleted
         var readOnlyMaterial2 = await context.Set<Material>()
-                .FirstOrDefaultAsync(m => m.TenantId == "RODRIGO.BASNIAK" && m.Id == material2.Id);
+                .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == material2.Id);
         readOnlyMaterial2.ShouldBeNull();
 
         // Material 3 should be created
         var readOnlyMaterial3 = await context.Set<Material>()
-                .FirstOrDefaultAsync(m => m.TenantId == "RODRIGO.BASNIAK" && m.Id == material3.Id);
+                .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == material3.Id);
         readOnlyMaterial3.ShouldNotBeNull();
         readOnlyMaterial3.Name.ShouldBe("Material 3");
         readOnlyMaterial3.PricePerUnit.Amount.ShouldBe(0.2); // 15.00 / 75
@@ -253,7 +253,7 @@ public class Material_End_To_End_Event_Flow_Tests
         // Assert - Verify final state reflects the last update
         using var context = TestingServer.CreateContext();
         var readOnlyMaterial = await context.Set<Material>()
-            .FirstOrDefaultAsync(m => m.TenantId == "RODRIGO.BASNIAK" && m.Id == material.Id);
+            .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == material.Id);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Update 2");

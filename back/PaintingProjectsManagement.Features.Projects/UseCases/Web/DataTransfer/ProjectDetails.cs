@@ -1,4 +1,4 @@
-﻿namespace PaintingProjectsManagement.Features.Projects;
+namespace PaintingProjectsManagement.Features.Projects;
 public class ProjectDetails
 {
     public Guid Id { get; set; }
@@ -29,15 +29,15 @@ public class ProjectDetails
             Steps = project.Steps.Select(x => ProjectStepDataDetails.FromModel(x)).ToArray(),
             // Materials = materialDetails ?? Array.Empty<MaterialDetails>(),
             CostBreakdown = ProjectCostDetails.FromModel(projectCostBreakdown),
-            References = project.References.Select(r => new UrlReference
+            References = project.References.Select(x => new UrlReference
             {
-                Id = r.Id,
-                Url = r.Url
+                Id = x.Id,
+                Url = x.Url
             }).ToArray(),
-            Pictures = project.Pictures.Select(p => new UrlReference
+            Pictures = project.Pictures.Select(x => new UrlReference
             {
-                Id = p.Id,
-                Url = p.Url
+                Id = x.Id,
+                Url = x.Url
             }).ToArray(),
             Groups = project.ColorGroups
                 .Select(ColorGroupDetails.FromModel)

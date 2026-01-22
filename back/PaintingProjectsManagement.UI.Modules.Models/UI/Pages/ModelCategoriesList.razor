@@ -44,14 +44,14 @@
     {
         get
         {
-            var filtered = categories.Where(c => string.IsNullOrWhiteSpace(searchString) ||
-                c.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+            var filtered = categories.Where(x => string.IsNullOrWhiteSpace(searchString) ||
+                x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
 
             if (tableState.SortLabel == "Name")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(c => c.Name)
-                    : filtered.OrderByDescending(c => c.Name);
+                    ? filtered.OrderBy(x => x.Name)
+                    : filtered.OrderByDescending(x => x.Name);
             }
 
             return filtered;
@@ -104,7 +104,7 @@
                 Name = updatedInput.Name
             };
             var updated = await ModelCategoriesService.UpdateAsync(request, CancellationToken.None);
-            var index = categories.FindIndex(c => c.Id == updated.Id);
+            var index = categories.FindIndex(x => x.Id == updated.Id);
             if (index >= 0)
                 categories[index] = updated;
         }

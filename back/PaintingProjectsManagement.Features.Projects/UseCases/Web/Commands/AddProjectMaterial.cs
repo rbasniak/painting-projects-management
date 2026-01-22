@@ -34,7 +34,7 @@ public class AddProjectMaterial : IEndpoint
             RuleFor(x => x.Quantity).GreaterThan(0);
             RuleFor(x => x.Unit).IsInEnum();
             RuleFor(x => x.ProjectId)
-                .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(p => p.Id == id && p.TenantId == request.Identity.Tenant, ct))
+                .MustAsync(async (request, id, ct) => await Context.Set<Project>().AnyAsync(x => x.Id == id && x.TenantId == request.Identity.Tenant, ct))
                 .WithMessage("Project not found");
         }
     }

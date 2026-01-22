@@ -51,8 +51,8 @@ public class ProjectConfig : IEntityTypeConfiguration<Project>
             .OnDelete(DeleteBehavior.Cascade);
             
         // Indexes
-        builder.HasIndex(p => p.Name);
-        builder.HasIndex(p => p.StartDate);
-        builder.HasIndex(p => p.EndDate);
+        builder.HasIndex(x => x.Name);
+        builder.HasIndex(x => x.StartDate);
+        builder.HasIndex(x => x.EndDate);
     }
 }

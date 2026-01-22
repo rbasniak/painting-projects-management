@@ -114,9 +114,9 @@
                                                                 <MudText Typo="Typo.subtitle1">@group.Name</MudText>
                                                                 <MudStack Row="true" Spacing="1">
                                                                     @{
-                                                                        var highlightSection = group.Sections.FirstOrDefault(s => s.Zone == ColorZone.Highlight);
-                                                                        var midtoneSection = group.Sections.FirstOrDefault(s => s.Zone == ColorZone.Midtone);
-                                                                        var shadowSection = group.Sections.FirstOrDefault(s => s.Zone == ColorZone.Shadow);
+                                                                        var highlightSection = group.Sections.FirstOrDefault(x => x.Zone == ColorZone.Highlight);
+                                                                        var midtoneSection = group.Sections.FirstOrDefault(x => x.Zone == ColorZone.Midtone);
+                                                                        var shadowSection = group.Sections.FirstOrDefault(x => x.Zone == ColorZone.Shadow);
                                                                     }
                                                                     
                                                                     @if (shadowSection != null)
@@ -281,8 +281,8 @@
             
             // Update local state
             var section = colorGroups
-                .SelectMany(g => g.Sections)
-                .FirstOrDefault(s => s.Id == selectedSectionId.Value);
+                .SelectMany(x => x.Sections)
+                .FirstOrDefault(x => x.Id == selectedSectionId.Value);
             
             if (section != null)
             {

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace PaintingProjectsManagement.Features.Materials;
 
@@ -16,20 +16,20 @@ public class MaterialConfig : IEntityTypeConfiguration<Material>
         
         builder.ComplexProperty(x => x.PackageContent, owned =>
         {
-            owned.Property(p => p.Amount)
+            owned.Property(x => x.Amount)
                 .HasColumnName("PackageContent_Amount")
                 .IsRequired();
-            owned.Property(p => p.Unit)
+            owned.Property(x => x.Unit)
                 .HasColumnName("PackageContent_Unit")
                 .IsRequired();
         });
         
         builder.ComplexProperty(x => x.PackagePrice, owned =>
         {
-            owned.Property(p => p.Amount)
+            owned.Property(x => x.Amount)
                 .HasColumnName("PackagePrice_Amount")
                 .IsRequired();
-            owned.Property(p => p.CurrencyCode)
+            owned.Property(x => x.CurrencyCode)
                 .HasColumnName("PackagePrice_Currency")
                 .HasMaxLength(3)
                 .IsRequired();
@@ -38,6 +38,6 @@ public class MaterialConfig : IEntityTypeConfiguration<Material>
         // Indexes
         builder.HasIndex(x => x.Name);
         builder.HasIndex(x => x.TenantId);
-        builder.HasIndex(m => new { m.Name, m.TenantId }).IsUnique();
+        builder.HasIndex(x => new { x.Name, x.TenantId }).IsUnique();
     }
 }

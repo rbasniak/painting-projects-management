@@ -32,7 +32,7 @@ public class SetModelBaseSize : IEndpoint
         {
             RuleFor(x => x.Id)
                 .MustAsync(async (request, id, cancellationToken) =>
-                    await Context.Set<Model>().AnyAsync(m => m.Id == id && m.TenantId == request.Identity.Tenant, cancellationToken))
+                    await Context.Set<Model>().AnyAsync(x => x.Id == id && x.TenantId == request.Identity.Tenant, cancellationToken))
                 .WithMessage("Model not found.");
         }
     }

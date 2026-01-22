@@ -95,7 +95,7 @@ public class UpdateColorGroup : IEndpoint
             colorGroup.UpdateName(request.Name);
 
             // Get current zones
-            var currentZones = colorGroup.Sections.Select(s => s.Zone).ToHashSet();
+            var currentZones = colorGroup.Sections.Select(x => x.Zone).ToHashSet();
             var newZones = request.Zones.ToHashSet();
 
             // Remove sections for zones that are no longer selected

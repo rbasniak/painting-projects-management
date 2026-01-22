@@ -106,7 +106,7 @@
     private Guid SelectedCategoryId
     {
         get => Model.Category.Id;
-        set => Model.Category = new PaintingProjectsManagement.UI.Modules.Shared.EntityReference(value, categories.FirstOrDefault(c => c.Id == value)?.Name ?? string.Empty);
+        set => Model.Category = new PaintingProjectsManagement.UI.Modules.Shared.EntityReference(value, categories.FirstOrDefault(x => x.Id == value)?.Name ?? string.Empty);
     }
 
     private ModelType SelectedType
@@ -132,13 +132,13 @@
     private async Task<IEnumerable<string>> SearchFranchises(string value, CancellationToken cancellationToken)
     {
         var franchises = AllModels
-            .Where(m => !string.IsNullOrWhiteSpace(m.Franchise))
-            .Select(m => m.Franchise)
+            .Where(x => !string.IsNullOrWhiteSpace(x.Franchise))
+            .Select(x => x.Franchise)
             .Distinct()
-            .OrderBy(f => f)
+            .OrderBy(x => x)
             .ToList();
 
-        var results = franchises.Where(f => f.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+        var results = franchises.Where(x => x.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
         
         // Add the current input value if it's not empty and not already in the results
         if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
@@ -152,13 +152,13 @@
     private async Task<IEnumerable<string>> SearchCharacters(string value, CancellationToken cancellationToken)
     {
         var characters = AllModels
-            .SelectMany(m => m.Characters)
-            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .SelectMany(x => x.Characters)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
             .Distinct()
-            .OrderBy(c => c)
+            .OrderBy(x => x)
             .ToList();
 
-        var results = characters.Where(c => c.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+        var results = characters.Where(x => x.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
         
         // Add the current input value if it's not empty and not already in the results
         if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
@@ -172,13 +172,13 @@
     private async Task<IEnumerable<string>> SearchArtists(string value, CancellationToken cancellationToken)
     {
         var artists = AllModels
-            .Where(m => !string.IsNullOrWhiteSpace(m.Artist))
-            .Select(m => m.Artist!)
+            .Where(x => !string.IsNullOrWhiteSpace(x.Artist))
+            .Select(x => x.Artist!)
             .Distinct()
-            .OrderBy(a => a)
+            .OrderBy(x => x)
             .ToList();
 
-        var results = artists.Where(a => a.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+        var results = artists.Where(x => x.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
         
         // Add the current input value if it's not empty and not already in the results
         if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
@@ -192,13 +192,13 @@
     private async Task<IEnumerable<string>> SearchTags(string value, CancellationToken cancellationToken)
     {
         var tags = AllModels
-            .SelectMany(m => m.Tags)
-            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .SelectMany(x => x.Tags)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
             .Distinct()
-            .OrderBy(t => t)
+            .OrderBy(x => x)
             .ToList();
 
-        var results = tags.Where(t => t.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+        var results = tags.Where(x => x.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
         
         // Add the current input value if it's not empty and not already in the results
         if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
@@ -250,7 +250,7 @@
 
     private void RemoveTag(string tag)
     {
-        selectedTags.RemoveWhere(t => string.Equals(t, tag, StringComparison.OrdinalIgnoreCase));
+        selectedTags.RemoveWhere(x => string.Equals(x, tag, StringComparison.OrdinalIgnoreCase));
         Model.Tags = selectedTags.ToArray();
     }
 
@@ -301,7 +301,7 @@
 
     private void RemoveCharacter(string character)
     {
-        selectedCharacters.RemoveWhere(c => string.Equals(c, character, StringComparison.OrdinalIgnoreCase));
+        selectedCharacters.RemoveWhere(x => string.Equals(x, character, StringComparison.OrdinalIgnoreCase));
         Model.Characters = selectedCharacters.ToArray();
     }
 }

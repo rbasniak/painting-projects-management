@@ -34,7 +34,7 @@ public class ColorGroup : BaseEntity
 
     public void AddSection(ColorZone zone, string referenceColor)
     {
-        if (_sections.Any(s => s.Zone == zone))
+        if (_sections.Any(x => x.Zone == zone))
         {
             throw new InvalidOperationException($"Section with zone {zone} already exists.");
         }
@@ -45,7 +45,7 @@ public class ColorGroup : BaseEntity
 
     public void UpdateSection(ColorZone zone, string referenceColor)
     {
-        var section = _sections.FirstOrDefault(s => s.Zone == zone);
+        var section = _sections.FirstOrDefault(x => x.Zone == zone);
         if (section == null)
         {
             throw new InvalidOperationException($"Section with zone {zone} not found.");
@@ -56,7 +56,7 @@ public class ColorGroup : BaseEntity
 
     public void RemoveSection(ColorZone zone)
     {
-        var section = _sections.FirstOrDefault(s => s.Zone == zone);
+        var section = _sections.FirstOrDefault(x => x.Zone == zone);
         if (section != null)
         {
             _sections.Remove(section);

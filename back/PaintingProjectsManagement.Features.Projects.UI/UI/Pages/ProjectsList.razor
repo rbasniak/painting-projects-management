@@ -62,14 +62,14 @@
     {
         get
         {
-            var filtered = projects.Where(m => string.IsNullOrWhiteSpace(searchString) ||
-                m.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+            var filtered = projects.Where(x => string.IsNullOrWhiteSpace(searchString) ||
+                x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
 
             if (tableState.SortLabel == "Name")
             {
                 filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(m => m.Name)
-                    : filtered.OrderByDescending(m => m.Name);
+                    ? filtered.OrderBy(x => x.Name)
+                    : filtered.OrderByDescending(x => x.Name);
             } 
 
             return filtered;
@@ -140,7 +140,7 @@
                 Name = updatedInput.Name,
             };
             var updated = await ProjectsService.UpdateAsync(request, default);
-            var index = projects.FindIndex(m => m.Id == updated.Id);
+            var index = projects.FindIndex(x => x.Id == updated.Id);
             if (index >= 0)
             {
                 projects[index] = updated;

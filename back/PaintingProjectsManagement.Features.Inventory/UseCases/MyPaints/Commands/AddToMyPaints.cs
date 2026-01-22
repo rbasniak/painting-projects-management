@@ -44,8 +44,8 @@ public class AddToMyPaints : IEndpoint
                 .ToList();
 
             var existingPaints = await _context.Set<PaintColor>()
-                .Where(p => toAdd.Contains(p.Id))
-                .Select(p => p.Id)
+                .Where(x => toAdd.Contains(x.Id))
+                .Select(x => x.Id)
                 .ToListAsync(cancellationToken);
 
             foreach (var id in toAdd)

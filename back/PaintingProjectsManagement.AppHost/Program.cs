@@ -44,17 +44,17 @@ var blazorApp = builder.AddProject<Projects.PaintingProjectsManagement_UI>("ppm-
     .WithReference(apiService)
     .WaitFor(apiService);
 
-blazorApp.Resource.Annotations.OfType<EndpointAnnotation>().ToList().ForEach(e =>
+blazorApp.Resource.Annotations.OfType<EndpointAnnotation>().ToList().ForEach(x =>
 {
-    if (e.Name == "http")
+    if (x.Name == "http")
     {
-        e.Port = 5251;
-        e.IsProxied = false;
+        x.Port = 5251;
+        x.IsProxied = false;
     }
-    if (e.Name == "https")
+    if (x.Name == "https")
     {
-        e.Port = 7114;
-        e.IsProxied = false;
+        x.Port = 7114;
+        x.IsProxied = false;
     }
 });
 

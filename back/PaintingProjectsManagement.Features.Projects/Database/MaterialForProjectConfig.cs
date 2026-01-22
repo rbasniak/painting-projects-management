@@ -9,7 +9,7 @@ public class MaterialForProjectConfig : IEntityTypeConfiguration<MaterialForProj
         builder.ToTable("projects.project_materials");
 
         // Composite key
-        builder.HasKey(e => new { e.ProjectId, e.MaterialId });
+        builder.HasKey(x => new { x.ProjectId, x.MaterialId });
         
         builder.Property(x => x.ProjectId)
             .IsRequired();
@@ -19,11 +19,11 @@ public class MaterialForProjectConfig : IEntityTypeConfiguration<MaterialForProj
 
         builder.ComplexProperty(x => x.Quantity, owned =>
         {
-            owned.Property(p => p.Value)
+            owned.Property(x => x.Value)
                 .HasColumnName("Quantity_Value")
                 .IsRequired();
 
-            owned.Property(p => p.Unit)
+            owned.Property(x => x.Unit)
                 .HasColumnName("Quantity_Unit")
                 .IsRequired();
         });

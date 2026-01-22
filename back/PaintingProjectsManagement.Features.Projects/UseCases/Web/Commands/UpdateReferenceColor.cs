@@ -59,7 +59,7 @@ public class UpdateReferenceColor : IEndpoint
             }
 
             // Check if the remaining 6 characters are valid hex digits
-            return color.Substring(1).All(c => (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'));
+            return color.Substring(1).All(x => (x >= '0' && x <= '9') || (x >= 'A' && x <= 'F') || (x >= 'a' && x <= 'f'));
         }
     }
 

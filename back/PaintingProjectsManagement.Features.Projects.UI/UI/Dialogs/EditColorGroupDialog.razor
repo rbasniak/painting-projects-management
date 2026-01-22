@@ -64,7 +64,7 @@
             name = Group.Name;
             
             // Pre-select zones that exist in the group
-            var existingZones = Group.Sections.Select(s => s.Zone).ToHashSet();
+            var existingZones = Group.Sections.Select(x => x.Zone).ToHashSet();
             foreach (var zone in selectedZones.Keys.ToList())
             {
                 selectedZones[zone] = existingZones.Contains(zone);
@@ -72,7 +72,7 @@
         }
     }
 
-    private bool CanSubmit => !string.IsNullOrWhiteSpace(name) && selectedZones.Values.Any(v => v);
+    private bool CanSubmit => !string.IsNullOrWhiteSpace(name) && selectedZones.Values.Any(x => x);
 
     private async Task Submit()
     {

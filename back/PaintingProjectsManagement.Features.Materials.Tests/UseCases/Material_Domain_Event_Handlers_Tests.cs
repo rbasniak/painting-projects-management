@@ -244,7 +244,7 @@ public class Material_Domain_Event_Handlers_Tests
         // Assert - Verify no MaterialUpdatedV1 integration event was published to outbox
         using var context = TestingServer.CreateContext();
         var outboxMessages = await context.Set<IntegrationOutboxMessage>()
-            .Where(m => m.Name == "materials.material-updated.v1")
+            .Where(x => x.Name == "materials.material-updated.v1")
             .ToListAsync();
 
         outboxMessages.ShouldBeEmpty();

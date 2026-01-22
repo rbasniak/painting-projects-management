@@ -1,4 +1,4 @@
-﻿using DotNet.Testcontainers.Configurations;
+using DotNet.Testcontainers.Configurations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -200,7 +200,7 @@ public abstract class BaseApplicationTestingServer<TProgram> : RbkTestingServer<
         {
             using var context = CreateContext();
             var inboxMessage = await context.Set<InboxMessage>()
-                .Where(m => m.EventId == eventId && m.ProcessedUtc != null)
+                .Where(x => x.EventId == eventId && x.ProcessedUtc != null)
                 .FirstOrDefaultAsync();
                 
             if (inboxMessage != null)
@@ -229,7 +229,7 @@ public abstract class BaseApplicationTestingServer<TProgram> : RbkTestingServer<
         {
             using var context = CreateContext();
             var outboxMessage = await context.Set<DomainOutboxMessage>()
-                .Where(m => m.Name == GetEventName<TEvent>() && m.ProcessedUtc != null)
+                .Where(x => x.Name == GetEventName<TEvent>() && x.ProcessedUtc != null)
                 .FirstOrDefaultAsync();
                 
             if (outboxMessage != null)
@@ -275,7 +275,7 @@ public abstract class BaseApplicationTestingServer<TProgram> : RbkTestingServer<
         {
             using var context = CreateContext();
             var pendingCount = await context.Set<DomainOutboxMessage>()
-                .Where(m => m.ProcessedUtc == null)
+                .Where(x => x.ProcessedUtc == null)
                 .CountAsync();
                 
             if (pendingCount == 0)
@@ -304,7 +304,7 @@ public abstract class BaseApplicationTestingServer<TProgram> : RbkTestingServer<
         {
             using var context = CreateContext();
             var pendingCount = await context.Set<IntegrationOutboxMessage>()
-                .Where(m => m.ProcessedUtc == null)
+                .Where(x => x.ProcessedUtc == null)
                 .CountAsync();
                 
             if (pendingCount == 0)

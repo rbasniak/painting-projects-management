@@ -22,7 +22,7 @@ public class PaintLineConfig : IEntityTypeConfiguration<PaintLine>
             .HasForeignKey(x => x.BrandId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(e => new { e.BrandId, e.Name })
+        builder.HasIndex(x => new { x.BrandId, x.Name })
            .IsUnique();
     }
 }

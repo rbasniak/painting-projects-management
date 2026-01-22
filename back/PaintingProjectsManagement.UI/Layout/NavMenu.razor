@@ -5,10 +5,10 @@
         Home
     </MudNavLink>
 
-    @foreach (var module in Modules.OrderBy(m => m.Order))
+    @foreach (var module in Modules.OrderBy(x => x.Order))
     {
         <MudNavGroup Title="@module.Name" Icon="@module.Icon" Expanded="false">
-            @foreach (var route in module.Routes.OrderBy(r => r.Order))
+            @foreach (var route in module.Routes.OrderBy(x => x.Order))
             {
                 <MudNavLink Href="@($"/{module.Route}/{route.Route}")"
                             Icon="@route.Icon"

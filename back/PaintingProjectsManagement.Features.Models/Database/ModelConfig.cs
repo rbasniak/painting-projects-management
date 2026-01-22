@@ -30,7 +30,7 @@ public class ModelConfig : IEntityTypeConfiguration<Model>
 
         builder.OwnsOne(x => x.Score, owned =>
         {
-            owned.Property(p => p.Value)
+            owned.Property(x => x.Value)
                 .HasColumnName("Score")
                 .IsRequired()
                 .HasDefaultValue(0);
@@ -41,6 +41,6 @@ public class ModelConfig : IEntityTypeConfiguration<Model>
             .HasForeignKey(x => x.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(e => new { e.TenantId, e.Name });
+        builder.HasIndex(x => new { x.TenantId, x.Name });
     }
 }

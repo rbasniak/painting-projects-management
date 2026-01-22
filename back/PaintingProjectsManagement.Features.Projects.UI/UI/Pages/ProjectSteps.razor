@@ -30,7 +30,7 @@
                         <TitleContent>
                             <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
                                 <MudText>@group.Value.First().Step.Value</MudText>
-                                <MudChip T="string" Color="Color.Default" Variant="Variant.Outlined" Size="Size.Small">@FormatDuration(group.Value.Sum(s => s.DurationInHours))</MudChip>
+                                <MudChip T="string" Color="Color.Default" Variant="Variant.Outlined" Size="Size.Small">@FormatDuration(group.Value.Sum(x => x.DurationInHours))</MudChip>
                             </div>
                         </TitleContent>
                         <ChildContent>

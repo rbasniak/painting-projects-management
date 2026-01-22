@@ -13,10 +13,10 @@ public class ReadOnlyMaterialConfig : IEntityTypeConfiguration<Material>
         builder.Property(x => x.Unit).IsRequired().HasMaxLength(50);
         builder.Property(x => x.UpdatedUtc).IsRequired();
 
-        builder.ComplexProperty(x => x.PricePerUnit, x =>
+        builder.ComplexProperty(x => x.PricePerUnit, owned =>
         {
-            x.Property(x => x.Amount).HasColumnName("PricePerUnit_Amount").IsRequired();
-            x.Property(m => m.Currency).HasColumnName("PricePerUnit_Currency").IsRequired().HasMaxLength(3);
+            owned.Property(x => x.Amount).HasColumnName("PricePerUnit_Amount").IsRequired();
+            owned.Property(x => x.Currency).HasColumnName("PricePerUnit_Currency").IsRequired().HasMaxLength(3);
         });
     }
 }
