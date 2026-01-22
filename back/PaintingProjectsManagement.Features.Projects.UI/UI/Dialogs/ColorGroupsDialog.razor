@@ -1,0 +1,450 @@
+@using MudBlazor
+@using PaintingProjectsManagement.Features.Projects.UI
+@using PaintingProjectsManagement.Features.Projects
+@using PaintingProjectsManagement.UI.Modules.Projects
+@using System.Text.Json
+
+@namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
+@implements IAsyncDisposable
+
+<MudDialog Class="color-groups-dialog">
+    <DialogContent>
+        <MudPaper Class="pa-4" Style="height: calc(100vh - 120px); display: flex; flex-direction: column;">
+            <MudStack Spacing="2">
+                <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween">
+                    <div>
+                        <MudText Typo="Typo.h4">@Model?.Name</MudText>
+                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Color Zones Management</MudText>
+                    </div>
+                </MudStack>
+
+                @if (Model?.References == null || !Model.References.Any())
+                {
+                    <MudAlert Severity="Severity.Warning">No reference images available for this project.</MudAlert>
+                }
+                else
+                {
+                    <!-- Image Carousel -->
+                    <MudPaper Elevation="1" Class="pa-2">
+                        <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mb-2">Select Reference Image</MudText>
+                        <div style="display: flex; gap: 8px; overflow-x: auto; padding: 8px 0;">
+                            @for (int i = 0; i < Model.References.Length; i++)
+                            {
+                                var reference = Model.References[i];
+                                var isSelected = i == selectedImageIndex;
+                                var borderStyle = isSelected ? "2px solid var(--mud-palette-primary)" : "2px solid transparent";
+                                <div style="@($"flex-shrink: 0; cursor: pointer; border: {borderStyle}; border-radius: 4px; padding: 2px;")"
+                                     @onclick="async () => await SelectImage(reference)">
+                                    <img src="@reference.Url" alt="Reference" style="max-height: 100px; max-width: 150px; object-fit: contain; display: block;" />
+                                </div>
+                            }
+                        </div>
+                    </MudPaper>
+
+                    <!-- Main Content: Two Columns -->
+                    <MudGrid Spacing="3" Style="flex: 1; min-height: 0;">
+                        <!-- Left Column: Image Viewer -->
+                        <MudItem xs="12" md="8">
+                            <MudPaper Elevation="1" Class="image-viewer-container" Style="height: 100%; position: relative; overflow: hidden;">
+                                <div style="width: 100%; height: 100%; position: relative; overflow: hidden; cursor: crosshair; touch-action: none;" 
+                                     id="image-container">
+                                    <img id="zoomable-image"
+                                         @ref="zoomableImageRef"
+                                         src="@CurrentImageUrl" 
+                                         crossorigin="anonymous"
+                                         alt="Reference Image"
+                                         style="display: block; max-width: none; user-select: none; transform-origin: 0 0;"
+                                         @oncontextmenu:preventDefault="true" />
+                                    <div id="pixel-magnifier"
+                                         @ref="magnifierRef" 
+                                         style="position: absolute; border: 2px solid #000; background: white; display: none; z-index: 1000; pointer-events: none; width: 150px; height: 150px; box-shadow: 0 0 10px rgba(0,0,0,0.5);"></div>
+                                </div>
+                            </MudPaper>
+                        </MudItem>
+
+                        <!-- Right Column: Color Groups Management -->
+                        <MudItem xs="12" md="4">
+                            <MudPaper Elevation="1" Class="pa-4" Style="height: 100%; display: flex; flex-direction: column; overflow: hidden;">
+                                <MudStack Spacing="2" Style="flex: 1; min-height: 0; overflow-y: auto;">
+                                    <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween">
+                                        <MudText Typo="Typo.h6">Color Groups</MudText>
+                                        <MudButton OnClick="CreateNewGroup" 
+                                                 Color="Color.Primary" 
+                                                 Variant="Variant.Filled" 
+                                                 Size="Size.Small"
+                                                 StartIcon="@Icons.Material.Filled.Add">
+                                            New Group
+                                        </MudButton>
+                                    </MudStack>
+
+                                    @if (selectedColor != null)
+                                    {
+                                        <MudPaper Elevation="2" Class="pa-3" Style="@($"background-color: {selectedColor.Hex};")">
+                                            <MudStack Spacing="1">
+                                                <MudText Typo="Typo.body2" Style="@($"color: {GetContrastColor(selectedColor.Hex)};")">
+                                                    Picked: @selectedColor.Hex
+                                                </MudText>
+                                                <MudText Typo="Typo.caption" Style="@($"color: {GetContrastColor(selectedColor.Hex)};")">
+                                                    @if (selectedSectionId.HasValue)
+                                                    {
+                                                        <text>Click image to update selected section</text>
+                                                    }
+                                                    else
+                                                    {
+                                                        <text>Select a section below to update its color</text>
+                                                    }
+                                                </MudText>
+                                            </MudStack>
+                                        </MudPaper>
+                                    }
+
+                                    @if (colorGroups.Count == 0)
+                                    {
+                                        <MudAlert Severity="Severity.Info">No color groups yet. Create one to get started.</MudAlert>
+                                    }
+                                    else
+                                    {
+                                        <MudExpansionPanels MultiExpansion="true">
+                                            @foreach (var group in colorGroups)
+                                            {
+                                                <MudExpansionPanel>
+                                                    <TitleContent>
+                                                        <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween" Style="width: 100%;">
+                                                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="flex: 1;">
+                                                                <MudText Typo="Typo.subtitle1">@group.Name</MudText>
+                                                                <MudStack Row="true" Spacing="1">
+                                                                    @{
+                                                                        var highlightSection = group.Sections.FirstOrDefault(s => s.Zone == ColorZone.Highlight);
+                                                                        var midtoneSection = group.Sections.FirstOrDefault(s => s.Zone == ColorZone.Midtone);
+                                                                        var shadowSection = group.Sections.FirstOrDefault(s => s.Zone == ColorZone.Shadow);
+                                                                    }
+                                                                    
+                                                                    @if (shadowSection != null)
+                                                                    {
+                                                                        <div style="@($"width: 20px; height: 20px; background-color: {shadowSection.ReferenceColor}; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2);")" title="Shadow"></div>
+                                                                    }
+                                                                    @if (midtoneSection != null)
+                                                                    {
+                                                                        <div style="@($"width: 20px; height: 20px; background-color: {midtoneSection.ReferenceColor}; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2);")" title="Midtone"></div>
+                                                                    }
+                                                                    @if (highlightSection != null)
+                                                                    {
+                                                                        <div style="@($"width: 20px; height: 20px; background-color: {highlightSection.ReferenceColor}; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2);")" title="Highlight"></div>
+                                                                    }
+                                                                </MudStack>
+                                                            </MudStack>
+                                                            <MudStack Row="true" Spacing="1">
+                                                                <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                                                              Size="Size.Small" 
+                                                                              Color="Color.Primary"
+                                                                              OnClick="() => EditGroup(group)"
+                                                                              OnClick:StopPropagation="true" />
+                                                                <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                                                              Size="Size.Small" 
+                                                                              Color="Color.Error"
+                                                                              OnClick="() => DeleteGroup(group)"
+                                                                              OnClick:StopPropagation="true" />
+                                                            </MudStack>
+                                                        </MudStack>
+                                                    </TitleContent>
+                                                    <ChildContent>
+                                                        <MudStack Spacing="2" Class="mt-2">
+                                                            @foreach (var section1 in group.Sections)
+                                                            {
+                                                                var isSelected = selectedSectionId == section1.Id;
+                                                                var borderStyle = isSelected ? "2px solid var(--mud-palette-primary)" : "1px solid var(--mud-palette-divider)";
+                                                                <MudPaper Elevation="0" 
+                                                                        Class="pa-2" 
+                                                                        Style="@($"border: {borderStyle}; border-radius: 4px; cursor: pointer;")"
+                                                                        @onclick="() => SelectSectionForUpdate(section1.Id)">
+                                                                    <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
+                                                                        <div style="@($"width: 40px; height: 40px; background-color: {section1.ReferenceColor}; border-radius: 4px; border: 1px solid #ccc;")"></div>
+                                                                        <MudStack Spacing="0" Style="flex: 1;">
+                                                                            <MudText Typo="Typo.body2">@GetZoneLabel(section1.Zone)</MudText>
+                                                                            <MudText Typo="Typo.caption" Color="Color.Secondary">@section1.ReferenceColor</MudText>
+                                                                        </MudStack>
+                                                                        @if (isSelected)
+                                                                        {
+                                                                            <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled">Click a color in the image</MudChip>
+                                                                        }
+                                                                    </MudStack>
+                                                                </MudPaper>
+                                                            }
+                                                        </MudStack>
+                                                    </ChildContent>
+                                                </MudExpansionPanel>
+                                            }
+                                        </MudExpansionPanels>
+                                    }
+                                </MudStack>
+                            </MudPaper>
+                        </MudItem>
+                    </MudGrid>
+                }
+            </MudStack>
+        </MudPaper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close" Color="Color.Primary" Variant="Variant.Filled" Size="Size.Medium">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = default!;
+    [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public IDialogService DialogService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+
+    [Parameter] public ProjectDetails Model { get; set; } = default!;
+
+    private ElementReference zoomableImageRef;
+    private ElementReference magnifierRef;
+    private IJSObjectReference? jsModule;
+
+    private int selectedImageIndex = 0;
+    private string? CurrentImageUrl => Model?.References?.Length > 0 && selectedImageIndex >= 0 && selectedImageIndex < Model.References.Length
+        ? Model.References[selectedImageIndex].Url + "?cors=true"
+        : null;
+
+    private SelectedColor? selectedColor;
+    private List<ColorGroupDetails> colorGroups = new();
+    private Guid? selectedSectionId;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/PaintingProjectsManagement.Features.Projects.UI/js/imageViewer.js");
+                await jsModule.InvokeVoidAsync("initializeImageViewer", "image-container", "zoomable-image", "pixel-magnifier", DotNetObjectReference.Create(this));
+                
+                LoadColorGroups();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to load image viewer JS module: {ex.Message}");
+            }
+        }
+    }
+
+    private void LoadColorGroups()
+    {
+        colorGroups = Model?.Groups?.ToList() ?? new List<ColorGroupDetails>();
+        StateHasChanged();
+    }
+
+    private async Task SelectImage(UrlReference reference)
+    {
+        var index = Array.IndexOf(Model.References, reference);
+        if (index >= 0)
+        {
+            selectedImageIndex = index;
+            selectedColor = null;
+            StateHasChanged();
+            
+            // Wait for the image to load, then reset transform
+            await Task.Delay(100); 
+            if (jsModule != null)
+            {
+                await jsModule.InvokeVoidAsync("resetImageViewer");
+            }
+        }
+    }
+
+    [JSInvokable]
+    public async Task SetSelectedColor(int r, int g, int b)
+    {
+        selectedColor = new SelectedColor { R = r, G = g, B = b };
+        
+        // If a section is selected, update it with the picked color
+        if (selectedSectionId.HasValue)
+        {
+            await UpdateSelectedSectionColor(selectedColor.Hex);
+        }
+        
+        StateHasChanged();
+    }
+
+    private async Task UpdateSelectedSectionColor(string hexColor)
+    {
+        try
+        {
+            var request = new UpdateColorSectionRequest
+            {
+                SectionId = selectedSectionId.Value,
+                ReferenceColor = hexColor
+            };
+
+            await ProjectsService.UpdateColorSectionAsync(request, default);
+            
+            // Update local state
+            var section = colorGroups
+                .SelectMany(g => g.Sections)
+                .FirstOrDefault(s => s.Id == selectedSectionId.Value);
+            
+            if (section != null)
+            {
+                section.ReferenceColor = hexColor;
+            }
+            
+            selectedSectionId = null; // Clear selection after update
+            Snackbar.Add("Color updated successfully", Severity.Success);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error updating color: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private void SelectSectionForUpdate(Guid sectionId)
+    {
+        selectedSectionId = sectionId;
+        StateHasChanged();
+    }
+
+    private async Task CreateNewGroup()
+    {
+        var parameters = new DialogParameters { ["ProjectId"] = Model.Id };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = false };
+        var dialog = DialogService.Show<CreateColorGroupDialog>("Create Color Group", parameters, options);
+        var result = await dialog.Result;
+        
+        if (!result.Canceled)
+        {
+            await RefreshGroups();
+        }
+    }
+
+    private async Task EditGroup(ColorGroupDetails group)
+    {
+        var parameters = new DialogParameters 
+        { 
+            ["ProjectId"] = Model.Id,
+            ["Group"] = group
+        };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = false };
+        var dialog = DialogService.Show<EditColorGroupDialog>("Edit Color Group", parameters, options);
+        var result = await dialog.Result;
+        
+        if (!result.Canceled)
+        {
+            await RefreshGroups();
+        }
+    }
+
+    private async Task DeleteGroup(ColorGroupDetails group)
+    {
+        var parameters = new DialogParameters
+        {
+            { "ContentText", $"Are you sure you want to delete the color group '{group.Name}'? This action cannot be undone." },
+            { "ButtonText", "Delete" },
+            { "Color", Color.Error }
+        };
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var confirmDialog = DialogService.Show<MudDialog>("Confirm Delete", parameters, options);
+        var confirmResult = await confirmDialog.Result;
+        
+        if (!confirmResult.Canceled)
+        {
+            try
+            {
+                var request = new DeleteColorGroupRequest
+                {
+                    ProjectId = Model.Id,
+                    ColorGroupId = group.Id
+                };
+
+                await ProjectsService.DeleteColorGroupAsync(request, default);
+                Snackbar.Add("Color group deleted successfully", Severity.Success);
+                await RefreshGroups();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Error deleting color group: {ex.Message}", Severity.Error);
+            }
+        }
+    }
+
+    private async Task RefreshGroups()
+    {
+        try
+        {
+            var projectDetails = await ProjectsService.GetDetailsAsync(Model.Id, default);
+            Model = projectDetails;
+            LoadColorGroups();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error refreshing groups: {ex.Message}", Severity.Error);
+        }
+    }
+
+    private string GetZoneLabel(ColorZone zone)
+    {
+        return zone switch
+        {
+            ColorZone.Highlight => "Highlights",
+            ColorZone.Midtone => "Midtones",
+            ColorZone.Shadow => "Shadows",
+            _ => zone.ToString()
+        };
+    }
+
+    private void OnContextMenu(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)
+    {
+        // Context menu is prevented via @oncontextmenu:preventDefault="true"
+    }
+
+    private string GetContrastColor(string hexColor)
+    {
+        try
+        {
+            var r = Convert.ToInt32(hexColor.Substring(1, 2), 16);
+            var g = Convert.ToInt32(hexColor.Substring(3, 2), 16);
+            var b = Convert.ToInt32(hexColor.Substring(5, 2), 16);
+            var brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            return brightness > 128 ? "#000000" : "#FFFFFF";
+        }
+        catch
+        {
+            return "#000000";
+        }
+    }
+
+    private void Close() => MudDialog.Close(DialogResult.Ok(true));
+
+    public class SelectedColor
+    {
+        public int R { get; set; }
+        public int G { get; set; }
+        public int B { get; set; }
+        public string Hex => $"#{R:X2}{G:X2}{B:X2}";
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (jsModule != null)
+        {
+            await jsModule.DisposeAsync();
+        }
+    }
+}
+
+<style>
+    .color-groups-dialog .image-viewer-container {
+        background: #f5f5f5;
+    }
+
+    .color-groups-dialog .image-carousel {
+        height: 120px;
+    }
+
+    #zoomable-image {
+        transform-origin: 0 0;
+    }
+</style>
+

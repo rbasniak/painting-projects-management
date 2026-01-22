@@ -5,7 +5,7 @@ public class Project : TenantEntity
     private HashSet<MaterialForProject> _materials = new();
     private HashSet<ProjectReference> _references = new();
     private HashSet<ProjectPicture> _pictures = new();
-    private HashSet<ColorGroup> _groups = new();
+    private HashSet<ColorGroup> _colorGroups = new();
     private HashSet<ProjectStepData> _steps = new();
 
     // EF Core constructor, don't remote it
@@ -25,7 +25,7 @@ public class Project : TenantEntity
         _references = new HashSet<ProjectReference>();
         _pictures = new HashSet<ProjectPicture>();
         _steps = new HashSet<ProjectStepData>();
-        _groups = new HashSet<ColorGroup>();
+        _colorGroups = new HashSet<ColorGroup>();
     }
 
     public string Name { get; private set; } = string.Empty;
@@ -37,7 +37,7 @@ public class Project : TenantEntity
     public IEnumerable<MaterialForProject> Materials => _materials.AsReadOnly();
     public IEnumerable<ProjectReference> References => _references.AsReadOnly();
     public IEnumerable<ProjectPicture> Pictures => _pictures.AsReadOnly();
-    public IEnumerable<ColorGroup> ColorGroups => _groups.AsReadOnly();
+    public IEnumerable<ColorGroup> ColorGroups => _colorGroups.AsReadOnly();
     public IEnumerable<ProjectStepData> Steps => _steps.AsReadOnly();
 
     public void UpdateDetails(string name, string pictureUrl, DateTime? startDate, DateTime? endDate)
@@ -160,6 +160,30 @@ public class Project : TenantEntity
         {
             _steps.Remove(step);
             RaiseDomainEvent(new BuildingStepRemoved(Id, stepId));
+        }
+    }
+
+    public void AddColorGroup(ColorGroup group)
+    {
+        if (group == null)
+        {
+            throw new ArgumentNullException(nameof(group));
+        }
+
+        if (group.ProjectId != Id)
+        {
+            throw new InvalidOperationException("ColorGroup's ProjectId does not match this Project's Id.");
+        }
+
+        _colorGroups.Add(group);
+    }
+
+    public void RemoveColorGroup(Guid colorGroupId)
+    {
+        var group = _colorGroups.FirstOrDefault(g => g.Id == colorGroupId);
+        if (group != null)
+        {
+            _colorGroups.Remove(group);
         }
     }
 }
