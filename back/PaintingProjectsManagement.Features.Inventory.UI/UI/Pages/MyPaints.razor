@@ -1,0 +1,96 @@
+@page "/inventory/my-paints"
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Inventory
+@using PaintingProjectsManagement.UI.Modules.Inventory.UI.Dialogs
+@using PaintingProjectsManagement.UI.Modules.Shared
+
+<PageTitle>My Paints</PageTitle>
+
+<MudPaper Class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-4">
+        <MudText Typo="Typo.h5">My Paints</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenAddDialog" StartIcon="@Icons.Material.Filled.Add">Add</MudButton>
+    </MudStack>
+
+    @if (_loading)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-4" />
+    }
+    else if (_paints.Count > 0)
+    {
+        <MudGrid Spacing="3">
+            @foreach (var paint in _paints)
+            {
+                <MudItem xs="12" sm="6" md="4" lg="3">
+                    <div class="d-flex flex-column align-center position-relative">
+                        <div class="d-flex align-center">
+                            <div style="width: 48px; height: 48px; border-radius: 50%; background-color: @paint.HexColor; border: 1px solid #ccc; box-shadow: 0 1px 3px rgba(0,0,0,0.2);" title="@paint.Name"></div>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="() => Remove(paint)" Class="ms-1" Title="Remove from inventory" />
+                        </div>
+                        <MudText Typo="Typo.caption" Class="mt-1 text-center" Style="max-width: 100px;">@paint.Name</MudText>
+                        <MudText Typo="Typo.caption" Class="text-center" Color="Color.Secondary" Style="max-width: 100px;">@paint.BrandName / @paint.LineName</MudText>
+                    </div>
+                </MudItem>
+            }
+        </MudGrid>
+    }
+    else
+    {
+        <MudText Typo="Typo.body1" Color="Color.Secondary">You have no paints in your inventory. Click Add to add some.</MudText>
+    }
+</MudPaper>
+
+@code {
+    [Inject] public IInventoryService InventoryService { get; set; } = default!;
+    [Inject] public IDialogService DialogService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+
+    private List<MyPaintDetails> _paints = new();
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _loading = true;
+        try
+        {
+            var list = await InventoryService.GetMyPaintsAsync(default);
+            _paints = list.ToList();
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task OpenAddDialog()
+    {
+        var parameters = new DialogParameters();
+        var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = await DialogService.ShowAsync<AddPaintsDialog>("Add Paints", parameters, options);
+        var result = await dialog.Result;
+        if (result is { Canceled: false })
+        {
+            await LoadAsync();
+            Snackbar.Add("Paints added to your inventory.", Severity.Success);
+        }
+    }
+
+    private async Task Remove(MyPaintDetails paint)
+    {
+        try
+        {
+            await InventoryService.RemoveFromMyPaintsAsync(paint.PaintColorId, default);
+            _paints.Remove(paint);
+            Snackbar.Add("Removed from inventory.", Severity.Success);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Failed to remove: {ex.Message}", Severity.Error);
+        }
+    }
+}

@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PaintingProjectsManagement.Features;
 using PaintingProjectsManagement.Features.Materials;
-using PaintingProjectsManagement.Features.Paints;
+using PaintingProjectsManagement.Features.Inventory;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Core;
 
@@ -17,7 +17,7 @@ public partial class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatab
         AddSeed("2025-08-11 23:15: Example materials", new SeedInfo<DatabaseContext>(MaterialsSeed, EnvironmentUsage.Development));
         AddSeed("2025-11-11 22:30: Example projects", new SeedInfo<DatabaseContext>(ProjectsSeed, EnvironmentUsage.Development));
         AddSeed("2025-12-05 12:00: Update materials tenant", new SeedInfo<DatabaseContext>(UpdateMaterialsTenant, EnvironmentUsage.Development));
-        // AddSeed("2025-07-20: Army Painter Seed", new SeedInfo<DatabaseContext>(ArmyPainterFanaticsSeed));
+        AddSeed("2025-07-20: Army Painter Seed", new SeedInfo<DatabaseContext>(ArmyPainterFanaticsSeed));
     }
 
     private void UpdateMaterialsTenant(DatabaseContext context, IServiceProvider provider)

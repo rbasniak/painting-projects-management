@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Common properties are now in Directory.Build.props -->
+
+	<ItemGroup>
+	  <Compile Remove="Events\**" />
+	  <EmbeddedResource Remove="Events\**" />
+	  <None Remove="Events\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\PaintingProjectsManagement.Features.Authorization\PaintingProjectsManagement.Features.Authorization.csproj" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<PackageReference Include="FluentValidation" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+		<PackageReference Include="rbkApiModules.Commons.Core" />
+	</ItemGroup>
+	
+</Project>

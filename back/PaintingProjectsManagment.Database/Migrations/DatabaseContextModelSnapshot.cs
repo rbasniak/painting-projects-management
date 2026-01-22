@@ -23,6 +23,119 @@ namespace PaintingProjectsManagment.Database.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Inventory.PaintBrand", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("paints_catalog.brands", (string)null);
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Inventory.PaintColor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("BottleSize")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("HexColor")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("character varying(7)");
+
+                    b.Property<Guid>("LineId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ManufacturerCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LineId");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("Type");
+
+                    b.HasIndex("LineId", "HexColor")
+                        .IsUnique();
+
+                    b.HasIndex("LineId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("paints_catalog.colors", (string)null);
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Inventory.PaintLine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BrandId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("paints_catalog.lines", (string)null);
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Inventory.UserPaint", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PaintColorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaintColorId");
+
+                    b.HasIndex("Username");
+
+                    b.HasIndex("Username", "PaintColorId")
+                        .IsUnique();
+
+                    b.ToTable("user_paints", "inventory");
+                });
+
             modelBuilder.Entity("PaintingProjectsManagement.Features.Materials.Material", b =>
                 {
                     b.Property<Guid>("Id")
@@ -177,93 +290,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("models.categories", (string)null);
-                });
-
-            modelBuilder.Entity("PaintingProjectsManagement.Features.Paints.PaintBrand", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("paints_catalog.brands", (string)null);
-                });
-
-            modelBuilder.Entity("PaintingProjectsManagement.Features.Paints.PaintColor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<double>("BottleSize")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("HexColor")
-                        .IsRequired()
-                        .HasMaxLength(7)
-                        .HasColumnType("character varying(7)");
-
-                    b.Property<Guid>("LineId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ManufacturerCode")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LineId");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("Type");
-
-                    b.HasIndex("LineId", "HexColor")
-                        .IsUnique();
-
-                    b.HasIndex("LineId", "Name")
-                        .IsUnique();
-
-                    b.ToTable("paints_catalog.colors", (string)null);
-                });
-
-            modelBuilder.Entity("PaintingProjectsManagement.Features.Paints.PaintLine", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("BrandId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BrandId", "Name")
-                        .IsUnique();
-
-                    b.ToTable("paints_catalog.lines", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorGroup", b =>
@@ -944,6 +970,39 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.ToTable("UsersToRoles", (string)null);
                 });
 
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Inventory.PaintColor", b =>
+                {
+                    b.HasOne("PaintingProjectsManagement.Features.Inventory.PaintLine", "Line")
+                        .WithMany()
+                        .HasForeignKey("LineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Line");
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Inventory.PaintLine", b =>
+                {
+                    b.HasOne("PaintingProjectsManagement.Features.Inventory.PaintBrand", "Brand")
+                        .WithMany()
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Inventory.UserPaint", b =>
+                {
+                    b.HasOne("PaintingProjectsManagement.Features.Inventory.PaintColor", "PaintColor")
+                        .WithMany()
+                        .HasForeignKey("PaintColorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PaintColor");
+                });
+
             modelBuilder.Entity("PaintingProjectsManagement.Features.Materials.Material", b =>
                 {
                     b.HasOne("rbkApiModules.Identity.Core.Tenant", null)
@@ -996,28 +1055,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .WithMany()
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("PaintingProjectsManagement.Features.Paints.PaintColor", b =>
-                {
-                    b.HasOne("PaintingProjectsManagement.Features.Paints.PaintLine", "Line")
-                        .WithMany()
-                        .HasForeignKey("LineId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Line");
-                });
-
-            modelBuilder.Entity("PaintingProjectsManagement.Features.Paints.PaintLine", b =>
-                {
-                    b.HasOne("PaintingProjectsManagement.Features.Paints.PaintBrand", "Brand")
-                        .WithMany()
-                        .HasForeignKey("BrandId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Brand");
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorGroup", b =>

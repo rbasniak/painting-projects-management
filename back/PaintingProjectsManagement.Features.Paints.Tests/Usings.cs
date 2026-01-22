@@ -8,4 +8,5 @@ global using System.Net;
 global using System.Threading.Tasks;
 global using Shouldly;
 global using rbkApiModules.Identity.Core;
+global using PaintingProjectsManagement.Features.Inventory;
 global using PaintingProjectsManagement.Features.Paints.Tests;

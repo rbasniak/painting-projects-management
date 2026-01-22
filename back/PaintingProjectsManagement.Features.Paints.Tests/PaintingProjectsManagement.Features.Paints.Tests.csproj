@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<!-- Common test properties and packages are now in Directory.Build.props -->
 
@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj" />
+		<ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagement.Testing.Core\PaintingProjectsManagement.Testing.Core.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagment.Database\PaintingProjectsManagment.Database.csproj" />
 	</ItemGroup> 

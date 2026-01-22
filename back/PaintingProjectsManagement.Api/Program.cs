@@ -5,7 +5,7 @@ using OpenTelemetry.Trace;
 using PaintingProjectsManagement.Api.Diagnostics;
 using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.Features.Models;
-using PaintingProjectsManagement.Features.Paints;
+using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.Features.Projects;
 using PaintingProjectsManagment.Database;
 using rbkApiModules.Commons.Core;
@@ -270,7 +270,7 @@ public class Program
 
         app.UseMaterialsFeature();
         app.MapPrintingModelsFeature();
-        app.MapPaintsFeature();
+        app.MapInventoryFeature();
         app.MapProjectsFeature();
 
         app.Run();

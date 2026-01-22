@@ -26,6 +26,7 @@ namespace PaintingProjectsManagement.UI
             builder.Services.AddMaterialsModule();
             builder.Services.AddModelsModule();
             builder.Services.AddProjectsModule();
+            builder.Services.AddInventoryModule();
             builder.Services.AddAuthenticationModule();
 
             // Register storage service

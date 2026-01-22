@@ -1,4 +1,4 @@
-﻿@using System.Reflection
+@using System.Reflection
 
 <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="@AdditionalAssemblies">
     <Found Context="routeData">
@@ -27,8 +27,9 @@
             var modelsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Models.ModelDetails))!;
             var authAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.Blazor.Modules.Authentication.AuthenticationService))!;
             var projectsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Projects.ProjectDetails))!;
+            var inventoryAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Inventory.MyPaintDetails))!;
 
-            return new[] { materialsAssembly, modelsAssembly, authAssembly, projectsAssembly };
+            return new[] { materialsAssembly, modelsAssembly, authAssembly, projectsAssembly, inventoryAssembly };
         }
         catch (Exception ex)
         {
