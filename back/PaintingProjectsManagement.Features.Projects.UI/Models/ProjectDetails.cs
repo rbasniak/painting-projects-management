@@ -10,12 +10,7 @@ public record ProjectHeader
 }
 
 public class ProjectDetails
-{
-    private static readonly UrlReference[] _images = [
-        new UrlReference { Id = Guid.NewGuid(), Url = "https://localhost:7236/uploads/sample/image1.png" },
-        new UrlReference { Id = Guid.NewGuid(), Url = "https://localhost:7236/uploads/sample/image2.png" },
-        new UrlReference { Id = Guid.NewGuid(), Url = "https://localhost:7236/uploads/sample/image3.png" }
-    ];
+{ 
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string PictureUrl { get; set; } = string.Empty;
@@ -24,7 +19,7 @@ public class ProjectDetails
 
     //public ProjectStepDataDetails[] Steps { get; set; } = Array.Empty<ProjectStepDataDetails>();
     //// public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();
-    public UrlReference[] References => _images;
+    public UrlReference[] References { get; set; } = [];
     //public UrlReference[] Pictures { get; set; } = Array.Empty<UrlReference>();
     public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();
     public ProjectCostDetails CostBreakdown { get; set; }  

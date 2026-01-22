@@ -52,6 +52,8 @@ public static class Builder
         MatchPaints.MapEndpoint(app);
         UpdatePickedColor.MapEndpoint(app);
 
+        UploadProjectReferencePicture.MapEndpoint(app);
+        DeleteProjectReferencePicture.MapEndpoint(app);
 
         return app;
     }

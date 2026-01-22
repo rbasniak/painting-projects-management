@@ -35,7 +35,7 @@
                                 var borderStyle = isSelected ? "2px solid var(--mud-palette-primary)" : "2px solid transparent";
                                 <div style="@($"flex-shrink: 0; cursor: pointer; border: {borderStyle}; border-radius: 4px; padding: 2px;")"
                                      @onclick="async () => await SelectImage(reference)">
-                                    <img src="@reference.Url" alt="Reference" style="max-height: 100px; max-width: 150px; object-fit: contain; display: block;" />
+                                    <img src="@GetPictureAddress(reference.Url)" alt="Reference" style="max-height: 100px; max-width: 150px; object-fit: contain; display: block;" />
                                 </div>
                             }
                         </div>
@@ -50,7 +50,7 @@
                                      id="image-container">
                                     <img id="zoomable-image"
                                          @ref="zoomableImageRef"
-                                         src="@CurrentImageUrl" 
+                                         src="@GetPictureAddress(CurrentImageUrl)"
                                          crossorigin="anonymous"
                                          alt="Reference Image"
                                          style="display: block; max-width: none; user-select: none; transform-origin: 0 0;"
@@ -227,6 +227,11 @@
                 Console.WriteLine($"Failed to load image viewer JS module: {ex.Message}");
             }
         }
+    }
+
+    private string GetPictureAddress(string url)
+    {
+        return $"https://localhost:7236/{url.Trim('/')}";
     }
 
     private void LoadColorGroups()

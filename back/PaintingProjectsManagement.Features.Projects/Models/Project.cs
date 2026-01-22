@@ -186,4 +186,29 @@ public class Project : TenantEntity
             _colorGroups.Remove(group);
         }
     }
+
+    public void AddReferencePicture(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            throw new ArgumentException("URL cannot be null or empty.", nameof(url));
+        }
+
+        var reference = new ProjectReference(Id, url);
+        _references.Add(reference);
+    }
+
+    public void RemoveReferencePicture(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return;
+        }
+
+        var reference = _references.FirstOrDefault(x => x.Url == url);
+        if (reference != null)
+        {
+            _references.Remove(reference);
+        }
+    }
 }

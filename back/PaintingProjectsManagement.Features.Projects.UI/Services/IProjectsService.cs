@@ -44,6 +44,10 @@ public interface IProjectsService
     // Color matching
     Task MatchPaintsAsync(Guid projectId, CancellationToken cancellationToken);
     Task UpdatePickedColorAsync(UpdatePickedColorRequest request, CancellationToken cancellationToken);
+
+    // Reference pictures
+    Task<UrlReference[]> UploadReferencePictureAsync(UploadProjectReferencePictureRequest request, CancellationToken cancellationToken);
+    Task DeleteReferencePictureAsync(Guid projectId, string pictureUrl, CancellationToken cancellationToken);
 }
 
 public class ProjectsService : IProjectsService
@@ -226,5 +230,24 @@ public class ProjectsService : IProjectsService
     {
         var response = await _httpClient.PutAsJsonAsync("api/projects/color-sections/picked-color", request, cancellationToken);
         response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<UrlReference[]> UploadReferencePictureAsync(UploadProjectReferencePictureRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/projects/reference-picture", request, cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<UrlReference[]>();
+            return result ?? Array.Empty<UrlReference>();
+        }
+
+        return Array.Empty<UrlReference>();
+    }
+
+    public async Task DeleteReferencePictureAsync(Guid projectId, string pictureUrl, CancellationToken cancellationToken)
+    {
+        var request = new { ProjectId = projectId, PictureUrl = pictureUrl };
+        await _httpClient.PostAsJsonAsync("api/projects/reference-picture/delete", request, cancellationToken);
     }
 }

@@ -51,4 +51,11 @@ public class UpdatePickedColorRequest
 {
     public Guid SectionId { get; init; }
     public Guid PaintColorId { get; init; }
+}
+
+public class UploadProjectReferencePictureRequest
+{
+    public Guid ProjectId { get; init; }
+    public string Base64Image { get; init; } = string.Empty;
+    public string FileExtension { get; init; } = string.Empty;
 } 
