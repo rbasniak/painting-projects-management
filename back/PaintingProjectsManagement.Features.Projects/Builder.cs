@@ -36,7 +36,20 @@ public static class Builder
         UpdateProject.MapEndpoint(app);
         DeleteProject.MapEndpoint(app);
         AddProjectMaterial.MapEndpoint(app);
+        UpdateProjectMaterial.MapEndpoint(app);
+        DeleteProjectMaterial.MapEndpoint(app);
         AddProjectStepSpan.MapEndpoint(app);
+        AddProjectStep.MapEndpoint(app);
+        UpdateProjectStep.MapEndpoint(app);
+        DeleteProjectStep.MapEndpoint(app);
+        GetProjectMaterials.MapEndpoint(app);
+        GetProjectSteps.MapEndpoint(app);
+
+        CreateColorGroup.MapEndpoint(app);
+        UpdateColorGroup.MapEndpoint(app);
+        DeleteColorGroup.MapEndpoint(app);
+        UpdateReferenceColor.MapEndpoint(app);
+
 
         return app;
     }

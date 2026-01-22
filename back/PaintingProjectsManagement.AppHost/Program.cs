@@ -44,4 +44,18 @@ var blazorApp = builder.AddProject<Projects.PaintingProjectsManagement_UI>("ppm-
     .WithReference(apiService)
     .WaitFor(apiService);
 
+blazorApp.Resource.Annotations.OfType<EndpointAnnotation>().ToList().ForEach(e =>
+{
+    if (e.Name == "http")
+    {
+        e.Port = 5251;
+        e.IsProxied = false;
+    }
+    if (e.Name == "https")
+    {
+        e.Port = 7114;
+        e.IsProxied = false;
+    }
+});
+
 builder.Build().Run();

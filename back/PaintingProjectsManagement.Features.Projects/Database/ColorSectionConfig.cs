@@ -31,7 +31,7 @@ public class ColorSectionConfig : IEntityTypeConfiguration<ColorSection>
 
         // Relationship with ColorGroup
         builder.HasOne(x => x.ColorGroup)
-            .WithMany(x => x.Sections)
+            .WithMany()
             .HasForeignKey(x => x.ColorGroupId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);

@@ -65,15 +65,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Core", "PaintingProjectsManagement.Features.Core\PaintingProjectsManagement.Features.Core.csproj", "{49EFBF12-CC8F-493D-9F26-73806AADCD0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.UI", "..\blazor\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj", "{82D445C4-8530-2F07-F8AB-2D04C4D86344}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.UI", "PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj", "{82D445C4-8530-2F07-F8AB-2D04C4D86344}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Projects.Integration", "PaintingProjectsManagement.Features.Projects.Abstractions\PaintingProjectsManagement.Features.Projects.Integration.csproj", "{21010993-786F-DB15-7AEA-1A1F2858729F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Authorization.UI", "..\blazor\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj", "{4FD0EFFC-2EE4-DC52-6424-3F2CD1E15E12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Authorization.UI", "PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj", "{4FD0EFFC-2EE4-DC52-6424-3F2CD1E15E12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Materials.UI", "..\blazor\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.Modules.Materials\PaintingProjectsManagement.Features.Materials.UI.csproj", "{B4368EA9-FEEB-A590-973D-36B8DC5306BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Materials.UI", "PaintingProjectsManagement.UI.Modules.Materials\PaintingProjectsManagement.Features.Materials.UI.csproj", "{B4368EA9-FEEB-A590-973D-36B8DC5306BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Shared.UI", "..\blazor\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj", "{DF1E9F4F-9277-6E1D-F325-10197274571F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Shared.UI", "PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj", "{DF1E9F4F-9277-6E1D-F325-10197274571F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{277CFBFE-8931-4328-B65B-9ED42037BAFD}"
 EndProject
@@ -81,7 +81,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{C3758D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Models.Integration", "PaintingProjectsManagement.Features.Models.Abstractions\PaintingProjectsManagement.Features.Models.Integration.csproj", "{965CF002-9D20-4C6B-BD89-BC6CAE84EBF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Models.UI", "..\blazor\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.Modules.Models\PaintingProjectsManagement.Features.Models.UI.csproj", "{36C9B331-48E4-D506-98B8-26A9118B2979}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Models.UI", "PaintingProjectsManagement.UI.Modules.Models\PaintingProjectsManagement.Features.Models.UI.csproj", "{36C9B331-48E4-D506-98B8-26A9118B2979}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{CE5E17BC-8320-423F-88E3-080F5D2CD7F8}"
 EndProject

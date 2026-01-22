@@ -1,8 +1,9 @@
-﻿@page "/projects/my-projects"
+@page "/projects/my-projects"
 @using MudBlazor
 @using PaintingProjectsManagement.UI.Modules.Projects 
 @using PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 @using PaintingProjectsManagement.UI.Modules.Shared
+@using System.Text.Json
 
 <MudPaper Class="pa-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
@@ -21,9 +22,24 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name" Style="width: 50%">@context.Name</MudTd>
-            <MudTd Style="width: 100px">
+            <MudTd Style="width: 150px">
                 <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
-                <MudIconButton Icon="@Icons.Material.Filled.CurrencyExchange" OnClick="() => GetProjectCost(context)" Color="Color.Primary" />
+                <MudIconButton Icon="@Icons.Material.Filled.PlayArrow" OnClick="() => NavigateToExecution(context)" Color="Color.Success" Title="Execution" />
+                <MudMenu>
+                    <ActivatorContent>
+                        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Primary" />
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem OnClick="() => GetProjectCost(context)">
+                            <MudIcon Icon="@Icons.Material.Filled.CurrencyExchange" Class="mr-3" />
+                            Costs
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="() => OpenColorZones(context)">
+                            <MudIcon Icon="@Icons.Material.Filled.Palette" Class="mr-3" />
+                            Color Zones
+                        </MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
             </MudTd>
         </RowTemplate>
@@ -36,6 +52,7 @@
 @code {
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
     [Inject] public IDialogService DialogService { get; set; } = default!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
 
     private List<ProjectDetails> projects = new();
     private string searchString = string.Empty;
@@ -91,6 +108,15 @@
         var dialog = DialogService.Show<ProjectCostBreakdownDialog>(title: null, parameters, options);
     }
 
+    private async Task OpenColorZones(ProjectDetails project)
+    {
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+        var dialog = DialogService.Show<ColorGroupsDialog>(title: null, parameters, options);
+    }
+
     private async Task Edit(ProjectDetails project)
     {
         var input = new ProjectDetails
@@ -135,5 +161,12 @@
             await ProjectsService.DeleteAsync(project.Id, default);
             projects.Remove(project);
         }
+    }
+
+    private void NavigateToExecution(ProjectDetails project)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(project));
+
+        NavigationManager.NavigateTo($"/projects/{project.Id}/execution");
     }
 } 

@@ -299,6 +299,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<Guid>("ColorGroupId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("ColorGroupId1")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("ReferenceColor")
                         .IsRequired()
                         .HasMaxLength(7)
@@ -316,10 +319,60 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ColorGroupId1");
+
                     b.HasIndex("ColorGroupId", "Zone")
                         .IsUnique();
 
                     b.ToTable("project.project_color_sections", (string)null);
+                });
+
+            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.Material", b =>
+                {
+                    b.Property<string>("Tenant")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("Unit")
+                        .HasMaxLength(50)
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "PricePerUnit", "PaintingProjectsManagement.Features.Projects.Material.PricePerUnit#Money", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<double>("Amount")
+                                .HasColumnType("double precision")
+                                .HasColumnName("PricePerUnit_Amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("character varying(3)")
+                                .HasColumnName("PricePerUnit_Currency");
+                        });
+
+                    b.HasKey("Tenant", "Id");
+
+                    b.ToTable("projects.projections.materials", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.MaterialForProject", b =>
@@ -458,54 +511,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectStepData");
-                });
-
-            modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ReadOnlyMaterial", b =>
-                {
-                    b.Property<string>("Tenant")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<int>("Unit")
-                        .HasMaxLength(50)
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("UpdatedUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.ComplexProperty(typeof(Dictionary<string, object>), "PricePerUnit", "PaintingProjectsManagement.Features.Projects.ReadOnlyMaterial.PricePerUnit#Money", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<double>("Amount")
-                                .HasColumnType("double precision")
-                                .HasColumnName("PricePerUnit_Amount");
-
-                            b1.Property<string>("Currency")
-                                .IsRequired()
-                                .HasMaxLength(3)
-                                .HasColumnType("character varying(3)")
-                                .HasColumnName("PricePerUnit_Currency");
-                        });
-
-                    b.HasKey("Tenant", "Id");
-
-                    b.ToTable("ReadOnlyMaterials", (string)null);
                 });
 
             modelBuilder.Entity("rbkApiModules.Commons.Core.DomainOutboxMessage", b =>
@@ -1017,20 +1022,27 @@ namespace PaintingProjectsManagment.Database.Migrations
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorGroup", b =>
                 {
-                    b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
+                    b.HasOne("PaintingProjectsManagement.Features.Projects.Project", "Project")
                         .WithMany("ColorGroups")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorSection", b =>
                 {
                     b.HasOne("PaintingProjectsManagement.Features.Projects.ColorGroup", "ColorGroup")
-                        .WithMany("Sections")
+                        .WithMany()
                         .HasForeignKey("ColorGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PaintingProjectsManagement.Features.Projects.ColorGroup", null)
+                        .WithMany("Sections")
+                        .HasForeignKey("ColorGroupId1")
+                        .HasConstraintName("FK_project.project_color_sections_projects.project_color_grou~1");
 
                     b.Navigation("ColorGroup");
                 });

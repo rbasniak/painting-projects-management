@@ -1,0 +1,187 @@
+@page "/projects/{ProjectId}/execution/steps"
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Projects
+@using PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
+@using PaintingProjectsManagement.UI.Modules.Shared
+
+<MudPaper Class="pa-4">
+    <MudStack Spacing="3">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+            <MudText Typo="Typo.h5">Project Execution Steps</MudText>
+            <MudButton Variant="Variant.Filled" 
+                      Color="Color.Primary" 
+                      Size="Size.Large"
+                      StartIcon="@Icons.Material.Filled.Add"
+                      OnClick="AddStep">
+                Add Step
+            </MudButton>
+        </MudStack>
+
+        @if (isLoading)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-4" />
+        }
+        else if (stepsGrouped.StepsByType.Any())
+        {
+            <MudExpansionPanels MultiExpansion="true">
+                @foreach (var group in stepsGrouped.StepsByType.OrderBy(x => x.Key))
+                {
+                    <MudExpansionPanel Icon="@Icons.Material.Filled.KeyboardArrowDown">
+                        <TitleContent>
+                            <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+                                <MudText>@group.Value.First().Step.Value</MudText>
+                                <MudChip T="string" Color="Color.Default" Variant="Variant.Outlined" Size="Size.Small">@FormatDuration(group.Value.Sum(s => s.DurationInHours))</MudChip>
+                            </div>
+                        </TitleContent>
+                        <ChildContent>
+                            <MudTable Items="group.Value" Hover="true" Dense="false" Striped="true">
+                                <HeaderContent>
+                                    <MudTh>Date</MudTh>
+                                    <MudTh>Duration</MudTh>
+                                    <MudTh Style="width: 150px;">Actions</MudTh>
+                                </HeaderContent>
+                                <RowTemplate>
+                                    <MudTd>@FormatDate(context.Date)</MudTd>
+                                    <MudTd>@FormatDuration(context.DurationInHours)</MudTd>
+                                    <MudTd>
+                                        <MudIconButton Icon="@Icons.Material.Filled.Edit" 
+                                                      OnClick="() => EditStep(context)" 
+                                                      Color="Color.Primary" 
+                                                      Size="Size.Small" />
+                                        <MudIconButton Icon="@Icons.Material.Filled.Delete" 
+                                                      OnClick="() => DeleteStep(context)" 
+                                                      Color="Color.Error" 
+                                                      Size="Size.Small" />
+                                    </MudTd>
+                                </RowTemplate>
+                            </MudTable>
+                        </ChildContent>
+                    </MudExpansionPanel>
+                }
+            </MudExpansionPanels>
+        }
+        else
+        {
+            <MudAlert Severity="Severity.Info">No execution steps recorded yet.</MudAlert>
+        }
+
+        <MudButton Variant="Variant.Text" 
+                  Color="Color.Default" 
+                  StartIcon="@Icons.Material.Filled.ArrowBack"
+                  OnClick="NavigateBack">
+            Back to Execution
+        </MudButton>
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Parameter] public string ProjectId { get; set; }
+    
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public IDialogService DialogService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+
+    private ProjectStepsGrouped stepsGrouped = new();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadStepsAsync();
+    }
+
+    private async Task LoadStepsAsync()
+    {
+        try
+        {
+            isLoading = true;
+            stepsGrouped = await ProjectsService.GetProjectStepsAsync(new Guid(ProjectId), default);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error loading steps: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task AddStep()
+    {
+        var parameters = new DialogParameters 
+        { 
+            ["ProjectId"] = ProjectId
+        };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<AddStepDialog>("Add Execution Step", parameters, options);
+        var result = await dialog.Result;
+        
+        if (!result.Canceled)
+        {
+            await LoadStepsAsync();
+        }
+    }
+
+    private async Task EditStep(ProjectStepDetails step)
+    {
+        var parameters = new DialogParameters 
+        { 
+            ["Step"] = step,
+            ["ProjectId"] = ProjectId
+        };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<AdjustStepDurationDialog>("Edit Step", parameters, options);
+        var result = await dialog.Result;
+        
+        if (!result.Canceled)
+        {
+            await LoadStepsAsync();
+        }
+    }
+
+    private async Task DeleteStep(ProjectStepDetails step)
+    {
+        bool? confirm = await DialogService.ShowMessageBox(
+            "Delete Step",
+            $"Delete this execution step?",
+            yesText: "Delete",
+            cancelText: "Cancel");
+
+        if (confirm == true)
+        {
+            try
+            {
+                await ProjectsService.DeleteProjectStepAsync(new Guid(ProjectId), step.Id, default);
+                Snackbar.Add("Step deleted successfully", Severity.Success);
+                await LoadStepsAsync();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Add($"Error deleting step: {ex.Message}", Severity.Error);
+            }
+        }
+    }
+
+    private void NavigateBack()
+    {
+        NavigationManager.NavigateTo($"/projects/{ProjectId}/execution");
+    }
+
+    private static string FormatDuration(double hours)
+    {
+        var wholeHours = (int)Math.Floor(hours);
+        var minutes = (int)Math.Round((hours - wholeHours) * 60);
+        if (minutes == 60)
+        {
+            wholeHours += 1;
+            minutes = 0;
+        }
+        return $"{wholeHours}h {(minutes > 0 ? $"{minutes}min" : "0min")}";
+    }
+
+    private static string FormatDate(DateTime date)
+    {
+        return $"{date:dd MMM yyyy HH}h{date:mm}min";
+    }
+}

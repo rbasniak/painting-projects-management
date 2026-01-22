@@ -1,4 +1,5 @@
-﻿using PaintingProjectsManagement.Features.Projects;
+﻿using Microsoft.EntityFrameworkCore;
+using PaintingProjectsManagement.Features.Projects;
 using System.Diagnostics;
 
 namespace PaintingProjectsManagment.Database;
@@ -53,8 +54,8 @@ public partial class DatabaseSeed
 
         archangelProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 06, 24), 4);
         archangelProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 06, 26), 1.5);
-        archangelProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 1.5); 
-        archangelProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5+2+13);
+        archangelProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 1.5);
+        archangelProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5 + 2 + 13);
         archangelProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 28), 15);
         archangelProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 08, 10), 8);
 
@@ -71,7 +72,7 @@ public partial class DatabaseSeed
         ConsumeMaterial(illidanProject, _materialMagnet10x5, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(illidanProject, _materialMagnet8x4, 18, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(illidanProject, _materialMagnet3x2, 8, MaterialUnit.Unit).GetAwaiter().GetResult();
-        
+
         ConsumeMaterial(illidanProject, _materialPaintMixingCupCorrugated, 10, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(illidanProject, _materialMaskingTape3m25mm, 3, MaterialUnit.Meter).GetAwaiter().GetResult();
         ConsumeMaterial(illidanProject, _materialVallejoLiquidMask, 2, MaterialUnit.Mililiter).GetAwaiter().GetResult();
@@ -80,17 +81,17 @@ public partial class DatabaseSeed
         ConsumeMaterial(illidanProject, _materialSunluWaterWashableStandardResin, (210 + 160 + 205), MaterialUnit.Gram).GetAwaiter().GetResult();
 
         ConsumeMaterial(illidanProject, _materialVallejoPrimer, 150, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(illidanProject, _materialBiltemaMatteVarnish, 68+19+30, MaterialUnit.Spray).GetAwaiter().GetResult();
+        ConsumeMaterial(illidanProject, _materialBiltemaMatteVarnish, 68 + 19 + 30, MaterialUnit.Spray).GetAwaiter().GetResult();
         ConsumeMaterial(illidanProject, _materialGswVarnish, 50, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(illidanProject, _materialArmyPainterAcrylic, 345+50+25+115+50+75, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(illidanProject, _materialArmyPainterAcrylic, 345 + 50 + 25 + 115 + 50 + 75, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         illidanProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (260.0 + 206.0 + 204.0) / 20.0);
 
         illidanProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 06, 24), 6);
         illidanProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 1.5);
         illidanProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 06, 26), 2);
-        illidanProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5+6+3+1+3+3+1.5+3);
+        illidanProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5 + 6 + 3 + 1 + 3 + 3 + 1.5 + 3);
 
         context.Add(illidanProject);
 
@@ -111,17 +112,17 @@ public partial class DatabaseSeed
 
         ConsumeMaterial(sylvanasProject, _materialVallejoPrimer, 225, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(sylvanasProject, _materialBiltemaMatteVarnish, 75, MaterialUnit.Spray).GetAwaiter().GetResult();
-        ConsumeMaterial(sylvanasProject, _materialGswAcrylic, 125+50+5+15, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(sylvanasProject, _materialGswAcrylic, 125 + 50 + 5 + 15, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(sylvanasProject, _materialGswChrome, 100, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(sylvanasProject, _materialTamiyaTS80, 15, MaterialUnit.Spray).GetAwaiter().GetResult();
-        ConsumeMaterial(sylvanasProject, _materialArmyPainterAcrylic, 10+20+50+10+15+25+50+50+10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(sylvanasProject, _materialArmyPainterAcrylic, 10 + 20 + 50 + 10 + 15 + 25 + 50 + 50 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         sylvanasProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (223.0 + 200.0 + 115.0) / 20.0);
 
         sylvanasProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 06, 24), 6);
         sylvanasProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 1.5);
         sylvanasProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 06, 26), 2);
-        sylvanasProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5+1.5+5+6+6+1.5+1.5);
+        sylvanasProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5 + 1.5 + 5 + 6 + 6 + 1.5 + 1.5);
 
         context.Add(sylvanasProject);
 
@@ -137,7 +138,7 @@ public partial class DatabaseSeed
         ConsumeMaterial(laraProject, _materialMagnet8x4, 14, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(laraProject, _materialMagnet6x4, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(laraProject, _materialTamiyaTS80, 70+5+15+50, MaterialUnit.Spray).GetAwaiter().GetResult();
+        ConsumeMaterial(laraProject, _materialTamiyaTS80, 70 + 5 + 15 + 50, MaterialUnit.Spray).GetAwaiter().GetResult();
 
         ConsumeMaterial(laraProject, _materialMaskingTapeTamiya10mm, 30, MaterialUnit.Centimeter).GetAwaiter().GetResult();
 
@@ -145,12 +146,12 @@ public partial class DatabaseSeed
         ConsumeMaterial(laraProject, _materialSunluWaterWashableStandardResin, (180.0 + 165.5 + 195.0), MaterialUnit.Gram).GetAwaiter().GetResult();
 
         ConsumeMaterial(laraProject, _materialVallejoPrimer, 175, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(laraProject, _materialArmyPainterAcrylic, 25+95+150+30+75+50+40+155, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(laraProject, _materialArmyPainterAcrylic, 25 + 95 + 150 + 30 + 75 + 50 + 40 + 155, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         laraProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 06, 24), 6);
         laraProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 1);
         laraProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 06, 26), 3);
-        laraProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5+1+0.5+3+1+15+2+2);
+        laraProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5 + 1 + 0.5 + 3 + 1 + 15 + 2 + 2);
 
         context.Add(laraProject);
 
@@ -162,22 +163,22 @@ public partial class DatabaseSeed
 
         var camusProject = new Project("rodrigo.basniak", "Camus of Aquarius", new DateTime(2025, 08, 15), modelId: null);
 
-        camusProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (190.0+210.0+185.0+145.0+135.0) / 20.0);
-        ConsumeMaterial(camusProject, _materialSunluWaterWashableStandardResin, (175+125+335+60+150+45+160+50+130+75), MaterialUnit.Gram).GetAwaiter().GetResult();
+        camusProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (190.0 + 210.0 + 185.0 + 145.0 + 135.0) / 20.0);
+        ConsumeMaterial(camusProject, _materialSunluWaterWashableStandardResin, (175 + 125 + 335 + 60 + 150 + 45 + 160 + 50 + 130 + 75), MaterialUnit.Gram).GetAwaiter().GetResult();
 
         ConsumeMaterial(camusProject, _materialMagnet10x5, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(camusProject, _materialMagnet8x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(camusProject, _materialMagnet6x4, 10, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(camusProject, _materialBiltemaMatteVarnish, 92+65+35, MaterialUnit.Spray).GetAwaiter().GetResult();
+        ConsumeMaterial(camusProject, _materialBiltemaMatteVarnish, 92 + 65 + 35, MaterialUnit.Spray).GetAwaiter().GetResult();
 
-        ConsumeMaterial(camusProject, _materialVallejoPrimer, 100+100+100, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(camusProject, _materialArmyPainterAcrylic, 100+75+15+25+25+125+50+50+25, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(camusProject, _materialVallejoPrimer, 100 + 100 + 100, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(camusProject, _materialArmyPainterAcrylic, 100 + 75 + 15 + 25 + 25 + 125 + 50 + 50 + 25, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         camusProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 06, 24), 4);
         camusProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 1.5);
         camusProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 06, 26), 4.5);
-        camusProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 1+3+2+2+1.5+2+4);
+        camusProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 1 + 3 + 2 + 2 + 1.5 + 2 + 4);
 
         context.Add(camusProject);
 
@@ -200,23 +201,23 @@ public partial class DatabaseSeed
         ConsumeMaterial(kratosProject, _materialPaintMixingCupNonCorrugated, 5, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(kratosProject, _materialMaskingTapeGeneric10mm, 200, MaterialUnit.Centimeter).GetAwaiter().GetResult();
         ConsumeMaterial(kratosProject, _materialMaskingTape3m25mm, 100, MaterialUnit.Centimeter).GetAwaiter().GetResult();
-        ConsumeMaterial(kratosProject, _materialArmyPainterSnow, 150*0.75, MaterialUnit.Gram).GetAwaiter().GetResult();
+        ConsumeMaterial(kratosProject, _materialArmyPainterSnow, 150 * 0.75, MaterialUnit.Gram).GetAwaiter().GetResult();
         ConsumeMaterial(kratosProject, _materialMaskingTapeTamiya20mm, 100, MaterialUnit.Centimeter).GetAwaiter().GetResult();
 
-        kratosProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (160+160+155+155+135+125+190) / 20.0);
-        ConsumeMaterial(kratosProject, _materialSunluAbsResin, 195+75+225+65+195+70+135+55+165+60+155+60+150+80, MaterialUnit.Gram).GetAwaiter().GetResult();
+        kratosProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (160 + 160 + 155 + 155 + 135 + 125 + 190) / 20.0);
+        ConsumeMaterial(kratosProject, _materialSunluAbsResin, 195 + 75 + 225 + 65 + 195 + 70 + 135 + 55 + 165 + 60 + 155 + 60 + 150 + 80, MaterialUnit.Gram).GetAwaiter().GetResult();
 
-        ConsumeMaterial(kratosProject, _materialVallejoPrimer, 175+375+50+15, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(kratosProject, _materialVallejoVarnish, 500+25+25, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(kratosProject, _materialVallejoPrimer, 175 + 375 + 50 + 15, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(kratosProject, _materialVallejoVarnish, 500 + 25 + 25, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(kratosProject, _materialGswVarnish, 25, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(kratosProject, _materialBiltemaMatteVarnish, 110+40+105, MaterialUnit.Spray).GetAwaiter().GetResult();
+        ConsumeMaterial(kratosProject, _materialBiltemaMatteVarnish, 110 + 40 + 105, MaterialUnit.Spray).GetAwaiter().GetResult();
 
-        ConsumeMaterial(kratosProject, _materialArmyPainterAcrylic, 245+640, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(kratosProject, _materialArmyPainterAcrylic, 245 + 640, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         kratosProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 06, 24), 9.5);
         kratosProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 2);
         kratosProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 06, 26), 9);
-        kratosProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 1.75+4.5+2+4+10+10+8+7.5+5);
+        kratosProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 1.75 + 4.5 + 2 + 4 + 10 + 10 + 8 + 7.5 + 5);
 
         context.Add(kratosProject);
 
@@ -233,20 +234,20 @@ public partial class DatabaseSeed
         ConsumeMaterial(starligtProject, _materialMagnet6x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(starligtProject, _materialMagnet3x2, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(starligtProject, _materialTamiyaTS80, 25+25+25+20, MaterialUnit.Spray).GetAwaiter().GetResult();
+        ConsumeMaterial(starligtProject, _materialTamiyaTS80, 25 + 25 + 25 + 20, MaterialUnit.Spray).GetAwaiter().GetResult();
 
         ConsumeMaterial(starligtProject, _materialDisposableBrush, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
 
         starligtProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (115.0 + 85.0) / 20.0);
-        ConsumeMaterial(starligtProject, _materialJayoAbsResin, 150+90+40, MaterialUnit.Gram).GetAwaiter().GetResult();
+        ConsumeMaterial(starligtProject, _materialJayoAbsResin, 150 + 90 + 40, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         ConsumeMaterial(starligtProject, _materialVallejoPrimer, 50, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(starligtProject, _materialArmyPainterAcrylic, 50+50+50+20+25+40+5+20+145+75+10+25+10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(starligtProject, _materialArmyPainterAcrylic, 50 + 50 + 50 + 20 + 25 + 40 + 5 + 20 + 145 + 75 + 10 + 25 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         starligtProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 06, 24), 2.5);
         starligtProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 1.5);
         starligtProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 06, 26), 1);
-        starligtProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5 + 1+3+1.5+2+2);
+        starligtProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5 + 1 + 3 + 1.5 + 2 + 2);
 
         context.Add(starligtProject);
 
@@ -263,24 +264,24 @@ public partial class DatabaseSeed
         ConsumeMaterial(harleyProject, _materialMagnet6x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
 
         ConsumeMaterial(harleyProject, _materialVallejoPrimer, 150, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(harleyProject, _materialArmyPainterAcrylic, 40+75+40+425+45, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(harleyProject, _materialArmyPainterAcrylic, 40 + 75 + 40 + 425 + 45, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(harleyProject, _materialTamiyaTS80, 125+30+35+45+45, MaterialUnit.Spray).GetAwaiter().GetResult();
+        ConsumeMaterial(harleyProject, _materialTamiyaTS80, 125 + 30 + 35 + 45 + 45, MaterialUnit.Spray).GetAwaiter().GetResult();
         ConsumeMaterial(harleyProject, _materialBiltemaMatteVarnish, 25, MaterialUnit.Spray).GetAwaiter().GetResult();
 
         ConsumeMaterial(harleyProject, _materialDisposableBrush, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
-        
+
         ConsumeMaterial(harleyProject, _materialMaskingTape3m25mm, 60, MaterialUnit.Centimeter).GetAwaiter().GetResult();
         ConsumeMaterial(harleyProject, _materialMaskingTapeGeneric25mm, 40, MaterialUnit.Centimeter).GetAwaiter().GetResult();
 
-        harleyProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (152+105) / 20.0);
-        ConsumeMaterial(harleyProject, _materialSunluAbsResin, 235+115, MaterialUnit.Gram).GetAwaiter().GetResult();
+        harleyProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (152 + 105) / 20.0);
+        ConsumeMaterial(harleyProject, _materialSunluAbsResin, 235 + 115, MaterialUnit.Gram).GetAwaiter().GetResult();
 
 
         harleyProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 06, 24), 3);
         harleyProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 0.5);
         harleyProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 06, 26), 2);
-        harleyProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 1+2.5+8+9+2.5+6+2.5+1+1.5);
+        harleyProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 1 + 2.5 + 8 + 9 + 2.5 + 6 + 2.5 + 1 + 1.5);
 
         context.Add(harleyProject);
 
@@ -298,24 +299,24 @@ public partial class DatabaseSeed
         ConsumeMaterial(sadieProject, _materialMagnet5x3, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
 
         ConsumeMaterial(sadieProject, _materialVallejoPrimer, 150, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(sadieProject, _materialArmyPainterAcrylic, 10+30+90+5+3+15+20+20+5+15+5+15, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(sadieProject, _materialArmyPainterAcrylic, 10 + 30 + 90 + 5 + 3 + 15 + 20 + 20 + 5 + 15 + 5 + 15, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(sadieProject, _materialVallejoAcrylic, 45, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(sadieProject, _materialAtomAcrylic, 10+7+25+2+5+20+30, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(sadieProject, _materialAtomAcrylic, 10 + 7 + 25 + 2 + 5 + 20 + 30, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         ConsumeMaterial(sadieProject, _materialDisposableBrush, 1, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(sadieProject, _materialDspiaeSandingDisk, 1, MaterialUnit.Unit).GetAwaiter().GetResult();
 
         ConsumeMaterial(sadieProject, _materialMaskingTapeTamiya10mm, 20, MaterialUnit.Centimeter).GetAwaiter().GetResult();
         ConsumeMaterial(sadieProject, _materialMaskingTapeGeneric25mm, 20, MaterialUnit.Centimeter).GetAwaiter().GetResult();
-        ConsumeMaterial(sadieProject, _materialMaskingTapeGeneric10mm, 20+15, MaterialUnit.Centimeter).GetAwaiter().GetResult();
+        ConsumeMaterial(sadieProject, _materialMaskingTapeGeneric10mm, 20 + 15, MaterialUnit.Centimeter).GetAwaiter().GetResult();
 
-        sadieProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (70+150) / 20.0);
-        ConsumeMaterial(sadieProject, _materialJayoAbsResin, (75+35+100+45), MaterialUnit.Gram).GetAwaiter().GetResult();
+        sadieProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (70 + 150) / 20.0);
+        ConsumeMaterial(sadieProject, _materialJayoAbsResin, (75 + 35 + 100 + 45), MaterialUnit.Gram).GetAwaiter().GetResult();
 
         sadieProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 06, 24), 3);
         sadieProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 06, 26), 1);
         sadieProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 06, 26), 1.5);
-        sadieProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5+0.5+13+2);
+        sadieProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 06, 27), 0.5 + 0.5 + 13 + 2);
 
         context.Add(sadieProject);
 
@@ -328,7 +329,7 @@ public partial class DatabaseSeed
         var hulkbusterProject = new Project("rodrigo.basniak", "Hulkbuster and Iron Man", new DateTime(2025, 08, 15), modelId: null);
 
         hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (156 + 143 + 145 + 153 + 138 + 135 + 165 + 115 + 132 + 148 + 131 + 150 + 90 + 136 + 96 + 98) / 17.5);
-        ConsumeMaterial(hulkbusterProject, _materialJayoAbsResin, (185+175+220+160+175+165+200+185+180+185+215+210+170+235+95+105), MaterialUnit.Gram).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialJayoAbsResin, (185 + 175 + 220 + 160 + 175 + 165 + 200 + 185 + 180 + 185 + 215 + 210 + 170 + 235 + 95 + 105), MaterialUnit.Gram).GetAwaiter().GetResult();
 
         ConsumeMaterial(hulkbusterProject, _materialMagnet10x5, 10, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(hulkbusterProject, _materialMagnet8x4, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
@@ -341,17 +342,21 @@ public partial class DatabaseSeed
         ConsumeMaterial(hulkbusterProject, _materialGswPrimer, 1040, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(hulkbusterProject, _materialVallejoPrimer, 215, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(hulkbusterProject, _materialAkChrome, 115, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(hulkbusterProject, _materialGswChrome, 50+100+100+100+39+100+100+100+75, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialGswChrome, 50 + 100 + 100 + 100 + 39 + 100 + 100 + 100 + 75, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(hulkbusterProject, _materialVallejoAcrylic, 10, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(hulkbusterProject, _materialTamiyaClear, 75+50+40+200+6+20+250+250, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(hulkbusterProject, _materialAmmoCandy, 75, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(hulkbusterProject, _materialArmyPainterAcrylic, 45+50+40+10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialTamiyaClear, 75 + 50 + 40 + 200 + 6 + 20 + 250 + 250, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialAmmoCandy, 75 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialArmyPainterAcrylic, 45 + 50 + 40 + 10 + 30 + 50 + 20 + 10 + 10 + 50 + 75 + 10 + 20, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialGswVarnish, 200 + 100 + 50 + 75, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialAmmoTransparator, 20, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(hulkbusterProject, _materialAmmoDrybrush, 50, MaterialUnit.Drop).GetAwaiter().GetResult();
+
 
         hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 12), 4);
-        hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 12), 2+2+3.5+1.5+12+4);
+        hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 12), 2 + 2 + 3.5 + 1.5 + 12 + 4);
         hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 11, 12), 6);
         hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 11, 12), 7.5);
-        hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 12), 3+1+6+4.5+2+5+12+2+1.5+1);
+        hulkbusterProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 12), 3 + 1 + 6 + 4.5 + 2 + 5 + 12 + 2 + 1.5 + 1 + 1.5 + 3 + 4);
 
         context.Add(hulkbusterProject);
 
@@ -363,7 +368,7 @@ public partial class DatabaseSeed
 
         var harryProject = new Project("rodrigo.basniak", "Harry Potter", new DateTime(2025, 08, 15), modelId: null);
 
-        harryProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (140+190+58+140) / 20);
+        harryProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 08, 10), (140 + 190 + 58 + 140) / 20);
         ConsumeMaterial(harryProject, _materialJayoAbsResin, 115 + 30 + 185 + 55 + 51 + 25 + 190 + 85, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         harryProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 12), 1);
@@ -373,22 +378,22 @@ public partial class DatabaseSeed
 
         ConsumeMaterial(harryProject, _materialMagnet10x5, 8, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(harryProject, _materialMagnet8x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(harryProject, _materialMaskingTapeTamiya10mm, 10+15, MaterialUnit.Centimeter).GetAwaiter().GetResult();
-        ConsumeMaterial(harryProject, _materialMaskingTapeGeneric25mm, 15+25, MaterialUnit.Centimeter).GetAwaiter().GetResult();
+        ConsumeMaterial(harryProject, _materialMaskingTapeTamiya10mm, 10 + 15, MaterialUnit.Centimeter).GetAwaiter().GetResult();
+        ConsumeMaterial(harryProject, _materialMaskingTapeGeneric25mm, 15 + 25, MaterialUnit.Centimeter).GetAwaiter().GetResult();
         ConsumeMaterial(harryProject, _materialMaskingTapeGeneric10mm, 100, MaterialUnit.Centimeter).GetAwaiter().GetResult();
 
         ConsumeMaterial(harryProject, _materialVallejoPrimer, 300, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(harryProject, _materialGswChrome, 30, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(harryProject, _materialArmyPainterAcrylic, 100+25+50+5+25+20+25+5+5+5+5+5+5+5+5+10, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(harryProject, _materialVallejoAcrylic, 5+15+10+5+25+10+15, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(harryProject, _materialArmyPainterAcrylic, 100 + 25 + 50 + 5 + 25 + 20 + 25 + 5 + 5 + 5 + 5 + 5 + 5 + 5 + 5 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(harryProject, _materialVallejoAcrylic, 5 + 15 + 10 + 5 + 25 + 10 + 15, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(harryProject, _materialBiltemaMatteVarnish, 50, MaterialUnit.Spray).GetAwaiter().GetResult();
-        ConsumeMaterial(harryProject, _materialAtomAcrylic, 30+10+5+4+7, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(harryProject, _materialAmmoAcrylic, 5+40+10+10, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(harryProject, _materialVallejoVarnish, 30+55, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(harryProject, _materialAtomAcrylic, 30 + 10 + 5 + 4 + 7, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(harryProject, _materialAmmoAcrylic, 5 + 40 + 10 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(harryProject, _materialVallejoVarnish, 30 + 55, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(harryProject, _materialAmmoDrybrush, 5, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(harryProject, _materialAmmoTransparator, 130+40+10+15, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(harryProject, _materialAmmoTransparator, 130 + 40 + 10 + 15, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        harryProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 12), 0.5+5+1+1.5+6.5+5+1);
+        harryProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 12), 0.5 + 5 + 1 + 1.5 + 6.5 + 5 + 1);
 
         context.Add(harryProject);
 
@@ -400,8 +405,8 @@ public partial class DatabaseSeed
 
         var ravenProject = new Project("rodrigo.basniak", "Raven", new DateTime(2025, 11, 01), modelId: null);
 
-        ravenProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (190+210) / 20);
-        ConsumeMaterial(ravenProject, _materialJayoAbsResin, (170+55+195+50), MaterialUnit.Gram).GetAwaiter().GetResult();
+        ravenProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (190 + 210) / 20);
+        ConsumeMaterial(ravenProject, _materialJayoAbsResin, (170 + 55 + 195 + 50), MaterialUnit.Gram).GetAwaiter().GetResult();
 
         ravenProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
         ravenProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 5);
@@ -413,7 +418,7 @@ public partial class DatabaseSeed
         ConsumeMaterial(ravenProject, _materialMagnet4x3, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(ravenProject, _materialMagnet3x2, 1, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(ravenProject, _materialMagnet6x4, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
-        
+
         ConsumeMaterial(ravenProject, _materialMaskingTape3m25mm, 15, MaterialUnit.Centimeter).GetAwaiter().GetResult();
         ConsumeMaterial(ravenProject, _materialMaskingTapeGeneric25mm, 10, MaterialUnit.Centimeter).GetAwaiter().GetResult();
         ConsumeMaterial(ravenProject, _materialMaskingTapeTamiya10mm, 30, MaterialUnit.Centimeter).GetAwaiter().GetResult();
@@ -421,8 +426,8 @@ public partial class DatabaseSeed
         ConsumeMaterial(ravenProject, _materialNailWoodSwab, 35, MaterialUnit.Unit).GetAwaiter().GetResult();
 
         ConsumeMaterial(ravenProject, _materialVallejoPrimer, 250, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(ravenProject, _materialArmyPainterAcrylic, 25+10+5+50+30+20+15+15+20, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(ravenProject, _materialVallejoAcrylic, 5+10+10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(ravenProject, _materialArmyPainterAcrylic, 25 + 10 + 5 + 50 + 30 + 20 + 15 + 15 + 20, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(ravenProject, _materialVallejoAcrylic, 5 + 10 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(ravenProject, _materialAmmoDrybrush, 5, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(ravenProject, _materialAtomAcrylic, 18, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(ravenProject, _materialAmmoTransparator, 30, MaterialUnit.Drop).GetAwaiter().GetResult();
@@ -430,7 +435,7 @@ public partial class DatabaseSeed
         ConsumeMaterial(ravenProject, _materialBiltemaMatteVarnish, 25, MaterialUnit.Spray).GetAwaiter().GetResult();
         ConsumeMaterial(ravenProject, _materialVallejoVarnish, 15, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ravenProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 3+4+6+0.5);
+        ravenProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 3 + 4 + 6 + 0.5);
 
         context.Add(ravenProject);
 
@@ -471,28 +476,38 @@ public partial class DatabaseSeed
 
         var aphroditeProject = new Project("rodrigo.basniak", "Aphrodite of Pisces", new DateTime(2025, 12, 10), modelId: null);
 
-        aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (90+210+215+210+120+205+200+155+140) / 17);
-        ConsumeMaterial(aphroditeProject, _materialJayoAbsResin, 110+50+160+70+220+105+160+105, MaterialUnit.Gram).GetAwaiter().GetResult();
-        ConsumeMaterial(aphroditeProject, _materialAnycubricClearResin, 70+70+90+50+180+85+115+45+85+55, MaterialUnit.Gram).GetAwaiter().GetResult();
+        aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (90 + 210 + 215 + 210 + 120 + 205 + 200 + 155 + 140) / 17);
+        ConsumeMaterial(aphroditeProject, _materialJayoAbsResin, 110 + 50 + 160 + 70 + 220 + 105 + 160 + 105, MaterialUnit.Gram).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialAnycubricClearResin, 70 + 70 + 90 + 50 + 180 + 85 + 115 + 45 + 85 + 55, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 2);
         aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 18);
         aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 11, 01), 4.5);
-        aphroditeProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 11, 01), 1); // must be updated
+        aphroditeProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 11, 01), 3);
 
         ConsumeMaterial(aphroditeProject, _materialMagnet10x5, 12, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(aphroditeProject, _materialMagnet8x4, 7, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(aphroditeProject, _materialMagnet6x4, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialMagnet6x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(aphroditeProject, _materialVallejoPrimer, 0, MaterialUnit.Drop).GetAwaiter().GetResult(); // must be updated
-        ConsumeMaterial(aphroditeProject, _materialGswPrimer, 0, MaterialUnit.Drop).GetAwaiter().GetResult(); // must be updated
-        ConsumeMaterial(aphroditeProject, _materialTamiyaClear, 0, MaterialUnit.Drop).GetAwaiter().GetResult(); // must be updated
-        ConsumeMaterial(aphroditeProject, _materialAmmoCandy, 0, MaterialUnit.Drop).GetAwaiter().GetResult(); // must be updated
-        ConsumeMaterial(aphroditeProject, _materialArmyPainterAcrylic, 0, MaterialUnit.Drop).GetAwaiter().GetResult(); // must be updated
+        ConsumeMaterial(aphroditeProject, _materialVallejoPrimer, 125 + 30 + 35 + 30 + 15, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialGswPrimer, 350, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialTamiyaClear, 180 + 60 + 20 + 50 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialAmmoCandy, 40 + 80 + 10 + 30, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialArmyPainterAcrylic, 20 + 60 + 10 + 25 + 40 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialGswVarnish, 50, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialAtomAcrylic, 30, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialGswChrome, 220, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialAmmoDrybrush, 50, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialGswAcrylic, 30, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(aphroditeProject, _materialBiltemaGlossVarnish, 30+70+30+67, MaterialUnit.Spray).GetAwaiter().GetResult(); // must be updated
+        ConsumeMaterial(aphroditeProject, _materialBiltemaGlossVarnish, 30 + 70 + 30 + 67 + 35 + 55 + 40 + 55, MaterialUnit.Spray).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialTamiyaTS80, 40, MaterialUnit.Spray).GetAwaiter().GetResult();
 
-        aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 0.0); // must be updated
+        ConsumeMaterial(aphroditeProject, _materialPaintMixingCupCorrugated, 3, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialNailWoodSwab, 40, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(aphroditeProject, _materialDisposableBrush, 10, MaterialUnit.Unit).GetAwaiter().GetResult();
+
+        aphroditeProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 12, 12), 1.5 + 0.5 + 1 + 1 + 3 + 2 + 2 + 1.5 + 1 + 3 + 1 + 2 + 1);
 
         context.Add(aphroditeProject);
 
@@ -504,8 +519,8 @@ public partial class DatabaseSeed
 
         var tonyStarkProject = new Project("rodrigo.basniak", "Iton Man and Tony Stark", new DateTime(2025, 01, 01), modelId: null);
 
-        tonyStarkProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (200+125+90)/13);
-        ConsumeMaterial(tonyStarkProject, _materialSunluWaterWashableStandardResin, 325+115+170+65+80+40, MaterialUnit.Gram).GetAwaiter().GetResult();
+        tonyStarkProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (200 + 125 + 90) / 13);
+        ConsumeMaterial(tonyStarkProject, _materialSunluWaterWashableStandardResin, 325 + 115 + 170 + 65 + 80 + 40, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         tonyStarkProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
         tonyStarkProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 6);
@@ -516,12 +531,12 @@ public partial class DatabaseSeed
         ConsumeMaterial(tonyStarkProject, _materialMagnet8x4, 8, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(tonyStarkProject, _materialMagnet6x4, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(tonyStarkProject, _materialVallejoPrimer, 75+135, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(tonyStarkProject, _materialVallejoPrimer, 75 + 135, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(tonyStarkProject, _materialArmyPainterAcrylic, 35+20+10+5+15+10+5+10+60+5+10+5+30+30+10+10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(tonyStarkProject, _materialArmyPainterAcrylic, 35 + 20 + 10 + 5 + 15 + 10 + 5 + 10 + 60 + 5 + 10 + 5 + 30 + 30 + 10 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(tonyStarkProject, _materialTamiyaClear, 20, MaterialUnit.Mililiter).GetAwaiter().GetResult();
 
-        tonyStarkProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 1.5+1+1.5+0.5+2+1.5+1.5+3+2+3.5+2+3+2+2);
+        tonyStarkProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 1.5 + 1 + 1.5 + 0.5 + 2 + 1.5 + 1.5 + 3 + 2 + 3.5 + 2 + 3 + 2 + 2);
 
         context.Add(tonyStarkProject);
 
@@ -533,8 +548,8 @@ public partial class DatabaseSeed
 
         var kassandraProject = new Project("rodrigo.basniak", "Kassandra", new DateTime(2025, 01, 01), modelId: null);
 
-        kassandraProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (155+105+215+175)/15);
-        ConsumeMaterial(kassandraProject, _materialSunluWaterWashableStandardResin, 245+60+70+35+155+100+250, MaterialUnit.Gram).GetAwaiter().GetResult();
+        kassandraProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (155 + 105 + 215 + 175) / 15);
+        ConsumeMaterial(kassandraProject, _materialSunluWaterWashableStandardResin, 245 + 60 + 70 + 35 + 155 + 100 + 250, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         kassandraProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
         kassandraProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 6);
@@ -548,9 +563,9 @@ public partial class DatabaseSeed
 
         ConsumeMaterial(kassandraProject, _materialVallejoPrimer, 23, MaterialUnit.Mililiter).GetAwaiter().GetResult();
 
-        ConsumeMaterial(kassandraProject, _materialArmyPainterAcrylic, 15+40+10+10+5+70+40+2+30+5+30+15+10+310, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(kassandraProject, _materialArmyPainterAcrylic, 15 + 40 + 10 + 10 + 5 + 70 + 40 + 2 + 30 + 5 + 30 + 15 + 10 + 310, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        kassandraProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 1.5+1+1.5+1.5+0.25+1.25+2+1.5+1+3+7+3+5+2);
+        kassandraProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 1.5 + 1 + 1.5 + 1.5 + 0.25 + 1.25 + 2 + 1.5 + 1 + 3 + 7 + 3 + 5 + 2);
 
         context.Add(kassandraProject);
 
@@ -562,8 +577,8 @@ public partial class DatabaseSeed
 
         var missMarvelProject = new Project("rodrigo.basniak", "Rogue vs Miss Marvel", new DateTime(2025, 01, 01), modelId: null);
 
-        missMarvelProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (160+90+200)/15.0);
-        ConsumeMaterial(missMarvelProject, _materialSunluWaterWashableStandardResin, 155+70+100+50+135+75, MaterialUnit.Gram).GetAwaiter().GetResult();
+        missMarvelProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (160 + 90 + 200) / 15.0);
+        ConsumeMaterial(missMarvelProject, _materialSunluWaterWashableStandardResin, 155 + 70 + 100 + 50 + 135 + 75, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         missMarvelProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
         missMarvelProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 6);
@@ -577,11 +592,11 @@ public partial class DatabaseSeed
 
         ConsumeMaterial(missMarvelProject, _materialVallejoPrimer, 225, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(missMarvelProject, _materialArmyPainterAcrylic, 60+10+15+15+30+20+10+10+5+5+5+45+20+20+45+20+20+20+5+50+100+35+10+40+10+40+20+20, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(missMarvelProject, _materialArmyPainterAcrylic, 60 + 10 + 15 + 15 + 30 + 20 + 10 + 10 + 5 + 5 + 5 + 45 + 20 + 20 + 45 + 20 + 20 + 20 + 5 + 50 + 100 + 35 + 10 + 40 + 10 + 40 + 20 + 20, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         ConsumeMaterial(missMarvelProject, _materialVallejoVarnish, 150, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        missMarvelProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 1.5+0.25+0.25+2+1.5+2+4.5+5+12);
+        missMarvelProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 1.5 + 0.25 + 0.25 + 2 + 1.5 + 2 + 4.5 + 5 + 12);
 
         context.Add(missMarvelProject);
 
@@ -593,8 +608,8 @@ public partial class DatabaseSeed
 
         var yenneferProject = new Project("rodrigo.basniak", "Yennefer", new DateTime(2025, 01, 01), modelId: null);
 
-        yenneferProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (85+140) / 15.0);
-        ConsumeMaterial(yenneferProject, _materialSunluWaterWashableStandardResin, 95+20+210+35, MaterialUnit.Gram).GetAwaiter().GetResult();
+        yenneferProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (85 + 140) / 15.0);
+        ConsumeMaterial(yenneferProject, _materialSunluWaterWashableStandardResin, 95 + 20 + 210 + 35, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         yenneferProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
         yenneferProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 4);
@@ -605,7 +620,7 @@ public partial class DatabaseSeed
 
         ConsumeMaterial(yenneferProject, _materialVallejoPrimer, 75, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(yenneferProject, _materialArmyPainterAcrylic, 10+10+20+20+15+15+10+10+5+5+5+5+30+10+50+5+5+10+10+5+10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(yenneferProject, _materialArmyPainterAcrylic, 10 + 10 + 20 + 20 + 15 + 15 + 10 + 10 + 5 + 5 + 5 + 5 + 30 + 10 + 50 + 5 + 5 + 10 + 10 + 5 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         ConsumeMaterial(yenneferProject, _materialVallejoVarnish, 75, MaterialUnit.Drop).GetAwaiter().GetResult();
 
@@ -621,8 +636,8 @@ public partial class DatabaseSeed
 
         var wonderWomanProject = new Project("rodrigo.basniak", "Wonder Woman", new DateTime(2025, 01, 01), modelId: null);
 
-        wonderWomanProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (145+155) / 15.0);
-        ConsumeMaterial(wonderWomanProject, _materialSunluWaterWashableStandardResin, 130+60+150+45, MaterialUnit.Gram).GetAwaiter().GetResult();
+        wonderWomanProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (145 + 155) / 15.0);
+        ConsumeMaterial(wonderWomanProject, _materialSunluWaterWashableStandardResin, 130 + 60 + 150 + 45, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         wonderWomanProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
         wonderWomanProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 4);
@@ -634,9 +649,9 @@ public partial class DatabaseSeed
         ConsumeMaterial(wonderWomanProject, _materialMagnet6x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(wonderWomanProject, _materialMagnet5x3, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(wonderWomanProject, _materialVallejoPrimer, 200+325, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(wonderWomanProject, _materialVallejoPrimer, 200 + 325, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(wonderWomanProject, _materialArmyPainterAcrylic, 15+15+30+9+6+7+435, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(wonderWomanProject, _materialArmyPainterAcrylic, 15 + 15 + 30 + 9 + 6 + 7 + 435, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(wonderWomanProject, _materialVallejoAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
         ConsumeMaterial(wonderWomanProject, _materialAtomAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
 
@@ -655,7 +670,7 @@ public partial class DatabaseSeed
         var blackWidowsProject = new Project("rodrigo.basniak", "Black Widow", new DateTime(2025, 01, 01), modelId: null);
 
         blackWidowsProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (120) / 15.0);
-        ConsumeMaterial(blackWidowsProject, _materialSunluWaterWashableStandardResin, 150+60, MaterialUnit.Gram).GetAwaiter().GetResult();
+        ConsumeMaterial(blackWidowsProject, _materialSunluWaterWashableStandardResin, 150 + 60, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         blackWidowsProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 0);
         blackWidowsProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 2);
@@ -665,13 +680,13 @@ public partial class DatabaseSeed
         ConsumeMaterial(blackWidowsProject, _materialMagnet8x4, 10, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(blackWidowsProject, _materialMagnet6x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(blackWidowsProject, _materialVallejoPrimer, 150+15+10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(blackWidowsProject, _materialVallejoPrimer, 150 + 15 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(blackWidowsProject, _materialArmyPainterAcrylic, 15+5+5+5+30+30+10+50+10+30, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(blackWidowsProject, _materialArmyPainterAcrylic, 15 + 5 + 5 + 5 + 30 + 30 + 10 + 50 + 10 + 30, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         ConsumeMaterial(blackWidowsProject, _materialVallejoVarnish, 60, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        blackWidowsProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 0.5+1+1+1+4+9+2);
+        blackWidowsProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 0.5 + 1 + 1 + 1 + 4 + 9 + 2);
 
         context.Add(blackWidowsProject);
 
@@ -683,8 +698,8 @@ public partial class DatabaseSeed
 
         var lightningProject = new Project("rodrigo.basniak", "Lightning", new DateTime(2025, 01, 01), modelId: null);
 
-        lightningProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (130+110) / 15.0);
-        ConsumeMaterial(lightningProject, _materialSunluWaterWashableStandardResin, 100+40+80+30, MaterialUnit.Gram).GetAwaiter().GetResult();
+        lightningProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (130 + 110) / 15.0);
+        ConsumeMaterial(lightningProject, _materialSunluWaterWashableStandardResin, 100 + 40 + 80 + 30, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         lightningProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
         lightningProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 4);
@@ -697,7 +712,7 @@ public partial class DatabaseSeed
 
         ConsumeMaterial(lightningProject, _materialVallejoPrimer, 550, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(lightningProject, _materialArmyPainterAcrylic, 240+50+75+15+70, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(lightningProject, _materialArmyPainterAcrylic, 240 + 50 + 75 + 15 + 70, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         ConsumeMaterial(lightningProject, _materialVallejoVarnish, 100, MaterialUnit.Drop).GetAwaiter().GetResult();
 
@@ -713,8 +728,8 @@ public partial class DatabaseSeed
 
         var thrallProject = new Project("rodrigo.basniak", "Thrall", new DateTime(2025, 01, 01), modelId: null);
 
-        thrallProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (130+90+125) / 15.0);
-        ConsumeMaterial(thrallProject, _materialSunluWaterWashableStandardResin, 145+60+85+40+95+35, MaterialUnit.Gram).GetAwaiter().GetResult();
+        thrallProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (130 + 90 + 125) / 15.0);
+        ConsumeMaterial(thrallProject, _materialSunluWaterWashableStandardResin, 145 + 60 + 85 + 40 + 95 + 35, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         thrallProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
         thrallProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 6);
@@ -726,11 +741,11 @@ public partial class DatabaseSeed
 
         ConsumeMaterial(thrallProject, _materialVallejoPrimer, 450, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(thrallProject, _materialArmyPainterAcrylic, 30+15+30+10+10+15+5+25+15+25+10+25+20+40+30+10, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(thrallProject, _materialArmyPainterAcrylic, 30 + 15 + 30 + 10 + 10 + 15 + 5 + 25 + 15 + 25 + 10 + 25 + 20 + 40 + 30 + 10, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         ConsumeMaterial(thrallProject, _materialVallejoVarnish, 200, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        thrallProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 1+1+3+2+2+6+4+2);
+        thrallProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 1 + 1 + 3 + 2 + 2 + 6 + 4 + 2);
 
         context.Add(thrallProject);
 
@@ -742,8 +757,8 @@ public partial class DatabaseSeed
 
         var DonkeyKongProject = new Project("rodrigo.basniak", "Donkey Kong", new DateTime(2025, 01, 01), modelId: null);
 
-        DonkeyKongProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (85+175+100) / 15.0);
-        ConsumeMaterial(DonkeyKongProject, _materialSunluWaterWashableStandardResin, 110+30+250+90+70+20, MaterialUnit.Gram).GetAwaiter().GetResult();
+        DonkeyKongProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (85 + 175 + 100) / 15.0);
+        ConsumeMaterial(DonkeyKongProject, _materialSunluWaterWashableStandardResin, 110 + 30 + 250 + 90 + 70 + 20, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         DonkeyKongProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
         DonkeyKongProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 5);
@@ -756,11 +771,11 @@ public partial class DatabaseSeed
 
         ConsumeMaterial(DonkeyKongProject, _materialVallejoPrimer, 450, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(DonkeyKongProject, _materialArmyPainterAcrylic, 15+5+5+3+5+120+5+10+5+5+5+5+20+6+6+20+20+5+5+5+20+15+50+15+15+30+25+75, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(DonkeyKongProject, _materialArmyPainterAcrylic, 15 + 5 + 5 + 3 + 5 + 120 + 5 + 10 + 5 + 5 + 5 + 5 + 20 + 6 + 6 + 20 + 20 + 5 + 5 + 5 + 20 + 15 + 50 + 15 + 15 + 30 + 25 + 75, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         ConsumeMaterial(DonkeyKongProject, _materialVallejoVarnish, 200, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        DonkeyKongProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 2.5+1+1+1.5+3+2+2+8+4);
+        DonkeyKongProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 2.5 + 1 + 1 + 1.5 + 3 + 2 + 2 + 8 + 4);
 
         context.Add(DonkeyKongProject);
 
@@ -772,8 +787,8 @@ public partial class DatabaseSeed
 
         var ffxivProject = new Project("rodrigo.basniak", "Final Fantasy Diorama", new DateTime(2025, 01, 01), modelId: null);
 
-        ffxivProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (175+165+160+165+105+85) / 15.0);
-        ConsumeMaterial(ffxivProject, _materialSunluWaterWashableStandardResin, 140+80+190+45+175+55+170+55+85+35+95+40, MaterialUnit.Gram).GetAwaiter().GetResult();
+        ffxivProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (175 + 165 + 160 + 165 + 105 + 85) / 15.0);
+        ConsumeMaterial(ffxivProject, _materialSunluWaterWashableStandardResin, 140 + 80 + 190 + 45 + 175 + 55 + 170 + 55 + 85 + 35 + 95 + 40, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         ffxivProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
         ffxivProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 10);
@@ -802,8 +817,8 @@ public partial class DatabaseSeed
 
         var yunnaProject = new Project("rodrigo.basniak", "Yunna", new DateTime(2025, 01, 01), modelId: null);
 
-        yunnaProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (100+150) / 15.0);
-        ConsumeMaterial(yunnaProject, _materialSunluWaterWashableStandardResin, 75+45+75+35, MaterialUnit.Gram).GetAwaiter().GetResult();
+        yunnaProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (100 + 150) / 15.0);
+        ConsumeMaterial(yunnaProject, _materialSunluWaterWashableStandardResin, 75 + 45 + 75 + 35, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         yunnaProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
         yunnaProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 4);
@@ -833,7 +848,7 @@ public partial class DatabaseSeed
         var newProject = new Project("rodrigo.basniak", "Makima", new DateTime(2025, 01, 01), modelId: null);
 
         newProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (160) / 17);
-        ConsumeMaterial(newProject, _materialJayoAbsResin, 100+60, MaterialUnit.Gram).GetAwaiter().GetResult();
+        ConsumeMaterial(newProject, _materialJayoAbsResin, 100 + 60, MaterialUnit.Gram).GetAwaiter().GetResult();
 
         newProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 0.5);
         newProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 2);
@@ -843,7 +858,7 @@ public partial class DatabaseSeed
         ConsumeMaterial(newProject, _materialMagnet10x5, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
         ConsumeMaterial(newProject, _materialMagnet8x4, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(newProject, _materialVallejoPrimer, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult(); 
+        ConsumeMaterial(newProject, _materialVallejoPrimer, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
 
         ConsumeMaterial(newProject, _materialArmyPainterAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
 
