@@ -165,7 +165,7 @@ public class Get_Project_Details_Tests
         using (var context = TestingServer.CreateContext())
         {
             var project = await context.Set<Project>().FirstAsync(x => x.Id == _testProjectId);
-            var colorGroup = new ColorGroup(project.Id, "Test Color Group");
+            var colorGroup = new ColorGroup(project, "Test Color Group");
             context.Add(colorGroup);
             await context.SaveChangesAsync();
             colorGroupId = colorGroup.Id;

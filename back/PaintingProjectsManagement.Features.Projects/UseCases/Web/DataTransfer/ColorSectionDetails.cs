@@ -3,9 +3,8 @@ namespace PaintingProjectsManagement.Features.Projects;
 public class ColorSectionDetails
 {
     public Guid Id { get; set; }
-    public ColorGroupDetails Group { get; set; } = new();
     public ColorZone Zone { get; set; }
-    public string Color { get; set; } = string.Empty;
+    public string ReferenceColor { get; set; } = string.Empty;
     public Guid[] SuggestedColorIds { get; set; } = Array.Empty<Guid>();
 
     public static ColorSectionDetails FromModel(ColorSection section)
@@ -13,9 +12,8 @@ public class ColorSectionDetails
         return new ColorSectionDetails
         {
             Id = section.Id,
-            Group = ColorGroupDetails.FromModel(section.ColorGroup),
             Zone = section.Zone,
-            Color = section.ReferenceColor,
+            ReferenceColor = section.ReferenceColor,
             SuggestedColorIds = section.SuggestedColorIds
         };
     }

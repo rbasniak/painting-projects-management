@@ -21,11 +21,11 @@
             </MudText>
             
             <MudStack Spacing="2">
-                <MudCheckBox @bind-Selected="selectedZones[ColorZone.Highlight]" 
+                <MudCheckBox T="bool" @bind-Value="selectedZones[ColorZone.Highlight]" 
                             Label="Highlights" />
-                <MudCheckBox @bind-Selected="selectedZones[ColorZone.Midtone]" 
+                <MudCheckBox T="bool" @bind-Value="selectedZones[ColorZone.Midtone]"
                             Label="Midtones" />
-                <MudCheckBox @bind-Selected="selectedZones[ColorZone.Shadow]" 
+                <MudCheckBox T="bool" @bind-Value="selectedZones[ColorZone.Shadow]"
                             Label="Shadows" />
             </MudStack>
         </MudStack>

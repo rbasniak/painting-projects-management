@@ -299,6 +299,9 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.Property<Guid>("ColorGroupId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("ColorGroupId1")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("ReferenceColor")
                         .IsRequired()
                         .HasMaxLength(7)
@@ -315,6 +318,8 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ColorGroupId1");
 
                     b.HasIndex("ColorGroupId", "Zone")
                         .IsUnique();
@@ -1017,20 +1022,27 @@ namespace PaintingProjectsManagment.Database.Migrations
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorGroup", b =>
                 {
-                    b.HasOne("PaintingProjectsManagement.Features.Projects.Project", null)
+                    b.HasOne("PaintingProjectsManagement.Features.Projects.Project", "Project")
                         .WithMany("ColorGroups")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Projects.ColorSection", b =>
                 {
                     b.HasOne("PaintingProjectsManagement.Features.Projects.ColorGroup", "ColorGroup")
-                        .WithMany("Sections")
+                        .WithMany()
                         .HasForeignKey("ColorGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PaintingProjectsManagement.Features.Projects.ColorGroup", null)
+                        .WithMany("Sections")
+                        .HasForeignKey("ColorGroupId1")
+                        .HasConstraintName("FK_project.project_color_sections_projects.project_color_grou~1");
 
                     b.Navigation("ColorGroup");
                 });

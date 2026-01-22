@@ -72,12 +72,12 @@ public class CreateColorGroup : IEndpoint
 
             var colorGroup = new ColorGroup(project, request.Name);
 
-            // Add to context first so EF Core assigns the Id
-            await _context.AddAsync(colorGroup, cancellationToken);
+            _context.Add(colorGroup);
             
             // Add sections for each selected zone with default neutral grey
             // (ColorGroup now has an Id after being added to context)
             const string defaultGrey = "#808080";
+            
             foreach (var zone in request.Zones)
             {
                 colorGroup.AddSection(zone, defaultGrey);

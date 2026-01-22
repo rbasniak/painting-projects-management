@@ -7,7 +7,7 @@
 @namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 @implements IAsyncDisposable
 
-<MudDialog Class="color-zones-dialog">
+<MudDialog Class="color-groups-dialog">
     <DialogContent>
         <MudPaper Class="pa-4" Style="height: calc(100vh - 120px); display: flex; flex-direction: column;">
             <MudStack Spacing="2">
@@ -110,7 +110,29 @@
                                                 <MudExpansionPanel>
                                                     <TitleContent>
                                                         <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween" Style="width: 100%;">
-                                                            <MudText Typo="Typo.subtitle1">@group.Name</MudText>
+                                                            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="flex: 1;">
+                                                                <MudText Typo="Typo.subtitle1">@group.Name</MudText>
+                                                                <MudStack Row="true" Spacing="1">
+                                                                    @{
+                                                                        var highlightSection = group.Sections.FirstOrDefault(s => s.Zone == ColorZone.Highlight);
+                                                                        var midtoneSection = group.Sections.FirstOrDefault(s => s.Zone == ColorZone.Midtone);
+                                                                        var shadowSection = group.Sections.FirstOrDefault(s => s.Zone == ColorZone.Shadow);
+                                                                    }
+                                                                    
+                                                                    @if (shadowSection != null)
+                                                                    {
+                                                                        <div style="@($"width: 20px; height: 20px; background-color: {shadowSection.ReferenceColor}; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2);")" title="Shadow"></div>
+                                                                    }
+                                                                    @if (midtoneSection != null)
+                                                                    {
+                                                                        <div style="@($"width: 20px; height: 20px; background-color: {midtoneSection.ReferenceColor}; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2);")" title="Midtone"></div>
+                                                                    }
+                                                                    @if (highlightSection != null)
+                                                                    {
+                                                                        <div style="@($"width: 20px; height: 20px; background-color: {highlightSection.ReferenceColor}; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2);")" title="Highlight"></div>
+                                                                    }
+                                                                </MudStack>
+                                                            </MudStack>
                                                             <MudStack Row="true" Spacing="1">
                                                                 <MudIconButton Icon="@Icons.Material.Filled.Edit" 
                                                                               Size="Size.Small" 
@@ -127,23 +149,23 @@
                                                     </TitleContent>
                                                     <ChildContent>
                                                         <MudStack Spacing="2" Class="mt-2">
-                                                            @foreach (var section in group.Sections)
+                                                            @foreach (var section1 in group.Sections)
                                                             {
-                                                                var isSelected = selectedSectionId == section.Id;
+                                                                var isSelected = selectedSectionId == section1.Id;
                                                                 var borderStyle = isSelected ? "2px solid var(--mud-palette-primary)" : "1px solid var(--mud-palette-divider)";
                                                                 <MudPaper Elevation="0" 
                                                                         Class="pa-2" 
                                                                         Style="@($"border: {borderStyle}; border-radius: 4px; cursor: pointer;")"
-                                                                        @onclick="() => SelectSectionForUpdate(section.Id)">
+                                                                        @onclick="() => SelectSectionForUpdate(section1.Id)">
                                                                     <MudStack Row="true" Spacing="2" AlignItems="AlignItems.Center">
-                                                                        <div style="@($"width: 40px; height: 40px; background-color: {section.Color}; border-radius: 4px; border: 1px solid #ccc;")"></div>
+                                                                        <div style="@($"width: 40px; height: 40px; background-color: {section1.ReferenceColor}; border-radius: 4px; border: 1px solid #ccc;")"></div>
                                                                         <MudStack Spacing="0" Style="flex: 1;">
-                                                                            <MudText Typo="Typo.body2">@GetZoneLabel(section.Zone)</MudText>
-                                                                            <MudText Typo="Typo.caption" Color="Color.Secondary">@section.Color</MudText>
+                                                                            <MudText Typo="Typo.body2">@GetZoneLabel(section1.Zone)</MudText>
+                                                                            <MudText Typo="Typo.caption" Color="Color.Secondary">@section1.ReferenceColor</MudText>
                                                                         </MudStack>
                                                                         @if (isSelected)
                                                                         {
-                                                                            <MudChip Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled">Selected</MudChip>
+                                                                            <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled">Click a color in the image</MudChip>
                                                                         }
                                                                     </MudStack>
                                                                 </MudPaper>
@@ -174,7 +196,7 @@
     [Inject] public IDialogService DialogService { get; set; } = default!;
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
-    [Parameter] public PaintingProjectsManagement.Features.Projects.ProjectDetails Model { get; set; } = default!;
+    [Parameter] public ProjectDetails Model { get; set; } = default!;
 
     private ElementReference zoomableImageRef;
     private ElementReference magnifierRef;
@@ -210,6 +232,7 @@
     private void LoadColorGroups()
     {
         colorGroups = Model?.Groups?.ToList() ?? new List<ColorGroupDetails>();
+        StateHasChanged();
     }
 
     private async Task SelectImage(UrlReference reference)
@@ -263,7 +286,7 @@
             
             if (section != null)
             {
-                section.Color = hexColor;
+                section.ReferenceColor = hexColor;
             }
             
             selectedSectionId = null; // Clear selection after update
@@ -412,11 +435,11 @@
 }
 
 <style>
-    .color-zones-dialog .image-viewer-container {
+    .color-groups-dialog .image-viewer-container {
         background: #f5f5f5;
     }
 
-    .color-zones-dialog .image-carousel {
+    .color-groups-dialog .image-carousel {
         height: 120px;
     }
 

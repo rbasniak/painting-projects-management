@@ -45,6 +45,12 @@ public static class Builder
         GetProjectMaterials.MapEndpoint(app);
         GetProjectSteps.MapEndpoint(app);
 
+        CreateColorGroup.MapEndpoint(app);
+        UpdateColorGroup.MapEndpoint(app);
+        DeleteColorGroup.MapEndpoint(app);
+        UpdateReferenceColor.MapEndpoint(app);
+
+
         return app;
     }
 }

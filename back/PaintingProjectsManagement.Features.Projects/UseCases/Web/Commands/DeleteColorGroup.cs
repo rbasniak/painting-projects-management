@@ -4,9 +4,9 @@ public class DeleteColorGroup : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/api/projects/color-groups", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/api/projects/color-groups", async (Guid colorGroupId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.SendAsync(request, cancellationToken);
+            var result = await dispatcher.SendAsync(new Request { ColorGroupId = colorGroupId }, cancellationToken);
 
             return ResultsMapper.FromResponse(result);
         })
@@ -18,7 +18,6 @@ public class DeleteColorGroup : IEndpoint
 
     public class Request : AuthenticatedRequest, ICommand
     {
-        public Guid ProjectId { get; set; }
         public Guid ColorGroupId { get; set; }
     }
 
@@ -30,21 +29,7 @@ public class DeleteColorGroup : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
-            RuleFor(x => x.ProjectId)
-                .MustAsync(async (request, projectId, cancellationToken) =>
-                    await Context.Set<Project>().AnyAsync(
-                        p => p.Id == projectId && p.TenantId == request.Identity.Tenant, 
-                        cancellationToken))
-                .WithMessage("Project not found.");
-
-            RuleFor(x => x.ColorGroupId)
-                .MustAsync(async (request, colorGroupId, cancellationToken) =>
-                    await Context.Set<ColorGroup>().AnyAsync(
-                        g => g.Id == colorGroupId && 
-                        g.ProjectId == request.ProjectId &&
-                        g.Project.TenantId == request.Identity.Tenant, 
-                        cancellationToken))
-                .WithMessage("Color group not found or does not belong to the specified project.");
+            // TODO: Check wheter it belongs to the tenant
         }
     }
 
@@ -52,11 +37,11 @@ public class DeleteColorGroup : IEndpoint
     {
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var project = await _context.Set<Project>()
-                .Include(x => x.ColorGroups)
-                .FirstAsync(x => x.Id == request.ProjectId && x.TenantId == request.Identity.Tenant, cancellationToken);
+            var colorGroup = await _context.Set<ColorGroup>()
+                .Include(x => x.Project)
+                .FirstAsync(x => x.Id == request.ColorGroupId, cancellationToken); 
 
-            project.RemoveColorGroup(request.ColorGroupId);
+            colorGroup.Project.RemoveColorGroup(request.ColorGroupId);
 
             await _context.SaveChangesAsync(cancellationToken);
 

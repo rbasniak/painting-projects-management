@@ -26,7 +26,7 @@ public class ProjectDetails
     //// public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();
     public UrlReference[] References => _images;
     //public UrlReference[] Pictures { get; set; } = Array.Empty<UrlReference>();
-    //public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();
+    public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();
     public ProjectCostDetails CostBreakdown { get; set; }  
 }
 
@@ -90,3 +90,17 @@ public class UrlReference
     public Guid Id { get; set; }
     public string Url { get; set; } = string.Empty;
 } 
+
+public class ColorGroupDetails
+{
+    public Guid Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public ColorSectionDetails[] Sections { get; set; } = [];
+}
+
+public class ColorSectionDetails
+{
+    public Guid Id { get; set; }
+    public string ReferenceColor { get; set; } = string.Empty;
+    public ColorZone Zone { get; set; }
+}

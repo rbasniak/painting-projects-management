@@ -1,6 +1,7 @@
 @using MudBlazor
 @using PaintingProjectsManagement.UI.Modules.Projects
 @using PaintingProjectsManagement.Features.Projects
+@using System.Diagnostics
 
 @namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 
@@ -21,11 +22,11 @@
             </MudText>
             
             <MudStack Spacing="2">
-                <MudCheckBox @bind-Selected="selectedZones[ColorZone.Highlight]" 
+                <MudCheckBox T="bool" @bind-Value="isHighlightSelected" 
                             Label="Highlights" />
-                <MudCheckBox @bind-Selected="selectedZones[ColorZone.Midtone]" 
+                <MudCheckBox T="bool" @bind-Value="isMidtoneSelected"
                             Label="Midtones" />
-                <MudCheckBox @bind-Selected="selectedZones[ColorZone.Shadow]" 
+                <MudCheckBox T="bool" @bind-Value="isShadowSelected"
                             Label="Shadows" />
             </MudStack>
         </MudStack>
@@ -43,20 +44,17 @@
 
 @code {
     [Parameter] public Guid ProjectId { get; set; }
-    
+
     [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
     private string name = string.Empty;
-    private Dictionary<ColorZone, bool> selectedZones = new()
-    {
-        { ColorZone.Highlight, false },
-        { ColorZone.Midtone, false },
-        { ColorZone.Shadow, false }
-    };
+    private bool isHighlightSelected = false;
+    private bool isMidtoneSelected = true;
+    private bool isShadowSelected = false;
 
-    private bool CanSubmit => !string.IsNullOrWhiteSpace(name) && selectedZones.Values.Any(v => v);
+    private bool CanSubmit => !string.IsNullOrWhiteSpace(name) && (isHighlightSelected || isMidtoneSelected || isShadowSelected);
 
     private async Task Submit()
     {
@@ -68,12 +66,12 @@
                 return;
             }
 
-            var zones = selectedZones
-                .Where(kvp => kvp.Value)
-                .Select(kvp => kvp.Key)
-                .ToArray();
+            var zones = new List<ColorZone>();
+            if (isHighlightSelected) zones.Add(ColorZone.Highlight);
+            if (isMidtoneSelected) zones.Add(ColorZone.Midtone);
+            if (isShadowSelected) zones.Add(ColorZone.Shadow);
 
-            if (zones.Length == 0)
+            if (zones.Count == 0)
             {
                 Snackbar.Add("Please select at least one zone", Severity.Warning);
                 return;
@@ -83,7 +81,7 @@
             {
                 ProjectId = ProjectId,
                 Name = name,
-                Zones = zones
+                Zones = zones.ToArray()
             };
 
             await ProjectsService.CreateColorGroupAsync(request, default);
