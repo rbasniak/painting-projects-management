@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Inventory;
 
+// TODO: nao precisa do id
 public class UserPaint : BaseEntity
 {
     private UserPaint() { }

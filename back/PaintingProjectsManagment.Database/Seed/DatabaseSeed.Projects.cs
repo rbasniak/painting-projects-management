@@ -845,28 +845,74 @@ public partial class DatabaseSeed
 
         #region Makima
 
-        var newProject = new Project("rodrigo.basniak", "Makima", new DateTime(2025, 01, 01), modelId: null);
+        var makimaProject = new Project("rodrigo.basniak", "Makima", new DateTime(2025, 01, 01), modelId: null);
 
-        newProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (160) / 17);
-        ConsumeMaterial(newProject, _materialJayoAbsResin, 100 + 60, MaterialUnit.Gram).GetAwaiter().GetResult();
+        makimaProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (160) / 17);
+        ConsumeMaterial(makimaProject, _materialJayoAbsResin, 100 + 60, MaterialUnit.Gram).GetAwaiter().GetResult();
 
-        newProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 0.5);
-        newProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 2);
-        newProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 11, 01), 0.5);
-        newProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 11, 01), 1);
+        makimaProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 0.5);
+        makimaProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 2);
+        makimaProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 11, 01), 0.5);
+        makimaProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 11, 01), 1);
 
-        ConsumeMaterial(newProject, _materialMagnet10x5, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(newProject, _materialMagnet8x4, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(makimaProject, _materialMagnet10x5, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(makimaProject, _materialMagnet8x4, 2, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(newProject, _materialVallejoPrimer, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(makimaProject, _materialVallejoPrimer, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(newProject, _materialArmyPainterAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(makimaProject, _materialArmyPainterAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(newProject, _materialVallejoVarnish, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(makimaProject, _materialVallejoVarnish, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        newProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 000000000);
+        makimaProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 000000000);
 
-        context.Add(newProject);
+        context.Add(makimaProject);
+
+        context.SaveChanges();
+
+        #endregion
+
+        #region SAMPLE 
+
+        var lastOfUsProject = new Project("rodrigo.basniak", "Last Of Us", new DateTime(2026, 01, 23), modelId: null);
+
+        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2026, 01, 23), (000000000) / 15.0);
+        ConsumeMaterial(lastOfUsProject, _materialSunluWaterWashableStandardResin, 000000000, MaterialUnit.Gram).GetAwaiter().GetResult();
+
+        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2026, 01, 23), 1);
+        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2026, 01, 23), 000000000);
+        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2026, 01, 23), 000000000);
+        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2026, 01, 23), 000000000);
+
+        ConsumeMaterial(lastOfUsProject, _materialMagnet10x5, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(lastOfUsProject, _materialMagnet8x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(lastOfUsProject, _materialMagnet6x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
+
+        ConsumeMaterial(lastOfUsProject, _materialVallejoPrimer, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+
+        ConsumeMaterial(lastOfUsProject, _materialArmyPainterAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(lastOfUsProject, _materialVallejoAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(lastOfUsProject, _materialAtomAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+
+        ConsumeMaterial(lastOfUsProject, _materialVallejoVarnish, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+
+        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 000000000);
+
+        context.Add(lastOfUsProject);
+
+        var sampleDirectory = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "PaintingProjectsManagement.Api", "wwwroot", "uploads", "sample", "LastOfUs");
+        if (Directory.Exists(sampleDirectory))
+        {
+            var imageFiles = Directory.GetFiles(sampleDirectory)
+                .OrderBy(x => x)
+                .ToList();
+
+            foreach (var imageFile in imageFiles)
+            {
+                var fileName = Path.GetFileName(imageFile);
+                lastOfUsProject.AddReferencePicture($"uploads\\sample\\LastOfUs\\{fileName}");
+            }
+        }
 
         context.SaveChanges();
 
