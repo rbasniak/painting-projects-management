@@ -1,3 +1,5 @@
+
+
 @page "/projects/{ProjectId}/execution/steps"
 @using MudBlazor
 @using PaintingProjectsManagement.UI.Modules.Projects
@@ -75,6 +77,7 @@
 </MudPaper>
 
 @code {
+    // TODO: remover, nao é mais utilizado
     [Parameter] public string ProjectId { get; set; }
     
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
