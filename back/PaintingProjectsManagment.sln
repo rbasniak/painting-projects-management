@@ -30,7 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{63
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Materials", "PaintingProjectsManagement.Features.Materials\PaintingProjectsManagement.Features.Materials.csproj", "{9ABF31BF-F2E7-4154-B582-C06D187E6580}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Inventory", "PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.csproj", "{83706609-FB7F-4379-8792-271832E89560}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Inventory.Core", "PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.Core.csproj", "{83706609-FB7F-4379-8792-271832E89560}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Models", "PaintingProjectsManagement.Features.Models\PaintingProjectsManagement.Features.Models.csproj", "{64BA5928-FD21-4E72-A0CB-5A6E41B484C5}"
 EndProject
@@ -71,6 +71,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Shared.UI", "PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj", "{DF1E9F4F-9277-6E1D-F325-10197274571F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{277CFBFE-8931-4328-B65B-9ED42037BAFD}"
+	ProjectSection(SolutionItems) = preProject
+		Add-Migration.txt = Add-Migration.txt
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		lessons_learned.txt = lessons_learned.txt
+		..\README.md = ..\README.md
+		rbkApiModules\docs\README.md = rbkApiModules\docs\README.md
+		requirements.txt = requirements.txt
+		validator_ideas.txt = validator_ideas.txt
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{C3758D4C-6DAA-471C-BCA3-AC782E7BD78C}"
 EndProject
@@ -90,7 +100,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Inventory.UI", "PaintingProjectsManagement.Features.Inventory.UI\PaintingProjectsManagement.Features.Inventory.UI.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Inventory.Integration", "PaintingProjectsManagement.Features.Inventory.Integration\PaintingProjectsManagement.Features.Inventory.Integration.csproj", "{66E1969D-7521-4308-DEB3-C73C1BDDB54E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Inventory.Integrations", "PaintingProjectsManagement.Features.Inventory.Integration\PaintingProjectsManagement.Features.Inventory.Integrations.csproj", "{66E1969D-7521-4308-DEB3-C73C1BDDB54E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Inventory.Web", "PaintingProjectsManagement.Features.Inventory.Web\PaintingProjectsManagement.Features.Inventory.Web.csproj", "{3A6C5E95-83E6-480F-BDF3-67183D859A39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Inventory.Web.Contracts", "PaintingProjectsManagement.Features.Inventory.Web.Contracts\PaintingProjectsManagement.Features.Inventory.Web.Contracts.csproj", "{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Inventory.Core.Contracts", "PaintingProjectsManagement.Features.Inventory.Core.Contracts\PaintingProjectsManagement.Features.Inventory.Core.Contracts.csproj", "{D102F62C-FC51-4BA3-B25D-75AD11507719}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Inventory.Integrations.Contracts", "PaintingProjectsManagement.Features.Inventory.Integrations.Contracts\PaintingProjectsManagement.Features.Inventory.Integrations.Contracts.csproj", "{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -402,6 +420,54 @@ Global
 		{66E1969D-7521-4308-DEB3-C73C1BDDB54E}.Release|x64.Build.0 = Release|Any CPU
 		{66E1969D-7521-4308-DEB3-C73C1BDDB54E}.Release|x86.ActiveCfg = Release|Any CPU
 		{66E1969D-7521-4308-DEB3-C73C1BDDB54E}.Release|x86.Build.0 = Release|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Debug|x64.Build.0 = Debug|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Debug|x86.Build.0 = Debug|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Release|x64.ActiveCfg = Release|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Release|x64.Build.0 = Release|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Release|x86.ActiveCfg = Release|Any CPU
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39}.Release|x86.Build.0 = Release|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Debug|x64.Build.0 = Debug|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Debug|x86.Build.0 = Debug|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Release|x64.ActiveCfg = Release|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Release|x64.Build.0 = Release|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Release|x86.ActiveCfg = Release|Any CPU
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0}.Release|x86.Build.0 = Release|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Debug|x64.Build.0 = Debug|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Debug|x86.Build.0 = Debug|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Release|x64.ActiveCfg = Release|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Release|x64.Build.0 = Release|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Release|x86.ActiveCfg = Release|Any CPU
+		{D102F62C-FC51-4BA3-B25D-75AD11507719}.Release|x86.Build.0 = Release|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Debug|x64.Build.0 = Debug|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Debug|x86.Build.0 = Debug|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Release|x64.ActiveCfg = Release|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Release|x64.Build.0 = Release|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Release|x86.ActiveCfg = Release|Any CPU
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -440,6 +506,10 @@ Global
 		{4248EE1A-8E3A-4DA2-BE47-49BDBE1522EF} = {6398C842-1E51-4272-9993-0055BB2E71E3}
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890} = {B551456D-BBBE-4174-AE03-36B8B3C9503D}
 		{66E1969D-7521-4308-DEB3-C73C1BDDB54E} = {B551456D-BBBE-4174-AE03-36B8B3C9503D}
+		{3A6C5E95-83E6-480F-BDF3-67183D859A39} = {B551456D-BBBE-4174-AE03-36B8B3C9503D}
+		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0} = {B551456D-BBBE-4174-AE03-36B8B3C9503D}
+		{D102F62C-FC51-4BA3-B25D-75AD11507719} = {B551456D-BBBE-4174-AE03-36B8B3C9503D}
+		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9} = {B551456D-BBBE-4174-AE03-36B8B3C9503D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D9D84DD-C876-47C0-8479-5AA1E9881CFA}

@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
 <PropertyGroup>
-<TargetFramework>net10.0</TargetFramework>
-<Nullable>enable</Nullable>
-<ImplicitUsings>enable</ImplicitUsings>
+	<!-- Common properties are now in Directory.Build.props -->
+	
 <UseRazorBuildServer>false</UseRazorBuildServer>
 <SupportedPlatform>Browser</SupportedPlatform>
 <DisableImplicitAspNetCoreFrameworkReference>true</DisableImplicitAspNetCoreFrameworkReference>
@@ -16,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory.Web.Contracts\PaintingProjectsManagement.Features.Inventory.Web.Contracts.csproj" />
 	  <ProjectReference Include="..\PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj" />
 	  <ProjectReference Include="..\PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj" />
 	</ItemGroup>

@@ -1,4 +1,4 @@
-namespace PaintingProjectsManagement.UI.Modules.Inventory;
+using PaintingProjectsManagement.UI.Modules.Inventory;
 
 public class GetCatalogResponse
 {

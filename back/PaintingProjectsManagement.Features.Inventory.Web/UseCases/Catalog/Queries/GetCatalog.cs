@@ -1,3 +1,4 @@
+using rbkApiModules.Commons.Core;
 using rbkApiModules.Commons.Core.Abstractions;
 
 namespace PaintingProjectsManagement.Features.Inventory;
@@ -11,7 +12,7 @@ public class GetCatalog : IEndpoint
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
             return ResultsMapper.FromResponse(result);
         })
-        .Produces<GetCatalogResponse>(StatusCodes.Status200OK)
+        .Produces<Response>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Get Catalog")
         .WithTags("Inventory");
@@ -56,7 +57,7 @@ public class GetCatalog : IEndpoint
                         Id = line.Id,
                         Name = line.Name,
                         Brand = new EntityReference(line.BrandId, line.Brand.Name),
-                        Paints = linePaints.Select(PaintColorDetails.FromModelForCatalog).ToList()
+                        Paints = linePaints.Select(PaintColorDetails.FromModel).ToList()
                     };
                 }).ToList();
 
@@ -68,8 +69,13 @@ public class GetCatalog : IEndpoint
                 };
             }).ToList();
 
-            var response = new GetCatalogResponse { Brands = brandDetails };
+            var response = new Response { Brands = brandDetails };
             return QueryResponse.Success(response);
         }
+    }
+
+    public record Response
+    {
+        public required IReadOnlyList<PaintBrandDetails> Brands { get; init; } 
     }
 }

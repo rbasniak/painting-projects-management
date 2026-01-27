@@ -10,7 +10,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\PaintingProjectsManagement.Features.Authorization\PaintingProjectsManagement.Features.Authorization.csproj" />
-		<ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory.Integration\PaintingProjectsManagement.Features.Inventory.Integration.csproj" />
+		<ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory.Core.Contracts\PaintingProjectsManagement.Features.Inventory.Core.Contracts.csproj" />
 	</ItemGroup>
 
 

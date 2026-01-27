@@ -1,13 +1,14 @@
+using PaintingProjectsManagement.Features.Inventory.Web;
 using rbkApiModules.Commons.Core.Abstractions;
 
 namespace PaintingProjectsManagement.Features.Inventory;
 
-public class PaintLineDetails
+public class PaintLineDetails  
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public EntityReference Brand { get; set; }
-    public IReadOnlyList<PaintColorDetails> Paints { get; set; } = Array.Empty<PaintColorDetails>();
+    public required Guid Id { get; init; }
+    public required string Name { get; init; } = string.Empty;
+    public required EntityReference Brand { get; init; }
+    public IReadOnlyList<PaintColorDetails> Paints { get; init; } = Array.Empty<PaintColorDetails>();
 
     public static PaintLineDetails FromModel(PaintLine line)
     {

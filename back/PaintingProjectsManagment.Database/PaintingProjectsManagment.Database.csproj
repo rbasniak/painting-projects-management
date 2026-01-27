@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.Core.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Materials\PaintingProjectsManagement.Features.Materials.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Models\PaintingProjectsManagement.Features.Models.csproj" />
-    <ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Projects\PaintingProjectsManagement.Features.Projects.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,8 @@
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using PaintingProjectsManagement.Features.Inventory.Integration;
 
-namespace PaintingProjectsManagement.Features.Inventory;
+namespace PaintingProjectsManagement.Features.Inventory.Integration;
 
 public static class Builder
 {
@@ -11,14 +12,9 @@ public static class Builder
 
         return services;
     }
+
     public static IEndpointRouteBuilder MapInventoryFeature(this IEndpointRouteBuilder app)
     {
-        app.MapCatalogueFeature();
-        app.MapMyPaintsFeature();
-        app.MapPaintBrandsFeature();
-        app.MapPaintLinesFeature();
-        app.MapPaintColorsFeature();
-
         return app;
     }
 }

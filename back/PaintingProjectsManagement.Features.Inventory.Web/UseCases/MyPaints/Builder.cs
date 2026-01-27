@@ -7,7 +7,6 @@ public static class MyPaintsBuilder
         ListMyPaints.MapEndpoint(app);
         AddToMyPaints.MapEndpoint(app);
         RemoveFromMyPaints.MapEndpoint(app);
-        FindColorMatches.MapEndpoint(app);
         return app;
     }
 }

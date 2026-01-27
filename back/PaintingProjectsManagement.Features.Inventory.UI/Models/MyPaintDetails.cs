@@ -1,6 +1,7 @@
+
 namespace PaintingProjectsManagement.UI.Modules.Inventory;
 
-public class MyPaintDetails
+public class MyPaintDetails 
 {
     public Guid PaintColorId { get; set; }
     public string Name { get; set; } = string.Empty;

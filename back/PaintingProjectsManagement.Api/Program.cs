@@ -272,6 +272,7 @@ public class Program
         app.UseMaterialsFeature();
         app.MapPrintingModelsFeature();
         Features.Inventory.Builder.MapInventoryFeature(app);
+        Features.Inventory.Integration.Builder.MapInventoryFeature(app);
         app.MapProjectsFeature();
 
         app.Run();

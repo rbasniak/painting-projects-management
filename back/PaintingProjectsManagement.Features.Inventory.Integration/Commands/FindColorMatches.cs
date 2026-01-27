@@ -1,24 +1,13 @@
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using PaintingProjectsManagement.Features.Inventory.Integration;
 
 namespace PaintingProjectsManagement.Features.Inventory;
 
-public class FindColorMatches : IEndpoint
+public class FindColorMatches 
 {
-    public static void MapEndpoint(IEndpointRouteBuilder endpoints)
-    {
-        // Note: This endpoint is optional since the command is primarily called via IDispatcher
-        // But we can expose it as an HTTP endpoint for direct API access if needed
-        endpoints.MapPost("/api/inventory/my-paints/match", async (FindColorMatchesCommandRequest request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
-        {
-            var result = await dispatcher.SendAsync(request, cancellationToken);
-            return ResultsMapper.FromResponse(result);
-        })
-        .Produces<IReadOnlyCollection<ColorMatchResult>>(StatusCodes.Status200OK)
-        .RequireAuthorization()
-        .WithName("Find Color Matches")
-        .WithTags("Inventory");
-    }
-
     // TODO: reorganize folder, it is an integration command, not web
     // TODO: explore possibilities of getting handler based on interface
 
