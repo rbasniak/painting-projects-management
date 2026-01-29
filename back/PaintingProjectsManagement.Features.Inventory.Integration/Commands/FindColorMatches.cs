@@ -11,13 +11,9 @@ public class FindColorMatches
     // TODO: reorganize folder, it is an integration command, not web
     // TODO: explore possibilities of getting handler based on interface
 
-    public class Validator : SmartValidator<FindColorMatchesCommandRequest, UserPaint>
+    public class Validator : AbstractValidator<FindColorMatchesQuery>
     {
-        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
-        {
-        }
-
-        protected override void ValidateBusinessRules()
+        public Validator()
         {
             RuleFor(x => x.ReferenceColor)
                 .NotEmpty()
@@ -49,9 +45,9 @@ public class FindColorMatches
         }
     }
 
-    public class Handler(DbContext _context) : IQueryHandler<FindColorMatchesCommandRequest, IReadOnlyCollection<ColorMatchResult>>
+    public class Handler(DbContext _context) : IQueryHandler<FindColorMatchesQuery, IReadOnlyCollection<ColorMatchResult>>
     {
-        public async Task<QueryResponse<IReadOnlyCollection<ColorMatchResult>>> HandleAsync(FindColorMatchesCommandRequest request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<ColorMatchResult>>> HandleAsync(FindColorMatchesQuery request, CancellationToken cancellationToken)
         {
             var username = request.Identity.Tenant ?? string.Empty;
 

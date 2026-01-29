@@ -1,4 +1,4 @@
-using rbkApiModules.Commons.Core.Abstractions;
+using PaintingProjectsManagement.Infrastructure.Common;
 
 namespace PaintingProjectsManagement.Features.Models;
 

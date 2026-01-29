@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using PaintingProjectsManagement.Features.Models.Abstractions;
-using rbkApiModules.Commons.Core.Abstractions;
+using PaintingProjectsManagement.Infrastructure.Common;
 
 namespace PaintingProjectsManagement.Features.Models;
 

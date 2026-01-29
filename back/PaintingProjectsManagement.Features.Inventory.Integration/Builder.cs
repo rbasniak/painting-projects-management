@@ -8,8 +8,6 @@ public static class Builder
 {
     public static IServiceCollection AddInventoryFeature(this IServiceCollection services)
     {
-        services.AddScoped<IRequestHandler<FindColorMatchesCommandRequest, QueryResponse<IReadOnlyCollection<ColorMatchResult>>>, FindColorMatches.Handler>();
-
         return services;
     }
 

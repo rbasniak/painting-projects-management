@@ -1,5 +1,5 @@
-using rbkApiModules.Commons.Core;
-using rbkApiModules.Commons.Core.Abstractions;
+using PaintingProjectsManagement.Features.Inventory.Web;
+using PaintingProjectsManagement.Infrastructure.Common;
 
 namespace PaintingProjectsManagement.Features.Inventory;
 
@@ -12,13 +12,13 @@ public class GetCatalog : IEndpoint
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
             return ResultsMapper.FromResponse(result);
         })
-        .Produces<Response>(StatusCodes.Status200OK)
+        .Produces<CatalogDetails>(StatusCodes.Status200OK)
         .RequireAuthorization()
         .WithName("Get Catalog")
         .WithTags("Inventory");
     }
 
-    public class Request : IQuery { }
+    public class Request : IQuery, IGetCatalogRequest { }
 
     public class Validator : SmartValidator<Request, PaintBrand>
     {
@@ -69,13 +69,8 @@ public class GetCatalog : IEndpoint
                 };
             }).ToList();
 
-            var response = new Response { Brands = brandDetails };
+            var response = new CatalogDetails { Brands = brandDetails };
             return QueryResponse.Success(response);
         }
-    }
-
-    public record Response
-    {
-        public required IReadOnlyList<PaintBrandDetails> Brands { get; init; } 
-    }
+    } 
 }

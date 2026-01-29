@@ -1,5 +1,5 @@
 using PaintingProjectsManagement.Features.Models.Abstractions;
-using rbkApiModules.Commons.Core.Abstractions;
+using PaintingProjectsManagement.Infrastructure.Common;
 using System.Diagnostics;
 
 namespace PaintingProjectsManagement.Features.Models;

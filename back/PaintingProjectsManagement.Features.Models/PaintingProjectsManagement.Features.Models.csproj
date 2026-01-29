@@ -4,6 +4,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Models.Abstractions\PaintingProjectsManagement.Features.Models.Integration.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
   </ItemGroup>
 
 	<ItemGroup>

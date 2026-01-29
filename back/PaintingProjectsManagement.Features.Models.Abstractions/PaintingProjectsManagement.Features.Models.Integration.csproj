@@ -3,4 +3,7 @@
 	<ItemGroup>
 		<PackageReference Include="rbkApiModules.Commons.Core" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
+	</ItemGroup>
 </Project>

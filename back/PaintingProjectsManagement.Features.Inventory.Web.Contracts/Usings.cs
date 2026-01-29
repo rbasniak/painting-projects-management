@@ -1,1 +1,1 @@
-﻿global using rbkApiModules.Commons.Core.Abstractions;
+﻿

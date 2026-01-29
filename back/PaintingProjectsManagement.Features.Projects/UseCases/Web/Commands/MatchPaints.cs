@@ -59,7 +59,7 @@ public class MatchPaints : IEndpoint
                 foreach (var section in group.Sections)
                 {
                     // Create command request that implements IFindColorMatchesCommand
-                    var findMatchesCommand = new FindColorMatchesCommandRequest
+                    var findMatchesCommand = new FindColorMatchesQuery
                     {
                         ReferenceColor = section.ReferenceColor,
                         MaxResults = 10

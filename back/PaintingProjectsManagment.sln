@@ -49,7 +49,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Packages.props = Directory.Packages.props
 		lessons_learned.txt = lessons_learned.txt
 		..\README.md = ..\README.md
-		rbkApiModules\docs\README.md = rbkApiModules\docs\README.md
 		requirements.txt = requirements.txt
 		validator_ideas.txt = validator_ideas.txt
 	EndProjectSection
@@ -109,6 +108,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Inventory.Core.Contracts", "PaintingProjectsManagement.Features.Inventory.Core.Contracts\PaintingProjectsManagement.Features.Inventory.Core.Contracts.csproj", "{D102F62C-FC51-4BA3-B25D-75AD11507719}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Features.Inventory.Integrations.Contracts", "PaintingProjectsManagement.Features.Inventory.Integrations.Contracts\PaintingProjectsManagement.Features.Inventory.Integrations.Contracts.csproj", "{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaintingProjectsManagement.Infrastructure.Common", "PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj", "{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -468,6 +469,18 @@ Global
 		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Release|x64.Build.0 = Release|Any CPU
 		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Release|x86.ActiveCfg = Release|Any CPU
 		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9}.Release|x86.Build.0 = Release|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Debug|x64.Build.0 = Debug|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Debug|x86.Build.0 = Debug|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Release|x64.ActiveCfg = Release|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Release|x64.Build.0 = Release|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Release|x86.ActiveCfg = Release|Any CPU
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -510,6 +523,7 @@ Global
 		{EFF70FE6-78B4-4AFC-AF10-71E01F905CE0} = {B551456D-BBBE-4174-AE03-36B8B3C9503D}
 		{D102F62C-FC51-4BA3-B25D-75AD11507719} = {B551456D-BBBE-4174-AE03-36B8B3C9503D}
 		{6494572B-0568-42D1-A9BA-4CF5BE1ED1D9} = {B551456D-BBBE-4174-AE03-36B8B3C9503D}
+		{6A97DFF0-57A8-4FF9-97D7-5DCF65F7FCD4} = {ADB915B9-7C76-4A12-BC62-0C603457F96B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D9D84DD-C876-47C0-8479-5AA1E9881CFA}

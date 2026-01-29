@@ -6,5 +6,6 @@
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory.UI\PaintingProjectsManagement.Features.Inventory.UI.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory.Web.Contracts\PaintingProjectsManagement.Features.Inventory.Web.Contracts.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.Core.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
   </ItemGroup>
 </Project>

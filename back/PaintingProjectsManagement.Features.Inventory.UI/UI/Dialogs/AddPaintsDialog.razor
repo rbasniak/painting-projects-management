@@ -75,7 +75,7 @@
     [Inject] public IInventoryService InventoryService { get; set; } = default!;
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
-    private GetCatalogResponse? _catalog;
+    private CatalogDetails? _catalog;
     private HashSet<Guid> _selectedIds = new();
     private bool _loading = true;
 

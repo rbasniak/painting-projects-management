@@ -1,3 +1,5 @@
+using PaintingProjectsManagement.Features.Inventory.Web;
+
 namespace PaintingProjectsManagement.Features.Inventory;
 
 public class AddToMyPaints : IEndpoint
@@ -15,7 +17,7 @@ public class AddToMyPaints : IEndpoint
         .WithTags("Inventory");
     }
 
-    public class Request : AuthenticatedRequest, ICommand
+    public class Request : AuthenticatedRequest, ICommand, IAddToMyPaintsRequest
     {
         public IReadOnlyList<Guid> PaintColorIds { get; set; } = Array.Empty<Guid>();
     }

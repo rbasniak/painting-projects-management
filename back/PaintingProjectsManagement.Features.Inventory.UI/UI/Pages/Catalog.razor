@@ -68,7 +68,7 @@
 @code {
     [Inject] public IInventoryService InventoryService { get; set; } = default!;
 
-    private GetCatalogResponse? _catalog;
+    private CatalogDetails? _catalog;
     private bool _loading = true;
 
     protected override async Task OnInitializedAsync()

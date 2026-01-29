@@ -1,9 +1,10 @@
+
 using PaintingProjectsManagement.Features.Inventory.Web;
-using rbkApiModules.Commons.Core.Abstractions;
+using PaintingProjectsManagement.Infrastructure.Common;
 
 namespace PaintingProjectsManagement.Features.Inventory;
 
-public class PaintColorDetails 
+public class PaintColorDetails : IPaintColorDetails
 {
     public required Guid Id { get; init; }
     public required string Name { get; init; } = string.Empty;

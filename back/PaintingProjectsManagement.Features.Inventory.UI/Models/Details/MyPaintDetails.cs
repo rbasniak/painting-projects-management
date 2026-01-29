@@ -1,7 +1,9 @@
 
+using PaintingProjectsManagement.Features.Inventory.Web;
+
 namespace PaintingProjectsManagement.UI.Modules.Inventory;
 
-public class MyPaintDetails 
+public class MyPaintDetails : IMyPaintDetails
 {
     public Guid PaintColorId { get; set; }
     public string Name { get; set; } = string.Empty;
