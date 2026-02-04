@@ -58,4 +58,19 @@ blazorApp.Resource.Annotations.OfType<EndpointAnnotation>().ToList().ForEach(x =
     }
 });
 
+// Note: TUnit test projects don't support Main methods, so we use AddExecutable to run dotnet test via batch script
+// Only add in development to avoid including in production builds
+var testProjectPath = Path.GetFullPath(Path.Combine(builder.AppHostDirectory, "..", "PaintingProjectsManagement.Features.Materials.UI.Tests"));
+var testScriptPath = Path.Combine(testProjectPath, "run-tests.cmd");
+// Execute the batch file directly - it will handle running dotnet test with proper arguments
+var playwrightTests = builder
+    .AddExecutable("playwright-tests", testScriptPath, string.Empty, testProjectPath)
+    .WithExplicitStart()
+    .WithReference(blazorApp)
+    .WithEnvironment("ASPIRE", "true")
+    .WithEnvironment("EnableTestingPlatformDotnetTestSupport", "true")
+    .WithEnvironment("TestingPlatformDotnetTestSupport", "true")
+    .ExcludeFromManifest()
+    .WithParentRelationship(blazorApp);
+
 builder.Build().Run();

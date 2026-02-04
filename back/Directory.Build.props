@@ -17,6 +17,9 @@
     <IsPackable>false</IsPackable>
     <OutputType>Exe</OutputType>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- Opt-in to the new dotnet test experience for .NET 10 -->
+    <!-- This property enables the new testing platform for .NET 10+ -->
+    <EnableTestingPlatformDotnetTestSupport>true</EnableTestingPlatformDotnetTestSupport>
   </PropertyGroup>
 
   <!-- Properties specific to UI/Blazor projects -->

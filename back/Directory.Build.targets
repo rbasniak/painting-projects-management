@@ -1,0 +1,8 @@
+<Project>
+  <!-- This file is evaluated after Directory.Build.props but before project-specific targets -->
+  <!-- Set testing platform properties early to prevent VSTest target from being used -->
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Tests'))">
+    <EnableTestingPlatformDotnetTestSupport>true</EnableTestingPlatformDotnetTestSupport>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+  </PropertyGroup>
+</Project>

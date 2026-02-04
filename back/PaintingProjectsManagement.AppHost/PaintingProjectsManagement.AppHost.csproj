@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.Features.Materials.UI.Tests\PaintingProjectsManagement.Features.Materials.UI.Tests.csproj" />
   </ItemGroup>
 
 </Project>
