@@ -2,7 +2,4 @@
 
 	<!-- Common properties are now in Directory.Build.props -->
 
-	<ItemGroup>
-		<PackageReference Include="rbkApiModules.Commons.Core" />
-	</ItemGroup>
 </Project>

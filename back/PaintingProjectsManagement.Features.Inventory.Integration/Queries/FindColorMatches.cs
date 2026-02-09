@@ -4,14 +4,13 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using PaintingProjectsManagement.Features.Inventory.Integration;
 
+using Request = PaintingProjectsManagement.Features.Inventory.Integration.FindColorMatchesQuery;
+
 namespace PaintingProjectsManagement.Features.Inventory;
 
 public class FindColorMatches 
 {
-    // TODO: reorganize folder, it is an integration command, not web
-    // TODO: explore possibilities of getting handler based on interface
-
-    public class Validator : AbstractValidator<FindColorMatchesQuery>
+    public class Validator : AbstractValidator<Request>
     {
         public Validator()
         {
@@ -45,9 +44,9 @@ public class FindColorMatches
         }
     }
 
-    public class Handler(DbContext _context) : IQueryHandler<FindColorMatchesQuery, IReadOnlyCollection<ColorMatchResult>>
+    public class Handler(DbContext _context) : IQueryHandler<Request, IReadOnlyCollection<ColorMatchResult>>
     {
-        public async Task<QueryResponse<IReadOnlyCollection<ColorMatchResult>>> HandleAsync(FindColorMatchesQuery request, CancellationToken cancellationToken)
+        public async Task<QueryResponse<IReadOnlyCollection<ColorMatchResult>>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var username = request.Identity.Tenant ?? string.Empty;
 
