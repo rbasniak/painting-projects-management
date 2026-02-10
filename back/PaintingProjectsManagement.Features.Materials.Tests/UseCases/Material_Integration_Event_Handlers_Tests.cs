@@ -5,6 +5,7 @@ using ReadOnlyMaterial = PaintingProjectsManagement.Features.Projects.Material;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
+[HumanFriendlyDisplayName]
 public class Material_Integration_Event_Handlers_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

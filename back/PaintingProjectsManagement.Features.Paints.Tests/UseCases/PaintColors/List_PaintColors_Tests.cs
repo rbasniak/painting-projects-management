@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Paints.Tests;
 
+[HumanFriendlyDisplayName]
 public class List_PaintColors_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

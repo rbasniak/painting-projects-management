@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Paints.Lines.Tests;
 
+[HumanFriendlyDisplayName]
 public class Update_PaintLine_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

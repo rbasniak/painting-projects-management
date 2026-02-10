@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Inventory.Core.Tests;
 
+[HumanFriendlyDisplayName]
 public class ColorHelper_Tests
 {
     [Test]

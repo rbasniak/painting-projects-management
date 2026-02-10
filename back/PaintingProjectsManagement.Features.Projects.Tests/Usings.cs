@@ -8,3 +8,4 @@ global using System.Net;
 global using rbkApiModules.Testing.Core;
 global using Microsoft.EntityFrameworkCore;
 global using TUnit.Core;
+global using PaintingProjectsManagement.Testing.Core;

@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
+[HumanFriendlyDisplayName]
 public class List_Materials_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Inventory.Integrations.Tests;
 
+[HumanFriendlyDisplayName]
 public class FindColorMatches_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

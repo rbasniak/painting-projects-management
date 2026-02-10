@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Inventory.Core.Tests;
 
+[HumanFriendlyDisplayName]
 public class PaintBrand_Tests
 {
     [Test]

@@ -12,3 +12,4 @@ global using PaintingProjectsManagement.Features.Inventory.Integration;
 global using rbkApiModules.Commons.Core.Abstractions;
 global using rbkApiModules.Commons.Core;
 global using FluentValidation;
+global using PaintingProjectsManagement.Testing.Core;

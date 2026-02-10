@@ -9,3 +9,4 @@ global using rbkApiModules.Identity.Core;
 global using System.Net;
 global using rbkApiModules.Testing.Core;
 global using Microsoft.EntityFrameworkCore;
+global using PaintingProjectsManagement.Testing.Core;

@@ -2,6 +2,7 @@ using PaintingProjectsManagement.Features.Materials;
 
 namespace PaintingProjectsManagement.Features.Models.Tests;
 
+[HumanFriendlyDisplayName]
 public class Model_Pictures_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

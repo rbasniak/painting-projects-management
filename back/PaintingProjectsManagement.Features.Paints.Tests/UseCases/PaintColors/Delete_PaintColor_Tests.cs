@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Paints.Tests;
 
+[HumanFriendlyDisplayName]
 public class Delete_PaintColor_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

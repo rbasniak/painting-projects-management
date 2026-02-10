@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Inventory.Web.Tests;
 
+[HumanFriendlyDisplayName]
 public class Update_PaintColor_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
