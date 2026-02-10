@@ -51,7 +51,7 @@ public class FindColorMatches
             var username = request.Identity.Tenant ?? string.Empty;
 
             var userPaints = await _context.Set<UserPaint>()
-                .Where(up => up.Username == username)
+                .Where(up => up.Username.ToLower() == username.ToLower())
                 .Include(up => up.PaintColor)
                 .ThenInclude(x => x.Line)
                 .ThenInclude(x => x!.Brand)
