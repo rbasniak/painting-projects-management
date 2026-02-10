@@ -1,5 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<!-- Common properties are now in Directory.Build.props -->
-
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\PaintingProjectsManagement.Testing.Core\PaintingProjectsManagement.Testing.Core.csproj" />
+	</ItemGroup>
 </Project>

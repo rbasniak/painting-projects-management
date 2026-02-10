@@ -18,6 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\PaintingProjectsManagement.Testing.Core\PaintingProjectsManagement.Testing.Core.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj" />
 	</ItemGroup>
 
