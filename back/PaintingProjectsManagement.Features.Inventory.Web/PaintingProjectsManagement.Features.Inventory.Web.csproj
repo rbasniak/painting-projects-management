@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk"><!-- Common properties are now in Directory.Build.props -->
 
-
+	<ItemGroup>
+		<PackageReference Include="rbkApiModules.Identity.Core" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory.UI\PaintingProjectsManagement.Features.Inventory.UI.csproj" />

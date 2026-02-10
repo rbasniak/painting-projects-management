@@ -8,60 +8,75 @@ namespace PaintingProjectsManagement.Testing.Core;
 // The wrapped object do not have parameterless contructors, which is required by ClassDataSource.
 public class PostgreSqlContainerWrapper 
 {
+    private static readonly object _lock = new();
+    private static PostgreSqlContainer? _sharedContainer;
+    private static bool _isInitialized = false;
+
     private string _instanceId;
-    private bool _isInitialized = false;
-    private PostgreSqlContainer? _container;
 
     public PostgreSqlContainerWrapper()
     {
         _instanceId = Guid.NewGuid().ToString("N");
-
-        Debug.WriteLine($"*** Instance created: ::{_instanceId}");
+        Debug.WriteLine($"*** Wrapper instance created: ::{_instanceId}");
     }
 
     public PostgreSqlContainer Container
     {
         get
         {
-            Debug.WriteLine($"*** Getting: ::{_instanceId} ");
+            Debug.WriteLine($"*** Getting container from wrapper: ::{_instanceId}");
 
-            if (!_isInitialized)
+            if (!_isInitialized || _sharedContainer == null)
             {
                 throw new InvalidOperationException("Container is not initialized.");
             }
-            return _container ?? throw new InvalidOperationException("Container is initialized but is null.");
+            return _sharedContainer;
         }
     }
 
     public void Initialize()
     {
-        Debug.WriteLine($"*** Initializing: ::{_instanceId} (_isInitialized={_isInitialized})");
-        if (!_isInitialized)
+        lock (_lock)
         {
-            _container = new PostgreSqlBuilder()
-                .WithDatabase("postgres")
-                .WithUsername("postgres")
-                .WithPassword("postgrespw")
-                .WithReuse(true) // Either this or random ports in between assemblies
-                .Build();
+            Debug.WriteLine($"*** Initializing wrapper: ::{_instanceId} (_isInitialized={_isInitialized})");
 
-            _isInitialized = true;
+            if (!_isInitialized)
+            {
+                _sharedContainer = new PostgreSqlBuilder()
+                    .WithDatabase("postgres")
+                    .WithUsername("postgres")
+                    .WithPassword("postgrespw")
+                    .Build();
 
-            Debug.WriteLine($"*** Initialized: ::{_instanceId} (_isInitialized={_isInitialized})");
+                _isInitialized = true;
+
+                Debug.WriteLine($"*** Container created by wrapper: ::{_instanceId}");
+            }
+            else
+            {
+                Debug.WriteLine($"*** Container already exists, reusing from wrapper: ::{_instanceId}");
+            }
         }
     }
 
     public async Task StartAsync()
     {
-        Debug.WriteLine($"*** Starting: ::{_instanceId}");
-        if (_isInitialized && _container != null)
+        Debug.WriteLine($"*** Starting container from wrapper: ::{_instanceId}");
+
+        if (!_isInitialized || _sharedContainer == null)
         {
-            Debug.WriteLine($"*** Started: ::{_instanceId}");
-            await _container.StartAsync();
+            throw new InvalidOperationException("Container is not initialized.");
+        }
+
+        // Only start if not already running
+        if (_sharedContainer.State != DotNet.Testcontainers.Containers.TestcontainersStates.Running)
+        {
+            await _sharedContainer.StartAsync();
+            Debug.WriteLine($"*** Container started by wrapper: ::{_instanceId}");
         }
         else
         {
-            throw new InvalidOperationException("Container is not initialized or is not healthy.");
+            Debug.WriteLine($"*** Container already running, wrapper: ::{_instanceId}");
         }
     }
 }
