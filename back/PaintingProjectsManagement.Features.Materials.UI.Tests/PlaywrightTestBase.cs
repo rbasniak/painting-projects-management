@@ -73,7 +73,7 @@ public class PlaywrightTestBase : IAsyncDisposable
         });
     }
 
-    public async Task AuthenticateAsync(string username = "superuser", string password = "admin")
+    public async Task AuthenticateAsync(string username, string password)
     {
         // First, navigate to a page to ensure localStorage is available
         await Page.GotoAsync(BaseUrl, new PageGotoOptions

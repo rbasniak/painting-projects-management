@@ -24,9 +24,6 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.AddServiceDefaults();
 
-        // Add services to the container.
-        builder.Services.AddAuthorization();
-
         builder.Services.AddOpenTelemetry()
             .WithTracing(tracer =>
             {
