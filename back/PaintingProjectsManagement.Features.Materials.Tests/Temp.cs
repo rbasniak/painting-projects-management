@@ -104,3 +104,6 @@ public class ServiceIntegrationTests
         File.AppendAllLines("C:\\temp\\text.log", [$"  <<<  ASSEMBLY {context.Assembly.GetName().Name}"]);
     }
 }
+
+
+

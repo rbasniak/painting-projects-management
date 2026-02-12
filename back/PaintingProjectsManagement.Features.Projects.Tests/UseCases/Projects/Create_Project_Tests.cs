@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Projects.Tests;
 
+[HumanFriendlyDisplayName]
 public class Create_Project_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

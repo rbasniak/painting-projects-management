@@ -2,6 +2,7 @@ using PaintingProjectsManagement.Features.Models.Tests;
 
 namespace PaintingProjectsManagement.Features.Models.Categories.Tests;
 
+[HumanFriendlyDisplayName]
 public class List_Model_Categories_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

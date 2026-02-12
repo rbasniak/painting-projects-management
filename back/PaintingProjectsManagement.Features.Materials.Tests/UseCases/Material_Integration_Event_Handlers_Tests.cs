@@ -1,8 +1,11 @@
 using PaintingProjectsManagement.Features.Materials.Abstractions;
 using PaintingProjectsManagement.Features.Projects;
 
+using ReadOnlyMaterial = PaintingProjectsManagement.Features.Projects.Material;
+
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
+[HumanFriendlyDisplayName]
 public class Material_Integration_Event_Handlers_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
@@ -48,11 +51,12 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was created
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<Material>()
-            .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == materialId);
+        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            .FirstOrDefaultAsync(x => x.Tenant == "RODRIGO.BASNIAK" && x.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Test Material");
+
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.255); // 25.50 / 100
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
         readOnlyMaterial.CategoryId.ShouldBe(((int)MaterialCategory.Paints));
@@ -106,11 +110,12 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was updated
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<Material>()
-            .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == materialId);
+        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            .FirstOrDefaultAsync(x => x.Tenant == "RODRIGO.BASNIAK" && x.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
+
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.17875); // 35.75 / 200
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
@@ -142,11 +147,12 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was created
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<Material>()
-            .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == materialId);
+        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            .FirstOrDefaultAsync(x => x.Tenant == "RODRIGO.BASNIAK" && x.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("New Material");
+
         readOnlyMaterial.CategoryId.ShouldBe(((int)MaterialCategory.Primers));
         readOnlyMaterial.CategoryName.ShouldBe(MaterialCategory.Primers.ToString());
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0.2); // 30.00 / 150
@@ -180,8 +186,8 @@ public class Material_Integration_Event_Handlers_Tests
         // Verify material exists
         using (var context = TestingServer.CreateContext())
         {
-            var readOnlyMaterial = await context.Set<Material>()
-                .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == materialId);
+            var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+                .FirstOrDefaultAsync(x => x.Tenant == "RODRIGO.BASNIAK" && x.Id == materialId);
             readOnlyMaterial.ShouldNotBeNull();
         }
 
@@ -224,8 +230,8 @@ public class Material_Integration_Event_Handlers_Tests
         // Assert - Should not throw exception and complete successfully
         // (The handler should handle the case where the material doesn't exist gracefully)
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<Material>()
-            .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == materialId);
+        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            .FirstOrDefaultAsync(x => x.Tenant == "RODRIGO.BASNIAK" && x.Id == materialId);
         readOnlyMaterial.ShouldBeNull();
     }
 
@@ -256,11 +262,12 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was created with zero unit price
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<Material>()
-            .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == materialId);
+        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            .FirstOrDefaultAsync(x => x.Tenant == "RODRIGO.BASNIAK" && x.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Test Material");
+
         readOnlyMaterial.PricePerUnit.Amount.ShouldBe(0); // Should be 0 when package content is 0
         readOnlyMaterial.Unit.ShouldBe(MaterialUnit.Mililiter);
     }
@@ -311,8 +318,8 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify read-only material was updated with zero unit price
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<Material>()
-            .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == materialId);
+        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            .FirstOrDefaultAsync(x => x.Tenant == "RODRIGO.BASNIAK" && x.Id == materialId);
 
         readOnlyMaterial.ShouldNotBeNull();
         readOnlyMaterial.Name.ShouldBe("Updated Material");
@@ -347,8 +354,8 @@ public class Material_Integration_Event_Handlers_Tests
 
         // Assert - Verify final state (material should be deleted)
         using var context = TestingServer.CreateContext();
-        var readOnlyMaterial = await context.Set<Material>()
-            .FirstOrDefaultAsync(x => x.TenantId == "RODRIGO.BASNIAK" && x.Id == materialId);
+        var readOnlyMaterial = await context.Set<ReadOnlyMaterial>()
+            .FirstOrDefaultAsync(x => x.Tenant   == "RODRIGO.BASNIAK" && x.Id == materialId);
 
         readOnlyMaterial.ShouldBeNull();
     }

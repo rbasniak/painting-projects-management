@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 
-namespace PaintingProjectsManagement.Features.Materials.UI.Tests;
+namespace PaintingProjectsManagement.Testing.Core;
 
 public class PlaywrightTestBase : IAsyncDisposable
 {

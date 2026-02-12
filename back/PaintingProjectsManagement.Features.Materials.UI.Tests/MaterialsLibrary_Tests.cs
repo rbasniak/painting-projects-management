@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Materials.UI.Tests;
 
+[HumanFriendlyDisplayName]
 public class MaterialsLibrary_Tests : PlaywrightTestBase
 {
     [Test]

@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Common properties are now in Directory.Build.props -->
+
+	<!-- Explicitly enable the new testing platform for .NET 10 -->
+	<!-- This must be set before any targets are evaluated to prevent VSTest target usage -->
+	<PropertyGroup>
+		<EnableTestingPlatformDotnetTestSupport>true</EnableTestingPlatformDotnetTestSupport>
+		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Playwright" />
+		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\PaintingProjectsManagement.Testing.Core\PaintingProjectsManagement.Testing.Core.csproj" />
+		<ProjectReference Include="..\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj" />
+	</ItemGroup>
+
+	<Target Name="InstallPlaywright" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+		<!-- Playwright browsers need to be installed manually after first build -->
+		<!-- Run: pwsh bin/$(Configuration)/$(TargetFramework)/playwright.ps1 install -->
+		<!-- Or use: dotnet tool install - - global Microsoft.Playwright.CLI && playwright install -->
+		<Message Text="Note: To install Playwright browsers, run: pwsh bin/$(Configuration)/$(TargetFramework)/playwright.ps1 install" />
+	</Target>
+</Project>

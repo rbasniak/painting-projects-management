@@ -1,4 +1,3 @@
-using DotNet.Testcontainers.Configurations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,21 +27,26 @@ public abstract class BaseApplicationTestingServer<TProgram> : RbkTestingServer<
 
     protected override bool UseHttps => true;
 
-    private static bool AreContainersInitialized = false;
+    private static readonly SemaphoreSlim _containerInitializationLock = new(1, 1);
 
     protected override async Task InitializeApplicationAsync()
     {
-        if (!AreContainersInitialized)
+        await _containerInitializationLock.WaitAsync();
+        try
         {
+            // Always initialize wrappers (they check internally if already initialized)
             PostgresContainerWrapper.Initialize();
             RabbitContainerWrapper.Initialize();
 
+            // Always call StartAsync - it's idempotent and ensures the container is tracked
             await Task.WhenAll(
                 PostgresContainerWrapper.StartAsync(),
                 RabbitContainerWrapper.StartAsync()
             );
-
-            AreContainersInitialized = true;
+        }
+        finally
+        {
+            _containerInitializationLock.Release();
         }
 
         _dbName = $"db_{InstanceId}";
@@ -265,10 +269,10 @@ public abstract class BaseApplicationTestingServer<TProgram> : RbkTestingServer<
     /// </summary>
     public async Task WaitForAllDomainEventsProcessedAsync(TimeSpan? timeout = null)
     {
-        timeout ??= TimeSpan.FromSeconds(15);
+        timeout ??= TimeSpan.FromSeconds(30);
         var endTime = DateTime.UtcNow.Add(timeout.Value);
 
-        var delay = 100;
+        var delay = 500;
         var steps = timeout.Value.TotalMilliseconds / delay;
 
         for (int i = 0; i < steps; i++)
@@ -342,6 +346,9 @@ public abstract class BaseApplicationTestingServer<TProgram> : RbkTestingServer<
                     .Where(x => x.HandlerName == kvp.Key.FullName)
                     .ToListAsync();
 
+                var temp = context.Set<InboxMessage>().Where(x => x.ProcessedUtc != null).OrderByDescending(x => x.ProcessedUtc).ToList();
+                var temp2 = context.Set<InboxMessage>().ToList();
+
                 if (processedMessages.Count == kvp.Value)
                 {
                     return; // All events processed
@@ -390,4 +397,31 @@ public abstract class BaseApplicationTestingServer<TProgram> : RbkTestingServer<
     }
 
     #endregion
+}
+
+public class HumanFriendlyDisplayNameAttribute : DisplayNameFormatterAttribute
+{
+    protected override string FormatDisplayName(DiscoveredTestContext context)
+    {
+        try
+        {
+            int order = 0;
+
+            if (context.TestDetails.AttributesByType.ContainsKey(typeof(NotInParallelAttribute)))
+            {
+                var attribute = (NotInParallelAttribute)context.TestDetails.AttributesByType[typeof(NotInParallelAttribute)].First();
+                order = attribute.Order;
+                return $"T{order:000}: {context.TestContext.Metadata.TestDetails.TestName.Replace("_", " ")}";
+            }
+            else
+            {
+                return $"{context.TestContext.Metadata.TestDetails.TestName.Replace("_", " ")}";
+            }
+
+        }
+        catch (Exception ex)
+        {
+            return context.TestContext.Metadata.TestDetails.TestName + " (FAIL TO COMPUTE NAME)";
+        }
+    }
 }

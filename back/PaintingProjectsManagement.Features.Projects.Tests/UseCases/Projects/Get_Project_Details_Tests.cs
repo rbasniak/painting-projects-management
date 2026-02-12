@@ -2,6 +2,7 @@ using PaintingProjectsManagement.Features.Materials;
 
 namespace PaintingProjectsManagement.Features.Projects.Tests;
 
+[HumanFriendlyDisplayName]
 public class Get_Project_Details_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

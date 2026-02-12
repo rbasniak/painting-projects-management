@@ -9,6 +9,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="rbkApiModules.Testing.Core" />
+		<PackageReference Include="Microsoft.Playwright" />
 	</ItemGroup>
 	
 </Project>

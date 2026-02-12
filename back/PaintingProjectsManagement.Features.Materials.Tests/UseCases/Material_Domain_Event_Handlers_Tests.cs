@@ -3,6 +3,7 @@ using rbkApiModules.Commons.Core;
 
 namespace PaintingProjectsManagement.Features.Materials.Tests;
 
+[HumanFriendlyDisplayName]
 public class Material_Domain_Event_Handlers_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

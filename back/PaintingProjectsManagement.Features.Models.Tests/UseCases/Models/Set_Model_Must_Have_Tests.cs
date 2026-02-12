@@ -1,5 +1,6 @@
 namespace PaintingProjectsManagement.Features.Models.Tests;
 
+[HumanFriendlyDisplayName]
 public class Set_Model_Must_Have_Tests
 {
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]

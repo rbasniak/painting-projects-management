@@ -14,8 +14,8 @@ public class Menu : IModule
     public IModuleRoute[] Routes => [
         new ModuleRoute
         {
-            Name = "My Paints",
-            Route = "my-paints",
+            Name = "Inventory",
+            Route = "inventory",
             Icon = "icon",
             Order = 1
         },
