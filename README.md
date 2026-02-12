@@ -1,11 +1,11 @@
-# Module structure (Inventory example)
+# Module structure 
 
-This repo is organized into **modules**. A module is a set of projects that implement a single business capability end-to-end (domain + API + UI). The Inventory module currently consists of:
+Features are organized into **modules**. A module is a set of projects that implement a single business capability end-to-end (domain + API + UI). Each module currently consists of:
 
 - `PaintingProjectsManagement.Features.Inventory.Core`
 - `PaintingProjectsManagement.Features.Inventory.Core.Contracts`
-- `PaintingProjectsManagement.Features.Inventory.Integrations` *(placeholder – to be updated)*
-- `PaintingProjectsManagement.Features.Inventory.Integrations.Contracts` *(placeholder – to be updated)*
+- `PaintingProjectsManagement.Features.Inventory.Integrations` 
+- `PaintingProjectsManagement.Features.Inventory.Integrations.Contracts`  
 - `PaintingProjectsManagement.Features.Inventory.Web`
 - `PaintingProjectsManagement.Features.Inventory.Web.Contracts`
 - `PaintingProjectsManagement.Features.Inventory.UI`
@@ -16,8 +16,8 @@ This repo is organized into **modules**. A module is a set of projects that impl
 The module **core domain** layer.
 
 Should contain:
-- `Models/` – domain entities (e.g. `PaintBrand`, `PaintLine`, `PaintColor`, ...)
 - `Database/` – EF Core model configuration (e.g. `*Config` classes)
+- `Models/` – domain entities (e.g. `PaintBrand`, `PaintLine`, `PaintColor`, ...)
 - `Services/` – domain services used by the module
 - `Usings.cs` – module-level usings
 
@@ -29,18 +29,25 @@ Should NOT contain:
 The module public **shared contracts** intended for other modules and presentation layers.
 
 Should contain:
-- Cross-module shared types (mostly enums)
+- Cross-module shared types (mostly enums and constants)
+
+### `*.Core.Tests`
+Tests for the core domain layer. All tests here should be unit tests, and not depend on any external resources (e.g. database, file system, network).
+
+Tests should cover the domain entities and the domain services.
 
 ### `*.Web`
-The module **HTTP API host** (ASP.NET Core endpoints for the module).
+The module **HTTP API host** (ASP.NET Core endpoints for the module) meant to serve exclusively the UI layer.
 
 Should contain:
+- `DataTransfer/` - reusable DTOs returned by the API. These should be used across multiple endpoints, and are not meant to be one-off request/response models. 
 - `UseCases/` – vertical slices grouped by feature (e.g. `PaintBrands`, `PaintLines`, `PaintColors`, `MyPaints`, `Catalog`)
-  - `Builder.cs` – per-slice registrations/route composition
   - `Commands/` – write operations
   - `Queries/` – read operations
+  - `Builder.cs` – per-slice registrations/route composition
 - `DataTransfer/` – concrete DTOs returned/accepted by the API (e.g. `*Details`)
 - `Usings.cs` – module-level usings
+
 
 ### `*.Web.Contracts`
 Contracts specific to the **web surface** of the module.
