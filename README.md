@@ -40,12 +40,11 @@ Tests should cover the domain entities and the domain services.
 The module **HTTP API host** (ASP.NET Core endpoints for the module) meant to serve exclusively the UI layer.
 
 Should contain:
-- `DataTransfer/` - reusable DTOs returned by the API. These should be used across multiple endpoints, and are not meant to be one-off request/response models. 
+- `DataTransfer/` - reusable DTOs returned by the API. These should be used across multiple endpoints, and are not meant to be one-off request/response models. Usually sufixed with `Details`, e.g. `PaintBrandDetails`, `CatalogDetails`
 - `UseCases/` – vertical slices grouped by feature (e.g. `PaintBrands`, `PaintLines`, `PaintColors`, `MyPaints`, `Catalog`)
   - `Commands/` – write operations
   - `Queries/` – read operations
   - `Builder.cs` – per-slice registrations/route composition
-- `DataTransfer/` – concrete DTOs returned/accepted by the API (e.g. `*Details`)
 - `Usings.cs` – module-level usings
 
 
@@ -57,7 +56,7 @@ Use this project when you need types that are:
 - HTTP-facing and should not leak internal domain/application details
 
 Typical contents:
-- Interfaces for shared request/response shapes between API and clients. These interfaces are meant to keep consistency between the API and its consumers without exposing internal domain models directly.
+- Interfaces for shared request/response shapes between API and clients. These interfaces are meant to keep consistency between the API and its consumers without exposing internal domain models directly. This allows for the backend to an implementation focused in the creation and serialization (i.e. private sets, init, required) and the frontend to have an implmentation focused in the deserialization.
 
 Folder layout (as used today):
 - `DataTransfer/` – `I*Details` interfaces (e.g. `IPaintBrandDetails`)
@@ -76,7 +75,7 @@ Folder layout (as used today):
 - `Services/` (e.g. `InventoryService`)
 - `Models/`
   - `Details/` (e.g. `*Details`)
-  - `Requests/` (module request models)
+  - `Requests/` (module request models, used in http calls)
 - `Menu.cs` (configuration for the side menu
 - `Builder.cs`
 
@@ -91,12 +90,10 @@ Folder layout (as used today):
 
 ### `*.Integrations`
 
-This is meant for module-to-module communication within the solution. When a module needs to consume another module's functionality, it should do so via this project using Dispatcher commands/queries. 
+This is meant for module-to-module communication within the solution. When a module needs to consume another module's functionality, it should do so via this project using `IDispatcher` commands/queries. 
 
 Should contain:
-- `Models/` – domain entities (e.g. `PaintBrand`, `PaintLine`, `PaintColor`, ...)
-- `Database/` – EF Core model configuration (e.g. `*Config` classes)
-- `Services/` – domain services used by the module
+- `Queries/` and `Commands/` – Implementation of business capabilities using the same patterns in the `*.Web` layer (`IDispatcher` commands). But here only the `Validator` and `Handler` are nested in the main class. The request is in the `*.Integrations.Contracts` because it needs to be shared betweem layers. Commands are meant for operations that must the synchoronous and the caller must wait for the result, otherwise use the events framework.
 - `Usings.cs` – module-level usings
 
 Should NOT contain:
@@ -104,7 +101,10 @@ Should NOT contain:
 - UI components
 
 ### `*.Integrations.Contracts`
-The module public **shared contracts** intended for other modules and presentation layers.
+The module public **shared contracts**, meant to the consumed by other modules from the application.
+
+Should Contain:
+- `{Operation}/` - request and result objects for the operation (e.g. `ColorMatchResult` and `FindColorMatchesQuery`)
 
 Should contain:
-- Cross-module shared types (mostly enums)
+- Cross-module requests (commands and queries) models

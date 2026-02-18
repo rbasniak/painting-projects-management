@@ -10,4 +10,8 @@
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.Core.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UseCases\Catalog\Queries\" />
+  </ItemGroup>
 </Project>
