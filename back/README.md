@@ -17,7 +17,8 @@ The module **core domain** layer.
 
 Should contain:
 - `Database/` – EF Core model configuration (e.g. `*Config` classes)
-- `Models/` – domain entities (e.g. `PaintBrand`, `PaintLine`, `PaintColor`, ...)
+- `Models/Domain/` – domain entities (e.g. `PaintBrand`, `PaintLine`, `PaintColor`, ...)
+- `Models/Events/` – domain events (e.g. `PaintBrandCreated`, `PaintLineUpdated`, `PaintColorDeleted`, ...)
 - `Services/` – domain services used by the module
 - `Usings.cs` – module-level usings
 
