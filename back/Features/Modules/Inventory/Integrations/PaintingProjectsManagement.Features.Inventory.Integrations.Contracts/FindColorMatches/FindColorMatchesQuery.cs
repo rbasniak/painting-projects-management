@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace PaintingProjectsManagement.Features.Inventory.Integration;
 
 public class FindColorMatchesQuery : AuthenticatedRequest, IQuery<IReadOnlyCollection<ColorMatchResult>>

@@ -17,8 +17,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\..\Application\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj" />
 		<ProjectReference Include="..\..\..\..\Shared\Testing\PaintingProjectsManagement.Testing.Core\PaintingProjectsManagement.Testing.Core.csproj" />
-		<ProjectReference Include="..\..\..\..\Application\PaintingProjectsManagement.UI\PaintingProjectsManagement.UI.csproj" />
 	</ItemGroup>
 
 	<Target Name="InstallPlaywright" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">

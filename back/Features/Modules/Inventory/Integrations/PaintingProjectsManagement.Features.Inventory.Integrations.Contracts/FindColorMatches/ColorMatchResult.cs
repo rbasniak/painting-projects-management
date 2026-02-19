@@ -1,3 +1,5 @@
+using System;
+
 namespace PaintingProjectsManagement.Features.Inventory.Integration;
 
 public class ColorMatchResult

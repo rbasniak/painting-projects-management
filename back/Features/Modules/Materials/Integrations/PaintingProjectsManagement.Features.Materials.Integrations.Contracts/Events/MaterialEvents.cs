@@ -1,3 +1,5 @@
+using System;
+
 namespace PaintingProjectsManagement.Features.Materials.Abstractions;
 
 // Fired once when a material is created
