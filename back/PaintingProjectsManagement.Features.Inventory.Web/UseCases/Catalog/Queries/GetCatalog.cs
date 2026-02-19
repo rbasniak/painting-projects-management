@@ -18,7 +18,7 @@ public class GetCatalog : IEndpoint
         .WithTags("Inventory");
     }
 
-    public class Request : IQuery, IGetCatalogRequest { }
+    public class Request : IQuery { }
 
     public class Validator : SmartValidator<Request, PaintBrand>
     {
