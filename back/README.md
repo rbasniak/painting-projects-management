@@ -41,6 +41,7 @@ Tests should cover the domain entities and the domain services.
 The module **HTTP API host** (ASP.NET Core endpoints for the module) meant to serve exclusively the UI layer.
 
 Should contain:
+- `Localization/` - localization enums to be used by the localization framework
 - `DataTransfer/` - reusable DTOs returned by the API. These should be used across multiple endpoints, and are not meant to be one-off request/response models. Usually sufixed with `Details`, e.g. `PaintBrandDetails`, `CatalogDetails`
 - `UseCases/` – vertical slices grouped by feature (e.g. `PaintBrands`, `PaintLines`, `PaintColors`, `MyPaints`, `Catalog`)
   - `Commands/` – write operations

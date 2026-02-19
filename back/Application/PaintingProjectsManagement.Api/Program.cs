@@ -4,6 +4,7 @@ using Npgsql;
 using OpenTelemetry.Trace;
 using PaintingProjectsManagement.Api.Diagnostics;
 using PaintingProjectsManagement.Features.Materials;
+using PaintingProjectsManagement.Features.Materials.Integration;
 using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.Features.Projects;
@@ -200,6 +201,7 @@ public class Program
 
         // Application modules
         builder.Services.AddMaterialsFeature();
+        builder.Services.AddMaterialsIntegrations();
         builder.Services.AddInventoryFeature();
         builder.Services.AddModelsFeature();
         builder.Services.AddProjectsFeature();

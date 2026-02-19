@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<!-- Common properties are now in Directory.Build.props -->
 
 	<ItemGroup>
-		<ProjectReference Include="..\PaintingProjectsManagement.Features.Materials.Abstractions\PaintingProjectsManagement.Features.Materials.Integration.csproj" />
+		<ProjectReference Include="..\PaintingProjectsManagement.Features.Materials.Core.Contracts\PaintingProjectsManagement.Features.Materials.Core.Contracts.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

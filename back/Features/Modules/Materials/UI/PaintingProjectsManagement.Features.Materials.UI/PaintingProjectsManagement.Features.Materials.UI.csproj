@@ -14,12 +14,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\Authentication\PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj" />
-    <ProjectReference Include="..\..\..\Shared\Common\PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj" />
+    <ProjectReference Include="..\..\Web\PaintingProjectsManagement.Features.Materials.Web.Contracts\PaintingProjectsManagement.Features.Materials.Web.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\Authentication\PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj" />
+    <ProjectReference Include="..\..\..\..\Shared\Common\PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
-
-</Project> 
+</Project>

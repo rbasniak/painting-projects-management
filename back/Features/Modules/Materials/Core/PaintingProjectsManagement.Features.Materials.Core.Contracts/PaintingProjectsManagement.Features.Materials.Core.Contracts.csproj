@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Common properties are now in Directory.Build.props -->
+
+</Project>

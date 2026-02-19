@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Features\Modules\Inventory\Core\PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.Core.csproj" />
-    <ProjectReference Include="..\..\Features\Modules\Materials\PaintingProjectsManagement.Features.Materials\PaintingProjectsManagement.Features.Materials.csproj" />
+    <ProjectReference Include="..\..\Features\Modules\Materials\Core\PaintingProjectsManagement.Features.Materials.Core\PaintingProjectsManagement.Features.Materials.Core.csproj" />
     <ProjectReference Include="..\..\Features\Modules\Models\PaintingProjectsManagement.Features.Models\PaintingProjectsManagement.Features.Models.csproj" />
     <ProjectReference Include="..\..\Features\Modules\Projects\PaintingProjectsManagement.Features.Projects\PaintingProjectsManagement.Features.Projects.csproj" />
   </ItemGroup>
