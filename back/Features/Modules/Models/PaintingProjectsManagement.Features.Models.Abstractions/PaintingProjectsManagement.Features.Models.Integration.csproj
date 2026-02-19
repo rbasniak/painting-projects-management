@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Common properties are now in Directory.Build.props -->
+	<ItemGroup>
+		<PackageReference Include="rbkApiModules.Commons.Core" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\..\Infrastructure\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
+	</ItemGroup>
+</Project>

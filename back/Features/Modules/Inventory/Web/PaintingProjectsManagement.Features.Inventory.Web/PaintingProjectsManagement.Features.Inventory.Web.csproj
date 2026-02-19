@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk"><!-- Common properties are now in Directory.Build.props -->
+
+	<ItemGroup>
+		<PackageReference Include="rbkApiModules.Identity.Core" />
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\UI\PaintingProjectsManagement.Features.Inventory.UI\PaintingProjectsManagement.Features.Inventory.UI.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory.Web.Contracts\PaintingProjectsManagement.Features.Inventory.Web.Contracts.csproj" />
+    <ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Infrastructure\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UseCases\Catalog\Queries\" />
+  </ItemGroup>
+</Project>

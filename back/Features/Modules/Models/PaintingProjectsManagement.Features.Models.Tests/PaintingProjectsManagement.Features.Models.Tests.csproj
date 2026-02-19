@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Common test properties and packages are now in Directory.Build.props -->
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Shared\Testing\PaintingProjectsManagement.Testing.Core\PaintingProjectsManagement.Testing.Core.csproj" />
+		<ProjectReference Include="..\..\..\..\Database\PaintingProjectsManagment.Database\PaintingProjectsManagment.Database.csproj" />
+		<ProjectReference Include="..\..\..\..\Application\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj" /> 
+	</ItemGroup>
+
+</Project>
