@@ -14,8 +14,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Features\Modules\Inventory\Core\PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.Core.csproj" />
     <ProjectReference Include="..\..\Features\Modules\Materials\Core\PaintingProjectsManagement.Features.Materials.Core\PaintingProjectsManagement.Features.Materials.Core.csproj" />
-    <ProjectReference Include="..\..\Features\Modules\Models\PaintingProjectsManagement.Features.Models\PaintingProjectsManagement.Features.Models.csproj" />
-    <ProjectReference Include="..\..\Features\Modules\Projects\PaintingProjectsManagement.Features.Projects\PaintingProjectsManagement.Features.Projects.csproj" />
+    <ProjectReference Include="..\..\Features\Modules\Models\Core\PaintingProjectsManagement.Features.Models.Core\PaintingProjectsManagement.Features.Models.Core.csproj" />
+    <ProjectReference Include="..\..\Features\Modules\Projects\Core\PaintingProjectsManagement.Features.Projects.Core\PaintingProjectsManagement.Features.Projects.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+<PropertyGroup>
+	<!-- Common properties are now in Directory.Build.props -->
+<UseRazorBuildServer>false</UseRazorBuildServer>
+<SupportedPlatform>Browser</SupportedPlatform>
+<DisableImplicitAspNetCoreFrameworkReference>true</DisableImplicitAspNetCoreFrameworkReference>
+</PropertyGroup>
+
+<ItemGroup>
+  <Content Include="UI\Dialogs\ProjectCostBreakdownDialog.razor.codex2" />
+  <Content Include="UI\Dialogs\ProjectCostBreakdownDialog.razor.AntiGravity" />
+  <Content Include="UI\Dialogs\ProjectCostBreakdownDialog.razor.codex1" />
+  <Content Include="UI\Dialogs\ProjectCostBreakdownDialog.razor.cursor" />
+</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" />
+		<PackageReference Include="MudBlazor" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\..\Shared\Authentication\PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj" />
+	  <ProjectReference Include="..\..\..\..\Shared\Common\PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj" />
+	  <ProjectReference Include="..\..\Web\PaintingProjectsManagement.Features.Projects.Web.Contracts\PaintingProjectsManagement.Features.Projects.Web.Contracts.csproj" />
+	  <ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Projects.Core.Contracts\PaintingProjectsManagement.Features.Projects.Core.Contracts.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+</Project>
+

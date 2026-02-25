@@ -1,0 +1,127 @@
+@page "/models/categories"
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Models 
+@using PaintingProjectsManagement.UI.Modules.Models.UI.Dialogs
+@using PaintingProjectsManagement.UI.Modules.Shared
+
+<MudPaper Class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
+        <MudText Typo="Typo.h5">Model Categories</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Add">Add</MudButton>
+    </MudStack>
+
+    <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" Class="mb-2" />
+
+    <MudTable Items="sortedCategories" Hover="true" Dense="true" RowsPerPage="10" SortLabel="Sort by" @bind-TableState="tableState">
+        <HeaderContent>
+            <MudTh Style="width: 80%">
+                <MudTableSortLabel SortBy="new Func<ModelCategoryDetails, object>(x => x.Name)">Name</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 20%"></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name" Style="width: 80%">@context.Name</MudTd>
+            <MudTd Style="width: 20%">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
+
+@code {
+    [Inject] public IModelCategoriesService ModelCategoriesService { get; set; } = default!;
+    [Inject] public IDialogService DialogService { get; set; } = default!;
+
+    private List<ModelCategoryDetails> categories = new();
+    private string searchString = string.Empty;
+    private TableState tableState = new();
+
+    private IEnumerable<ModelCategoryDetails> sortedCategories
+    {
+        get
+        {
+            var filtered = categories.Where(x => string.IsNullOrWhiteSpace(searchString) ||
+                x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+
+            if (tableState.SortLabel == "Name")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(x => x.Name)
+                    : filtered.OrderByDescending(x => x.Name);
+            }
+
+            return filtered;
+        }
+    }
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        categories = (await ModelCategoriesService.GetAllAsync(CancellationToken.None)).ToList();
+    }
+
+    private async Task Add()
+    {
+        var parameters = new DialogParameters { ["Category"] = new ModelCategoryDetails() };
+        var dialog = await DialogService.ShowAsync<ModelCategoriesDialog>("Model Category", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled && result.Data is ModelCategoryDetails input)
+        {
+            var request = new CreateModelCategoryRequest
+            {
+                Name = input.Name
+            };
+            var created = await ModelCategoriesService.CreateAsync(request, CancellationToken.None);
+            categories.Add(created);
+        }
+    }
+
+    private async Task Edit(ModelCategoryDetails category)
+    {
+        var input = new ModelCategoryDetails
+        {
+            Id = category.Id,
+            Name = category.Name
+        };
+        var parameters = new DialogParameters { ["Category"] = input };
+        var dialog = await DialogService.ShowAsync<ModelCategoriesDialog>("Model Category", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled && result.Data is ModelCategoryDetails updatedInput)
+        {
+            if (updatedInput.Id == Guid.Empty)
+            {
+                return;
+            }
+
+            var request = new UpdateModelCategoryRequest
+            {
+                Id = updatedInput.Id,
+                Name = updatedInput.Name
+            };
+            var updated = await ModelCategoriesService.UpdateAsync(request, CancellationToken.None);
+            var index = categories.FindIndex(x => x.Id == updated.Id);
+            if (index >= 0)
+                categories[index] = updated;
+        }
+    }
+
+    private async Task Delete(ModelCategoryDetails category)
+    {
+        bool? confirm = await DialogService.ShowMessageBox(
+            "Delete Model Category",
+            $"Delete '{category.Name}'?",
+            yesText: "Delete",
+            cancelText: "Cancel");
+
+        if (confirm == true)
+        {
+            await ModelCategoriesService.DeleteAsync(category.Id, CancellationToken.None);
+            categories.Remove(category);
+        }
+    }
+}

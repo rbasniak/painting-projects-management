@@ -13,7 +13,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\..\Application\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj" />
 		<ProjectReference Include="..\..\..\..\..\Database\PaintingProjectsManagment.Database\PaintingProjectsManagment.Database.csproj" />
-		<ProjectReference Include="..\..\..\..\Modules\Projects\PaintingProjectsManagement.Features.Projects\PaintingProjectsManagement.Features.Projects.csproj" />
+		<ProjectReference Include="..\..\..\..\Projects\Core\PaintingProjectsManagement.Features.Projects.Core\PaintingProjectsManagement.Features.Projects.Core.csproj" />
 		<ProjectReference Include="..\..\..\..\Shared\Testing\PaintingProjectsManagement.Testing.Core\PaintingProjectsManagement.Testing.Core.csproj" />
 		<ProjectReference Include="..\..\Integrations\PaintingProjectsManagement.Features.Materials.Integrations.Contracts\PaintingProjectsManagement.Features.Materials.Integrations.Contracts.csproj" />
 		<ProjectReference Include="..\PaintingProjectsManagement.Features.Materials.Web\PaintingProjectsManagement.Features.Materials.Web.csproj" />

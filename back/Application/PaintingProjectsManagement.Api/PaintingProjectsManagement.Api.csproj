@@ -32,8 +32,8 @@
     <ProjectReference Include="..\..\Features\Modules\Materials\Web\PaintingProjectsManagement.Features.Materials.Web\PaintingProjectsManagement.Features.Materials.Web.csproj" />
     <ProjectReference Include="..\..\Features\Modules\Materials\Integrations\PaintingProjectsManagement.Features.Materials.Integration\PaintingProjectsManagement.Features.Materials.Integrations.csproj" />
     <ProjectReference Include="..\..\Features\Modules\Inventory\Core\PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.Core.csproj" />
-    <ProjectReference Include="..\..\Features\Modules\Models\PaintingProjectsManagement.Features.Models\PaintingProjectsManagement.Features.Models.csproj" />
-    <ProjectReference Include="..\..\Features\Modules\Projects\PaintingProjectsManagement.Features.Projects\PaintingProjectsManagement.Features.Projects.csproj" />
+    <ProjectReference Include="..\..\Features\Modules\Models\Web\PaintingProjectsManagement.Features.Models.Web\PaintingProjectsManagement.Features.Models.Web.csproj" />
+    <ProjectReference Include="..\..\Features\Modules\Projects\Web\PaintingProjectsManagement.Features.Projects.Web\PaintingProjectsManagement.Features.Projects.Web.csproj" />
     <ProjectReference Include="..\..\Aspire\PaintingProjectsManagement.ServiceDefaults\PaintingProjectsManagement.ServiceDefaults.csproj" />
     <ProjectReference Include="..\..\Database\PaintingProjectsManagment.Database\PaintingProjectsManagment.Database.csproj" />
   </ItemGroup>

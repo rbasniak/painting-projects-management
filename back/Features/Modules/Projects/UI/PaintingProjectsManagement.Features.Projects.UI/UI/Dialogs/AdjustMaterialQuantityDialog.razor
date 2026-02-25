@@ -1,0 +1,102 @@
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Projects
+@using PaintingProjectsManagement.UI.Modules.Shared
+
+@namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="3">
+            <MudText Typo="Typo.h6">@Material.MaterialName</MudText>
+            <MudText Typo="Typo.body2">Category: @Material.CategoryName</MudText>
+            <MudText Typo="Typo.body2">Current Quantity: @Material.QuantityFormatted</MudText>
+            
+            <MudNumericField @bind-Value="quantity" 
+                            Label="Quantity" 
+                            Variant="Variant.Outlined"
+                            Min="0"
+                            Step="0.1"
+                            HelperText="Set to 0 to remove material from project"
+                            Immediate="true" />
+            
+            <MudStack Row="true" Spacing="2" Justify="Justify.Center">
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustQuantity(-100)">-100</MudButton>
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustQuantity(-10)">-10</MudButton>
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustQuantity(-1)">-1</MudButton>
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustQuantity(1)">+1</MudButton>
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustQuantity(10)">+10</MudButton>
+                <MudButton Variant="Variant.Outlined" 
+                          Color="Color.Secondary" 
+                          Size="Size.Large"
+                          OnClick="() => AdjustQuantity(100)">+100</MudButton>
+            </MudStack>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Submit" Color="Color.Primary" Size="Size.Large" Variant="Variant.Filled">Confirm</MudButton>
+        <MudButton OnClick="Cancel" Size="Size.Large">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter] public ProjectMaterialDetails Material { get; set; } = default!;
+    [Parameter] public string ProjectId { get; set; }
+    
+    [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+
+    private double quantity;
+
+    protected override void OnInitialized()
+    {
+        quantity = Material.Quantity;
+    }
+
+    private void AdjustQuantity(double delta)
+    {
+        quantity = Math.Max(0, quantity + delta);
+    }
+
+    private async Task Submit()
+    {
+        try
+        {
+            var request = new UpdateProjectMaterialRequest
+            {
+                ProjectId = new Guid(ProjectId),
+                MaterialId = Material.MaterialId,
+                Quantity = quantity,
+                Unit = Material.Unit
+            };
+
+            await ProjectsService.UpdateProjectMaterialAsync(request, default);
+            Snackbar.Add(quantity == 0 ? "Material removed from project" : "Quantity updated successfully", Severity.Success);
+            MudDialog?.Close(DialogResult.Ok(true));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error updating quantity: {ex.Message}", Severity.Error);
+        }
+    }
+    
+    private void Cancel()
+    {
+        MudDialog?.Cancel();
+    }
+}

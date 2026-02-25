@@ -1,0 +1,206 @@
+@page "/projects/my-projects"
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Projects 
+@using PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
+@using PaintingProjectsManagement.UI.Modules.Shared
+@using System.Text.Json
+
+<MudPaper Class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
+        <MudText Typo="Typo.h5">My Projects</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Add">Add</MudButton>
+    </MudStack>
+
+    <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" Class="mb-2" />
+
+    <MudTable Items="sortedProjects" Hover="true" Dense="true" RowsPerPage="10" SortLabel="Sort by" @bind-TableState="tableState">
+        <HeaderContent>
+            <MudTh Style="width: 50%">
+                <MudTableSortLabel SortBy="new Func<ProjectDetails, object>(x => x.Name)">Name</MudTableSortLabel>
+            </MudTh>
+            <MudTh Style="width: 100px"></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name" Style="width: 50%">@context.Name</MudTd>
+            <MudTd Style="width: 150px">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
+                <MudIconButton Icon="@Icons.Material.Filled.PlayArrow" OnClick="() => NavigateToExecution(context)" Color="Color.Success" Title="Execution" />
+                <MudMenu>
+                    <ActivatorContent>
+                        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Primary" />
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem OnClick="() => GetProjectCost(context)">
+                            <MudIcon Icon="@Icons.Material.Filled.CurrencyExchange" Class="mr-3" />
+                            Costs
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="() => OpenColorZones(context)">
+                            <MudIcon Icon="@Icons.Material.Filled.Palette" Class="mr-3" />
+                            Color Zones
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="() => OpenMatchPaints(context)">
+                            <MudIcon Icon="@Icons.Material.Filled.Colorize" Class="mr-3" />
+                            Match Paints
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="() => OpenReferencePictures(context)">
+                            <MudIcon Icon="@Icons.Material.Filled.Image" Class="mr-3" />
+                            Reference Pictures
+                        </MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</MudPaper>
+
+@code {
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public IDialogService DialogService { get; set; } = default!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+
+    private List<ProjectDetails> projects = new();
+    private string searchString = string.Empty;
+    private TableState tableState = new();
+
+    private IEnumerable<ProjectDetails> sortedProjects
+    {
+        get
+        {
+            var filtered = projects.Where(x => string.IsNullOrWhiteSpace(searchString) ||
+                x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
+
+            if (tableState.SortLabel == "Name")
+            {
+                filtered = tableState.SortDirection == SortDirection.Ascending 
+                    ? filtered.OrderBy(x => x.Name)
+                    : filtered.OrderByDescending(x => x.Name);
+            } 
+
+            return filtered;
+        }
+    }
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        projects = (await ProjectsService.GetAllAsync(default)).ToList();
+    }
+
+    private async Task Add()
+    {
+        var parameters = new DialogParameters { ["Model"] = new ProjectDetails() };
+        var dialog = DialogService.Show<ProjectsDialog>("Project", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled && result.Data is ProjectDetails input)
+        {
+            var request = new CreateProjectRequest
+            {
+                Name = input.Name,
+            };
+            var created = await ProjectsService.CreateAsync(request, default);
+            projects.Add(created);
+        }
+    }
+
+    private async Task GetProjectCost(ProjectDetails project)
+    {
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+        var dialog = DialogService.Show<ProjectCostBreakdownDialog>(title: null, parameters, options);
+    }
+
+    private async Task OpenColorZones(ProjectDetails project)
+    {
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+        var dialog = DialogService.Show<ColorGroupsDialog>(title: null, parameters, options);
+    }
+
+    private async Task OpenMatchPaints(ProjectDetails project)
+    {
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+        var dialog = DialogService.Show<MatchPaintsDialog>(title: null, parameters, options);
+    }
+
+    private async Task OpenReferencePictures(ProjectDetails project)
+    {
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.ExtraLarge,
+            FullWidth = true,
+            CloseButton = true,
+            CloseOnEscapeKey = true
+        };
+
+        var dialogTitle = projectDetails.Name;
+        await DialogService.ShowAsync<ProjectReferencePicturesDialog>(dialogTitle, parameters, options);
+    }
+
+    private async Task Edit(ProjectDetails project)
+    {
+        var input = new ProjectDetails
+        {
+            Id = project.Id,
+            Name = project.Name,
+        };
+        var parameters = new DialogParameters { ["Model"] = input };
+        var dialog = DialogService.Show<ProjectsDialog>("Project", parameters);
+        var result = await dialog.Result;
+        if (!result.Canceled && result.Data is ProjectDetails updatedInput)
+        {
+            if (updatedInput.Id == Guid.Empty)
+            {
+                return;
+            }
+
+            var request = new UpdateProjectRequest
+            {
+                Id = updatedInput.Id,
+                Name = updatedInput.Name,
+            };
+            var updated = await ProjectsService.UpdateAsync(request, default);
+            var index = projects.FindIndex(x => x.Id == updated.Id);
+            if (index >= 0)
+            {
+                projects[index] = updated;
+            }
+        }
+    }
+
+    private async Task Delete(ProjectDetails project)
+    {
+        bool? confirm = await DialogService.ShowMessageBox(
+            "Delete Project",
+            $"Delete '{project.Name}'?",
+            yesText: "Delete",
+            cancelText: "Cancel");
+
+        if (confirm == true)
+        {
+            await ProjectsService.DeleteAsync(project.Id, default);
+            projects.Remove(project);
+        }
+    }
+
+    private void NavigateToExecution(ProjectDetails project)
+    {
+        Console.WriteLine(JsonSerializer.Serialize(project));
+
+        NavigationManager.NavigateTo($"/projects/{project.Id}/execution");
+    }
+} 

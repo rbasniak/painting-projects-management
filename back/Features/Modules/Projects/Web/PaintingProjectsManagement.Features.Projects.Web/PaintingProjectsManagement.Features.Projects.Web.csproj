@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Common properties are now in Directory.Build.props -->
+
+  <ItemGroup>
+    <PackageReference Include="rbkApiModules.Identity.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Projects.Core\PaintingProjectsManagement.Features.Projects.Core.csproj" />
+    <ProjectReference Include="..\PaintingProjectsManagement.Features.Projects.Web.Contracts\PaintingProjectsManagement.Features.Projects.Web.Contracts.csproj" />
+    <ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Projects.Core.Contracts\PaintingProjectsManagement.Features.Projects.Core.Contracts.csproj" />
+    <ProjectReference Include="..\..\Integrations\PaintingProjectsManagement.Features.Projects.Integrations\PaintingProjectsManagement.Features.Projects.Integrations.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Features\Shared\Currency\PaintingProjectsManagement.Features.Currency\PaintingProjectsManagement.Features.Currency.csproj" />
+    <ProjectReference Include="..\..\..\Inventory\Integrations\PaintingProjectsManagement.Features.Inventory.Integration\PaintingProjectsManagement.Features.Inventory.Integrations.csproj" />
+    <ProjectReference Include="..\..\..\Materials\Integrations\PaintingProjectsManagement.Features.Materials.Integrations.Contracts\PaintingProjectsManagement.Features.Materials.Integrations.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Infrastructure\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
+  </ItemGroup>
+
+</Project>

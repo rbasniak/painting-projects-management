@@ -1,0 +1,214 @@
+namespace PaintingProjectsManagement.Features.Projects;
+
+public class Project : TenantEntity
+{
+    private HashSet<MaterialForProject> _materials = new();
+    private HashSet<ProjectReference> _references = new();
+    private HashSet<ProjectPicture> _pictures = new();
+    private HashSet<ColorGroup> _colorGroups = new();
+    private HashSet<ProjectStepData> _steps = new();
+
+    // EF Core constructor, don't remote it
+    private Project()
+    {
+        
+    }
+
+    public Project(string tenant, string name, DateTime startDate, Guid? modelId)
+    {
+        TenantId = tenant;
+        Name = name;
+        StartDate = startDate;
+        ModelId = modelId ?? null;
+
+        _materials = new HashSet<MaterialForProject>();
+        _references = new HashSet<ProjectReference>();
+        _pictures = new HashSet<ProjectPicture>();
+        _steps = new HashSet<ProjectStepData>();
+        _colorGroups = new HashSet<ColorGroup>();
+    }
+
+    public string Name { get; private set; } = string.Empty;
+    public string? PictureUrl { get; private set; } = string.Empty;
+    public DateTime StartDate { get; private set; }
+    public DateTime? EndDate { get; private set; }
+    public Guid? ModelId { get; private set; }
+
+    public IEnumerable<MaterialForProject> Materials => _materials.AsReadOnly();
+    public IEnumerable<ProjectReference> References => _references.AsReadOnly();
+    public IEnumerable<ProjectPicture> Pictures => _pictures.AsReadOnly();
+    public IEnumerable<ColorGroup> ColorGroups => _colorGroups.AsReadOnly();
+    public IEnumerable<ProjectStepData> Steps => _steps.AsReadOnly();
+
+    public void UpdateDetails(string name, string pictureUrl, DateTime? startDate, DateTime? endDate)
+    {
+        Name = name;
+        PictureUrl = pictureUrl;
+        StartDate = startDate != null ? startDate.Value : StartDate;    
+        EndDate = endDate;
+    }
+
+    public void ConsumeMaterial(Guid materialId, double quantity, MaterialUnit unit)
+    {
+        // TODO: make it idempotent, also:
+        // User can send the same material multiple times, we should aggregate it
+        // How to handle different units for the same material?
+
+        _materials.Add(new MaterialForProject(Id, materialId, quantity, unit));
+
+        RaiseDomainEvent(new ProjectMaterialAdded(Id, materialId, quantity));
+    }
+
+    public void AddExecutionWindow(ProjectStepDefinition step, DateTime start, DateTime end)
+    {
+        _steps.Add(new ProjectStepData(Id, step, start, end));
+        RaiseDomainEvent(new BuildingStepAddedToTheProject(Id, (int)step, start, end));
+    }
+
+    public void AddExecutionWindow(ProjectStepDefinition step, DateTime start, double duration)
+    {
+        _steps.Add(new ProjectStepData(Id, step, start, duration));
+        var end = start.AddHours(duration);
+        RaiseDomainEvent(new BuildingStepAddedToTheProject(Id, (int)step, start, end));
+    }
+
+    internal double GetTotalWorkingHours()
+    {
+        if (_steps == null)
+        {
+            throw new InvalidOperationException($"Property {nameof(Steps)} is not loaded from the database");
+        }
+
+        return _steps
+            .Where(x => x.Step is
+                ProjectStepDefinition.Planning or
+                ProjectStepDefinition.Supporting or
+                ProjectStepDefinition.PostProcessing or 
+                ProjectStepDefinition.Cleaning or 
+                ProjectStepDefinition.Painting)
+            .Sum(step => step.Duration);
+    }
+
+    internal double GetTotalPrintingTimeInHours()
+    {
+        if (_steps == null)
+        {
+            throw new InvalidOperationException($"Property {nameof(Steps)} is not loaded from the database");
+        }
+
+        return _steps
+            .Where(x => x.Step is ProjectStepDefinition.Printing)
+            .Sum(step => step.Duration);
+    }
+
+    public void UpdateMaterialQuantity(Guid materialId, double quantity, MaterialUnit unit)
+    {
+        if (quantity <= 0)
+        {
+            RemoveMaterial(materialId);
+            return;
+        }
+
+        var material = _materials.FirstOrDefault(x => x.MaterialId == materialId);
+        if (material != null)
+        {
+            var oldQuantity = material.Quantity.Value;
+            material.UpdateQuantity(quantity, unit);
+            RaiseDomainEvent(new ProjectMaterialQuantityChanged(Id, materialId, quantity));
+        }
+        else
+        {
+            // Material doesn't exist, add it
+            ConsumeMaterial(materialId, quantity, unit);
+        }
+    }
+
+    public void RemoveMaterial(Guid materialId)
+    {
+        var material = _materials.FirstOrDefault(x => x.MaterialId == materialId);
+        if (material != null)
+        {
+            _materials.Remove(material);
+            RaiseDomainEvent(new ProjectMaterialRemoved(Id, materialId));
+        }
+    }
+
+    public void UpdateStep(Guid stepId, DateTime? date, double? duration)
+    {
+        var step = _steps.FirstOrDefault(x => x.Id == stepId);
+        if (step == null)
+        {
+            throw new InvalidOperationException($"Step with id {stepId} not found");
+        }
+
+        var oldDate = step.Date;
+        var oldDuration = step.Duration;
+        
+        step.Update(date, duration);
+        
+        var newDate = date ?? oldDate;
+        var newDuration = duration ?? oldDuration;
+        var endDate = newDate.AddHours(newDuration);
+        
+        RaiseDomainEvent(new BuildingStepUpdated(Id, stepId, newDate, endDate));
+    }
+
+    public void RemoveStep(Guid stepId)
+    {
+        var step = _steps.FirstOrDefault(x => x.Id == stepId);
+        if (step != null)
+        {
+            _steps.Remove(step);
+            RaiseDomainEvent(new BuildingStepRemoved(Id, stepId));
+        }
+    }
+
+    public void AddColorGroup(ColorGroup group)
+    {
+        if (group == null)
+        {
+            throw new ArgumentNullException(nameof(group));
+        }
+
+        if (group.ProjectId != Id)
+        {
+            throw new InvalidOperationException("ColorGroup's ProjectId does not match this Project's Id.");
+        }
+
+        _colorGroups.Add(group);
+    }
+
+    public void RemoveColorGroup(Guid colorGroupId)
+    {
+        var group = _colorGroups.FirstOrDefault(x => x.Id == colorGroupId);
+        if (group != null)
+        {
+            _colorGroups.Remove(group);
+        }
+    }
+
+    public void AddReferencePicture(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            throw new ArgumentException("URL cannot be null or empty.", nameof(url));
+        }
+
+        var reference = new ProjectReference(Id, url);
+        _references.Add(reference);
+    }
+
+    public void RemoveReferencePicture(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return;
+        }
+
+        var reference = _references.FirstOrDefault(x => x.Url == url);
+        if (reference != null)
+        {
+            _references.Remove(reference);
+        }
+    }
+}

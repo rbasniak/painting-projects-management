@@ -1,0 +1,30 @@
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Projects
+@using PaintingProjectsManagement.UI.Modules.Shared
+
+@namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
+
+<MudDialog>
+    <DialogContent>
+        <MudStack Spacing="3">
+            <MudText Typo="Typo.h6">Add Material to Project</MudText>
+            <MudAlert Severity="Severity.Info">
+                Material wizard will be implemented in a future update. For now, please use the API directly or add materials through another interface.
+            </MudAlert>
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel" Size="Size.Large">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter] public string ProjectId { get; set; }
+    
+    [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
+    
+    private void Cancel()
+    {
+        MudDialog?.Cancel();
+    }
+}

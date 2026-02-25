@@ -56,17 +56,38 @@
     <Project Path="Features/Modules/Materials/UI/PaintingProjectsManagement.Features.Materials.UI.Tests/PaintingProjectsManagement.Features.Materials.UI.Tests.csproj" />
     <Project Path="Features/Modules/Materials/UI/PaintingProjectsManagement.Features.Materials.UI/PaintingProjectsManagement.Features.Materials.UI.csproj" />
   </Folder>
-  <Folder Name="/Features/Modules/Models/">
-    <Project Path="Features/Modules/Models/PaintingProjectsManagement.Features.Models.Abstractions/PaintingProjectsManagement.Features.Models.Integration.csproj" />
-    <Project Path="Features/Modules/Models/PaintingProjectsManagement.Features.Models.Tests/PaintingProjectsManagement.Features.Models.Tests.csproj" />
-    <Project Path="Features/Modules/Models/PaintingProjectsManagement.Features.Models/PaintingProjectsManagement.Features.Models.csproj" />
-    <Project Path="Features/Modules/Models/PaintingProjectsManagement.UI.Modules.Models/PaintingProjectsManagement.Features.Models.UI.csproj" />
+  <Folder Name="/Features/Modules/Models/" />
+  <Folder Name="/Features/Modules/Models/Core/">
+    <Project Path="Features/Modules/Models/Core/PaintingProjectsManagement.Features.Models.Core/PaintingProjectsManagement.Features.Models.Core.csproj" />
+    <Project Path="Features/Modules/Models/Core/PaintingProjectsManagement.Features.Models.Core.Contracts/PaintingProjectsManagement.Features.Models.Core.Contracts.csproj" />
   </Folder>
-  <Folder Name="/Features/Modules/Projects/">
-    <Project Path="Features/Modules/Projects/PaintingProjectsManagement.Features.Projects.Abstractions/PaintingProjectsManagement.Features.Projects.Integration.csproj" />
-    <Project Path="Features/Modules/Projects/PaintingProjectsManagement.Features.Projects.Tests/PaintingProjectsManagement.Features.Projects.Tests.csproj" />
-    <Project Path="Features/Modules/Projects/PaintingProjectsManagement.Features.Projects.UI/PaintingProjectsManagement.Features.Projects.UI.csproj" />
-    <Project Path="Features/Modules/Projects/PaintingProjectsManagement.Features.Projects/PaintingProjectsManagement.Features.Projects.csproj" />
+  <Folder Name="/Features/Modules/Models/Web/">
+    <Project Path="Features/Modules/Models/Web/PaintingProjectsManagement.Features.Models.Web/PaintingProjectsManagement.Features.Models.Web.csproj" />
+    <Project Path="Features/Modules/Models/Web/PaintingProjectsManagement.Features.Models.Web.Contracts/PaintingProjectsManagement.Features.Models.Web.Contracts.csproj" />
+    <Project Path="Features/Modules/Models/Web/PaintingProjectsManagement.Features.Models.Web.Tests/PaintingProjectsManagement.Features.Models.Web.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Features/Modules/Models/Integrations/">
+    <Project Path="Features/Modules/Models/Integrations/PaintingProjectsManagement.Features.Models.Integrations.Contracts/PaintingProjectsManagement.Features.Models.Integrations.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/Features/Modules/Models/UI/">
+    <Project Path="Features/Modules/Models/UI/PaintingProjectsManagement.Features.Models.UI/PaintingProjectsManagement.Features.Models.UI.csproj" />
+  </Folder>
+  <Folder Name="/Features/Modules/Projects/" />
+  <Folder Name="/Features/Modules/Projects/Core/">
+    <Project Path="Features/Modules/Projects/Core/PaintingProjectsManagement.Features.Projects.Core/PaintingProjectsManagement.Features.Projects.Core.csproj" />
+    <Project Path="Features/Modules/Projects/Core/PaintingProjectsManagement.Features.Projects.Core.Contracts/PaintingProjectsManagement.Features.Projects.Core.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/Features/Modules/Projects/Web/">
+    <Project Path="Features/Modules/Projects/Web/PaintingProjectsManagement.Features.Projects.Web/PaintingProjectsManagement.Features.Projects.Web.csproj" />
+    <Project Path="Features/Modules/Projects/Web/PaintingProjectsManagement.Features.Projects.Web.Contracts/PaintingProjectsManagement.Features.Projects.Web.Contracts.csproj" />
+    <Project Path="Features/Modules/Projects/Web/PaintingProjectsManagement.Features.Projects.Web.Tests/PaintingProjectsManagement.Features.Projects.Web.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Features/Modules/Projects/Integrations/">
+    <Project Path="Features/Modules/Projects/Integrations/PaintingProjectsManagement.Features.Projects.Integrations/PaintingProjectsManagement.Features.Projects.Integrations.csproj" />
+    <Project Path="Features/Modules/Projects/Integrations/PaintingProjectsManagement.Features.Projects.Integrations.Contracts/PaintingProjectsManagement.Features.Projects.Integrations.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/Features/Modules/Projects/UI/">
+    <Project Path="Features/Modules/Projects/UI/PaintingProjectsManagement.Features.Projects.UI/PaintingProjectsManagement.Features.Projects.UI.csproj" />
   </Folder>
   <Folder Name="/Features/Shared/" />
   <Folder Name="/Features/Shared/Authentication/">

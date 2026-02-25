@@ -13,9 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Features\Modules\Projects\PaintingProjectsManagement.Features.Projects.UI\PaintingProjectsManagement.Features.Projects.UI.csproj" />
+    <ProjectReference Include="..\..\Features\Modules\Projects\UI\PaintingProjectsManagement.Features.Projects.UI\PaintingProjectsManagement.Features.Projects.UI.csproj" />
     <ProjectReference Include="..\..\Features\Modules\Inventory\UI\PaintingProjectsManagement.Features.Inventory.UI\PaintingProjectsManagement.Features.Inventory.UI.csproj" />
-    <ProjectReference Include="..\..\Features\Modules\Models\PaintingProjectsManagement.UI.Modules.Models\PaintingProjectsManagement.Features.Models.UI.csproj" />
+    <ProjectReference Include="..\..\Features\Modules\Models\UI\PaintingProjectsManagement.Features.Models.UI\PaintingProjectsManagement.Features.Models.UI.csproj" />
     <ProjectReference Include="..\..\Features\Shared\Common\PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj" />
     <ProjectReference Include="..\..\Features\Shared\Authentication\PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj" />
     <ProjectReference Include="..\..\Features\Modules\Materials\UI\PaintingProjectsManagement.Features.Materials.UI\PaintingProjectsManagement.Features.Materials.UI.csproj" />
