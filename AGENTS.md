@@ -23,7 +23,17 @@ All commands run from `/workspace/back`.
 
 ### Running the application
 
-The Aspire AppHost orchestrates everything. Pass `--allow-unsecured-transport` to avoid HTTPS cert issues in headless environments. The UI is served on port **5251** (HTTP) / **7114** (HTTPS), and the API on port **5191** (HTTP) / **7236** (HTTPS) via Aspire's dcpctrl proxy.
+The Aspire AppHost orchestrates everything. Pass `--allow-unsecured-transport` to avoid HTTPS cert issues in headless environments. The Aspire dashboard (at `https://localhost:17257`) shows all resource endpoints.
+
+**Important**: Always access the UI via the **HTTPS** endpoint `https://localhost:7114`, not the HTTP endpoint on port 5251. The API enforces HTTPS redirect, so the Blazor WASM client must be served over HTTPS for API calls to work through Aspire's service discovery. Using `http://localhost:5251` will cause login and all API calls to fail silently.
+
+| Service | URL |
+|---------|-----|
+| UI | `https://localhost:7114` |
+| API | `https://localhost:7236` |
+| Aspire Dashboard | `https://localhost:17257` |
+| pgAdmin | `http://localhost:5050` |
+| RabbitMQ Management | `http://localhost:15672` |
 
 ### Docker startup
 
