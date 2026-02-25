@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Common properties are now in Directory.Build.props -->
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\Shared\Currency\PaintingProjectsManagement.Features.Currency\PaintingProjectsManagement.Features.Currency.csproj" />
+		<ProjectReference Include="..\..\Inventory\Integrations\PaintingProjectsManagement.Features.Inventory.Integration\PaintingProjectsManagement.Features.Inventory.Integrations.csproj" />
+		<ProjectReference Include="..\..\Materials\Integrations\PaintingProjectsManagement.Features.Materials.Integrations.Contracts\PaintingProjectsManagement.Features.Materials.Integrations.Contracts.csproj" />
+		<ProjectReference Include="..\PaintingProjectsManagement.Features.Projects.Abstractions\PaintingProjectsManagement.Features.Projects.Integration.csproj" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+		<PackageReference Include="rbkApiModules.Commons.Core" />
+	</ItemGroup>
+
+</Project>

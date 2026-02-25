@@ -1,0 +1,27 @@
+@inject IEnumerable<IModule> Modules
+
+<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
+        Home
+    </MudNavLink>
+
+    @foreach (var module in Modules.OrderBy(x => x.Order))
+    {
+        <MudNavGroup Title="@module.Name" Icon="@module.Icon" Expanded="false">
+            @foreach (var route in module.Routes.OrderBy(x => x.Order))
+            {
+                <MudNavLink Href="@($"/{module.Route}/{route.Route}")"
+                            Icon="@route.Icon"
+                            Match="NavLinkMatch.Prefix">
+                    @route.Name
+                </MudNavLink>
+            }
+        </MudNavGroup>
+    }
+
+    <MudNavLink Href="/about"
+                Icon="@Icons.Material.Filled.Info"
+                Match="NavLinkMatch.Prefix">
+        About
+    </MudNavLink>
+</MudNavMenu>

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<DisableImplicitAspNetCoreFrameworkReference>true</DisableImplicitAspNetCoreFrameworkReference>
+	</PropertyGroup>
+
+	<!-- Common properties are now in Directory.Build.props -->
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Materials.Core.Contracts\PaintingProjectsManagement.Features.Materials.Core.Contracts.csproj" />
+		<ProjectReference Include="..\..\..\..\..\Infrastructure\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
+	</ItemGroup>
+</Project>

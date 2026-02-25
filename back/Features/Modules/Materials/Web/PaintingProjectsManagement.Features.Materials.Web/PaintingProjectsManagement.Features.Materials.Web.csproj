@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- Common properties are now in Directory.Build.props -->
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="rbkApiModules.Identity.Core" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Materials.Core\PaintingProjectsManagement.Features.Materials.Core.csproj" />
+		<ProjectReference Include="..\PaintingProjectsManagement.Features.Materials.Web.Contracts\PaintingProjectsManagement.Features.Materials.Web.Contracts.csproj" />
+		<ProjectReference Include="..\..\..\..\..\Infrastructure\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
+	</ItemGroup>
+</Project>

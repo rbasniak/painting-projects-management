@@ -1,0 +1,40 @@
+@using System.Reflection
+
+<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="@AdditionalAssemblies">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+            <p>Debug: @DebugInfo</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code {
+    private Assembly[] AdditionalAssemblies => GetAdditionalAssemblies();
+    
+    private string DebugInfo => $"Loaded assemblies: {string.Join(", ", GetAdditionalAssemblies().Select(x => x.GetName().Name))}";
+    
+    private Assembly[] GetAdditionalAssemblies()
+    {
+        try
+        {
+            var materialsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Materials.MaterialDetails))!;
+            var modelsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Models.ModelDetails))!;
+            var authAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.Blazor.Modules.Authentication.AuthenticationService))!;
+            var projectsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Projects.ProjectDetails))!;
+            var inventoryAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Inventory.MyPaintDetails))!;
+
+            return new[] { materialsAssembly, modelsAssembly, authAssembly, projectsAssembly, inventoryAssembly };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading assemblies: {ex.Message}");
+            return new Assembly[0];
+        }
+    }
+}

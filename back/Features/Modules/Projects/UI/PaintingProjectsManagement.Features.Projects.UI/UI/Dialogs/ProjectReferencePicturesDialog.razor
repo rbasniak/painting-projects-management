@@ -1,0 +1,196 @@
+@using MudBlazor
+@using Microsoft.AspNetCore.Components.Forms
+@using System.IO
+@using System.Linq
+@using System.Threading
+@using System
+@using PaintingProjectsManagement.UI.Modules.Projects
+
+@namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
+
+<MudDialog Class="pics-dialog">
+  <DialogContent>
+    <MudStack Spacing="2">
+      <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+        <ActivatorContent>
+          <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload">
+            Upload Files
+          </MudButton>
+        </ActivatorContent>
+      </MudFileUpload>
+
+            <MudGrid Class="cards-grid">
+                @foreach (var reference in _vm.References)
+                {
+                    <MudItem xs="12" sm="6" md="4" lg="3">
+                        <MudCard Class="pic-card">
+                            <MudCardContent Class="p-0">
+                                <div class="img-frame">
+                                    <img src="@GetPictureAddress(reference.Url)" alt="reference picture" class="img-fit" />
+                                </div>
+                            </MudCardContent>
+
+                            <MudCardActions Class="pic-actions">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
+                                               OnClick="@(() => DeletePicture(reference.Url))" />
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+    </MudStack>
+  </DialogContent>
+  <DialogActions>
+    <MudButton OnClick="Close">Close</MudButton>
+  </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter] public ProjectDetails Model { get; set; } = new();
+
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+
+    [CascadingParameter] public IMudDialogInstance? MudDialog { get; set; }
+
+    private ProjectDetailsViewModel _vm = new();
+
+    protected override void OnParametersSet()
+    {
+        _vm = ProjectDetailsViewModel.From(Model);
+    }
+
+    private void Close()
+    {
+        MudDialog?.Close();
+    }
+
+    private string GetPictureAddress(string url)
+    {
+        return $"https://localhost:7236/{url.Trim('/')}";
+    }
+
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+
+        using var memoryStream = new MemoryStream();
+        using (var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024, cancellationToken: default))
+        {
+            await stream.CopyToAsync(memoryStream, cancellationToken: default);
+        }
+
+        var fileBytes = memoryStream.ToArray();
+        var base64Data = Convert.ToBase64String(fileBytes);
+
+        // Determine MIME type from file content type or extension
+        var mimeType = file.ContentType;
+        if (string.IsNullOrWhiteSpace(mimeType))
+        {
+            // Fallback to extension-based MIME type detection
+            var extension = Path.GetExtension(file.Name).ToLowerInvariant();
+            mimeType = extension switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".webp" => "image/webp",
+                ".bmp" => "image/bmp",
+                _ => "image/jpeg" // default fallback
+            };
+        }
+
+        // Format as data URI: data:image/png;base64,<bytes>
+        var base64Image = $"data:{mimeType};base64,{base64Data}";
+
+        var updatedReferences = await ProjectsService.UploadReferencePictureAsync(new UploadProjectReferencePictureRequest
+        {
+            ProjectId = _vm.Id,
+            Base64Image = base64Image,
+            FileExtension = Path.GetExtension(file.Name)
+        }, cancellationToken: default);
+
+        // Update only the references in the VM
+        _vm.References = updatedReferences;
+
+        StateHasChanged();
+    }
+
+    private async Task DeletePicture(string pictureUrl)
+    {
+        await ProjectsService.DeleteReferencePictureAsync(_vm.Id, pictureUrl, CancellationToken.None);
+
+        // Update local VM immediately for responsive UI
+        _vm.References = _vm.References.Where(x => !string.Equals(x.Url, pictureUrl, StringComparison.Ordinal)).ToArray();
+
+        StateHasChanged();
+    }
+
+    private sealed class ProjectDetailsViewModel
+    {
+        public Guid Id { get; set; }
+        public UrlReference[] References { get; set; } = Array.Empty<UrlReference>();
+
+        public static ProjectDetailsViewModel From(ProjectDetails project)
+        {
+            ArgumentNullException.ThrowIfNull(project);
+
+            return new ProjectDetailsViewModel
+            {
+                Id = project.Id,
+                References = project.References?.ToArray() ?? Array.Empty<UrlReference>()
+            };
+        }
+
+        public void Apply(ProjectDetails project)
+        {
+            ArgumentNullException.ThrowIfNull(project);
+
+            Id = project.Id;
+            References = project.References?.ToArray() ?? Array.Empty<UrlReference>();
+        }
+    }
+}
+
+
+<style>
+    /* Bigger dialog */
+    .pics-dialog .mud-dialog {
+        width: min(1200px, 95vw);
+    }
+
+    .pics-dialog .mud-dialog-content {
+        max-height: 80vh;
+        overflow: auto;
+    }
+
+    /* Uniform cards */
+    .pic-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+    }
+
+    .img-frame {
+        aspect-ratio: 1 / 1;
+        width: 100%;
+        background: var(--mud-palette-background);
+        display: grid;
+        place-items: center;
+        overflow: hidden; /* keep anything from leaking out */
+    }
+
+    .img-fit {
+        width: 100%; /* must be explicit for object-fit to apply */
+        height: 100%; /* must be explicit for object-fit to apply */
+        object-fit: contain; /* now it will letterbox instead of stretching */
+        display: block;
+    }
+
+    .pic-actions {
+        margin-top: auto;
+        min-height: 56px;
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
