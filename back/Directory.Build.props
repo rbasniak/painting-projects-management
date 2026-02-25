@@ -31,8 +31,8 @@
   <PropertyGroup Condition="$(MSBuildProjectName.Contains('.Api')) or $(MSBuildProjectName.Contains('.AppHost'))">
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
- 
-  <ItemGroup>
+
+  <ItemGroup Condition="!$(MSBuildProjectName.Contains('.UI'))">
     <PackageReference Include="rbkApiModules.Analysers" />
   </ItemGroup>
 

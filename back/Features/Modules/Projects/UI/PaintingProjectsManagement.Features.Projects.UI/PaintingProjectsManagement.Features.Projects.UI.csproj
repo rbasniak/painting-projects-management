@@ -24,7 +24,6 @@
 	  <ProjectReference Include="..\..\..\..\Shared\Authentication\PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj" />
 	  <ProjectReference Include="..\..\..\..\Shared\Common\PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj" />
 	  <ProjectReference Include="..\..\Web\PaintingProjectsManagement.Features.Projects.Web.Contracts\PaintingProjectsManagement.Features.Projects.Web.Contracts.csproj" />
-	  <ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Projects.Core.Contracts\PaintingProjectsManagement.Features.Projects.Core.Contracts.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
