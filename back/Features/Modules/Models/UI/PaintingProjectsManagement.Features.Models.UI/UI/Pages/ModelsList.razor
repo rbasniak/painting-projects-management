@@ -71,6 +71,14 @@
     private string searchString = string.Empty;
     private TableState tableState = new();
 
+    private static DialogOptions BuildModelDialogOptions() => new()
+    {
+        MaxWidth = MaxWidth.Medium,
+        FullWidth = true,
+        CloseButton = true,
+        CloseOnEscapeKey = true
+    };
+
     private IEnumerable<ModelDetails> sortedModels
     {
         get
@@ -149,7 +157,7 @@
             ["AllModels"] = models
         };
 
-        var dialog = await DialogService.ShowAsync<ModelsDialog>("Model", parameters);
+        var dialog = await DialogService.ShowAsync<ModelsDialog>("Model", parameters, BuildModelDialogOptions());
         var result = await dialog.Result;
         if (!result.Canceled && result.Data is ModelDetails input)
         {
@@ -188,14 +196,15 @@
             Id = model.Id,
             Name = model.Name,
             Franchise = model.Franchise,
-            Characters = model.Characters,
-            Category = model.Category,
-            Type = model.Type,
+            Characters = model.Characters.ToArray(),
+            Category = new EntityReference(model.Category.Id, model.Category.Name),
+            Type = new EnumReference(model.Type.Id, model.Type.Value),
             Artist = model.Artist,
-            Tags = model.Tags,
+            Tags = model.Tags.ToArray(),
             CoverPicture = model.CoverPicture,
-            BaseSize = model.BaseSize,
-            FigureSize = model.FigureSize,
+            Pictures = model.Pictures.ToArray(),
+            BaseSize = new EnumReference(model.BaseSize.Id, model.BaseSize.Value),
+            FigureSize = new EnumReference(model.FigureSize.Id, model.FigureSize.Value),
             NumberOfFigures = model.NumberOfFigures,
             Size = model.Size,
             MustHave = model.MustHave
@@ -205,7 +214,7 @@
             ["Model"] = input,
             ["AllModels"] = models
         };
-        var dialog = await DialogService.ShowAsync<ModelsDialog>("Model", parameters);
+        var dialog = await DialogService.ShowAsync<ModelsDialog>("Model", parameters, BuildModelDialogOptions());
         var result = await dialog.Result;
         if (!result.Canceled && result.Data is ModelDetails updatedInput)
         {
@@ -225,10 +234,10 @@
                 Artist = updatedInput.Artist,
                 Tags = updatedInput.Tags,
                 CoverPicture = updatedInput.CoverPicture,
-                BaseSize = BaseSize.Unknown,
-                FigureSize = FigureSize.Unknown,
-                NumberOfFigures = 1,
-                SizeInMb = 0
+                BaseSize = (BaseSize)updatedInput.BaseSize.Id,
+                FigureSize = (FigureSize)updatedInput.FigureSize.Id,
+                NumberOfFigures = updatedInput.NumberOfFigures,
+                SizeInMb = updatedInput.Size
             };
             var updated = await ModelsService.UpdateAsync(request, CancellationToken.None);
 
