@@ -5,6 +5,7 @@ namespace PaintingProjectsManagement.UI.Modules.Materials;
 public interface IMaterialsService
 {
     Task<IReadOnlyCollection<MaterialDetails>> GetAllAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<CurrencyOption>> GetCurrenciesAsync(CancellationToken cancellationToken);
 
     Task<MaterialDetails> CreateAsync(
       CreateMaterialRequest request,
@@ -19,6 +20,11 @@ public interface IMaterialsService
 
 public class MaterialsService : IMaterialsService
 {
+    private static readonly IReadOnlyCollection<CurrencyOption> DefaultCurrencies =
+    [
+        new CurrencyOption { Code = "USD", Name = "US Dollar" }
+    ];
+
     private readonly HttpClient _httpClient;
 
     public MaterialsService(HttpClient httpClient) => this._httpClient = httpClient;
@@ -35,6 +41,33 @@ public class MaterialsService : IMaterialsService
         }
 
         return Array.Empty<MaterialDetails>();
+    }
+
+    public async Task<IReadOnlyCollection<CurrencyOption>> GetCurrenciesAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync("api/currencies", cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return DefaultCurrencies;
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<CurrencyOption>>(cancellationToken: cancellationToken);
+
+            var currencies = result?
+                .Where(x => !string.IsNullOrWhiteSpace(x.Code))
+                .Select(x => x with { Code = x.Code.Trim().ToUpperInvariant() })
+                .OrderBy(x => x.Code, StringComparer.Ordinal)
+                .ToArray();
+
+            return currencies is { Length: > 0 } ? currencies : DefaultCurrencies;
+        }
+        catch (Exception) when (!cancellationToken.IsCancellationRequested)
+        {
+            return DefaultCurrencies;
+        }
     }
 
     public async Task<MaterialDetails> CreateAsync(

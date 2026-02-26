@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Npgsql;
 using OpenTelemetry.Trace;
 using PaintingProjectsManagement.Api.Diagnostics;
+using PaintingProjectsManagement.Features.Currency;
 using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.Features.Materials.Integration;
 using PaintingProjectsManagement.Features.Models;
@@ -207,7 +208,7 @@ public class Program
         builder.Services.AddProjectsFeature();
 
         // Common features
-        builder.Services.AddCurrencyConverter();
+        builder.Services.AddCurrencyFeature();
 
         // Configure Swagger/OpenAPI with custom schema naming for nested classes
         builder.Services.AddEndpointsApiExplorer();
@@ -273,6 +274,7 @@ public class Program
         Features.Inventory.Builder.MapInventoryFeature(app);
         Features.Inventory.Integration.Builder.MapInventoryFeature(app);
         app.MapProjectsFeature();
+        app.MapCurrencyFeature();
 
         app.Run();
     }

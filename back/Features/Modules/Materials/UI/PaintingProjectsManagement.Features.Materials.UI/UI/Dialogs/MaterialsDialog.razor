@@ -28,7 +28,15 @@
                     <MudNumericField @bind-Value="Model.PackagePrice.Amount" Label="Package Price"/>
                 </MudItem>
                 <MudItem xs="6">
-                    <MudTextField @bind-Value="Model.PackagePrice.CurrencyCode" Label="Package Currency" />
+                    <MudSelect T="string"
+                               @bind-Value="Model.PackagePrice.CurrencyCode"
+                               Label="Package Currency"
+                               Disabled="IsLoadingCurrencies">
+                        @foreach (var currency in Currencies)
+                        {
+                            <MudSelectItem T="string" Value="@currency.Code">@currency.Label</MudSelectItem>
+                        }
+                    </MudSelect>
                 </MudItem>
             </MudGrid>
         </MudStack>
@@ -41,13 +49,47 @@
 
 @code {
     [Parameter] public MaterialDetails Model { get; set; } = new();
+    [Inject] public IMaterialsService MaterialsService { get; set; } = default!;
 
     [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
+
+    private IReadOnlyCollection<CurrencyOption> Currencies { get; set; } = [];
+    private bool IsLoadingCurrencies { get; set; }
 
     private PackageContentUnit SelectedUnit
     {
         get => (PackageContentUnit)Model.PackageContent.Unit.Id;
         set => Model.PackageContent.Unit = new EnumReference((int)value, value.ToString());
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoadingCurrencies = true;
+        Currencies = await MaterialsService.GetCurrenciesAsync(CancellationToken.None);
+        IsLoadingCurrencies = false;
+
+        EnsureSelectedCurrency();
+    }
+
+    private void EnsureSelectedCurrency()
+    {
+        var selectedCurrency = Model.PackagePrice.CurrencyCode?.Trim().ToUpperInvariant();
+
+        if (string.IsNullOrWhiteSpace(selectedCurrency))
+        {
+            Model.PackagePrice.CurrencyCode = Currencies.FirstOrDefault()?.Code ?? "USD";
+            return;
+        }
+
+        if (!Currencies.Any(x => x.Code.Equals(selectedCurrency, StringComparison.OrdinalIgnoreCase)))
+        {
+            Currencies = Currencies
+                .Append(new CurrencyOption { Code = selectedCurrency, Name = selectedCurrency })
+                .OrderBy(x => x.Code, StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        Model.PackagePrice.CurrencyCode = selectedCurrency;
     }
 
     private void Submit()
