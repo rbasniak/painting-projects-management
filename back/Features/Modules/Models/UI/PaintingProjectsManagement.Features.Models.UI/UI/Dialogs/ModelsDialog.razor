@@ -75,20 +75,15 @@
                     <MudPaper Outlined="true" Class="pa-4 collection-panel">
                         <MudStack Spacing="2">
                             <MudText Typo="Typo.subtitle1">Characters</MudText>
-                            <MudAutocomplete T="string"
-                                             Label="Add character"
-                                             @bind-Text="_characterInput"
-                                             SearchFunc="SearchCharacters"
-                                             ToStringFunc="(string s) => s"
-                                             AllowCustomValues="true"
-                                             OpenOnFocus="false"
-                                             CoerceText="false"
-                                             CoerceValue="true"
-                                             Variant="Variant.Outlined"
-                                             OnKeyDown="HandleCharacterKeyDown"
-                                             Adornment="Adornment.End"
-                                             AdornmentIcon="@Icons.Material.Filled.Add"
-                                             OnAdornmentClick="AddCharacterFromInput" />
+                            <MudTextField @bind-Value="_characterInput"
+                                          Label="Add character"
+                                          Placeholder="Type a character and press Enter"
+                                          Immediate="true"
+                                          Variant="Variant.Outlined"
+                                          OnKeyDown="HandleCharacterKeyDown"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Add"
+                                          OnAdornmentClick="AddCharacterFromInput" />
                             <MudText Typo="Typo.caption" Class="helper-muted">Press Enter or click + to add.</MudText>
                             @if (selectedCharacters.Count == 0)
                             {
@@ -115,20 +110,15 @@
                     <MudPaper Outlined="true" Class="pa-4 collection-panel">
                         <MudStack Spacing="2">
                             <MudText Typo="Typo.subtitle1">Tags</MudText>
-                            <MudAutocomplete T="string"
-                                             Label="Add tag"
-                                             @bind-Text="_tagInput"
-                                             SearchFunc="SearchTags"
-                                             ToStringFunc="(string s) => s"
-                                             AllowCustomValues="true"
-                                             OpenOnFocus="false"
-                                             CoerceText="false"
-                                             CoerceValue="true"
-                                             Variant="Variant.Outlined"
-                                             OnKeyDown="HandleTagKeyDown"
-                                             Adornment="Adornment.End"
-                                             AdornmentIcon="@Icons.Material.Filled.Add"
-                                             OnAdornmentClick="AddTagFromInput" />
+                            <MudTextField @bind-Value="_tagInput"
+                                          Label="Add tag"
+                                          Placeholder="Type a tag and press Enter"
+                                          Immediate="true"
+                                          Variant="Variant.Outlined"
+                                          OnKeyDown="HandleTagKeyDown"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Add"
+                                          OnAdornmentClick="AddTagFromInput" />
                             <MudText Typo="Typo.caption" Class="helper-muted">Press Enter or click + to add.</MudText>
                             @if (selectedTags.Count == 0)
                             {
