@@ -159,6 +159,7 @@
 
     private readonly StringComparer valueComparer = StringComparer.OrdinalIgnoreCase;
     private List<ModelCategoryDetails> categories = new();
+    private Dictionary<Guid, string> knownCategoryNames = new();
     private HashSet<string> selectedCharacters = new(StringComparer.OrdinalIgnoreCase);
     private HashSet<string> selectedTags = new(StringComparer.OrdinalIgnoreCase);
     private Guid selectedCategoryId;
@@ -200,7 +201,50 @@
 
     private async Task LoadCategories()
     {
+        BuildKnownCategoryNames();
+
         categories = (await ModelCategoriesService.GetAllAsync(CancellationToken.None)).ToList();
+
+        foreach (var category in categories)
+        {
+            if (HasInvalidCategoryName(category.Name) &&
+                knownCategoryNames.TryGetValue(category.Id, out var knownName))
+            {
+                category.Name = knownName;
+            }
+        }
+
+        foreach (var knownCategory in knownCategoryNames)
+        {
+            if (categories.All(x => x.Id != knownCategory.Key))
+            {
+                categories.Add(new ModelCategoryDetails
+                {
+                    Id = knownCategory.Key,
+                    Name = knownCategory.Value
+                });
+            }
+        }
+
+        categories = categories
+            .OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private void BuildKnownCategoryNames()
+    {
+        knownCategoryNames = AllModels
+            .Where(x => x.Category.Id != Guid.Empty && !HasInvalidCategoryName(x.Category.Name))
+            .GroupBy(x => x.Category.Id)
+            .ToDictionary(
+                x => x.Key,
+                x => x.Select(y => y.Category.Name)
+                    .First(name => !HasInvalidCategoryName(name)));
+
+        if (Model.Category.Id != Guid.Empty && !HasInvalidCategoryName(Model.Category.Name))
+        {
+            knownCategoryNames[Model.Category.Id] = Model.Category.Name;
+        }
     }
 
     private void InitializeState()
@@ -224,6 +268,12 @@
 
         if (existingCategory is not null)
         {
+            if (HasInvalidCategoryName(existingCategory.Name) &&
+                knownCategoryNames.TryGetValue(existingCategory.Id, out var knownName))
+            {
+                existingCategory.Name = knownName;
+            }
+
             selectedCategoryId = existingCategory.Id;
             Model.Category = new EntityReference(existingCategory.Id, existingCategory.Name);
         }
@@ -387,6 +437,11 @@
     private void Cancel()
     {
         MudDialog?.Cancel();
+    }
+
+    private static bool HasInvalidCategoryName(string? value)
+    {
+        return string.IsNullOrWhiteSpace(value) || Guid.TryParse(value, out _);
     }
 }
 
