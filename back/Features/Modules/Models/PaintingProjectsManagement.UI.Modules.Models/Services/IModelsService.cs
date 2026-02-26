@@ -121,12 +121,20 @@ public class ModelsService : IModelsService
 
     public async Task PromotePictureToCoverAsync(PromoteModelPictureRequest request, CancellationToken cancellationToken)
     {
-        await _httpClient.PostAsJsonAsync($"api/models/{request.ModelId}/promote-picture", request, cancellationToken);
+        using var response = await _httpClient.PostAsJsonAsync("api/models/picture/promote", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
     }
 
     public async Task DeletePictureAsync(Guid modelId, string pictureUrl, CancellationToken cancellationToken)
     {
-        await _httpClient.DeleteAsync($"api/models/{modelId}/picture?pictureUrl={Uri.EscapeDataString(pictureUrl)}", cancellationToken);
+        var request = new DeleteModelPictureRequest
+        {
+            ModelId = modelId,
+            PictureUrl = pictureUrl
+        };
+
+        using var response = await _httpClient.PostAsJsonAsync("api/models/picture/delete", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
     }
 }
 
