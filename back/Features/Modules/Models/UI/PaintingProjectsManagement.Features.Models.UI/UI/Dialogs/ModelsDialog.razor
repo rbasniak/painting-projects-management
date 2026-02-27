@@ -15,15 +15,24 @@
                                   Required="true" />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudAutocomplete @bind-Value="Model.Franchise"
-                                     Label="Franchise"
-                                     SearchFunc="SearchFranchises"
-                                     ToStringFunc="(string s) => s"
-                                     AllowCustomValues="true"
-                                     CoerceValue="true"
-                                     Immediate="true"
-                                     OpenOnFocus="false"
-                                     Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="Model.Franchise"
+                                  Label="Franchise"
+                                  Immediate="true"
+                                  Variant="Variant.Outlined" />
+                    @if (FranchiseSuggestions.Count > 0)
+                    {
+                        <MudStack Row="true" Class="suggestion-list mt-1">
+                            @foreach (var suggestion in FranchiseSuggestions)
+                            {
+                                <MudButton Variant="Variant.Text"
+                                           Size="Size.Small"
+                                           Class="suggestion-button"
+                                           OnClick="@(() => ApplyFranchiseSuggestion(suggestion))">
+                                    @suggestion
+                                </MudButton>
+                            }
+                        </MudStack>
+                    }
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudSelect T="Guid"
@@ -51,17 +60,25 @@
                     </MudSelect>
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudAutocomplete @bind-Value="Model.Artist"
-                                     @bind-Text="_artistInput"
-                                     Label="Artist"
-                                     SearchFunc="SearchArtists"
-                                     ToStringFunc="(string s) => s"
-                                     AllowCustomValues="true"
-                                     CoerceValue="true"
-                                     Immediate="true"
-                                     OpenOnFocus="false"
-                                     Required="true"
-                                     Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="Model.Artist"
+                                  Label="Artist"
+                                  Immediate="true"
+                                  Required="true"
+                                  Variant="Variant.Outlined" />
+                    @if (ArtistSuggestions.Count > 0)
+                    {
+                        <MudStack Row="true" Class="suggestion-list mt-1">
+                            @foreach (var suggestion in ArtistSuggestions)
+                            {
+                                <MudButton Variant="Variant.Text"
+                                           Size="Size.Small"
+                                           Class="suggestion-button"
+                                           OnClick="@(() => ApplyArtistSuggestion(suggestion))">
+                                    @suggestion
+                                </MudButton>
+                            }
+                        </MudStack>
+                    }
                 </MudItem>
                 <MudItem xs="12" md="6" Class="d-flex align-center">
                     <MudCheckBox T="bool" @bind-Checked="Model.MustHave" Label="Must Have" Color="Color.Primary" />
@@ -201,12 +218,11 @@
     private ModelType selectedType = ModelType.Unknown;
     private string _tagInput = string.Empty;
     private string _characterInput = string.Empty;
-    private string _artistInput = string.Empty;
 
     private bool CanSubmit =>
         !string.IsNullOrWhiteSpace(Model.Name) &&
         selectedCategoryId != Guid.Empty &&
-        !string.IsNullOrWhiteSpace(GetArtistValue());
+        !string.IsNullOrWhiteSpace(Model.Artist);
 
     private List<string> CharacterSuggestions => GetSuggestions(
         AllModels.SelectMany(x => x.Characters ?? []),
@@ -217,6 +233,14 @@
         AllModels.SelectMany(x => x.Tags ?? []),
         _tagInput,
         selectedTags);
+
+    private List<string> FranchiseSuggestions => GetSuggestions(
+        AllModels.Select(x => x.Franchise),
+        Model.Franchise ?? string.Empty);
+
+    private List<string> ArtistSuggestions => GetSuggestions(
+        AllModels.Select(x => x.Artist ?? string.Empty),
+        Model.Artist ?? string.Empty);
 
     private Guid SelectedCategoryId
     {
@@ -302,7 +326,6 @@
         Model.Tags ??= [];
         Model.Franchise ??= string.Empty;
         Model.Artist ??= string.Empty;
-        _artistInput = Model.Artist;
 
         selectedCharacters = new HashSet<string>(NormalizeValues(Model.Characters), valueComparer);
         selectedTags = new HashSet<string>(NormalizeValues(Model.Tags), valueComparer);
@@ -341,23 +364,6 @@
         Model.Type = new EnumReference((int)selectedType, selectedType.ToString());
     }
 
-    private Task<IEnumerable<string>> SearchFranchises(string value, CancellationToken cancellationToken)
-    {
-        var source = AllModels
-            .Where(x => !string.IsNullOrWhiteSpace(x.Franchise))
-            .Select(x => x.Franchise);
-
-        return Task.FromResult(FilterValues(source, value));
-    }
-
-    private Task<IEnumerable<string>> SearchArtists(string value, CancellationToken cancellationToken)
-    {
-        var source = AllModels
-            .Where(x => !string.IsNullOrWhiteSpace(x.Artist))
-            .Select(x => x.Artist!);
-
-        return Task.FromResult(FilterValues(source, value));
-    }
     private IEnumerable<string> FilterValues(IEnumerable<string> source, string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -391,18 +397,27 @@
             .Distinct(valueComparer);
     }
 
-    private List<string> GetSuggestions(IEnumerable<string> source, string currentInput, HashSet<string> selectedValues)
+    private List<string> GetSuggestions(IEnumerable<string> source, string currentInput, HashSet<string>? selectedValues = null)
     {
         if (string.IsNullOrWhiteSpace(currentInput))
         {
             return [];
         }
 
-        return FilterValues(source, currentInput)
-            .Where(x => !selectedValues.Contains(x))
+        var suggestions = FilterValues(source, currentInput);
+        if (selectedValues is not null)
+        {
+            suggestions = suggestions.Where(x => !selectedValues.Contains(x));
+        }
+
+        return suggestions
             .Take(6)
             .ToList();
     }
+
+    private void ApplyFranchiseSuggestion(string value) => Model.Franchise = value;
+
+    private void ApplyArtistSuggestion(string value) => Model.Artist = value;
 
     private void HandleTagKeyDown(KeyboardEventArgs e)
     {
@@ -481,8 +496,8 @@
     private void Submit()
     {
         Model.Name = Model.Name.Trim();
-        Model.Franchise = Model.Franchise.Trim();
-        Model.Artist = GetArtistValue().Trim();
+        Model.Franchise = (Model.Franchise ?? string.Empty).Trim();
+        Model.Artist = (Model.Artist ?? string.Empty).Trim();
         Model.Characters = selectedCharacters.ToArray();
         Model.Tags = selectedTags.ToArray();
         MudDialog?.Close(DialogResult.Ok(Model));
@@ -523,12 +538,6 @@
         return id.ToString();
     }
 
-    private string GetArtistValue()
-    {
-        return !string.IsNullOrWhiteSpace(_artistInput)
-            ? _artistInput
-            : (Model.Artist ?? string.Empty);
-    }
 }
 
 <style>
