@@ -4,90 +4,148 @@
 
 @namespace PaintingProjectsManagement.UI.Modules.Models.UI.Dialogs
 
-<MudDialog>
+<MudDialog Class="model-dialog">
     <DialogContent>
-        <MudStack Spacing="3">
-            <MudTextField @bind-Value="Model.Name" Label="Name" />
-            
-            <MudAutocomplete @bind-Value="Model.Franchise" 
-                           Label="Franchise" 
-                           SearchFunc="SearchFranchises"
-                           ToStringFunc="(string s) => s"
-                           AllowCustomValues="true" />
+        <MudStack Spacing="3" Class="model-dialog-content">
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudTextField @bind-Value="Model.Name"
+                                  Label="Name"
+                                  Variant="Variant.Outlined"
+                                  Required="true" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudAutocomplete @bind-Value="Model.Franchise"
+                                     Label="Franchise"
+                                     SearchFunc="SearchFranchises"
+                                     ToStringFunc="(string s) => s"
+                                     AllowCustomValues="true"
+                                     OpenOnFocus="false"
+                                     Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudSelect T="Guid"
+                               @bind-Value="SelectedCategoryId"
+                               Label="Category"
+                               Variant="Variant.Outlined"
+                               Required="true">
+                        @foreach (var category in categories)
+                        {
+                            <MudSelectItem Value="@category.Id">@category.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudSelect T="ModelType"
+                               @bind-Value="SelectedType"
+                               Label="Type"
+                               Variant="Variant.Outlined"
+                               Required="true">
+                        @foreach (var type in Enum.GetValues<ModelType>())
+                        {
+                            <MudSelectItem Value="@type">@type</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudAutocomplete @bind-Value="Model.Artist"
+                                     Label="Artist"
+                                     SearchFunc="SearchArtists"
+                                     ToStringFunc="(string s) => s"
+                                     AllowCustomValues="true"
+                                     OpenOnFocus="false"
+                                     Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="6" Class="d-flex align-center">
+                    <MudCheckBox T="bool" @bind-Checked="Model.MustHave" Label="Must Have" Color="Color.Primary" />
+                </MudItem>
+            </MudGrid>
 
-            <MudAutocomplete T="string"
-                             Label="Characters"
-                             @bind-Text="_characterInput"
-                             SearchFunc="SearchCharacters"
-                             ToStringFunc="(string s) => s"
-                             MultiSelection="true"
-                             SelectedValues="selectedCharacters"
-                             SelectedValuesChanged="OnCharactersChanged"
-                             AllowCustomValues="true"
-                             CoerceText="false"
-                             CoerceValue="true"
-                             OnKeyDown="HandleCharacterKeyDown"
-                             Adornment="Adornment.End"
-                             AdornmentIcon="@Icons.Material.Filled.Add"
-                             OnAdornmentClick="AddCharacterFromInput" />
+            @if (categories.Count == 0)
+            {
+                <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined">
+                    Create at least one category before saving a model.
+                </MudAlert>
+            }
 
-            <MudChipSet T="string" Class="mt-2">
-                @foreach (var character in Model.Characters)
-                {
-                    <MudChip Value="@character" Text="@character" Closeable="true"
-                             OnClose="@((MudChip<string> _) => RemoveCharacter(character))" />
-                }
-            </MudChipSet>
-            
-            <MudSelect @bind-Value="SelectedCategoryId" Label="Category">
-                @foreach (var category in categories)
-                {
-                    <MudSelectItem Value="@category.Id">@category.Name</MudSelectItem>
-                }
-            </MudSelect>
-            
-            <MudSelect @bind-Value="SelectedType" Label="Type">
-                @foreach (var type in Enum.GetValues<ModelType>())
-                {
-                    <MudSelectItem Value="@type">@type.ToString()</MudSelectItem>
-                }
-            </MudSelect>
-            
-            <MudAutocomplete @bind-Value="Model.Artist" 
-                           Label="Artist" 
-                           SearchFunc="SearchArtists"
-                           ToStringFunc="(string s) => s"
-                           AllowCustomValues="true" />
-            
-            <MudAutocomplete T="string"
-                             Label="Tags"
-                             @bind-Text="_tagInput"
-                             SearchFunc="SearchTags"
-                             ToStringFunc="(string s) => s"
-                             MultiSelection="true"
-                             SelectedValues="selectedTags"
-                             SelectedValuesChanged="OnTagsChanged"
-                             AllowCustomValues="true"
-                             CoerceText="false"
-                             CoerceValue="true"
-                             OnKeyDown="HandleTagKeyDown"
-                             Adornment="Adornment.End"
-                             AdornmentIcon="@Icons.Material.Filled.Add"
-                             OnAdornmentClick="AddTagFromInput" />
+            <MudDivider />
 
-            <MudChipSet T="string" Class="mt-2">
-                @foreach (var tag in Model.Tags)
-                {
-                    <MudChip Value="@tag" Text="@tag" Closeable="true"
-                             OnClose="@((MudChip<string> _) => RemoveTag(tag))" />
-                }
-            </MudChipSet>
-            
-            <MudCheckBox T="bool" @bind-Checked="Model.MustHave" Label="Must Have" />
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudPaper Outlined="true" Class="pa-4 collection-panel">
+                        <MudStack Spacing="2">
+                            <MudText Typo="Typo.subtitle1">Characters</MudText>
+                            <MudTextField @bind-Value="_characterInput"
+                                          Label="Add character"
+                                          Placeholder="Type a character and press Enter"
+                                          Immediate="true"
+                                          Variant="Variant.Outlined"
+                                          OnKeyDown="HandleCharacterKeyDown"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Add"
+                                          OnAdornmentClick="AddCharacterFromInput" />
+                            <MudText Typo="Typo.caption" Class="helper-muted">Press Enter or click + to add.</MudText>
+                            @if (selectedCharacters.Count == 0)
+                            {
+                                <MudText Typo="Typo.caption" Class="helper-muted">No characters selected.</MudText>
+                            }
+                            else
+                            {
+                                <MudChipSet T="string" Class="collection-chip-set">
+                                    @foreach (var character in selectedCharacters.OrderBy(x => x))
+                                    {
+                                        <MudChip Value="@character"
+                                                 Text="@character"
+                                                 Variant="Variant.Outlined"
+                                                 Color="Color.Primary"
+                                                 Closeable="true"
+                                                 OnClose="@((MudChip<string> _) => RemoveCharacter(character))" />
+                                    }
+                                </MudChipSet>
+                            }
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudPaper Outlined="true" Class="pa-4 collection-panel">
+                        <MudStack Spacing="2">
+                            <MudText Typo="Typo.subtitle1">Tags</MudText>
+                            <MudTextField @bind-Value="_tagInput"
+                                          Label="Add tag"
+                                          Placeholder="Type a tag and press Enter"
+                                          Immediate="true"
+                                          Variant="Variant.Outlined"
+                                          OnKeyDown="HandleTagKeyDown"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Add"
+                                          OnAdornmentClick="AddTagFromInput" />
+                            <MudText Typo="Typo.caption" Class="helper-muted">Press Enter or click + to add.</MudText>
+                            @if (selectedTags.Count == 0)
+                            {
+                                <MudText Typo="Typo.caption" Class="helper-muted">No tags selected.</MudText>
+                            }
+                            else
+                            {
+                                <MudChipSet T="string" Class="collection-chip-set">
+                                    @foreach (var tag in selectedTags.OrderBy(x => x))
+                                    {
+                                        <MudChip Value="@tag"
+                                                 Text="@tag"
+                                                 Variant="Variant.Outlined"
+                                                 Color="Color.Secondary"
+                                                 Closeable="true"
+                                                 OnClose="@((MudChip<string> _) => RemoveTag(tag))" />
+                                    }
+                                </MudChipSet>
+                            }
+                        </MudStack>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
         </MudStack>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Submit" Color="Color.Primary">Save</MudButton>
+        <MudButton OnClick="Submit" Color="Color.Primary" Variant="Variant.Filled" Disabled="@(!CanSubmit)">Save</MudButton>
         <MudButton OnClick="Cancel">Cancel</MudButton>
     </DialogActions>
 </MudDialog>
@@ -99,197 +157,315 @@
 
     [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
 
+    private readonly StringComparer valueComparer = StringComparer.OrdinalIgnoreCase;
     private List<ModelCategoryDetails> categories = new();
-    private HashSet<string> selectedCharacters = new();
-    private HashSet<string> selectedTags = new();
+    private Dictionary<Guid, string> knownCategoryNames = new();
+    private HashSet<string> selectedCharacters = new(StringComparer.OrdinalIgnoreCase);
+    private HashSet<string> selectedTags = new(StringComparer.OrdinalIgnoreCase);
+    private Guid selectedCategoryId;
+    private ModelType selectedType = ModelType.Unknown;
+    private string _tagInput = string.Empty;
+    private string _characterInput = string.Empty;
+
+    private bool CanSubmit => !string.IsNullOrWhiteSpace(Model.Name) && selectedCategoryId != Guid.Empty;
 
     private Guid SelectedCategoryId
     {
-        get => Model.Category.Id;
-        set => Model.Category = new PaintingProjectsManagement.UI.Modules.Shared.EntityReference(value, categories.FirstOrDefault(x => x.Id == value)?.Name ?? string.Empty);
+        get => selectedCategoryId;
+        set
+        {
+            selectedCategoryId = value;
+            var category = categories.FirstOrDefault(x => x.Id == value);
+            if (category is not null)
+            {
+                Model.Category = new EntityReference(category.Id, category.Name);
+            }
+        }
     }
 
     private ModelType SelectedType
     {
-        get => (ModelType)Model.Type.Id;
-        set => Model.Type = new EnumReference((int)value, value.ToString());
+        get => selectedType;
+        set
+        {
+            selectedType = value;
+            Model.Type = new EnumReference((int)value, value.ToString());
+        }
     }
 
     protected override async Task OnInitializedAsync()
     {
         await LoadCategories();
-        // Initialize selectedCharacters with existing characters
-        selectedCharacters = new HashSet<string>(Model.Characters);
-        // Initialize selectedTags with existing tags
-        selectedTags = new HashSet<string>(Model.Tags);
+        InitializeState();
     }
 
     private async Task LoadCategories()
     {
+        BuildKnownCategoryNames();
+
         categories = (await ModelCategoriesService.GetAllAsync(CancellationToken.None)).ToList();
-    }
 
-    private async Task<IEnumerable<string>> SearchFranchises(string value, CancellationToken cancellationToken)
-    {
-        var franchises = AllModels
-            .Where(x => !string.IsNullOrWhiteSpace(x.Franchise))
-            .Select(x => x.Franchise)
-            .Distinct()
-            .OrderBy(x => x)
-            .ToList();
-
-        var results = franchises.Where(x => x.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
-        
-        // Add the current input value if it's not empty and not already in the results
-        if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
+        foreach (var category in categories)
         {
-            results.Insert(0, value);
+            if (HasInvalidCategoryName(category.Name) &&
+                knownCategoryNames.TryGetValue(category.Id, out var knownName))
+            {
+                category.Name = knownName;
+            }
         }
-        
-        return results;
-    }
 
-    private async Task<IEnumerable<string>> SearchCharacters(string value, CancellationToken cancellationToken)
-    {
-        var characters = AllModels
-            .SelectMany(x => x.Characters)
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .Distinct()
-            .OrderBy(x => x)
-            .ToList();
-
-        var results = characters.Where(x => x.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
-        
-        // Add the current input value if it's not empty and not already in the results
-        if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
+        foreach (var knownCategory in knownCategoryNames)
         {
-            results.Insert(0, value);
+            if (categories.All(x => x.Id != knownCategory.Key))
+            {
+                categories.Add(new ModelCategoryDetails
+                {
+                    Id = knownCategory.Key,
+                    Name = knownCategory.Value
+                });
+            }
         }
-        
-        return results;
-    }
 
-    private async Task<IEnumerable<string>> SearchArtists(string value, CancellationToken cancellationToken)
-    {
-        var artists = AllModels
-            .Where(x => !string.IsNullOrWhiteSpace(x.Artist))
-            .Select(x => x.Artist!)
-            .Distinct()
-            .OrderBy(x => x)
+        categories = categories
+            .OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
-
-        var results = artists.Where(x => x.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
-        
-        // Add the current input value if it's not empty and not already in the results
-        if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
-        {
-            results.Insert(0, value);
-        }
-        
-        return results;
     }
 
-    private async Task<IEnumerable<string>> SearchTags(string value, CancellationToken cancellationToken)
+    private void BuildKnownCategoryNames()
     {
-        var tags = AllModels
-            .SelectMany(x => x.Tags)
-            .Where(x => !string.IsNullOrWhiteSpace(x))
-            .Distinct()
-            .OrderBy(x => x)
-            .ToList();
+        knownCategoryNames = AllModels
+            .Where(x => x.Category.Id != Guid.Empty && !HasInvalidCategoryName(x.Category.Name))
+            .GroupBy(x => x.Category.Id)
+            .ToDictionary(
+                x => x.Key,
+                x => x.Select(y => y.Category.Name)
+                    .First(name => !HasInvalidCategoryName(name)));
 
-        var results = tags.Where(x => x.Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
-        
-        // Add the current input value if it's not empty and not already in the results
-        if (!string.IsNullOrWhiteSpace(value) && !results.Contains(value, StringComparer.OrdinalIgnoreCase))
+        if (Model.Category.Id != Guid.Empty && !HasInvalidCategoryName(Model.Category.Name))
         {
-            results.Insert(0, value);
+            knownCategoryNames[Model.Category.Id] = Model.Category.Name;
         }
-        
-        return results;
     }
 
-    private void OnCharactersChanged(HashSet<string> newSelectedCharacters)
+    private void InitializeState()
     {
-        selectedCharacters = newSelectedCharacters;
+        Model.Characters ??= [];
+        Model.Tags ??= [];
+        Model.Franchise ??= string.Empty;
+        Model.Artist ??= string.Empty;
+
+        selectedCharacters = new HashSet<string>(NormalizeValues(Model.Characters), valueComparer);
+        selectedTags = new HashSet<string>(NormalizeValues(Model.Tags), valueComparer);
+
         Model.Characters = selectedCharacters.ToArray();
+        Model.Tags = selectedTags.ToArray();
+
+        var existingCategory = categories.FirstOrDefault(x => x.Id == Model.Category.Id);
+        if (existingCategory is null && categories.Count > 0)
+        {
+            existingCategory = categories[0];
+        }
+
+        if (existingCategory is not null)
+        {
+            if (HasInvalidCategoryName(existingCategory.Name) &&
+                knownCategoryNames.TryGetValue(existingCategory.Id, out var knownName))
+            {
+                existingCategory.Name = knownName;
+            }
+
+            selectedCategoryId = existingCategory.Id;
+            Model.Category = new EntityReference(existingCategory.Id, existingCategory.Name);
+        }
+        else
+        {
+            selectedCategoryId = Guid.Empty;
+            Model.Category = new EntityReference(Guid.Empty, string.Empty);
+        }
+
+        var typeId = Model.Type.Id;
+        selectedType = Enum.IsDefined(typeof(ModelType), typeId)
+            ? (ModelType)typeId
+            : ModelType.Unknown;
+
+        Model.Type = new EnumReference((int)selectedType, selectedType.ToString());
     }
 
-    private void OnTagsChanged(HashSet<string> newSelectedTags)
+    private Task<IEnumerable<string>> SearchFranchises(string value, CancellationToken cancellationToken)
     {
-        selectedTags = newSelectedTags;
-        Model.Tags = selectedTags.ToArray();
+        var source = AllModels
+            .Where(x => !string.IsNullOrWhiteSpace(x.Franchise))
+            .Select(x => x.Franchise);
+
+        return Task.FromResult(FilterValues(source, value));
+    }
+
+    private Task<IEnumerable<string>> SearchCharacters(string value, CancellationToken cancellationToken)
+    {
+        var source = AllModels
+            .SelectMany(x => x.Characters ?? [])
+            .Where(x => !string.IsNullOrWhiteSpace(x));
+
+        return Task.FromResult(FilterValues(source, value));
+    }
+
+    private Task<IEnumerable<string>> SearchArtists(string value, CancellationToken cancellationToken)
+    {
+        var source = AllModels
+            .Where(x => !string.IsNullOrWhiteSpace(x.Artist))
+            .Select(x => x.Artist!);
+
+        return Task.FromResult(FilterValues(source, value));
+    }
+
+    private Task<IEnumerable<string>> SearchTags(string value, CancellationToken cancellationToken)
+    {
+        var source = AllModels
+            .SelectMany(x => x.Tags ?? [])
+            .Where(x => !string.IsNullOrWhiteSpace(x));
+
+        return Task.FromResult(FilterValues(source, value));
+    }
+
+    private IEnumerable<string> FilterValues(IEnumerable<string> source, string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return [];
+        }
+
+        var trimmedValue = value.Trim();
+
+        var results = source
+            .Select(x => x.Trim())
+            .Where(x => x.Contains(trimmedValue, StringComparison.OrdinalIgnoreCase))
+            .Distinct(valueComparer)
+            .OrderBy(x => x)
+            .ToList();
+
+        if (!results.Contains(trimmedValue, valueComparer))
+        {
+            results.Insert(0, trimmedValue);
+        }
+
+        return results;
+    }
+
+    private IEnumerable<string> NormalizeValues(IEnumerable<string> values)
+    {
+        return values
+            .Select(x => x?.Trim())
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Cast<string>()
+            .Distinct(valueComparer);
     }
 
     private void HandleTagKeyDown(KeyboardEventArgs e)
     {
-        if (e.Key == "Enter" || e.Key == ",")
+        if (e.Key is "Enter" or ",")
+        {
             AddTagFromInput();
+        }
     }
 
     private void AddTagFromInput()
     {
-        var v = _tagInput?.Trim();
-        if (string.IsNullOrWhiteSpace(v)) return;
+        var value = _tagInput.Trim();
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return;
+        }
 
-        if (!selectedTags.Contains(v, StringComparer.OrdinalIgnoreCase))
-            AddTag(v);
-
-        _tagInput = "";
-    }
-
-    private void AddTag(string v)
-    {
-        if (selectedTags.Add(v))
+        if (selectedTags.Add(value))
+        {
             Model.Tags = selectedTags.ToArray();
+        }
+
+        _tagInput = string.Empty;
     }
 
     private void RemoveTag(string tag)
     {
-        selectedTags.RemoveWhere(x => string.Equals(x, tag, StringComparison.OrdinalIgnoreCase));
-        Model.Tags = selectedTags.ToArray();
+        if (selectedTags.Remove(tag))
+        {
+            Model.Tags = selectedTags.ToArray();
+        }
     }
-
-    private void Submit()
-    {
-        MudDialog?.Close(DialogResult.Ok(Model));
-    }
-    
-    private void Cancel() 
-    {
-        MudDialog?.Cancel();
-    }
-
-    private string _tagInput = "";
-    private string _characterInput = "";
 
     private void HandleCharacterKeyDown(KeyboardEventArgs e)
     {
-        if (e.Key == "Enter" || e.Key == ",")
+        if (e.Key is "Enter" or ",")
+        {
             AddCharacterFromInput();
+        }
     }
 
     private void AddCharacterFromInput()
     {
-        var v = _characterInput?.Trim();
-        if (string.IsNullOrWhiteSpace(v)) return;
+        var value = _characterInput.Trim();
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return;
+        }
 
-        // include in selectable list for future searches if it didn't exist
-        if (!selectedCharacters.Contains(v, StringComparer.OrdinalIgnoreCase))
-            AddCharacter(v);
-
-        _characterInput = "";
-    }
-
-    private void AddCharacter(string v)
-    {
-        if (selectedCharacters.Add(v))
+        if (selectedCharacters.Add(value))
+        {
             Model.Characters = selectedCharacters.ToArray();
+        }
+
+        _characterInput = string.Empty;
     }
 
     private void RemoveCharacter(string character)
     {
-        selectedCharacters.RemoveWhere(x => string.Equals(x, character, StringComparison.OrdinalIgnoreCase));
+        if (selectedCharacters.Remove(character))
+        {
+            Model.Characters = selectedCharacters.ToArray();
+        }
+    }
+
+    private void Submit()
+    {
+        Model.Name = Model.Name.Trim();
+        Model.Franchise = Model.Franchise.Trim();
+        Model.Artist = string.IsNullOrWhiteSpace(Model.Artist) ? null : Model.Artist.Trim();
         Model.Characters = selectedCharacters.ToArray();
+        Model.Tags = selectedTags.ToArray();
+        MudDialog?.Close(DialogResult.Ok(Model));
+    }
+    
+    private void Cancel()
+    {
+        MudDialog?.Cancel();
+    }
+
+    private static bool HasInvalidCategoryName(string? value)
+    {
+        return string.IsNullOrWhiteSpace(value) || Guid.TryParse(value, out _);
     }
 }
+
+<style>
+    .model-dialog .mud-dialog {
+        width: min(860px, 96vw);
+    }
+
+    .model-dialog-content {
+        padding-top: 0.25rem;
+    }
+
+    .collection-panel {
+        height: 100%;
+    }
+
+    .collection-chip-set {
+        min-height: 2.75rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .helper-muted {
+        color: var(--mud-palette-text-secondary);
+    }
+</style>
