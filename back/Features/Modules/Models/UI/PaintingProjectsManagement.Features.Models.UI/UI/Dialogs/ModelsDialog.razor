@@ -82,21 +82,30 @@
                     <MudPaper Outlined="true" Class="pa-4 collection-panel">
                         <MudStack Spacing="2">
                             <MudText Typo="Typo.subtitle1">Characters</MudText>
-                            <MudAutocomplete T="string"
-                                             Label="Characters"
-                                             @bind-Text="_characterInput"
-                                             SearchFunc="SearchCharacters"
-                                             ToStringFunc="(string? s) => s ?? string.Empty"
-                                             MultiSelection="true"
-                                             SelectedValues="selectedCharacters"
-                                             SelectedValuesChanged="OnCharactersChanged"
-                                             AllowCustomValues="true"
-                                             CoerceText="false"
-                                             CoerceValue="true"
-                                             Immediate="true"
-                                             OpenOnFocus="false"
-                                             Variant="Variant.Outlined" />
-                            <MudText Typo="Typo.caption" Class="helper-muted">Type to search and press Enter to add.</MudText>
+                            <MudTextField @bind-Value="_characterInput"
+                                          Label="Add character"
+                                          Placeholder="Type a character and press Enter"
+                                          Immediate="true"
+                                          Variant="Variant.Outlined"
+                                          OnKeyDown="HandleCharacterKeyDown"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Add"
+                                          OnAdornmentClick="AddCharacterFromInput" />
+                            <MudText Typo="Typo.caption" Class="helper-muted">Type to search and press Enter or click + to add.</MudText>
+                            @if (CharacterSuggestions.Count > 0)
+                            {
+                                <MudStack Row="true" Class="suggestion-list">
+                                    @foreach (var suggestion in CharacterSuggestions)
+                                    {
+                                        <MudButton Variant="Variant.Text"
+                                                   Size="Size.Small"
+                                                   Class="suggestion-button"
+                                                   OnClick="@(() => AddCharacterValue(suggestion))">
+                                            @suggestion
+                                        </MudButton>
+                                    }
+                                </MudStack>
+                            }
                             @if (selectedCharacters.Count == 0)
                             {
                                 <MudText Typo="Typo.caption" Class="helper-muted">No characters selected.</MudText>
@@ -122,21 +131,30 @@
                     <MudPaper Outlined="true" Class="pa-4 collection-panel">
                         <MudStack Spacing="2">
                             <MudText Typo="Typo.subtitle1">Tags</MudText>
-                            <MudAutocomplete T="string"
-                                             Label="Tags"
-                                             @bind-Text="_tagInput"
-                                             SearchFunc="SearchTags"
-                                             ToStringFunc="(string? s) => s ?? string.Empty"
-                                             MultiSelection="true"
-                                             SelectedValues="selectedTags"
-                                             SelectedValuesChanged="OnTagsChanged"
-                                             AllowCustomValues="true"
-                                             CoerceText="false"
-                                             CoerceValue="true"
-                                             Immediate="true"
-                                             OpenOnFocus="false"
-                                             Variant="Variant.Outlined" />
-                            <MudText Typo="Typo.caption" Class="helper-muted">Type to search and press Enter to add.</MudText>
+                            <MudTextField @bind-Value="_tagInput"
+                                          Label="Add tag"
+                                          Placeholder="Type a tag and press Enter"
+                                          Immediate="true"
+                                          Variant="Variant.Outlined"
+                                          OnKeyDown="HandleTagKeyDown"
+                                          Adornment="Adornment.End"
+                                          AdornmentIcon="@Icons.Material.Filled.Add"
+                                          OnAdornmentClick="AddTagFromInput" />
+                            <MudText Typo="Typo.caption" Class="helper-muted">Type to search and press Enter or click + to add.</MudText>
+                            @if (TagSuggestions.Count > 0)
+                            {
+                                <MudStack Row="true" Class="suggestion-list">
+                                    @foreach (var suggestion in TagSuggestions)
+                                    {
+                                        <MudButton Variant="Variant.Text"
+                                                   Size="Size.Small"
+                                                   Class="suggestion-button"
+                                                   OnClick="@(() => AddTagValue(suggestion))">
+                                            @suggestion
+                                        </MudButton>
+                                    }
+                                </MudStack>
+                            }
                             @if (selectedTags.Count == 0)
                             {
                                 <MudText Typo="Typo.caption" Class="helper-muted">No tags selected.</MudText>
@@ -189,6 +207,16 @@
         !string.IsNullOrWhiteSpace(Model.Name) &&
         selectedCategoryId != Guid.Empty &&
         !string.IsNullOrWhiteSpace(GetArtistValue());
+
+    private List<string> CharacterSuggestions => GetSuggestions(
+        AllModels.SelectMany(x => x.Characters ?? []),
+        _characterInput,
+        selectedCharacters);
+
+    private List<string> TagSuggestions => GetSuggestions(
+        AllModels.SelectMany(x => x.Tags ?? []),
+        _tagInput,
+        selectedTags);
 
     private Guid SelectedCategoryId
     {
@@ -322,15 +350,6 @@
         return Task.FromResult(FilterValues(source, value));
     }
 
-    private Task<IEnumerable<string>> SearchCharacters(string value, CancellationToken cancellationToken)
-    {
-        var source = AllModels
-            .SelectMany(x => x.Characters ?? [])
-            .Where(x => !string.IsNullOrWhiteSpace(x));
-
-        return Task.FromResult(FilterValues(source, value));
-    }
-
     private Task<IEnumerable<string>> SearchArtists(string value, CancellationToken cancellationToken)
     {
         var source = AllModels
@@ -339,16 +358,6 @@
 
         return Task.FromResult(FilterValues(source, value));
     }
-
-    private Task<IEnumerable<string>> SearchTags(string value, CancellationToken cancellationToken)
-    {
-        var source = AllModels
-            .SelectMany(x => x.Tags ?? [])
-            .Where(x => !string.IsNullOrWhiteSpace(x));
-
-        return Task.FromResult(FilterValues(source, value));
-    }
-
     private IEnumerable<string> FilterValues(IEnumerable<string> source, string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -382,17 +391,45 @@
             .Distinct(valueComparer);
     }
 
-    private void OnCharactersChanged(HashSet<string> newSelectedCharacters)
+    private List<string> GetSuggestions(IEnumerable<string> source, string currentInput, HashSet<string> selectedValues)
     {
-        selectedCharacters = new HashSet<string>(NormalizeValues(newSelectedCharacters), valueComparer);
-        Model.Characters = selectedCharacters.ToArray();
-        _characterInput = string.Empty;
+        if (string.IsNullOrWhiteSpace(currentInput))
+        {
+            return [];
+        }
+
+        return FilterValues(source, currentInput)
+            .Where(x => !selectedValues.Contains(x))
+            .Take(6)
+            .ToList();
     }
 
-    private void OnTagsChanged(HashSet<string> newSelectedTags)
+    private void HandleTagKeyDown(KeyboardEventArgs e)
     {
-        selectedTags = new HashSet<string>(NormalizeValues(newSelectedTags), valueComparer);
-        Model.Tags = selectedTags.ToArray();
+        if (e.Key is "Enter" or ",")
+        {
+            AddTagFromInput();
+        }
+    }
+
+    private void AddTagFromInput()
+    {
+        AddTagValue(_tagInput);
+    }
+
+    private void AddTagValue(string? value)
+    {
+        var normalizedValue = (value ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(normalizedValue))
+        {
+            return;
+        }
+
+        if (selectedTags.Add(normalizedValue))
+        {
+            Model.Tags = selectedTags.ToArray();
+        }
+
         _tagInput = string.Empty;
     }
 
@@ -402,6 +439,35 @@
         {
             Model.Tags = selectedTags.ToArray();
         }
+    }
+
+    private void HandleCharacterKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key is "Enter" or ",")
+        {
+            AddCharacterFromInput();
+        }
+    }
+
+    private void AddCharacterFromInput()
+    {
+        AddCharacterValue(_characterInput);
+    }
+
+    private void AddCharacterValue(string? value)
+    {
+        var normalizedValue = (value ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(normalizedValue))
+        {
+            return;
+        }
+
+        if (selectedCharacters.Add(normalizedValue))
+        {
+            Model.Characters = selectedCharacters.ToArray();
+        }
+
+        _characterInput = string.Empty;
     }
 
     private void RemoveCharacter(string character)
@@ -487,5 +553,16 @@
 
     .helper-muted {
         color: var(--mud-palette-text-secondary);
+    }
+
+    .suggestion-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .suggestion-button {
+        min-width: 0;
+        padding-inline: 0.375rem;
     }
 </style>
