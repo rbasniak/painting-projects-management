@@ -15,23 +15,35 @@
                                   Required="true" />
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudAutocomplete @bind-Value="Model.Franchise"
-                                     Label="Franchise"
-                                     SearchFunc="SearchFranchises"
-                                     ToStringFunc="(string s) => s"
-                                     AllowCustomValues="true"
-                                     OpenOnFocus="false"
-                                     Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="Model.Franchise"
+                                  Label="Franchise"
+                                  Immediate="true"
+                                  Variant="Variant.Outlined" />
+                    @if (FranchiseSuggestions.Count > 0)
+                    {
+                        <MudStack Row="true" Class="suggestion-list mt-1">
+                            @foreach (var suggestion in FranchiseSuggestions)
+                            {
+                                <MudButton Variant="Variant.Text"
+                                           Size="Size.Small"
+                                           Class="suggestion-button"
+                                           OnClick="@(() => ApplyFranchiseSuggestion(suggestion))">
+                                    @suggestion
+                                </MudButton>
+                            }
+                        </MudStack>
+                    }
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudSelect T="Guid"
                                @bind-Value="SelectedCategoryId"
                                Label="Category"
                                Variant="Variant.Outlined"
+                               ToStringFunc="CategoryToString"
                                Required="true">
                         @foreach (var category in categories)
                         {
-                            <MudSelectItem Value="@category.Id">@category.Name</MudSelectItem>
+                            <MudSelectItem Value="@category.Id">@CategoryToString(category.Id)</MudSelectItem>
                         }
                     </MudSelect>
                 </MudItem>
@@ -48,13 +60,25 @@
                     </MudSelect>
                 </MudItem>
                 <MudItem xs="12" md="6">
-                    <MudAutocomplete @bind-Value="Model.Artist"
-                                     Label="Artist"
-                                     SearchFunc="SearchArtists"
-                                     ToStringFunc="(string s) => s"
-                                     AllowCustomValues="true"
-                                     OpenOnFocus="false"
-                                     Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="Model.Artist"
+                                  Label="Artist"
+                                  Immediate="true"
+                                  Required="true"
+                                  Variant="Variant.Outlined" />
+                    @if (ArtistSuggestions.Count > 0)
+                    {
+                        <MudStack Row="true" Class="suggestion-list mt-1">
+                            @foreach (var suggestion in ArtistSuggestions)
+                            {
+                                <MudButton Variant="Variant.Text"
+                                           Size="Size.Small"
+                                           Class="suggestion-button"
+                                           OnClick="@(() => ApplyArtistSuggestion(suggestion))">
+                                    @suggestion
+                                </MudButton>
+                            }
+                        </MudStack>
+                    }
                 </MudItem>
                 <MudItem xs="12" md="6" Class="d-flex align-center">
                     <MudCheckBox T="bool" @bind-Checked="Model.MustHave" Label="Must Have" Color="Color.Primary" />
@@ -84,7 +108,21 @@
                                           Adornment="Adornment.End"
                                           AdornmentIcon="@Icons.Material.Filled.Add"
                                           OnAdornmentClick="AddCharacterFromInput" />
-                            <MudText Typo="Typo.caption" Class="helper-muted">Press Enter or click + to add.</MudText>
+                            <MudText Typo="Typo.caption" Class="helper-muted">Type to search and press Enter or click + to add.</MudText>
+                            @if (CharacterSuggestions.Count > 0)
+                            {
+                                <MudStack Row="true" Class="suggestion-list">
+                                    @foreach (var suggestion in CharacterSuggestions)
+                                    {
+                                        <MudButton Variant="Variant.Text"
+                                                   Size="Size.Small"
+                                                   Class="suggestion-button"
+                                                   OnClick="@(() => AddCharacterValue(suggestion))">
+                                            @suggestion
+                                        </MudButton>
+                                    }
+                                </MudStack>
+                            }
                             @if (selectedCharacters.Count == 0)
                             {
                                 <MudText Typo="Typo.caption" Class="helper-muted">No characters selected.</MudText>
@@ -119,7 +157,21 @@
                                           Adornment="Adornment.End"
                                           AdornmentIcon="@Icons.Material.Filled.Add"
                                           OnAdornmentClick="AddTagFromInput" />
-                            <MudText Typo="Typo.caption" Class="helper-muted">Press Enter or click + to add.</MudText>
+                            <MudText Typo="Typo.caption" Class="helper-muted">Type to search and press Enter or click + to add.</MudText>
+                            @if (TagSuggestions.Count > 0)
+                            {
+                                <MudStack Row="true" Class="suggestion-list">
+                                    @foreach (var suggestion in TagSuggestions)
+                                    {
+                                        <MudButton Variant="Variant.Text"
+                                                   Size="Size.Small"
+                                                   Class="suggestion-button"
+                                                   OnClick="@(() => AddTagValue(suggestion))">
+                                            @suggestion
+                                        </MudButton>
+                                    }
+                                </MudStack>
+                            }
                             @if (selectedTags.Count == 0)
                             {
                                 <MudText Typo="Typo.caption" Class="helper-muted">No tags selected.</MudText>
@@ -167,7 +219,28 @@
     private string _tagInput = string.Empty;
     private string _characterInput = string.Empty;
 
-    private bool CanSubmit => !string.IsNullOrWhiteSpace(Model.Name) && selectedCategoryId != Guid.Empty;
+    private bool CanSubmit =>
+        !string.IsNullOrWhiteSpace(Model.Name) &&
+        selectedCategoryId != Guid.Empty &&
+        !string.IsNullOrWhiteSpace(Model.Artist);
+
+    private List<string> CharacterSuggestions => GetSuggestions(
+        AllModels.SelectMany(x => x.Characters ?? []),
+        _characterInput,
+        selectedCharacters);
+
+    private List<string> TagSuggestions => GetSuggestions(
+        AllModels.SelectMany(x => x.Tags ?? []),
+        _tagInput,
+        selectedTags);
+
+    private List<string> FranchiseSuggestions => GetSuggestions(
+        AllModels.Select(x => x.Franchise),
+        Model.Franchise ?? string.Empty);
+
+    private List<string> ArtistSuggestions => GetSuggestions(
+        AllModels.Select(x => x.Artist ?? string.Empty),
+        Model.Artist ?? string.Empty);
 
     private Guid SelectedCategoryId
     {
@@ -178,7 +251,7 @@
             var category = categories.FirstOrDefault(x => x.Id == value);
             if (category is not null)
             {
-                Model.Category = new EntityReference(category.Id, category.Name);
+                Model.Category = new EntityReference(category.Id, CategoryToString(category.Id));
             }
         }
     }
@@ -275,7 +348,7 @@
             }
 
             selectedCategoryId = existingCategory.Id;
-            Model.Category = new EntityReference(existingCategory.Id, existingCategory.Name);
+            Model.Category = new EntityReference(existingCategory.Id, CategoryToString(existingCategory.Id));
         }
         else
         {
@@ -289,42 +362,6 @@
             : ModelType.Unknown;
 
         Model.Type = new EnumReference((int)selectedType, selectedType.ToString());
-    }
-
-    private Task<IEnumerable<string>> SearchFranchises(string value, CancellationToken cancellationToken)
-    {
-        var source = AllModels
-            .Where(x => !string.IsNullOrWhiteSpace(x.Franchise))
-            .Select(x => x.Franchise);
-
-        return Task.FromResult(FilterValues(source, value));
-    }
-
-    private Task<IEnumerable<string>> SearchCharacters(string value, CancellationToken cancellationToken)
-    {
-        var source = AllModels
-            .SelectMany(x => x.Characters ?? [])
-            .Where(x => !string.IsNullOrWhiteSpace(x));
-
-        return Task.FromResult(FilterValues(source, value));
-    }
-
-    private Task<IEnumerable<string>> SearchArtists(string value, CancellationToken cancellationToken)
-    {
-        var source = AllModels
-            .Where(x => !string.IsNullOrWhiteSpace(x.Artist))
-            .Select(x => x.Artist!);
-
-        return Task.FromResult(FilterValues(source, value));
-    }
-
-    private Task<IEnumerable<string>> SearchTags(string value, CancellationToken cancellationToken)
-    {
-        var source = AllModels
-            .SelectMany(x => x.Tags ?? [])
-            .Where(x => !string.IsNullOrWhiteSpace(x));
-
-        return Task.FromResult(FilterValues(source, value));
     }
 
     private IEnumerable<string> FilterValues(IEnumerable<string> source, string value)
@@ -360,6 +397,28 @@
             .Distinct(valueComparer);
     }
 
+    private List<string> GetSuggestions(IEnumerable<string> source, string currentInput, HashSet<string>? selectedValues = null)
+    {
+        if (string.IsNullOrWhiteSpace(currentInput))
+        {
+            return [];
+        }
+
+        var suggestions = FilterValues(source, currentInput);
+        if (selectedValues is not null)
+        {
+            suggestions = suggestions.Where(x => !selectedValues.Contains(x));
+        }
+
+        return suggestions
+            .Take(6)
+            .ToList();
+    }
+
+    private void ApplyFranchiseSuggestion(string value) => Model.Franchise = value;
+
+    private void ApplyArtistSuggestion(string value) => Model.Artist = value;
+
     private void HandleTagKeyDown(KeyboardEventArgs e)
     {
         if (e.Key is "Enter" or ",")
@@ -370,13 +429,18 @@
 
     private void AddTagFromInput()
     {
-        var value = _tagInput.Trim();
-        if (string.IsNullOrWhiteSpace(value))
+        AddTagValue(_tagInput);
+    }
+
+    private void AddTagValue(string? value)
+    {
+        var normalizedValue = (value ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(normalizedValue))
         {
             return;
         }
 
-        if (selectedTags.Add(value))
+        if (selectedTags.Add(normalizedValue))
         {
             Model.Tags = selectedTags.ToArray();
         }
@@ -402,13 +466,18 @@
 
     private void AddCharacterFromInput()
     {
-        var value = _characterInput.Trim();
-        if (string.IsNullOrWhiteSpace(value))
+        AddCharacterValue(_characterInput);
+    }
+
+    private void AddCharacterValue(string? value)
+    {
+        var normalizedValue = (value ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(normalizedValue))
         {
             return;
         }
 
-        if (selectedCharacters.Add(value))
+        if (selectedCharacters.Add(normalizedValue))
         {
             Model.Characters = selectedCharacters.ToArray();
         }
@@ -427,8 +496,8 @@
     private void Submit()
     {
         Model.Name = Model.Name.Trim();
-        Model.Franchise = Model.Franchise.Trim();
-        Model.Artist = string.IsNullOrWhiteSpace(Model.Artist) ? null : Model.Artist.Trim();
+        Model.Franchise = (Model.Franchise ?? string.Empty).Trim();
+        Model.Artist = (Model.Artist ?? string.Empty).Trim();
         Model.Characters = selectedCharacters.ToArray();
         Model.Tags = selectedTags.ToArray();
         MudDialog?.Close(DialogResult.Ok(Model));
@@ -443,6 +512,32 @@
     {
         return string.IsNullOrWhiteSpace(value) || Guid.TryParse(value, out _);
     }
+
+    private string CategoryToString(Guid id)
+    {
+        if (id == Guid.Empty)
+        {
+            return string.Empty;
+        }
+
+        if (knownCategoryNames.TryGetValue(id, out var knownCategoryName) &&
+            !HasInvalidCategoryName(knownCategoryName))
+        {
+            return knownCategoryName;
+        }
+
+        var categoryName = categories
+            .FirstOrDefault(x => x.Id == id)?
+            .Name;
+
+        if (!HasInvalidCategoryName(categoryName))
+        {
+            return categoryName!;
+        }
+
+        return id.ToString();
+    }
+
 }
 
 <style>
@@ -467,5 +562,16 @@
 
     .helper-muted {
         color: var(--mud-palette-text-secondary);
+    }
+
+    .suggestion-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .suggestion-button {
+        min-width: 0;
+        padding-inline: 0.375rem;
     }
 </style>

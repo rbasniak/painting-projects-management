@@ -7,7 +7,7 @@ public class CreateModelRequest
     public string[] Characters { get; init; } = [];
     public Guid CategoryId { get; init; }
     public ModelType Type { get; init; }
-    public string? Artist { get; init; }
+    public string Artist { get; init; } = string.Empty;
     public string[] Tags { get; init; } = [];
     public string? CoverPicture { get; init; }
     public BaseSize BaseSize { get; init; }
