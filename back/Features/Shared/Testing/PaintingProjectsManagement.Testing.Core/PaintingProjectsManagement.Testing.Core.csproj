@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <!-- Common properties are now in Directory.Build.props -->
 
@@ -10,6 +10,7 @@
 	<ItemGroup>
 		<PackageReference Include="rbkApiModules.Testing.Core" />
 		<PackageReference Include="Microsoft.Playwright" />
+		<PackageReference Include="TUnit" />
 	</ItemGroup>
 	
 </Project>

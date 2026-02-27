@@ -33,24 +33,16 @@ jobs:
       - name: Build solution
         run: dotnet build PaintingProjectsManagment.slnx --configuration Release --no-restore
 
+      - name: Install Playwright browsers
+        run: |
+          pwsh "Features/Modules/Inventory/UI/PaintingProjectsManagement.Features.Inventory.UI.Tests/bin/Release/net10.0/playwright.ps1" install --with-deps
+          pwsh "Features/Modules/Materials/UI/PaintingProjectsManagement.Features.Materials.UI.Tests/bin/Release/net10.0/playwright.ps1" install --with-deps
+
       - name: Run tests
         env:
           ASPNETCORE_ENVIRONMENT: Testing
           DOTNET_ENVIRONMENT: Testing
-        run: |
-          TEST_PROJECTS=(
-            "Features/Modules/Inventory/Core/PaintingProjectsManagement.Features.Core.Tests/PaintingProjectsManagement.Features.Inventory.Core.Tests.csproj"
-            "Features/Modules/Inventory/Integrations/PaintingProjectsManagement.Features.Inventory.Integrations.Tests/PaintingProjectsManagement.Features.Inventory.Integrations.Tests.csproj"
-            "Features/Modules/Inventory/Web/PaintingProjectsManagement.Features.Inventory.Web.Tests/PaintingProjectsManagement.Features.Inventory.Web.Tests.csproj"
-            "Features/Modules/Materials/Web/PaintingProjectsManagement.Features.Materials.Web.Tests/PaintingProjectsManagement.Features.Materials.Web.Tests.csproj"
-            "Features/Modules/Models/Web/PaintingProjectsManagement.Features.Models.Web.Tests/PaintingProjectsManagement.Features.Models.Web.Tests.csproj"
-            "Features/Modules/Projects/Web/PaintingProjectsManagement.Features.Projects.Web.Tests/PaintingProjectsManagement.Features.Projects.Web.Tests.csproj"
-          )
-
-          for project in "${TEST_PROJECTS[@]}"; do
-            echo "Running tests for ${project}"
-            dotnet test --project "${project}" --configuration Release --no-build --report-trx --results-directory TestResults --coverage --coverage-output-format cobertura
-          done
+        run: dotnet test --solution PaintingProjectsManagment.slnx --configuration Release --no-build --report-trx --results-directory TestResults --coverage --coverage-output-format cobertura
 
       - name: Upload test artifacts
         if: always()
