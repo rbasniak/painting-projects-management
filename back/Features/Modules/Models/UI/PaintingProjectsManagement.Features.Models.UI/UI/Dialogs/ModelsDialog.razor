@@ -83,12 +83,13 @@
                         <MudStack Spacing="2">
                             <MudText Typo="Typo.subtitle1">Characters</MudText>
                             <MudAutocomplete T="string"
-                                             @bind-Text="_characterInput"
+                                             @bind-Value="_characterInput"
                                              Label="Add character"
                                              Placeholder="Type a character and press Enter"
                                              SearchFunc="SearchCharacters"
                                              ToStringFunc="(string s) => s"
                                              AllowCustomValues="true"
+                                             CoerceValue="true"
                                              Immediate="true"
                                              OpenOnFocus="false"
                                              Variant="Variant.Outlined"
@@ -123,12 +124,13 @@
                         <MudStack Spacing="2">
                             <MudText Typo="Typo.subtitle1">Tags</MudText>
                             <MudAutocomplete T="string"
-                                             @bind-Text="_tagInput"
+                                             @bind-Value="_tagInput"
                                              Label="Add tag"
                                              Placeholder="Type a tag and press Enter"
                                              SearchFunc="SearchTags"
                                              ToStringFunc="(string s) => s"
                                              AllowCustomValues="true"
+                                             CoerceValue="true"
                                              Immediate="true"
                                              OpenOnFocus="false"
                                              Variant="Variant.Outlined"
@@ -392,7 +394,7 @@
 
     private void AddTagFromInput()
     {
-        var value = _tagInput.Trim();
+        var value = (_tagInput ?? string.Empty).Trim();
         if (string.IsNullOrWhiteSpace(value))
         {
             return;
@@ -424,7 +426,7 @@
 
     private void AddCharacterFromInput()
     {
-        var value = _characterInput.Trim();
+        var value = (_characterInput ?? string.Empty).Trim();
         if (string.IsNullOrWhiteSpace(value))
         {
             return;
