@@ -20,6 +20,8 @@
                                      SearchFunc="SearchFranchises"
                                      ToStringFunc="(string s) => s"
                                      AllowCustomValues="true"
+                                     CoerceValue="true"
+                                     Immediate="true"
                                      OpenOnFocus="false"
                                      Variant="Variant.Outlined" />
                 </MudItem>
@@ -28,10 +30,11 @@
                                @bind-Value="SelectedCategoryId"
                                Label="Category"
                                Variant="Variant.Outlined"
+                               ToStringFunc="CategoryToString"
                                Required="true">
                         @foreach (var category in categories)
                         {
-                            <MudSelectItem Value="@category.Id">@category.Name</MudSelectItem>
+                            <MudSelectItem Value="@category.Id">@CategoryToString(category.Id)</MudSelectItem>
                         }
                     </MudSelect>
                 </MudItem>
@@ -49,11 +52,15 @@
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <MudAutocomplete @bind-Value="Model.Artist"
+                                     @bind-Text="_artistInput"
                                      Label="Artist"
                                      SearchFunc="SearchArtists"
                                      ToStringFunc="(string s) => s"
                                      AllowCustomValues="true"
+                                     CoerceValue="true"
+                                     Immediate="true"
                                      OpenOnFocus="false"
+                                     Required="true"
                                      Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem xs="12" md="6" Class="d-flex align-center">
@@ -75,15 +82,20 @@
                     <MudPaper Outlined="true" Class="pa-4 collection-panel">
                         <MudStack Spacing="2">
                             <MudText Typo="Typo.subtitle1">Characters</MudText>
-                            <MudTextField @bind-Value="_characterInput"
-                                          Label="Add character"
-                                          Placeholder="Type a character and press Enter"
-                                          Immediate="true"
-                                          Variant="Variant.Outlined"
-                                          OnKeyDown="HandleCharacterKeyDown"
-                                          Adornment="Adornment.End"
-                                          AdornmentIcon="@Icons.Material.Filled.Add"
-                                          OnAdornmentClick="AddCharacterFromInput" />
+                            <MudAutocomplete T="string"
+                                             @bind-Text="_characterInput"
+                                             Label="Add character"
+                                             Placeholder="Type a character and press Enter"
+                                             SearchFunc="SearchCharacters"
+                                             ToStringFunc="(string s) => s"
+                                             AllowCustomValues="true"
+                                             Immediate="true"
+                                             OpenOnFocus="false"
+                                             Variant="Variant.Outlined"
+                                             OnKeyDown="HandleCharacterKeyDown"
+                                             Adornment="Adornment.End"
+                                             AdornmentIcon="@Icons.Material.Filled.Add"
+                                             OnAdornmentClick="AddCharacterFromInput" />
                             <MudText Typo="Typo.caption" Class="helper-muted">Press Enter or click + to add.</MudText>
                             @if (selectedCharacters.Count == 0)
                             {
@@ -110,15 +122,20 @@
                     <MudPaper Outlined="true" Class="pa-4 collection-panel">
                         <MudStack Spacing="2">
                             <MudText Typo="Typo.subtitle1">Tags</MudText>
-                            <MudTextField @bind-Value="_tagInput"
-                                          Label="Add tag"
-                                          Placeholder="Type a tag and press Enter"
-                                          Immediate="true"
-                                          Variant="Variant.Outlined"
-                                          OnKeyDown="HandleTagKeyDown"
-                                          Adornment="Adornment.End"
-                                          AdornmentIcon="@Icons.Material.Filled.Add"
-                                          OnAdornmentClick="AddTagFromInput" />
+                            <MudAutocomplete T="string"
+                                             @bind-Text="_tagInput"
+                                             Label="Add tag"
+                                             Placeholder="Type a tag and press Enter"
+                                             SearchFunc="SearchTags"
+                                             ToStringFunc="(string s) => s"
+                                             AllowCustomValues="true"
+                                             Immediate="true"
+                                             OpenOnFocus="false"
+                                             Variant="Variant.Outlined"
+                                             OnKeyDown="HandleTagKeyDown"
+                                             Adornment="Adornment.End"
+                                             AdornmentIcon="@Icons.Material.Filled.Add"
+                                             OnAdornmentClick="AddTagFromInput" />
                             <MudText Typo="Typo.caption" Class="helper-muted">Press Enter or click + to add.</MudText>
                             @if (selectedTags.Count == 0)
                             {
@@ -166,8 +183,12 @@
     private ModelType selectedType = ModelType.Unknown;
     private string _tagInput = string.Empty;
     private string _characterInput = string.Empty;
+    private string _artistInput = string.Empty;
 
-    private bool CanSubmit => !string.IsNullOrWhiteSpace(Model.Name) && selectedCategoryId != Guid.Empty;
+    private bool CanSubmit =>
+        !string.IsNullOrWhiteSpace(Model.Name) &&
+        selectedCategoryId != Guid.Empty &&
+        !string.IsNullOrWhiteSpace(GetArtistValue());
 
     private Guid SelectedCategoryId
     {
@@ -178,7 +199,7 @@
             var category = categories.FirstOrDefault(x => x.Id == value);
             if (category is not null)
             {
-                Model.Category = new EntityReference(category.Id, category.Name);
+                Model.Category = new EntityReference(category.Id, CategoryToString(category.Id));
             }
         }
     }
@@ -253,6 +274,7 @@
         Model.Tags ??= [];
         Model.Franchise ??= string.Empty;
         Model.Artist ??= string.Empty;
+        _artistInput = Model.Artist;
 
         selectedCharacters = new HashSet<string>(NormalizeValues(Model.Characters), valueComparer);
         selectedTags = new HashSet<string>(NormalizeValues(Model.Tags), valueComparer);
@@ -275,7 +297,7 @@
             }
 
             selectedCategoryId = existingCategory.Id;
-            Model.Category = new EntityReference(existingCategory.Id, existingCategory.Name);
+            Model.Category = new EntityReference(existingCategory.Id, CategoryToString(existingCategory.Id));
         }
         else
         {
@@ -428,7 +450,7 @@
     {
         Model.Name = Model.Name.Trim();
         Model.Franchise = Model.Franchise.Trim();
-        Model.Artist = string.IsNullOrWhiteSpace(Model.Artist) ? null : Model.Artist.Trim();
+        Model.Artist = GetArtistValue().Trim();
         Model.Characters = selectedCharacters.ToArray();
         Model.Tags = selectedTags.ToArray();
         MudDialog?.Close(DialogResult.Ok(Model));
@@ -442,6 +464,38 @@
     private static bool HasInvalidCategoryName(string? value)
     {
         return string.IsNullOrWhiteSpace(value) || Guid.TryParse(value, out _);
+    }
+
+    private string CategoryToString(Guid id)
+    {
+        if (id == Guid.Empty)
+        {
+            return string.Empty;
+        }
+
+        if (knownCategoryNames.TryGetValue(id, out var knownCategoryName) &&
+            !HasInvalidCategoryName(knownCategoryName))
+        {
+            return knownCategoryName;
+        }
+
+        var categoryName = categories
+            .FirstOrDefault(x => x.Id == id)?
+            .Name;
+
+        if (!HasInvalidCategoryName(categoryName))
+        {
+            return categoryName!;
+        }
+
+        return id.ToString();
+    }
+
+    private string GetArtistValue()
+    {
+        return !string.IsNullOrWhiteSpace(_artistInput)
+            ? _artistInput
+            : (Model.Artist ?? string.Empty);
     }
 }
 
