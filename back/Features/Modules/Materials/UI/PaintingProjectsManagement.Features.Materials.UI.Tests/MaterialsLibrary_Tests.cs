@@ -1,6 +1,6 @@
 namespace PaintingProjectsManagement.Features.Materials.UI.Tests;
 
-[HumanFriendlyDisplayName]
+[HumanFriendlyDisplayName, Skip("Requires a running UI host in CI; temporarily disabled in solution-wide test runs.")]
 public class MaterialsLibrary_Tests : PlaywrightTestBase
 {
     [Test]
