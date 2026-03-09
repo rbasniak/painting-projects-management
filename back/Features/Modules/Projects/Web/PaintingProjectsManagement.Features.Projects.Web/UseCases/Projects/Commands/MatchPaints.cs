@@ -38,6 +38,11 @@ public class MatchPaints : IEndpoint
                         p => p.Id == projectId && p.TenantId == request.Identity.Tenant,
                         cancellationToken))
                 .WithMessage("Project not found.");
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableProjectAsync(Context, request.Identity.Tenant, request.ProjectId, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
     }
 

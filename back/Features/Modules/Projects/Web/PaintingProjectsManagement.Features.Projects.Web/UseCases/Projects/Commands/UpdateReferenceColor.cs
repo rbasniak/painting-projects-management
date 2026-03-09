@@ -43,6 +43,11 @@ public class UpdateReferenceColor : IEndpoint
                         s.ColorGroup.Project.TenantId == request.Identity.Tenant, 
                         cancellationToken))
                 .WithMessage("Color section not found.");
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableBySectionAsync(Context, request.Identity.Tenant, request.SectionId, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
 
         private static bool IsValidHexColor(string color)

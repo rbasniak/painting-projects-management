@@ -21,9 +21,23 @@
             <MudTh Style="width: 100px"></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Name" Style="width: 50%">@context.Name</MudTd>
+            <MudTd DataLabel="Name" Style="width: 50%">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                    <MudText>@context.Name</MudText>
+                    @if (context.IsArchived)
+                    {
+                        <MudChip T="string" Color="Color.Default" Variant="Variant.Outlined" Size="Size.Small" StartIcon="@Icons.Material.Filled.Lock">
+                            Archived
+                        </MudChip>
+                    }
+                </MudStack>
+            </MudTd>
             <MudTd Style="width: 150px">
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="() => Edit(context)" Color="Color.Primary" />
+                <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                               OnClick="() => Edit(context)"
+                               Color="Color.Primary"
+                               Disabled="@context.IsArchived"
+                               Title="@(context.IsArchived ? "Archived projects are read-only." : "Edit")" />
                 <MudIconButton Icon="@Icons.Material.Filled.PlayArrow" OnClick="() => NavigateToExecution(context)" Color="Color.Success" Title="Execution" />
                 <MudMenu>
                     <ActivatorContent>
@@ -33,6 +47,10 @@
                         <MudMenuItem OnClick="() => GetProjectCost(context)">
                             <MudIcon Icon="@Icons.Material.Filled.CurrencyExchange" Class="mr-3" />
                             Costs
+                        </MudMenuItem>
+                        <MudMenuItem OnClick="() => OpenUsedColors(context)">
+                            <MudIcon Icon="@Icons.Material.Filled.FormatColorFill" Class="mr-3" />
+                            Used Colors by Zone
                         </MudMenuItem>
                         <MudMenuItem OnClick="() => OpenColorZones(context)">
                             <MudIcon Icon="@Icons.Material.Filled.Palette" Class="mr-3" />
@@ -46,9 +64,20 @@
                             <MudIcon Icon="@Icons.Material.Filled.Image" Class="mr-3" />
                             Reference Pictures
                         </MudMenuItem>
+                        @if (!context.IsArchived)
+                        {
+                            <MudMenuItem OnClick="() => Archive(context)">
+                                <MudIcon Icon="@Icons.Material.Filled.Archive" Class="mr-3" />
+                                Archive Project
+                            </MudMenuItem>
+                        }
                     </ChildContent>
                 </MudMenu>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)" Color="Color.Error" />
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               OnClick="() => Delete(context)"
+                               Color="Color.Error"
+                               Disabled="@context.IsArchived"
+                               Title="@(context.IsArchived ? "Archived projects are read-only." : "Delete")" />
             </MudTd>
         </RowTemplate>
         <PagerContent>
@@ -61,6 +90,7 @@
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
     [Inject] public IDialogService DialogService { get; set; } = default!;
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
     private List<ProjectDetails> projects = new();
     private string searchString = string.Empty;
@@ -118,6 +148,12 @@
 
     private async Task OpenColorZones(ProjectDetails project)
     {
+        if (project.IsArchived)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
         var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
 
         var parameters = new DialogParameters { ["Model"] = projectDetails };
@@ -127,6 +163,12 @@
 
     private async Task OpenMatchPaints(ProjectDetails project)
     {
+        if (project.IsArchived)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
         var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
 
         var parameters = new DialogParameters { ["Model"] = projectDetails };
@@ -136,6 +178,12 @@
 
     private async Task OpenReferencePictures(ProjectDetails project)
     {
+        if (project.IsArchived)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
         var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
 
         var parameters = new DialogParameters { ["Model"] = projectDetails };
@@ -151,8 +199,22 @@
         await DialogService.ShowAsync<ProjectReferencePicturesDialog>(dialogTitle, parameters, options);
     }
 
+    private async Task OpenUsedColors(ProjectDetails project)
+    {
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = true };
+        DialogService.Show<UsedColorsByZoneDialog>(title: null, parameters, options);
+    }
+
     private async Task Edit(ProjectDetails project)
     {
+        if (project.IsArchived)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
         var input = new ProjectDetails
         {
             Id = project.Id,
@@ -182,8 +244,38 @@
         }
     }
 
+    private async Task Archive(ProjectDetails project)
+    {
+        bool? confirm = await DialogService.ShowMessageBox(
+            "Archive Project",
+            $"Archive '{project.Name}'? Once a project is archived it cannot be edited anymore. Only a read-only view will be available.",
+            yesText: "Archive",
+            cancelText: "Cancel");
+
+        if (confirm != true)
+        {
+            return;
+        }
+
+        var archived = await ProjectsService.ArchiveAsync(project.Id, default);
+        var index = projects.FindIndex(x => x.Id == project.Id);
+        if (index >= 0)
+        {
+            projects[index].EndDate = archived.EndDate;
+            projects[index].IsArchived = true;
+        }
+
+        Snackbar.Add("Project archived. It is now read-only.", Severity.Success);
+    }
+
     private async Task Delete(ProjectDetails project)
     {
+        if (project.IsArchived)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
         bool? confirm = await DialogService.ShowMessageBox(
             "Delete Project",
             $"Delete '{project.Name}'?",

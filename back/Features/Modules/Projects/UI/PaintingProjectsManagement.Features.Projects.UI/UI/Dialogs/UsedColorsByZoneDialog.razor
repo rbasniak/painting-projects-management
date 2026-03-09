@@ -1,0 +1,89 @@
+@using MudBlazor
+@using PaintingProjectsManagement.UI.Modules.Projects
+@using System.Linq
+
+@namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
+
+<MudDialog Class="used-colors-dialog">
+    <DialogContent>
+        <MudStack Spacing="3">
+            <MudText Typo="Typo.h5">@Model.Name</MudText>
+            <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Used colors by zone (chosen colors only)</MudText>
+
+            @if (Model.Groups == null || !Model.Groups.Any())
+            {
+                <MudAlert Severity="Severity.Info">No color groups available.</MudAlert>
+            }
+            else
+            {
+                @foreach (var group in Model.Groups)
+                {
+                    <MudPaper Class="pa-4" Elevation="1">
+                        <MudText Typo="Typo.h6" Class="mb-2">@group.Name</MudText>
+
+                        @if (!group.Sections.Any())
+                        {
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">No zones in this group.</MudText>
+                        }
+                        else
+                        {
+                            <MudTable Items="group.Sections.OrderBy(x => x.Zone)" Dense="true" Hover="true">
+                                <HeaderContent>
+                                    <MudTh>Zone</MudTh>
+                                    <MudTh>Used Color</MudTh>
+                                    <MudTh style="width: 80px;">Preview</MudTh>
+                                </HeaderContent>
+                                <RowTemplate>
+                                    @{
+                                        var pickedColor = context.PickedColorId.HasValue
+                                            ? context.SuggestedColors.FirstOrDefault(x => x.PaintColorId == context.PickedColorId.Value)
+                                            : null;
+                                    }
+                                    <MudTd>@GetZoneLabel(context.Zone)</MudTd>
+                                    <MudTd>
+                                        @if (pickedColor is null)
+                                        {
+                                            <MudText Typo="Typo.body2" Color="Color.Secondary">No chosen color</MudText>
+                                        }
+                                        else
+                                        {
+                                            <MudText Typo="Typo.body2">@pickedColor.Name</MudText>
+                                            <MudText Typo="Typo.caption" Color="Color.Secondary">@pickedColor.BrandName · @pickedColor.LineName · @pickedColor.HexColor</MudText>
+                                        }
+                                    </MudTd>
+                                    <MudTd>
+                                        @if (pickedColor is not null)
+                                        {
+                                            <div style="@($"width: 44px; height: 24px; border-radius: 4px; border: 1px solid #ccc; background-color: {pickedColor.HexColor};")"></div>
+                                        }
+                                    </MudTd>
+                                </RowTemplate>
+                            </MudTable>
+                        }
+                    </MudPaper>
+                }
+            }
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Close" Color="Color.Primary" Variant="Variant.Filled">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public ProjectDetails Model { get; set; } = new();
+
+    private static string GetZoneLabel(ColorZone zone)
+    {
+        return zone switch
+        {
+            ColorZone.Highlight => "Highlights",
+            ColorZone.Midtone => "Midtones",
+            ColorZone.Shadow => "Shadows",
+            _ => zone.ToString()
+        };
+    }
+
+    private void Close() => MudDialog.Close(DialogResult.Ok(true));
+}

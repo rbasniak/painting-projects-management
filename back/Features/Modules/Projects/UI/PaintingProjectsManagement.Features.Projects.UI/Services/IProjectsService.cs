@@ -13,6 +13,8 @@ public interface IProjectsService
 
     Task<ProjectDetails> UpdateAsync(UpdateProjectRequest request, CancellationToken cancellationToken);
 
+    Task<ProjectDetails> ArchiveAsync(Guid id, CancellationToken cancellationToken);
+
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 
     // Execution management
@@ -75,7 +77,7 @@ public class ProjectsService : IProjectsService
       CreateProjectRequest request,
       CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/materials", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync("api/projects", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -90,7 +92,20 @@ public class ProjectsService : IProjectsService
       UpdateProjectRequest request,
       CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/materials", request, cancellationToken);
+        var response = await _httpClient.PutAsJsonAsync("api/projects", request, cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<ProjectDetails>();
+            return result ?? new ProjectDetails();
+        }
+
+        return new ProjectDetails();
+    }
+
+    public async Task<ProjectDetails> ArchiveAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.PostAsync($"api/projects/{id}/archive", null, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -103,7 +118,7 @@ public class ProjectsService : IProjectsService
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        await _httpClient.DeleteAsync($"api/materials/{id}", cancellationToken);
+        await _httpClient.DeleteAsync($"api/projects/{id}", cancellationToken);
     }
 
     public async Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken)
