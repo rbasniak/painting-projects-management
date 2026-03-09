@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using PaintingProjectsManagement.Features.Models;
-using PaintingProjectsManagement.Features.Projects;
+using PaintingProjectsManagement.Infrastructure.Common;
 using PaintingProjectsManagment.Database;
 using rbkApiModules.Identity.Core;
 using System.Security.Claims;
@@ -9,8 +8,6 @@ namespace PaintingProjectsManagement.Api;
 
 public static class ProfileEndpoints
 {
-    public const long StorageQuotaInBytes = 100L * 1024 * 1024;
-
     public static IEndpointRouteBuilder MapProfileEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("/api/profile/me", GetProfileAsync)
@@ -60,59 +57,24 @@ public static class ProfileEndpoints
         return Results.Ok(profile);
     }
 
-    private static async Task<IResult> GetStorageUsageAsync(HttpContext httpContext, DatabaseContext context, IWebHostEnvironment environment, CancellationToken cancellationToken)
+    private static async Task<IResult> GetStorageUsageAsync(HttpContext httpContext, DatabaseContext context, ITenantStorageUsageService storageUsageService, CancellationToken cancellationToken)
     {
         var tenant = await ResolveTenantAsync(httpContext.User, context, cancellationToken);
         if (string.IsNullOrWhiteSpace(tenant))
         {
-            return Results.Ok(new StorageUsageDetails());
+            return Results.Ok(new StorageUsageDetails
+            {
+                QuotaBytes = storageUsageService.QuotaInBytes,
+                RemainingBytes = storageUsageService.QuotaInBytes
+            });
         }
 
-        var models = await context.Set<Model>()
-            .AsNoTracking()
-            .Where(x => x.TenantId == tenant)
-            .Select(x => new { x.CoverPicture, x.Pictures })
-            .ToListAsync(cancellationToken);
-
-        var projects = await context.Set<Project>()
-            .AsNoTracking()
-            .Include(x => x.References)
-            .Include(x => x.Pictures)
-            .Where(x => x.TenantId == tenant)
-            .ToListAsync(cancellationToken);
-
-        var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var model in models)
-        {
-            AddUrl(urls, model.CoverPicture);
-
-            foreach (var picture in model.Pictures)
-            {
-                AddUrl(urls, picture);
-            }
-        }
-
-        foreach (var project in projects)
-        {
-            AddUrl(urls, project.PictureUrl);
-
-            foreach (var reference in project.References)
-            {
-                AddUrl(urls, reference.Url);
-            }
-
-            foreach (var picture in project.Pictures)
-            {
-                AddUrl(urls, picture.Url);
-            }
-        }
-
-        long usedBytes = urls.Sum(url => TryGetFileSize(url, environment));
+        var usedBytes = await storageUsageService.GetUsageInBytesAsync(tenant, cancellationToken);
         var usage = new StorageUsageDetails
         {
             UsedBytes = usedBytes,
-            QuotaBytes = StorageQuotaInBytes,
-            RemainingBytes = Math.Max(0, StorageQuotaInBytes - usedBytes)
+            QuotaBytes = storageUsageService.QuotaInBytes,
+            RemainingBytes = Math.Max(0, storageUsageService.QuotaInBytes - usedBytes)
         };
 
         return Results.Ok(usage);
@@ -153,67 +115,6 @@ public static class ProfileEndpoints
         return null;
     }
 
-    private static void AddUrl(ICollection<string> target, string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return;
-        }
-
-        target.Add(value);
-    }
-
-    private static long TryGetFileSize(string rawUrl, IWebHostEnvironment environment)
-    {
-        var relativePath = NormalizeRelativePath(rawUrl);
-        if (string.IsNullOrWhiteSpace(relativePath))
-        {
-            return 0;
-        }
-
-        var roots = new[]
-        {
-            environment.WebRootPath,
-            Path.Combine(environment.ContentRootPath, "wwwroot"),
-            Path.Combine(AppContext.BaseDirectory, "wwwroot")
-        }
-        .Where(x => !string.IsNullOrWhiteSpace(x))
-        .Select(Path.GetFullPath)
-        .Distinct()
-        .ToArray();
-
-        foreach (var root in roots)
-        {
-            var candidate = Path.GetFullPath(Path.Combine(root, relativePath));
-            if (!candidate.StartsWith(root, StringComparison.Ordinal))
-            {
-                continue;
-            }
-
-            if (!File.Exists(candidate))
-            {
-                continue;
-            }
-
-            return new FileInfo(candidate).Length;
-        }
-
-        return 0;
-    }
-
-    private static string NormalizeRelativePath(string rawUrl)
-    {
-        var normalized = rawUrl.Trim();
-        if (Uri.TryCreate(normalized, UriKind.Absolute, out var uri))
-        {
-            normalized = uri.AbsolutePath;
-        }
-
-        normalized = normalized.Split('?', '#')[0];
-        normalized = normalized.Replace('\\', '/');
-
-        return normalized.TrimStart('/');
-    }
 }
 
 public sealed record ProfileDetails
@@ -228,6 +129,6 @@ public sealed record ProfileDetails
 public sealed record StorageUsageDetails
 {
     public long UsedBytes { get; init; }
-    public long QuotaBytes { get; init; } = ProfileEndpoints.StorageQuotaInBytes;
-    public long RemainingBytes { get; init; } = ProfileEndpoints.StorageQuotaInBytes;
+    public long QuotaBytes { get; init; }
+    public long RemainingBytes { get; init; }
 }

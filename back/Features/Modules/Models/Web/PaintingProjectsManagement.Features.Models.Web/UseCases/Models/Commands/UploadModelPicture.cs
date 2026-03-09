@@ -1,4 +1,5 @@
 using rbkApiModules.Core.Utilities;
+using PaintingProjectsManagement.Infrastructure.Common;
 
 namespace PaintingProjectsManagement.Features.Models;
 
@@ -26,8 +27,11 @@ public class UploadModelPicture : IEndpoint
 
     public class Validator : SmartValidator<Request, Model>
     {
-        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        private readonly ITenantStorageUsageService _storageUsageService;
+
+        public Validator(DbContext context, ILocalizationService localization, ITenantStorageUsageService storageUsageService) : base(context, localization)
         {
+            _storageUsageService = storageUsageService;
         }
 
         protected override void ValidateBusinessRules()
@@ -35,6 +39,9 @@ public class UploadModelPicture : IEndpoint
             RuleFor(x => x.Base64Image)
                 .NotEmpty()
                 .Must(HaveValidExtension).WithMessage("Invalid image format.");
+
+            RuleFor(x => x.Base64Image)
+                .MustAsync(HaveAvailableQuota).WithMessage("Storage quota exceeded.");
         }
 
         private bool HaveValidExtension(Request request, string base64Image)
@@ -48,6 +55,20 @@ public class UploadModelPicture : IEndpoint
             {
                 return false;
             }
+        }
+
+        private async Task<bool> HaveAvailableQuota(Request request, string base64Image, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(base64Image) || !HaveValidExtension(request, base64Image))
+            {
+                return true;
+            }
+
+            return await _storageUsageService.HasQuotaForImageAsync(
+                request.Identity.Tenant ?? string.Empty,
+                base64Image,
+                bytesToRelease: 0,
+                cancellationToken);
         }
     }
 

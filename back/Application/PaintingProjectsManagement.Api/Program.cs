@@ -9,6 +9,7 @@ using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.Features.Projects;
 using PaintingProjectsManagment.Database;
+using PaintingProjectsManagement.Infrastructure.Common;
 using rbkApiModules.Commons.Core;
 using rbkApiModules.Commons.Core.UiDefinitions;
 using rbkApiModules.Commons.Relational;
@@ -218,6 +219,8 @@ public class Program
 
         // Register file storage service
         builder.Services.AddSingleton<IFileStorage, LocalFileStorage>();
+        builder.Services.Configure<StorageQuotaOptions>(builder.Configuration.GetSection(StorageQuotaOptions.SectionName));
+        builder.Services.AddSingleton<ITenantStorageUsageService, TenantStorageUsageService>();
 
         var app = builder.Build();
 
