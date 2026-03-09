@@ -18,6 +18,7 @@ internal static class ProjectsEndpointsMap
         UpdateProjectStep.MapEndpoint(app);
         DeleteProjectStep.MapEndpoint(app);
         GetProjectMaterials.MapEndpoint(app);
+        GetExecutionMaterialsCatalog.MapEndpoint(app);
         GetProjectSteps.MapEndpoint(app);
 
         CreateColorGroup.MapEndpoint(app);

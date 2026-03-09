@@ -510,7 +510,7 @@
         { 
             ["ProjectId"] = ProjectId
         };
-        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<AddMaterialWizardDialog>("Add Material", parameters, options);
         var result = await dialog.Result;
         
