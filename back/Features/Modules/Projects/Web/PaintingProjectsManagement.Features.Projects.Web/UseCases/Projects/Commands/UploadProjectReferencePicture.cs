@@ -35,6 +35,11 @@ public class UploadProjectReferencePicture : IEndpoint
             RuleFor(x => x.Base64Image)
                 .NotEmpty()
                 .Must(HaveValidExtension).WithMessage("Invalid image format.");
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableProjectAsync(Context, request.Identity.Tenant, request.ProjectId, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
 
         private bool HaveValidExtension(Request request, string base64Image)

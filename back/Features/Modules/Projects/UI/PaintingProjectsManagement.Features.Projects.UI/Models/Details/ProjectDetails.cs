@@ -6,7 +6,9 @@ namespace PaintingProjectsManagement.UI.Modules.Projects;
 public record ProjectHeader
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty; 
+    public string Name { get; set; } = string.Empty;
+    public DateTime? EndDate { get; set; }
+    public bool IsArchived { get; set; }
 }
 
 public class ProjectDetails
@@ -16,6 +18,7 @@ public class ProjectDetails
     public string PictureUrl { get; set; } = string.Empty;
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
+    public bool IsArchived { get; set; }
 
     //public ProjectStepDataDetails[] Steps { get; set; } = Array.Empty<ProjectStepDataDetails>();
     //// public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();

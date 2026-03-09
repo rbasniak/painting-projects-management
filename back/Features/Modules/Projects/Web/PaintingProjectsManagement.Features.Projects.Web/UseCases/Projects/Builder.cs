@@ -9,6 +9,7 @@ internal static class ProjectsEndpointsMap
         
         CreateProject.MapEndpoint(app);
         UpdateProject.MapEndpoint(app);
+        ArchiveProject.MapEndpoint(app);
         DeleteProject.MapEndpoint(app);
         AddProjectMaterial.MapEndpoint(app);
         UpdateProjectMaterial.MapEndpoint(app);
