@@ -17,6 +17,8 @@ public static class ModelsBuilder
         SetModelFigureSize.MapEndpoint(app);
         SetModelFigureCount.MapEndpoint(app);
         ListPriorityModels.MapEndpoint(app);
+        GetPublicModelsOwnerKey.MapEndpoint(app);
+        ListPublicModels.MapEndpoint(app);
 
         return app;
     }
