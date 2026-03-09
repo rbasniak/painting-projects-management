@@ -8,6 +8,7 @@ using PaintingProjectsManagement.Features.Materials.Integration;
 using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.Features.Projects;
+using PaintingProjectsManagement.Features.Subscriptions;
 using PaintingProjectsManagement.Features.Authorization;
 using PaintingProjectsManagment.Database;
 using PaintingProjectsManagement.Infrastructure.Common;
@@ -207,6 +208,7 @@ public class Program
         builder.Services.AddInventoryFeature();
         builder.Services.AddModelsFeature();
         builder.Services.AddProjectsFeature();
+        builder.Services.AddSubscriptionsFeature();
 
         // Common features
         builder.Services.AddCurrencyConverter();
@@ -279,6 +281,7 @@ public class Program
         Features.Inventory.Builder.MapInventoryFeature(app);
         Features.Inventory.Integration.Builder.MapInventoryFeature(app);
         app.MapProjectsFeature();
+        app.MapSubscriptionsFeature();
 
         app.Run();
     }

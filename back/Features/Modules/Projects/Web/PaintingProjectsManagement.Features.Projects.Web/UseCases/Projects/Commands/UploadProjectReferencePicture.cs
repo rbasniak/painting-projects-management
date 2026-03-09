@@ -1,5 +1,6 @@
 using rbkApiModules.Core.Utilities;
 using PaintingProjectsManagement.Infrastructure.Common;
+using PaintingProjectsManagement.Features.Subscriptions.Integration;
 
 namespace PaintingProjectsManagement.Features.Projects;
 
@@ -28,10 +29,16 @@ public class UploadProjectReferencePicture : IEndpoint
     public class Validator : SmartValidator<Request, Project>
     {
         private readonly ITenantStorageUsageService _storageUsageService;
+        private readonly IDispatcher _dispatcher;
 
-        public Validator(DbContext context, ILocalizationService localization, ITenantStorageUsageService storageUsageService) : base(context, localization)
+        public Validator(
+            DbContext context,
+            ILocalizationService localization,
+            ITenantStorageUsageService storageUsageService,
+            IDispatcher dispatcher) : base(context, localization)
         {
             _storageUsageService = storageUsageService;
+            _dispatcher = dispatcher;
         }
 
         protected override void ValidateBusinessRules()
@@ -42,6 +49,10 @@ public class UploadProjectReferencePicture : IEndpoint
 
             RuleFor(x => x.Base64Image)
                 .MustAsync(HaveAvailableQuota).WithMessage("Storage quota exceeded.");
+
+            RuleFor(x => x)
+                .MustAsync(HaveAvailableReferencePicturesLimit)
+                .WithMessage("Project reference picture limit reached for current subscription tier.");
 
             RuleFor(x => x)
                 .MustAsync((request, cancellationToken) =>
@@ -74,6 +85,30 @@ public class UploadProjectReferencePicture : IEndpoint
                 base64Image,
                 bytesToRelease: 0,
                 cancellationToken);
+        }
+
+        private async Task<bool> HaveAvailableReferencePicturesLimit(Request request, CancellationToken cancellationToken)
+        {
+            var entitlementResponse = await _dispatcher.SendAsync(
+                new GetSubscriptionEntitlementQuery { TenantId = request.Identity.Tenant },
+                cancellationToken);
+            if (!entitlementResponse.IsValid || entitlementResponse.Data is null)
+            {
+                return true;
+            }
+
+            var maxReferences = entitlementResponse.Data.MaxProjectReferencePicturesPerProject;
+
+            if (maxReferences == int.MaxValue)
+            {
+                return true;
+            }
+
+            var currentReferences = await Context.Set<ProjectReference>()
+                .Where(x => x.ProjectId == request.ProjectId)
+                .CountAsync(cancellationToken);
+
+            return currentReferences < maxReferences;
         }
     }
 

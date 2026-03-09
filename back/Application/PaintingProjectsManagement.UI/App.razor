@@ -28,8 +28,9 @@
             var authAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.Blazor.Modules.Authentication.AuthenticationService))!;
             var projectsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Projects.ProjectDetails))!;
             var inventoryAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Inventory.MyPaintDetails))!;
+            var subscriptionsAssembly = Assembly.GetAssembly(typeof(PaintingProjectsManagement.UI.Modules.Subscriptions.SubscriptionModuleMarker))!;
 
-            return new[] { materialsAssembly, modelsAssembly, authAssembly, projectsAssembly, inventoryAssembly };
+            return new[] { materialsAssembly, modelsAssembly, authAssembly, projectsAssembly, inventoryAssembly, subscriptionsAssembly };
         }
         catch (Exception ex)
         {

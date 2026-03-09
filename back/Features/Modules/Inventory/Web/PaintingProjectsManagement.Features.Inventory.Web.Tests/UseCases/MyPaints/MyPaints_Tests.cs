@@ -249,6 +249,36 @@ public class MyPaints_Tests
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "PaintColorId references a non-existent record.");
     }
 
+    [Test, NotInParallel(Order = 12)]
+    public async Task Free_Tier_Inventory_Limit_Is_Enforced()
+    {
+        List<Guid> newColorIds = [];
+
+        using (var context = TestingServer.CreateContext())
+        {
+            var line = context.Set<PaintLine>().First();
+            for (var i = 0; i < 50; i++)
+            {
+                var hex = $"#{(0x110000 + i):X6}";
+                var color = new PaintColor(line, $"Bulk Color {i}", hex, 12.0, PaintType.Opaque, $"BULK-{i}");
+                context.Set<PaintColor>().Add(color);
+                newColorIds.Add(color.Id);
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+        var response = await TestingServer.PostAsync(
+            "/api/inventory/my-paints",
+            new AddToMyPaints.Request
+            {
+                PaintColorIds = newColorIds
+            },
+            "ricardo.smarzaro");
+
+        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Paint inventory limit reached for current subscription tier.");
+    }
+
     [Test, NotInParallel(Order = 99)]
     public async Task Cleanup()
     {

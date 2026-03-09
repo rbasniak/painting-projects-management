@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using PaintingProjectsManagement.Features.Authorization;
+using PaintingProjectsManagement.Features.Subscriptions;
 using PaintingProjectsManagement.Infrastructure.Common;
 
 namespace PaintingProjectsManagement.Features.Models.Tests;
@@ -35,6 +36,8 @@ public class Profile_Endpoints_Tests
         profile.Tenant.ShouldBe("RODRIGO.BASNIAK");
         profile.Email.ShouldNotBeNullOrWhiteSpace();
         profile.DisplayName.ShouldNotBeNullOrWhiteSpace();
+        profile.SubscriptionTier.ShouldBe(SubscriptionTier.Free);
+        profile.SubscriptionStatus.ShouldBe(SubscriptionStatus.Active);
     }
 
     [Test, NotInParallel(Order = 4)]

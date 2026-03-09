@@ -41,19 +41,21 @@ public class GetStorageUsage : IEndpoint
 
             if (string.IsNullOrWhiteSpace(tenant))
             {
+                var defaultQuota = await storageUsageService.GetQuotaInBytesAsync(string.Empty, cancellationToken);
                 return QueryResponse.Success(new StorageUsageDetails
                 {
-                    QuotaBytes = storageUsageService.QuotaInBytes,
-                    RemainingBytes = storageUsageService.QuotaInBytes
+                    QuotaBytes = defaultQuota,
+                    RemainingBytes = defaultQuota
                 });
             }
 
             var usedBytes = await storageUsageService.GetUsageInBytesAsync(tenant, cancellationToken);
+            var quotaBytes = await storageUsageService.GetQuotaInBytesAsync(tenant, cancellationToken);
             var result = new StorageUsageDetails
             {
                 UsedBytes = usedBytes,
-                QuotaBytes = storageUsageService.QuotaInBytes,
-                RemainingBytes = Math.Max(0, storageUsageService.QuotaInBytes - usedBytes)
+                QuotaBytes = quotaBytes,
+                RemainingBytes = Math.Max(0, quotaBytes - usedBytes)
             };
 
             return QueryResponse.Success(result);

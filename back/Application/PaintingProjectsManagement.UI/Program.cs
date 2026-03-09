@@ -5,6 +5,7 @@ using MudBlazor.Services;
 using PaintingProjectsManagement.Blazor.Modules.Authentication;
 using PaintingProjectsManagement.UI.Modules.Materials;
 using PaintingProjectsManagement.UI.Modules.Models;
+using PaintingProjectsManagement.UI.Modules.Subscriptions;
 using PaintingProjectsManagement.UI.Modules.Shared;
 using System;
 using System.Net.Http;
@@ -28,6 +29,7 @@ namespace PaintingProjectsManagement.UI
             builder.Services.AddProjectsModule();
             builder.Services.AddInventoryModule();
             builder.Services.AddAuthenticationModule();
+            builder.Services.AddSubscriptionsModule();
 
             // Register storage service
             builder.Services.AddScoped<IStorageService, StorageService>();

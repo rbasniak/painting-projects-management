@@ -1,3 +1,5 @@
+using PaintingProjectsManagement.Features.Subscriptions.Integration;
+
 namespace PaintingProjectsManagement.Features.Projects;
 
 public class CreateProject : IEndpoint
@@ -23,8 +25,11 @@ public class CreateProject : IEndpoint
 
     public class Validator : SmartValidator<Request, Project>
     {
-        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        private readonly IDispatcher _dispatcher;
+
+        public Validator(DbContext context, ILocalizationService localization, IDispatcher dispatcher) : base(context, localization)
         {
+            _dispatcher = dispatcher;
         }
 
         protected override void ValidateBusinessRules()
@@ -35,6 +40,10 @@ public class CreateProject : IEndpoint
                 .MustAsync(async (request, name, cancellationToken) =>
                     !await Context.Set<Project>().AnyAsync(x => x.Name == name && x.TenantId == request.Identity.Tenant, cancellationToken))
                 .WithMessage("A project with this name already exists.");
+
+            RuleFor(x => x)
+                .MustAsync(HaveAvailableActiveProjectSlots)
+                .WithMessage("Active project limit reached for current subscription tier.");
 
             // TODO: move to its own use case
             //    RuleFor(x => x.Base64Image)
@@ -68,6 +77,29 @@ public class CreateProject : IEndpoint
             //    {
             //        return false;
             //    }
+        }
+
+        private async Task<bool> HaveAvailableActiveProjectSlots(Request request, CancellationToken cancellationToken)
+        {
+            var entitlementResponse = await _dispatcher.SendAsync(
+                new GetSubscriptionEntitlementQuery { TenantId = request.Identity.Tenant },
+                cancellationToken);
+            if (!entitlementResponse.IsValid || entitlementResponse.Data is null)
+            {
+                return true;
+            }
+
+            var maxActiveProjects = entitlementResponse.Data.MaxActiveProjects;
+            if (maxActiveProjects == int.MaxValue)
+            {
+                return true;
+            }
+
+            var currentActiveProjects = await Context.Set<Project>()
+                .Where(x => x.TenantId == request.Identity.Tenant && x.EndDate == null)
+                .CountAsync(cancellationToken);
+
+            return currentActiveProjects < maxActiveProjects;
         }
     }
 

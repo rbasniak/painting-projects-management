@@ -30,6 +30,7 @@ internal static class ProjectsEndpointsMap
         UpdatePickedColor.MapEndpoint(app);
 
         UploadProjectReferencePicture.MapEndpoint(app);
+        UploadProjectFinishedPicture.MapEndpoint(app);
         DeleteProjectReferencePicture.MapEndpoint(app);
 
         return app;

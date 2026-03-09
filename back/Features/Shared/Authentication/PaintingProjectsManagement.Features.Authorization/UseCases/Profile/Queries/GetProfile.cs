@@ -1,6 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using PaintingProjectsManagement.Features.Subscriptions;
+using PaintingProjectsManagement.Features.Subscriptions.Integration;
 using rbkApiModules.Identity.Core;
 
 namespace PaintingProjectsManagement.Features.Authorization;
@@ -28,7 +30,7 @@ public class GetProfile : IEndpoint
     {
     }
 
-    public class Handler(DbContext context, IHttpContextAccessor httpContextAccessor) : IQueryHandler<Request>
+    public class Handler(DbContext context, IHttpContextAccessor httpContextAccessor, IDispatcher dispatcher) : IQueryHandler<Request>
     {
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
@@ -53,13 +55,55 @@ public class GetProfile : IEndpoint
                     .FirstOrDefaultAsync(x => x.TenantId == tenant, cancellationToken);
             }
 
+            var resolvedTenant = user?.TenantId ?? tenant ?? string.Empty;
+            var subscriptionTier = SubscriptionTier.Free;
+            var subscriptionStatus = SubscriptionStatus.Active;
+            DateTime? subscriptionPeriodEndUtc = null;
+            var subscriptionCancelAtPeriodEnd = false;
+
+            var primaryTenant = request.Identity.Tenant;
+            var secondaryTenant = resolvedTenant;
+
+            var primaryEntitlement = await dispatcher.SendAsync(
+                new GetSubscriptionEntitlementQuery { TenantId = primaryTenant },
+                cancellationToken);
+            if (primaryEntitlement.IsValid && primaryEntitlement.Data is not null)
+            {
+                subscriptionTier = primaryEntitlement.Data.Tier;
+                subscriptionStatus = primaryEntitlement.Data.Status;
+                subscriptionPeriodEndUtc = primaryEntitlement.Data.CurrentPeriodEndUtc;
+                subscriptionCancelAtPeriodEnd = primaryEntitlement.Data.CancelAtPeriodEnd;
+            }
+
+            var shouldTrySecondary = !string.IsNullOrWhiteSpace(secondaryTenant)
+                && !string.Equals(primaryTenant, secondaryTenant, StringComparison.OrdinalIgnoreCase)
+                && subscriptionTier == SubscriptionTier.Free;
+
+            if (shouldTrySecondary)
+            {
+                var secondaryEntitlement = await dispatcher.SendAsync(
+                    new GetSubscriptionEntitlementQuery { TenantId = secondaryTenant },
+                    cancellationToken);
+                if (secondaryEntitlement.IsValid && secondaryEntitlement.Data is not null)
+                {
+                    subscriptionTier = secondaryEntitlement.Data.Tier;
+                    subscriptionStatus = secondaryEntitlement.Data.Status;
+                    subscriptionPeriodEndUtc = secondaryEntitlement.Data.CurrentPeriodEndUtc;
+                    subscriptionCancelAtPeriodEnd = secondaryEntitlement.Data.CancelAtPeriodEnd;
+                }
+            }
+
             var profile = new ProfileDetails
             {
                 Username = user?.Username ?? username ?? string.Empty,
                 DisplayName = user?.DisplayName ?? string.Empty,
                 Email = user?.Email ?? string.Empty,
                 Avatar = user?.Avatar ?? string.Empty,
-                Tenant = user?.TenantId ?? tenant ?? string.Empty
+                Tenant = resolvedTenant,
+                SubscriptionTier = subscriptionTier,
+                SubscriptionStatus = subscriptionStatus,
+                SubscriptionPeriodEndUtc = subscriptionPeriodEndUtc,
+                SubscriptionCancelAtPeriodEnd = subscriptionCancelAtPeriodEnd
             };
 
             return QueryResponse.Success(profile);

@@ -13,6 +13,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\..\..\Infrastructure\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
+		<ProjectReference Include="..\..\..\Modules\Subscriptions\Integrations\PaintingProjectsManagement.Features.Subscriptions.Integrations.Contracts\PaintingProjectsManagement.Features.Subscriptions.Integrations.Contracts.csproj" />
+		<ProjectReference Include="..\..\..\Modules\Subscriptions\Core\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
 	</ItemGroup>
 
 </Project>

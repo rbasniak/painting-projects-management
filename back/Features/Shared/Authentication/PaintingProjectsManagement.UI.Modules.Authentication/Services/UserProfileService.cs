@@ -6,6 +6,7 @@ namespace PaintingProjectsManagement.Blazor.Modules.Authentication;
 public interface IUserProfileService
 {
     Task<ProfileDetailsResponse> GetProfileAsync(CancellationToken cancellationToken);
+    Task<CurrentSubscriptionSnapshotResponse> GetCurrentSubscriptionAsync(CancellationToken cancellationToken);
     Task<StorageUsageResponse> GetStorageUsageAsync(CancellationToken cancellationToken);
     Task<bool> ChangePasswordAsync(ChangePasswordRequest request, CancellationToken cancellationToken);
 }
@@ -16,6 +17,14 @@ public sealed class UserProfileService(HttpClient httpClient) : IUserProfileServ
     {
         var profile = await httpClient.GetFromJsonAsync<ProfileDetailsResponse>("api/profile/me", cancellationToken);
         return profile ?? new ProfileDetailsResponse();
+    }
+
+    public async Task<CurrentSubscriptionSnapshotResponse> GetCurrentSubscriptionAsync(CancellationToken cancellationToken)
+    {
+        var subscription = await httpClient.GetFromJsonAsync<CurrentSubscriptionSnapshotResponse>(
+            "api/subscriptions/me",
+            cancellationToken);
+        return subscription ?? new CurrentSubscriptionSnapshotResponse();
     }
 
     public async Task<StorageUsageResponse> GetStorageUsageAsync(CancellationToken cancellationToken)
