@@ -5,6 +5,8 @@ namespace PaintingProjectsManagement.UI.Modules.Models;
 public interface IModelsService
 {
     Task<IReadOnlyCollection<ModelDetails>> GetAllAsync(CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<ModelDetails>> GetPublicByOwnerAsync(string ownerKey, CancellationToken cancellationToken);
+    Task<string> GetPublicOwnerKeyAsync(CancellationToken cancellationToken);
     Task<ModelDetails> CreateAsync(CreateModelRequest request, CancellationToken cancellationToken);
     Task<ModelDetails> UpdateAsync(UpdateModelRequest request, CancellationToken cancellationToken);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
@@ -43,6 +45,38 @@ public class ModelsService : IModelsService
         }
 
         return Array.Empty<ModelDetails>();
+    }
+
+    public async Task<IReadOnlyCollection<ModelDetails>> GetPublicByOwnerAsync(string ownerKey, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(ownerKey))
+        {
+            return Array.Empty<ModelDetails>();
+        }
+
+        var escapedOwnerKey = Uri.EscapeDataString(ownerKey.Trim());
+        var response = await _httpClient.GetAsync($"api/models/public/{escapedOwnerKey}", cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<ModelDetails>>();
+            return result ?? Array.Empty<ModelDetails>();
+        }
+
+        return Array.Empty<ModelDetails>();
+    }
+
+    public async Task<string> GetPublicOwnerKeyAsync(CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.GetAsync("api/models/public/owner-key", cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<PublicModelsOwnerKey>(cancellationToken: cancellationToken);
+            return result?.OwnerKey ?? string.Empty;
+        }
+
+        return string.Empty;
     }
 
     public async Task<ModelDetails> CreateAsync(CreateModelRequest request, CancellationToken cancellationToken)

@@ -7,7 +7,15 @@
 <MudPaper Class="pa-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
         <MudText Typo="Typo.h5">Models Library</MudText>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Add">Add</MudButton>
+        <MudStack Row="true" Spacing="1">
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Secondary"
+                       StartIcon="@Icons.Material.Filled.Share"
+                       OnClick="CopyPublicLibraryLink">
+                Copy Public Link
+            </MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Add">Add</MudButton>
+        </MudStack>
     </MudStack>
 
     <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" Class="mb-2" />
@@ -66,6 +74,9 @@
 @code {
     [Inject] public IModelsService ModelsService { get; set; } = default!;
     [Inject] public IDialogService DialogService { get; set; } = default!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] public IJSRuntime JsRuntime { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
     private List<ModelDetails> models = new();
     private string searchString = string.Empty;
@@ -147,6 +158,46 @@
     private async Task LoadAsync()
     {
         models = (await ModelsService.GetAllAsync(CancellationToken.None)).ToList();
+    }
+
+    private async Task CopyPublicLibraryLink()
+    {
+        var ownerKey = await ModelsService.GetPublicOwnerKeyAsync(CancellationToken.None);
+
+        if (string.IsNullOrWhiteSpace(ownerKey))
+        {
+            Snackbar.Add("Could not generate a public link for this user.", Severity.Warning);
+            return;
+        }
+
+        var ownerRouteKey = BuildOwnerRouteKey(ownerKey);
+        var encodedOwner = Uri.EscapeDataString(ownerRouteKey);
+        var publicUrl = NavigationManager
+            .ToAbsoluteUri($"/models/library/public/{encodedOwner}")
+            .ToString();
+
+        await JsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", publicUrl);
+        Snackbar.Add("Public library link copied to clipboard.", Severity.Success);
+    }
+
+    private static string BuildOwnerRouteKey(string ownerKey)
+    {
+        var normalized = ownerKey.Trim();
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return string.Empty;
+        }
+
+        if (!normalized.Contains('.'))
+        {
+            return normalized;
+        }
+
+        var bytes = System.Text.Encoding.UTF8.GetBytes(normalized.ToLowerInvariant());
+        return Convert.ToBase64String(bytes)
+            .TrimEnd('=')
+            .Replace('+', '-')
+            .Replace('/', '_');
     }
 
     private async Task Add()
