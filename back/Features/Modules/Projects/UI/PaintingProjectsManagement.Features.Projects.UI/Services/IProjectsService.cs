@@ -17,6 +17,7 @@ public interface IProjectsService
 
     // Execution management
     Task<IReadOnlyCollection<ProjectMaterialDetails>> GetProjectMaterialsAsync(Guid projectId, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<AvailableProjectMaterialDetails>> GetExecutionMaterialsCatalogAsync(Guid projectId, CancellationToken cancellationToken);
 
     Task<ProjectStepsGrouped> GetProjectStepsAsync(Guid projectId, CancellationToken cancellationToken);
 
@@ -135,6 +136,19 @@ public class ProjectsService : IProjectsService
 
         var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<ProjectMaterialDetails>>();
         return result ?? Array.Empty<ProjectMaterialDetails>();
+    }
+
+    public async Task<IReadOnlyCollection<AvailableProjectMaterialDetails>> GetExecutionMaterialsCatalogAsync(Guid projectId, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.GetAsync("api/projects/execution/materials/available", cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception($"Failed to get materials catalog for project ID {projectId}. Status code: {response.StatusCode}");
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<AvailableProjectMaterialDetails>>();
+        return result ?? Array.Empty<AvailableProjectMaterialDetails>();
     }
 
     public async Task<ProjectStepsGrouped> GetProjectStepsAsync(Guid projectId, CancellationToken cancellationToken)
