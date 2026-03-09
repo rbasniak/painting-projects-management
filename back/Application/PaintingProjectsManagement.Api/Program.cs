@@ -8,6 +8,7 @@ using PaintingProjectsManagement.Features.Materials.Integration;
 using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.Features.Projects;
+using PaintingProjectsManagement.Features.Authorization;
 using PaintingProjectsManagment.Database;
 using PaintingProjectsManagement.Infrastructure.Common;
 using rbkApiModules.Commons.Core;
@@ -209,6 +210,7 @@ public class Program
 
         // Common features
         builder.Services.AddCurrencyConverter();
+        builder.Services.AddAuthenticationFeature();
 
         // Configure Swagger/OpenAPI with custom schema naming for nested classes
         builder.Services.AddEndpointsApiExplorer();
@@ -271,7 +273,7 @@ public class Program
         });
         app.MapScalarApiReference();
 
-        app.MapProfileEndpoints();
+        app.UseAuthenticationFeature();
         app.UseMaterialsFeature();
         app.MapPrintingModelsFeature();
         Features.Inventory.Builder.MapInventoryFeature(app);

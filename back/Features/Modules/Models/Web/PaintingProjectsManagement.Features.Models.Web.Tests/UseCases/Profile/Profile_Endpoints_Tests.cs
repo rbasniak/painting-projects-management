@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using PaintingProjectsManagement.Features.Authorization;
 using PaintingProjectsManagement.Infrastructure.Common;
 
 namespace PaintingProjectsManagement.Features.Models.Tests;
