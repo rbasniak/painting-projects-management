@@ -7,6 +7,13 @@ namespace PaintingProjectsManagement.UI.Modules.Shared;
 
 public class HttpErrorHandler : DelegatingHandler
 {
+    private static readonly HashSet<string> PublicRoutes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "/",
+        "/login",
+        "/signin"
+    };
+
     private readonly NavigationManager _navigation;
     private readonly ISnackbar _snackbar;
     private readonly ProblemDetailsState _problemState;
@@ -30,7 +37,11 @@ public class HttpErrorHandler : DelegatingHandler
         switch (response.StatusCode)
         {
             case HttpStatusCode.Unauthorized:
-                _navigation.NavigateTo("/login", true);
+                var currentPath = new Uri(_navigation.Uri).AbsolutePath;
+                if (!PublicRoutes.Contains(currentPath))
+                {
+                    _navigation.NavigateTo("/signin", true);
+                }
                 break;
             case HttpStatusCode.BadRequest:
                 var validation = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>(cancellationToken: cancellationToken);
