@@ -6,6 +6,7 @@ using PaintingProjectsManagement.Api.Diagnostics;
 using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.Features.Materials.Integration;
 using PaintingProjectsManagement.Features.Models;
+using PaintingProjectsManagement.Features.Models.Integrations.Api;
 using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.Features.Projects;
 using PaintingProjectsManagement.Features.Subscriptions;
@@ -207,6 +208,7 @@ public class Program
         builder.Services.AddMaterialsIntegrations();
         builder.Services.AddInventoryFeature();
         builder.Services.AddModelsFeature();
+        builder.Services.AddModelsIntegrationsApi();
         builder.Services.AddProjectsFeature();
         builder.Services.AddSubscriptionsFeature();
 
@@ -278,6 +280,7 @@ public class Program
         app.UseAuthenticationFeature();
         app.UseMaterialsFeature();
         app.MapPrintingModelsFeature();
+        app.MapModelsIntegrationsApi();
         Features.Inventory.Builder.MapInventoryFeature(app);
         Features.Inventory.Integration.Builder.MapInventoryFeature(app);
         app.MapProjectsFeature();

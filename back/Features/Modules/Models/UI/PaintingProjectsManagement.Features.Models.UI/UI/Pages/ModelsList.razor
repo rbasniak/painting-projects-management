@@ -214,6 +214,7 @@
         {
             var request = new CreateModelRequest
             {
+                Identity = input.Identity,
                 Name = input.Name,
                 Franchise = input.Franchise,
                 Characters = input.Characters,
@@ -258,7 +259,8 @@
             FigureSize = new EnumReference(model.FigureSize.Id, model.FigureSize.Value),
             NumberOfFigures = model.NumberOfFigures,
             Size = model.Size,
-            MustHave = model.MustHave
+            MustHave = model.MustHave,
+            Identity = model.Identity
         };
         var parameters = new DialogParameters 
         { 
@@ -277,6 +279,7 @@
             var request = new UpdateModelRequest
             {
                 Id = updatedInput.Id,
+                Identity = updatedInput.Identity,
                 Name = updatedInput.Name,
                 Franchise = updatedInput.Franchise,
                 Characters = updatedInput.Characters,

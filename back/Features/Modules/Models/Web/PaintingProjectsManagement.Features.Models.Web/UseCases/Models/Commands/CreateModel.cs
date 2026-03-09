@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace PaintingProjectsManagement.Features.Models;
 
 public class CreateModel : IEndpoint
@@ -18,6 +20,8 @@ public class CreateModel : IEndpoint
 
     public class Request : AuthenticatedRequest, ICommand
     {
+        [JsonPropertyName("identity")]
+        public string? InternalId { get; set; }
         public Guid CategoryId { get; set; }
         public string Artist { get; set; } = string.Empty;
         public string[] Tags { get; set; } = Array.Empty<string>();
@@ -62,6 +66,10 @@ public class CreateModel : IEndpoint
             RuleFor(x => x.SizeInMb)
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("SizeInMb must be greater than or equal to zero");
+
+            RuleFor(x => x.InternalId)
+                .MaximumLength(512)
+                .WithMessage("Identity cannot exceed 512 characters.");
         }
     }
 
@@ -86,7 +94,8 @@ public class CreateModel : IEndpoint
                 request.BaseSize,
                 request.FigureSize,
                 request.NumberOfFigures,
-                request.SizeInMb
+                request.SizeInMb,
+                request.InternalId
             );
 
             await _context.AddAsync(model, cancellationToken);

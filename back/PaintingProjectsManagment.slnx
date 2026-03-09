@@ -67,6 +67,7 @@
     <Project Path="Features/Modules/Models/Web/PaintingProjectsManagement.Features.Models.Web.Tests/PaintingProjectsManagement.Features.Models.Web.Tests.csproj" />
   </Folder>
   <Folder Name="/Features/Modules/Models/Integrations/">
+    <Project Path="Features/Modules/Models/Integrations/Api/PaintingProjectsManagement.Features.Models.Integrations.Api/PaintingProjectsManagement.Features.Models.Integrations.Api.csproj" />
     <Project Path="Features/Modules/Models/Integrations/PaintingProjectsManagement.Features.Models.Integrations.Contracts/PaintingProjectsManagement.Features.Models.Integrations.Contracts.csproj" />
   </Folder>
   <Folder Name="/Features/Modules/Models/UI/">

@@ -35,6 +35,14 @@
                     }
                 </MudItem>
                 <MudItem xs="12" md="6">
+                    <MudTextField @bind-Value="Model.Identity"
+                                  Label="Internal ID"
+                                  HelperText="Optional external identifier (max 512 chars)"
+                                  MaxLength="512"
+                                  Immediate="true"
+                                  Variant="Variant.Outlined" />
+                </MudItem>
+                <MudItem xs="12" md="6">
                     <MudSelect T="Guid"
                                @bind-Value="SelectedCategoryId"
                                Label="Category"
@@ -326,6 +334,7 @@
         Model.Tags ??= [];
         Model.Franchise ??= string.Empty;
         Model.Artist ??= string.Empty;
+        Model.Identity ??= string.Empty;
 
         selectedCharacters = new HashSet<string>(NormalizeValues(Model.Characters), valueComparer);
         selectedTags = new HashSet<string>(NormalizeValues(Model.Tags), valueComparer);
@@ -498,6 +507,7 @@
         Model.Name = Model.Name.Trim();
         Model.Franchise = (Model.Franchise ?? string.Empty).Trim();
         Model.Artist = (Model.Artist ?? string.Empty).Trim();
+        Model.Identity = string.IsNullOrWhiteSpace(Model.Identity) ? null : Model.Identity.Trim();
         Model.Characters = selectedCharacters.ToArray();
         Model.Tags = selectedTags.ToArray();
         MudDialog?.Close(DialogResult.Ok(Model));
