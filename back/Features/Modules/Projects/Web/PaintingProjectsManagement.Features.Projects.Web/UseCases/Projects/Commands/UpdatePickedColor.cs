@@ -69,6 +69,11 @@ public class UpdatePickedColor : IEndpoint
                     }
                 })
                 .WithMessage("Paint color ID must be one of the suggested colors for this section.");
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableBySectionAsync(Context, request.Identity.Tenant, request.SectionId, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
     }
 

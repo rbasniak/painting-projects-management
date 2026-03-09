@@ -52,6 +52,11 @@ public class UpdateProject : IEndpoint
             RuleFor(x => x.EndDate)
                 .Must(endDate => !endDate.HasValue || endDate.Value <= DateTime.UtcNow)
                 .WithMessage("End date cannot be in the future.");
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableProjectAsync(Context, request.Identity.Tenant, request.Id, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
 
         private bool IsValidBase64Image(string base64)

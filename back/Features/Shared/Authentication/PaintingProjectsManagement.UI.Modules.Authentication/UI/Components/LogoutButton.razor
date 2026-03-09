@@ -14,6 +14,6 @@
     private async Task HandleLogout()
     {
         await TokenService.ClearTokensAsync(CancellationToken.None);
-        NavigationManager.NavigateTo("/login");
+        NavigationManager.NavigateTo("/signin");
     }
 } 

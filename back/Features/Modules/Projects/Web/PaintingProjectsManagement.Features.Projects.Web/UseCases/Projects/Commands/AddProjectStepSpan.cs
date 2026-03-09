@@ -46,6 +46,11 @@ public class AddProjectStepSpan : IEndpoint
 
             RuleFor(x => x.EndDate)
                 .NotEmpty();
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableProjectAsync(Context, request.Identity.Tenant, request.ProjectId, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
     }
 

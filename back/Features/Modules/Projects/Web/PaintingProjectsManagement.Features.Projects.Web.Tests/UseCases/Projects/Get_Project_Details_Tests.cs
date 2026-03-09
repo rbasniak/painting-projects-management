@@ -54,6 +54,7 @@ public class Get_Project_Details_Tests
         response.Data.Name.ShouldBe("Test Project");
         response.Data.StartDate.ShouldNotBeNull();
         response.Data.EndDate.ShouldBeNull();
+        response.Data.IsArchived.ShouldBeFalse();
     }
 
     [Test, NotInParallel(Order = 4)]

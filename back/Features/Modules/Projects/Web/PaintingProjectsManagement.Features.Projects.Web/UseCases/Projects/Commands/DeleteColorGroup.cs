@@ -29,7 +29,16 @@ public class DeleteColorGroup : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
-            // TODO: Check wheter it belongs to the tenant
+            RuleFor(x => x.ColorGroupId)
+                .MustAsync(async (request, colorGroupId, cancellationToken) =>
+                    await Context.Set<ColorGroup>()
+                        .AnyAsync(x => x.Id == colorGroupId && x.Project.TenantId == request.Identity.Tenant, cancellationToken))
+                .WithMessage("Color group not found.");
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableByColorGroupAsync(Context, request.Identity.Tenant, request.ColorGroupId, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
     }
 

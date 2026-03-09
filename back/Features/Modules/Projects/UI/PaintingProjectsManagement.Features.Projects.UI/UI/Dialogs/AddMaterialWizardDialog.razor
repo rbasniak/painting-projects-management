@@ -4,27 +4,399 @@
 
 @namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 
-<MudDialog>
+<MudDialog Class="add-material-wizard">
     <DialogContent>
-        <MudStack Spacing="3">
+        <MudStack Spacing="3" Class="mt-1">
             <MudText Typo="Typo.h6">Add Material to Project</MudText>
-            <MudAlert Severity="Severity.Info">
-                Material wizard will be implemented in a future update. For now, please use the API directly or add materials through another interface.
-            </MudAlert>
+            @if (isLoadingCatalog)
+            {
+                <MudProgressLinear Color="Color.Primary" Indeterminate="true" />
+            }
+            else if (!catalogMaterials.Any())
+            {
+                <MudAlert Severity="Severity.Info">
+                    No materials are available yet. Add materials in the Materials module first.
+                </MudAlert>
+            }
+            else
+            {
+                <MudStack Row="true" Spacing="1" Class="mb-2">
+                    <MudChip T="string" Variant="@(step == 1 ? Variant.Filled : Variant.Outlined)" Color="@(step == 1 ? Color.Primary : Color.Default)">1. Category</MudChip>
+                    <MudChip T="string" Variant="@(step == 2 ? Variant.Filled : Variant.Outlined)" Color="@(step == 2 ? Color.Primary : Color.Default)">2. Material</MudChip>
+                    <MudChip T="string" Variant="@(step == 3 ? Variant.Filled : Variant.Outlined)" Color="@(step == 3 ? Color.Primary : Color.Default)">3. Unit & Quantity</MudChip>
+                </MudStack>
+
+                @if (step == 1)
+                {
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Choose a category</MudText>
+                    <MudGrid Spacing="2">
+                        @foreach (var category in categories)
+                        {
+                            <MudItem xs="12" sm="6">
+                                <MudButton Variant="Variant.Filled"
+                                           Color="Color.Primary"
+                                           FullWidth="true"
+                                           Size="Size.Large"
+                                           Class="choice-btn"
+                                           StartIcon="@GetCategoryIcon(category.CategoryId)"
+                                           OnClick="() => SelectCategory(category)">
+                                    <MudStack Spacing="0">
+                                        <MudText Typo="Typo.body1">@category.CategoryName</MudText>
+                                        <MudText Typo="Typo.caption">@category.MaterialCount material(s)</MudText>
+                                    </MudStack>
+                                </MudButton>
+                            </MudItem>
+                        }
+                    </MudGrid>
+                }
+                else if (step == 2)
+                {
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Choose a material</MudText>
+                    <MudStack Spacing="2">
+                        @foreach (var material in materialsInSelectedCategory)
+                        {
+                            <MudButton Variant="Variant.Outlined"
+                                       Color="Color.Primary"
+                                       FullWidth="true"
+                                       Size="Size.Large"
+                                       Class="choice-btn"
+                                       OnClick="() => SelectMaterial(material)">
+                                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Style="width:100%;">
+                                    <MudText Typo="Typo.body1">@material.MaterialName</MudText>
+                                    <MudChip T="string" Color="Color.Primary" Variant="Variant.Text" Size="Size.Small">@GetUnitLabel(material.DefaultUnit)</MudChip>
+                                </MudStack>
+                            </MudButton>
+                        }
+                    </MudStack>
+                }
+                else
+                {
+                    <MudPaper Elevation="0" Outlined="true" Class="pa-3">
+                        <MudStack Spacing="1">
+                            <MudText Typo="Typo.subtitle2">@selectedMaterial?.MaterialName</MudText>
+                            <MudText Typo="Typo.caption" Color="Color.Secondary">@selectedMaterial?.CategoryName</MudText>
+                        </MudStack>
+                    </MudPaper>
+
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Unit</MudText>
+                    <MudRadioGroup T="int" @bind-Value="SelectedUnit">
+                        @foreach (var unit in availableUnits)
+                        {
+                            <MudPaper Elevation="0" Outlined="true" Class="pa-2 mb-2 unit-option">
+                                <MudRadio T="int"
+                                          Value="@unit.Value"
+                                          Color="Color.Primary"
+                                          Class="unit-radio">
+                                    @unit.Label
+                                </MudRadio>
+                            </MudPaper>
+                        }
+                    </MudRadioGroup>
+
+                    <MudNumericField T="double"
+                                     @bind-Value="quantity"
+                                     Label="Quantity"
+                                     Variant="Variant.Outlined"
+                                     Min="@MinQuantity"
+                                     Step="@QuantityStep"
+                                     Immediate="true" />
+
+                    <MudGrid Spacing="2">
+                        <MudItem xs="4"><MudButton Variant="Variant.Outlined" Color="Color.Secondary" Size="Size.Large" FullWidth="true" Class="qty-btn" OnClick="() => AdjustQuantity(-50)">-50</MudButton></MudItem>
+                        <MudItem xs="4"><MudButton Variant="Variant.Outlined" Color="Color.Secondary" Size="Size.Large" FullWidth="true" Class="qty-btn" OnClick="() => AdjustQuantity(-10)">-10</MudButton></MudItem>
+                        <MudItem xs="4"><MudButton Variant="Variant.Outlined" Color="Color.Secondary" Size="Size.Large" FullWidth="true" Class="qty-btn" OnClick="() => AdjustQuantity(-1)">-1</MudButton></MudItem>
+                        <MudItem xs="4"><MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="qty-btn" OnClick="() => AdjustQuantity(1)">+1</MudButton></MudItem>
+                        <MudItem xs="4"><MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="qty-btn" OnClick="() => AdjustQuantity(10)">+10</MudButton></MudItem>
+                        <MudItem xs="4"><MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Large" FullWidth="true" Class="qty-btn" OnClick="() => AdjustQuantity(50)">+50</MudButton></MudItem>
+                    </MudGrid>
+                }
+            }
         </MudStack>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel" Size="Size.Large">Close</MudButton>
+        <MudButton OnClick="Back" Size="Size.Large" Disabled="@(step == 1 || isSubmitting)">Back</MudButton>
+        <MudButton OnClick="Cancel" Size="Size.Large" Disabled="isSubmitting">Cancel</MudButton>
+        <MudButton OnClick="SubmitAsync"
+                   Color="Color.Primary"
+                   Size="Size.Large"
+                   Variant="Variant.Filled"
+                   Disabled="@(!CanSubmit)">
+            Add Material
+        </MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
     [Parameter] public string ProjectId { get; set; }
-    
+
     [CascadingParameter] public MudBlazor.IMudDialogInstance? MudDialog { get; set; }
-    
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+
+    private readonly List<AvailableProjectMaterialDetails> catalogMaterials = [];
+    private readonly List<CategoryOption> categories = [];
+    private readonly List<UnitOption> availableUnits = [];
+
+    private List<AvailableProjectMaterialDetails> materialsInSelectedCategory = [];
+    private AvailableProjectMaterialDetails? selectedMaterial;
+
+    private int? selectedCategoryId;
+    private int selectedUnit = (int)ExecutionMaterialUnit.Unit;
+    private int step = 1;
+    private double quantity = 1;
+    private bool isLoadingCatalog = true;
+    private bool isSubmitting;
+
+    private bool CanSubmit =>
+        !isLoadingCatalog
+        && !isSubmitting
+        && step == 3
+        && selectedMaterial is not null
+        && availableUnits.Any()
+        && quantity >= MinQuantity;
+
+    private int SelectedUnit
+    {
+        get => selectedUnit;
+        set
+        {
+            selectedUnit = value;
+            NormalizeQuantity();
+        }
+    }
+
+    private double MinQuantity => AllowsFraction(SelectedUnit) ? 0.01d : 1d;
+    private double QuantityStep => AllowsFraction(SelectedUnit) ? 0.1d : 1d;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCatalogAsync();
+    }
+
+    private async Task LoadCatalogAsync()
+    {
+        if (!Guid.TryParse(ProjectId, out var projectId))
+        {
+            Snackbar.Add("Invalid project ID.", Severity.Error);
+            MudDialog?.Cancel();
+            return;
+        }
+
+        try
+        {
+            isLoadingCatalog = true;
+            catalogMaterials.AddRange(await ProjectsService.GetExecutionMaterialsCatalogAsync(projectId, default));
+
+            categories.AddRange(catalogMaterials
+                .GroupBy(x => new { x.CategoryId, x.CategoryName })
+                .OrderBy(x => x.Key.CategoryName)
+                .Select(x => new CategoryOption(x.Key.CategoryId, x.Key.CategoryName, x.Count())));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error loading materials catalog: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            isLoadingCatalog = false;
+        }
+    }
+
+    private void SelectCategory(CategoryOption category)
+    {
+        selectedCategoryId = category.CategoryId;
+        materialsInSelectedCategory = catalogMaterials
+            .Where(x => x.CategoryId == category.CategoryId)
+            .OrderBy(x => x.MaterialName)
+            .ToList();
+
+        selectedMaterial = null;
+        availableUnits.Clear();
+        step = 2;
+    }
+
+    private void SelectMaterial(AvailableProjectMaterialDetails material)
+    {
+        selectedMaterial = material;
+        availableUnits.Clear();
+        availableUnits.AddRange(GetUnitsForCategory(material.CategoryId, material.DefaultUnit));
+        SelectedUnit = availableUnits.First().Value;
+        quantity = MinQuantity;
+        step = 3;
+    }
+
+    private void Back()
+    {
+        if (step == 3)
+        {
+            step = 2;
+            return;
+        }
+
+        if (step == 2)
+        {
+            step = 1;
+            selectedCategoryId = null;
+            materialsInSelectedCategory = [];
+        }
+    }
+
+    private void AdjustQuantity(double delta)
+    {
+        quantity += delta;
+        NormalizeQuantity();
+    }
+
+    private void NormalizeQuantity()
+    {
+        quantity = Math.Max(MinQuantity, quantity);
+
+        if (!AllowsFraction(SelectedUnit))
+        {
+            quantity = Math.Ceiling(quantity);
+            return;
+        }
+
+        quantity = Math.Round(quantity, 2);
+    }
+
+    private static bool AllowsFraction(int unit) =>
+        unit is (int)ExecutionMaterialUnit.Meter
+            or (int)ExecutionMaterialUnit.Kilogram
+            or (int)ExecutionMaterialUnit.Liter
+            or (int)ExecutionMaterialUnit.Mililiter;
+
+    private async Task SubmitAsync()
+    {
+        if (selectedMaterial is null || !Guid.TryParse(ProjectId, out var projectId))
+        {
+            Snackbar.Add("Please complete all steps before confirming.", Severity.Warning);
+            return;
+        }
+
+        try
+        {
+            isSubmitting = true;
+            await ProjectsService.AddProjectMaterialAsync(new AddProjectMaterialRequest
+            {
+                ProjectId = projectId,
+                MaterialId = selectedMaterial.MaterialId,
+                Quantity = quantity,
+                Unit = SelectedUnit
+            }, default);
+
+            Snackbar.Add("Material added to project.", Severity.Success);
+            MudDialog?.Close(DialogResult.Ok(true));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add($"Error adding material: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private static IReadOnlyCollection<UnitOption> GetUnitsForCategory(int categoryId, int defaultUnit)
+    {
+        var units = new List<int>();
+        switch (categoryId)
+        {
+            case 10: // Resins
+                units.AddRange([(int)ExecutionMaterialUnit.Gram, (int)ExecutionMaterialUnit.Kilogram]);
+                break;
+            case 20: // Magnets
+                units.Add((int)ExecutionMaterialUnit.Unit);
+                break;
+            case 30: // Primers
+                units.AddRange([(int)ExecutionMaterialUnit.Mililiter, (int)ExecutionMaterialUnit.Spray, (int)ExecutionMaterialUnit.Liter]);
+                break;
+            case 40: // Paints
+                units.AddRange([(int)ExecutionMaterialUnit.Mililiter, (int)ExecutionMaterialUnit.Drop, (int)ExecutionMaterialUnit.Liter]);
+                break;
+            case 50: // Varnishes
+                units.AddRange([(int)ExecutionMaterialUnit.Mililiter, (int)ExecutionMaterialUnit.Drop, (int)ExecutionMaterialUnit.Liter, (int)ExecutionMaterialUnit.Spray]);
+                break;
+            case 60: // Masking
+                units.AddRange([(int)ExecutionMaterialUnit.Centimeter, (int)ExecutionMaterialUnit.Meter, (int)ExecutionMaterialUnit.Unit]);
+                break;
+            default:
+                units.AddRange([(int)ExecutionMaterialUnit.Unit, (int)ExecutionMaterialUnit.Gram, (int)ExecutionMaterialUnit.Mililiter]);
+                break;
+        }
+
+        if (IsKnownUnit(defaultUnit) && !units.Contains(defaultUnit))
+        {
+            units.Insert(0, defaultUnit);
+        }
+
+        return units
+            .Distinct()
+            .Where(IsKnownUnit)
+            .Select(x => new UnitOption(x, GetUnitLabel(x)))
+            .ToArray();
+    }
+
+    private static bool IsKnownUnit(int unit) => Enum.IsDefined(typeof(ExecutionMaterialUnit), unit);
+
+    private static string GetUnitLabel(int unit)
+    {
+        return unit switch
+        {
+            (int)ExecutionMaterialUnit.Drop => "Drops",
+            (int)ExecutionMaterialUnit.Unit => "Units",
+            (int)ExecutionMaterialUnit.Centimeter => "Centimeters (cm)",
+            (int)ExecutionMaterialUnit.Meter => "Meters (m)",
+            (int)ExecutionMaterialUnit.Gram => "Grams (g)",
+            (int)ExecutionMaterialUnit.Kilogram => "Kilograms (kg)",
+            (int)ExecutionMaterialUnit.Liter => "Liters (l)",
+            (int)ExecutionMaterialUnit.Mililiter => "Milliliters (ml)",
+            (int)ExecutionMaterialUnit.Spray => "Spray presses",
+            _ => "Unit"
+        };
+    }
+
+    private static string GetCategoryIcon(int categoryId)
+    {
+        return categoryId switch
+        {
+            10 => Icons.Material.Filled.Science,
+            20 => Icons.Material.Filled.RadioButtonChecked,
+            30 => Icons.Material.Filled.FormatColorFill,
+            40 => Icons.Material.Filled.Palette,
+            50 => Icons.Material.Filled.WaterDrop,
+            60 => Icons.Material.Filled.ContentCut,
+            _ => Icons.Material.Filled.Inventory2
+        };
+    }
+
     private void Cancel()
     {
         MudDialog?.Cancel();
     }
+
+    private sealed record CategoryOption(int CategoryId, string CategoryName, int MaterialCount);
+    private sealed record UnitOption(int Value, string Label);
 }
+
+<style>
+    .add-material-wizard .choice-btn {
+        min-height: 76px;
+        text-transform: none;
+    }
+
+    .add-material-wizard .unit-option {
+        border-radius: 12px;
+    }
+
+    .add-material-wizard .unit-radio {
+        width: 100%;
+        margin: 0;
+    }
+
+    .add-material-wizard .qty-btn {
+        min-height: 52px;
+        font-size: 1rem;
+    }
+</style>

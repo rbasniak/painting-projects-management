@@ -47,6 +47,11 @@ public class DeleteProjectStep : IEndpoint
                     return project.Steps.Any(x => x.Id == stepId);
                 })
                 .WithMessage("Step not found in project");
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableProjectAsync(Context, request.Identity.Tenant, request.ProjectId, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
     }
 

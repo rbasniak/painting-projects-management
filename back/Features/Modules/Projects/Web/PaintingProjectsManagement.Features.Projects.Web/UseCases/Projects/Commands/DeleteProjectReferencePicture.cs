@@ -39,10 +39,15 @@ public class DeleteProjectReferencePicture : IEndpoint
                 {
                     var project = await Context.Set<Project>()
                         .Include(x => x.References)
-                        .FirstOrDefaultAsync(x => x.Id == request.ProjectId, cancellation);
+                        .FirstOrDefaultAsync(x => x.Id == request.ProjectId && x.TenantId == request.Identity.Tenant, cancellation);
                     return project != null && project.References.Any(r => r.Url == request.PictureUrl);
                 })
                 .WithMessage("The specified picture URL must exist in the project's reference pictures collection.");
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableProjectAsync(Context, request.Identity.Tenant, request.ProjectId, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
     }
 

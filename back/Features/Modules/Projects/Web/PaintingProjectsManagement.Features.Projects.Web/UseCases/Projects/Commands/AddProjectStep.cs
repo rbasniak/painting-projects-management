@@ -43,6 +43,11 @@ public class AddProjectStep : IEndpoint
             RuleFor(x => x.DurationInHours)
                 .GreaterThan(0)
                 .WithMessage("Duration must be greater than 0");
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableProjectAsync(Context, request.Identity.Tenant, request.ProjectId, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
     }
 
