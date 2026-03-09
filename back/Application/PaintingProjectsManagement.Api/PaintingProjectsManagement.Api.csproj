@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Features\Shared\Authentication\PaintingProjectsManagement.Features.Authorization\PaintingProjectsManagement.Features.Authorization.csproj" />
     <ProjectReference Include="..\..\Features\Modules\Inventory\Web\PaintingProjectsManagement.Features.Inventory.Web\PaintingProjectsManagement.Features.Inventory.Web.csproj" />
     <ProjectReference Include="..\..\Features\Modules\Materials\Web\PaintingProjectsManagement.Features.Materials.Web\PaintingProjectsManagement.Features.Materials.Web.csproj" />
     <ProjectReference Include="..\..\Features\Modules\Materials\Integrations\PaintingProjectsManagement.Features.Materials.Integration\PaintingProjectsManagement.Features.Materials.Integrations.csproj" />

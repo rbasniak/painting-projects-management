@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Hosting;
+using PaintingProjectsManagement.Infrastructure.Common;
+
 namespace PaintingProjectsManagement.Features.Projects.Tests;
 
 [HumanFriendlyDisplayName]
@@ -349,6 +352,46 @@ public class Update_Project_Tests
         var unchanged = TestingServer.CreateContext().Set<Project>().FirstOrDefault(x => x.Id == archivedProject.Id);
         unchanged.ShouldNotBeNull();
         unchanged.Name.ShouldBe("Archived Project");
+    }
+
+    [Test, NotInParallel(Order = 14)]
+    public async Task User_Cannot_Update_Project_Image_When_Quota_Is_Exceeded()
+    {
+        var existingProject = TestingServer.CreateContext().Set<Project>()
+            .FirstOrDefault(x => x.Name == "Another User Project" && x.TenantId == "RODRIGO.BASNIAK");
+        existingProject.ShouldNotBeNull("Project should exist from previous tests");
+
+        var usageService = TestingServer.Services.GetRequiredService<ITenantStorageUsageService>();
+        var env = TestingServer.Services.GetRequiredService<IWebHostEnvironment>();
+
+        var tenant = "RODRIGO.BASNIAK";
+        var tenantFolder = Path.Combine(env.WebRootPath, "uploads", tenant, "quota-tests");
+        Directory.CreateDirectory(tenantFolder);
+
+        var fillerBytes = usageService.QuotaInBytes;
+        var fillerPath = Path.Combine(tenantFolder, $"{Guid.NewGuid():N}.bin");
+
+        await using (var fillerStream = new FileStream(fillerPath, FileMode.Create, FileAccess.Write, FileShare.None))
+        {
+            fillerStream.SetLength(fillerBytes);
+        }
+
+        try
+        {
+            var updateRequest = new UpdateProject.Request
+            {
+                Id = existingProject.Id,
+                Name = existingProject.Name,
+                Base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII="
+            };
+
+            var response = await TestingServer.PutAsync("api/projects", updateRequest, "rodrigo.basniak");
+            response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Storage quota exceeded.");
+        }
+        finally
+        {
+            File.Delete(fillerPath);
+        }
     }
 
 

@@ -1,3 +1,5 @@
+using PaintingProjectsManagement.Infrastructure.Common;
+
 namespace PaintingProjectsManagement.Features.Projects;
 
 public class UpdateProject : IEndpoint
@@ -26,8 +28,11 @@ public class UpdateProject : IEndpoint
 
     public class Validator : SmartValidator<Request, Project>
     {
-        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        private readonly ITenantStorageUsageService _storageUsageService;
+
+        public Validator(DbContext context, ILocalizationService localization, ITenantStorageUsageService storageUsageService) : base(context, localization)
         {
+            _storageUsageService = storageUsageService;
         }
 
         protected override void ValidateBusinessRules()
@@ -40,6 +45,9 @@ public class UpdateProject : IEndpoint
             RuleFor(x => x.Base64Image)
                 .Must(base64 => string.IsNullOrEmpty(base64) || IsValidBase64Image(base64))
                 .WithMessage("Invalid base64 image format. Must be a valid base64 encoded image with proper header.");
+
+            RuleFor(x => x.Base64Image)
+                .MustAsync(HaveAvailableQuota).WithMessage("Storage quota exceeded.");
 
             RuleFor(x => x.EndDate)
                 .Must(endDate => !endDate.HasValue || endDate.Value <= DateTime.UtcNow)
@@ -76,6 +84,27 @@ public class UpdateProject : IEndpoint
                 return false;
             }
         }
+
+        private async Task<bool> HaveAvailableQuota(Request request, string base64Image, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(base64Image) || !IsValidBase64Image(base64Image))
+            {
+                return true;
+            }
+
+            var existingPictureUrl = await Context.Set<Project>()
+                .Where(x => x.Id == request.Id && x.TenantId == request.Identity.Tenant)
+                .Select(x => x.PictureUrl)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            var bytesToRelease = _storageUsageService.GetFileSizeInBytes(existingPictureUrl);
+
+            return await _storageUsageService.HasQuotaForImageAsync(
+                request.Identity.Tenant ?? string.Empty,
+                base64Image,
+                bytesToRelease,
+                cancellationToken);
+        }
     }
 
     public class Handler(DbContext _context, IFileStorage _fileStorage) : ICommandHandler<Request>
@@ -102,7 +131,7 @@ public class UpdateProject : IEndpoint
                 pictureUrl = await _fileStorage.StoreFileFromBase64Async(
                     request.Base64Image,
                     $"project_{project.Id:N}",
-                    folderPath: "projects",
+                    folderPath: Path.Combine(request.Identity.Tenant ?? string.Empty, "projects"),
                     cancellationToken: cancellationToken);
             }
 

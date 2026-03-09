@@ -8,7 +8,9 @@ using PaintingProjectsManagement.Features.Materials.Integration;
 using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.Features.Projects;
+using PaintingProjectsManagement.Features.Authorization;
 using PaintingProjectsManagment.Database;
+using PaintingProjectsManagement.Infrastructure.Common;
 using rbkApiModules.Commons.Core;
 using rbkApiModules.Commons.Core.UiDefinitions;
 using rbkApiModules.Commons.Relational;
@@ -208,6 +210,7 @@ public class Program
 
         // Common features
         builder.Services.AddCurrencyConverter();
+        builder.Services.AddAuthenticationFeature();
 
         // Configure Swagger/OpenAPI with custom schema naming for nested classes
         builder.Services.AddEndpointsApiExplorer();
@@ -218,6 +221,8 @@ public class Program
 
         // Register file storage service
         builder.Services.AddSingleton<IFileStorage, LocalFileStorage>();
+        builder.Services.Configure<StorageQuotaOptions>(builder.Configuration.GetSection(StorageQuotaOptions.SectionName));
+        builder.Services.AddSingleton<ITenantStorageUsageService, TenantStorageUsageService>();
 
         var app = builder.Build();
 
@@ -268,6 +273,7 @@ public class Program
         });
         app.MapScalarApiReference();
 
+        app.UseAuthenticationFeature();
         app.UseMaterialsFeature();
         app.MapPrintingModelsFeature();
         Features.Inventory.Builder.MapInventoryFeature(app);
