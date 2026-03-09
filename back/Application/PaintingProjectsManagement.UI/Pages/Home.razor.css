@@ -10,6 +10,39 @@
     padding: 6rem 1.5rem 4rem;
 }
 
+.top-nav {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    color: #eef2ff;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.03rem;
+}
+
+.top-login {
+    border: 1px solid rgba(221, 230, 255, 0.65);
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 0.55rem 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.top-login:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.16);
+}
+
 .hero-overlay {
     position: absolute;
     inset: 0;
@@ -244,6 +277,14 @@ main {
 @media (max-width: 640px) {
     .hero {
         padding-top: 4.5rem;
+    }
+
+    .top-nav {
+        margin-bottom: 2rem;
+    }
+
+    .brand {
+        font-size: 0.9rem;
     }
 
     .hero-subtitle {
