@@ -268,6 +268,7 @@ public class Program
         });
         app.MapScalarApiReference();
 
+        app.MapProfileEndpoints();
         app.UseMaterialsFeature();
         app.MapPrintingModelsFeature();
         Features.Inventory.Builder.MapInventoryFeature(app);

@@ -1,0 +1,16 @@
+@namespace PaintingProjectsManagement.UI.Modules.Authentication.UI.Components
+@using MudBlazor
+
+<MudIconButton Icon="@Icons.Material.Filled.AccountCircle"
+               Color="Color.Inherit"
+               OnClick="OpenProfile"
+               Title="Profile" />
+
+@code {
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+
+    private void OpenProfile()
+    {
+        NavigationManager.NavigateTo("/users/profile");
+    }
+}
