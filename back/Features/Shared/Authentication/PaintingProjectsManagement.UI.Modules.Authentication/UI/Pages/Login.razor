@@ -1,6 +1,6 @@
-﻿@using PaintingProjectsManagement.Blazor.Modules.Authentication;
+@using PaintingProjectsManagement.Blazor.Modules.Authentication;
 
-@page "/login"
+@page "/signin"
 
 @inject IAuthenticationService AuthenticationService
 @inject NavigationManager NavigationManager
@@ -13,7 +13,7 @@
                 <div class="logo-icon">PAINT</div>
             </div>
             <h1 class="login-title">Welcome Back</h1>
-            <p class="login-subtitle">Sign in to your painting projects account</p>
+            <p class="login-subtitle">Sign in to your painting projects workspace</p>
         </div>
 
         @if (loading && !isLoggingIn)
