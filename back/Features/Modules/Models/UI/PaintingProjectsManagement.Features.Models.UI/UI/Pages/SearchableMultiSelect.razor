@@ -1,0 +1,190 @@
+<div class="searchable-multi-select">
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <MudText Typo="Typo.caption" Class="mb-1">@Label</MudText>
+    }
+
+    <MudPaper Outlined="true"
+              Class="searchable-multi-select-trigger pa-2"
+              @onclick="ToggleOpen">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+            <MudText Typo="Typo.body2">@SelectedSummary</MudText>
+            <MudIcon Icon="@(_isOpen ? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)" />
+        </MudStack>
+    </MudPaper>
+
+    @if (_isOpen)
+    {
+        <div class="searchable-multi-select-overlay"
+             @onclick="Close"
+             @onwheel="HandleOverlayWheel"></div>
+        <MudPaper Outlined="true" Class="searchable-multi-select-panel pa-2">
+            <MudTextField @bind-Value="_searchValue"
+                          Placeholder="@SearchPlaceholder"
+                          Immediate="true"
+                          Margin="Margin.Dense"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search" />
+
+            <MudDivider Class="mb-1" />
+
+            <div class="searchable-multi-select-options">
+                @if (FilteredOptions.Count == 0)
+                {
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary pa-2">No options found</MudText>
+                }
+                else
+                {
+                    @foreach (var option in FilteredOptions)
+                    {
+                        <MudCheckBox T="bool"
+                                     Dense="true"
+                                     Label="@option"
+                                     Value="@_selectedValues.Contains(option)"
+                                     ValueChanged="@((bool isChecked) => ToggleOption(option, isChecked))" />
+                    }
+                }
+            </div>
+
+            <MudDivider Class="my-1" />
+
+            <MudStack Row="true" Justify="Justify.SpaceBetween">
+                <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="SelectVisibleOptions">
+                    Select visible
+                </MudButton>
+                <MudButton Variant="Variant.Text" Size="Size.Small" OnClick="ClearSelection">
+                    Clear
+                </MudButton>
+            </MudStack>
+        </MudPaper>
+    }
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter] public string SearchPlaceholder { get; set; } = "Search options...";
+    [Parameter] public IEnumerable<string>? Options { get; set; }
+    [Parameter] public IEnumerable<string>? SelectedValues { get; set; }
+    [Parameter] public EventCallback<IEnumerable<string>> SelectedValuesChanged { get; set; }
+
+    private readonly StringComparer _valueComparer = StringComparer.OrdinalIgnoreCase;
+    private HashSet<string> _selectedValues = new(StringComparer.OrdinalIgnoreCase);
+    private bool _isOpen;
+    private string _searchValue = string.Empty;
+
+    private List<string> NormalizedOptions => (Options ?? Enumerable.Empty<string>())
+        .Where(value => !string.IsNullOrWhiteSpace(value))
+        .Select(value => value.Trim())
+        .Distinct(_valueComparer)
+        .OrderBy(value => value, _valueComparer)
+        .ToList();
+
+    private List<string> FilteredOptions => string.IsNullOrWhiteSpace(_searchValue)
+        ? NormalizedOptions
+        : NormalizedOptions
+            .Where(option => option.Contains(_searchValue.Trim(), StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+    private string SelectedSummary => _selectedValues.Count switch
+    {
+        0 => "Any",
+        1 => _selectedValues.First(),
+        _ => $"{_selectedValues.Count} selected"
+    };
+
+    protected override void OnParametersSet()
+    {
+        _selectedValues = (SelectedValues ?? Enumerable.Empty<string>())
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(value => value.Trim())
+            .Distinct(_valueComparer)
+            .ToHashSet(_valueComparer);
+    }
+
+    private void ToggleOpen()
+    {
+        _isOpen = !_isOpen;
+        if (!_isOpen)
+        {
+            _searchValue = string.Empty;
+        }
+    }
+
+    private void Close()
+    {
+        _isOpen = false;
+        _searchValue = string.Empty;
+    }
+
+    private void HandleOverlayWheel(WheelEventArgs _)
+    {
+        Close();
+    }
+
+    private async Task ToggleOption(string option, bool isChecked)
+    {
+        if (isChecked)
+        {
+            _selectedValues.Add(option);
+        }
+        else
+        {
+            _selectedValues.Remove(option);
+        }
+
+        await NotifySelectionChanged();
+    }
+
+    private async Task SelectVisibleOptions()
+    {
+        foreach (var option in FilteredOptions)
+        {
+            _selectedValues.Add(option);
+        }
+
+        await NotifySelectionChanged();
+    }
+
+    private async Task ClearSelection()
+    {
+        _selectedValues.Clear();
+        await NotifySelectionChanged();
+    }
+
+    private Task NotifySelectionChanged()
+    {
+        return SelectedValuesChanged.InvokeAsync(_selectedValues.ToArray());
+    }
+}
+
+<style>
+    .searchable-multi-select {
+        position: relative;
+    }
+
+    .searchable-multi-select-trigger {
+        cursor: pointer;
+        min-height: 56px;
+        display: flex;
+        align-items: center;
+    }
+
+    .searchable-multi-select-panel {
+        position: relative;
+        z-index: 1300;
+        margin-top: 4px;
+        max-height: 360px;
+    }
+
+    .searchable-multi-select-options {
+        max-height: 220px;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    .searchable-multi-select-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1299;
+    }
+</style>

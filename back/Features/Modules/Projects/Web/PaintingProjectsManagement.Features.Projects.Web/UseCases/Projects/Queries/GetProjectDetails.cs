@@ -6,9 +6,13 @@ public class GetProjectDetails : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/projects/{projectId}", async (Guid projectId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/api/projects/{projectId}", async (Guid projectId, string? currency, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.SendAsync(new Request { Id = projectId }, cancellationToken);
+            var result = await dispatcher.SendAsync(new Request
+            {
+                Id = projectId,
+                Currency = currency
+            }, cancellationToken);
             
             return ResultsMapper.FromResponse(result);
         })
@@ -21,6 +25,7 @@ public class GetProjectDetails : IEndpoint
     public class Request : AuthenticatedRequest, IQuery
     {
         public Guid Id { get; set; }
+        public string? Currency { get; set; }
     }
 
     internal class Validator : SmartValidator<Request, Project>
@@ -40,6 +45,8 @@ public class GetProjectDetails : IEndpoint
         ILogger<Handler> logger
     ) : IQueryHandler<Request>
     {
+        private const string DefaultCurrency = "DKK";
+
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var project = await context.Set<Project>()
@@ -69,6 +76,12 @@ public class GetProjectDetails : IEndpoint
                     Materials = new Dictionary<string, IReadOnlyCollection<MaterialsCost>>()
                 };
             }
+            var selectedCurrency = string.IsNullOrWhiteSpace(request.Currency)
+                ? DefaultCurrency
+                : request.Currency.Trim().ToUpperInvariant();
+
+            // TODO: Get from proper projection table in the future
+            var projectCostBreakdown = await projectCostCalculator.CalculateCostAsync(project.Id, selectedCurrency, cancellationToken);
 
             if (project.Materials.Any())
             {
