@@ -7,7 +7,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
+    <ProjectReference Include="..\..\Core\Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

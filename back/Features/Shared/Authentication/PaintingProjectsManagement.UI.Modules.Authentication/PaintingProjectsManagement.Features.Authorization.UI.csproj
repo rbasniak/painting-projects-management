@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj" />
-    <ProjectReference Include="..\..\..\Modules\Subscriptions\Core\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Subscriptions\Core\Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

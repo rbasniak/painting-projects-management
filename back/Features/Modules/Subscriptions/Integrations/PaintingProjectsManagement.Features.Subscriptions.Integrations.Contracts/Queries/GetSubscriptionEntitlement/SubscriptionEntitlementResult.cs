@@ -1,3 +1,5 @@
+using System;
+
 namespace PaintingProjectsManagement.Features.Subscriptions.Integration;
 
 public sealed class SubscriptionEntitlementResult

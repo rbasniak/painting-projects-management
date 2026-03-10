@@ -92,8 +92,8 @@
   </Folder>
   <Folder Name="/Features/Modules/Subscriptions/" />
   <Folder Name="/Features/Modules/Subscriptions/Core/">
-    <Project Path="Features/Modules/Subscriptions/Core/PaintingProjectsManagement.Features.Subscriptions.Core/PaintingProjectsManagement.Features.Subscriptions.Core.csproj" />
-    <Project Path="Features/Modules/Subscriptions/Core/PaintingProjectsManagement.Features.Subscriptions.Core.Contracts/PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
+    <Project Path="Features/Modules/Subscriptions/Core/Core/PaintingProjectsManagement.Features.Subscriptions.Core.csproj" />
+    <Project Path="Features/Modules/Subscriptions/Core/Core.Contracts/PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
   </Folder>
   <Folder Name="/Features/Modules/Subscriptions/Integrations/">
     <Project Path="Features/Modules/Subscriptions/Integrations/PaintingProjectsManagement.Features.Subscriptions.Integrations/PaintingProjectsManagement.Features.Subscriptions.Integrations.csproj" />

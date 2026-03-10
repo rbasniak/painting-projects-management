@@ -3,7 +3,7 @@
   <!-- Common properties are now in Directory.Build.props -->
 
   <ItemGroup>
-    <ProjectReference Include="..\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
+    <ProjectReference Include="..\Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

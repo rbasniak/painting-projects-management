@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Web\PaintingProjectsManagement.Features.Subscriptions.Web.Contracts\PaintingProjectsManagement.Features.Subscriptions.Web.Contracts.csproj" />
-    <ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
+    <ProjectReference Include="..\..\Core\Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\Authentication\PaintingProjectsManagement.UI.Modules.Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\Common\PaintingProjectsManagement.UI.Modules.Shared\PaintingProjectsManagement.Features.Shared.UI.csproj" />
   </ItemGroup>
