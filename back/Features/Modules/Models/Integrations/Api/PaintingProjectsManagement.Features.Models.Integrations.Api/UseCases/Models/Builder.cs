@@ -6,6 +6,7 @@ public static class ModelsBuilder
     {
         UpsertModel.MapEndpoint(app);
         DeleteModel.MapEndpoint(app);
+        UploadModelPicture.MapEndpoint(app);
         ListModels.MapEndpoint(app);
 
         return app;

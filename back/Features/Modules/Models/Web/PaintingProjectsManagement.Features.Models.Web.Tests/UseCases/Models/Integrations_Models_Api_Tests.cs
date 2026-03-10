@@ -5,6 +5,8 @@ namespace PaintingProjectsManagement.Features.Models.Tests;
 [HumanFriendlyDisplayName]
 public class Integrations_Models_Api_Tests
 {
+    private readonly string _base64Image1 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAQSURBVBhXY/iPBkgW+P8fAHg8P8Hpkr/2AAAAAElFTkSuQmCC";
+
     [ClassDataSource<TestingServer>(Shared = SharedType.PerClass)]
     public required TestingServer TestingServer { get; set; } = default!;
 
@@ -206,6 +208,47 @@ public class Integrations_Models_Api_Tests
         existing.ShouldNotBeNull();
         existing.Identity.ShouldBe("external-existing");
         existing.Category.Id.ShouldBe(_tenant1CategoryId);
+    }
+
+    [Test, NotInParallel(Order = 8)]
+    public async Task Upload_Picture_Adds_Model_Picture_When_Id_Is_External_Identity()
+    {
+        using var beforeContext = TestingServer.CreateContext();
+        var beforeModel = await beforeContext.Set<Model>().FirstAsync(x => x.Id == _existingModelId);
+        var beforeCount = beforeModel.Pictures.Length;
+
+        var response = await TestingServer.PostAsync<ModelDetails>(
+            "api/integrations/models/picture",
+            new
+            {
+                Id = "external-existing",
+                Base64Image = _base64Image1
+            },
+            new ApiKey(_tenant1ApiKey));
+
+        response.ShouldBeSuccess(out var result);
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(_existingModelId);
+        result.Pictures.Length.ShouldBeGreaterThan(beforeCount);
+
+        using var afterContext = TestingServer.CreateContext();
+        var afterModel = await afterContext.Set<Model>().FirstAsync(x => x.Id == _existingModelId);
+        afterModel.Pictures.Length.ShouldBe(beforeCount + 1);
+    }
+
+    [Test, NotInParallel(Order = 9)]
+    public async Task Upload_Picture_Fails_When_Image_Format_Is_Invalid()
+    {
+        var response = await TestingServer.PostAsync(
+            "api/integrations/models/picture",
+            new
+            {
+                Id = "external-existing",
+                Base64Image = "invalid-base64"
+            },
+            new ApiKey(_tenant1ApiKey));
+
+        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Invalid image format.");
     }
 
     [Test, NotInParallel(Order = 99)]
