@@ -1,6 +1,6 @@
 @using System.Linq
 @using MudBlazor
-@using PaintingProjectsManagement.Features.Projects.UI
+@using PaintingProjectsManagement.UI.Modules.Projects
 
 @namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 
@@ -13,9 +13,29 @@
                         <MudText Typo="Typo.h4">@Model?.Name</MudText>
                         <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Project Cost Breakdown</MudText>
                     </div>
-                    <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Class="px-5 py-4" Icon="@Icons.Material.Filled.Payments" Style="font-size: 1.1rem;">
-                        Total: @OverallTotal.ToString()
-                    </MudChip>
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                        <MudSelect T="string"
+                                   Label="Currency"
+                                   Value="SelectedCurrency"
+                                   ValueChanged="OnCurrencyChangedAsync"
+                                   Dense="true"
+                                   Margin="Margin.Dense"
+                                   Variant="Variant.Outlined"
+                                   Disabled="IsCurrencySelectionDisabled"
+                                   Style="min-width: 200px;">
+                            @foreach (var currency in Currencies)
+                            {
+                                <MudSelectItem T="string" Value="@currency.Code">@currency.Label</MudSelectItem>
+                            }
+                        </MudSelect>
+                        @if (IsReloadingBreakdown)
+                        {
+                            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Small" />
+                        }
+                        <MudChip T="string" Color="Color.Primary" Variant="Variant.Filled" Class="px-5 py-4" Icon="@Icons.Material.Filled.Payments" Style="font-size: 1.1rem;">
+                            Total: @OverallTotal.ToString()
+                        </MudChip>
+                    </MudStack>
                 </MudStack>
 
                 <MudGrid Spacing="3">
@@ -173,7 +193,16 @@
 @code {
     [CascadingParameter] public IMudDialogInstance MudDialog { get; set; }
 
+    [Inject] public IProjectsService ProjectsService { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+
     [Parameter] public ProjectDetails Model { get; set; }
+
+    private IReadOnlyCollection<CurrencyOption> Currencies { get; set; } = [];
+    private string SelectedCurrency { get; set; } = string.Empty;
+    private bool IsLoadingCurrencies { get; set; }
+    private bool IsReloadingBreakdown { get; set; }
+    private bool IsCurrencySelectionDisabled => IsLoadingCurrencies || IsReloadingBreakdown || Model is null || Model.Id == Guid.Empty;
 
     private MoneyDetails LaborTotal => new()
     {
@@ -198,7 +227,7 @@
     private string DefaultCurrency => Model?.CostBreakdown.Electricity.TotalCost.Currency
                                       ?? Model?.CostBreakdown.Labor?.Values.FirstOrDefault()?.TotalCost.Currency
                                       ?? Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).FirstOrDefault()?.TotalCost.Currency
-                                      ?? string.Empty;
+                                      ?? "DKK";
 
     private double TotalLaborHours => Model?.CostBreakdown.Labor?.Values.Sum(x => x.SpentHours) ?? 0;
 
@@ -212,6 +241,82 @@
             Currency = materials.FirstOrDefault()?.TotalCost.Currency ?? DefaultCurrency
         };
         return total.ToString();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoadingCurrencies = true;
+        Currencies = await ProjectsService.GetCurrenciesAsync(CancellationToken.None);
+        IsLoadingCurrencies = false;
+
+        EnsureSelectedCurrency();
+    }
+
+    private async Task OnCurrencyChangedAsync(string currency)
+    {
+        var normalizedCurrency = NormalizeCurrency(currency);
+
+        if (string.IsNullOrWhiteSpace(normalizedCurrency) ||
+            string.Equals(normalizedCurrency, SelectedCurrency, StringComparison.OrdinalIgnoreCase) ||
+            Model is null ||
+            Model.Id == Guid.Empty)
+        {
+            return;
+        }
+
+        var previousCurrency = SelectedCurrency;
+        SelectedCurrency = normalizedCurrency;
+
+        try
+        {
+            IsReloadingBreakdown = true;
+            Model = await ProjectsService.GetDetailsAsync(Model.Id, CancellationToken.None, normalizedCurrency);
+            EnsureSelectedCurrency();
+        }
+        catch (Exception ex)
+        {
+            SelectedCurrency = previousCurrency;
+            Snackbar.Add($"Could not recalculate costs in {normalizedCurrency}: {ex.Message}", Severity.Error);
+        }
+        finally
+        {
+            IsReloadingBreakdown = false;
+        }
+    }
+
+    private void EnsureSelectedCurrency()
+    {
+        if (!Currencies.Any())
+        {
+            Currencies =
+            [
+                new CurrencyOption { Code = "DKK", Name = "Danish Krone" }
+            ];
+        }
+
+        var normalizedCurrency = NormalizeCurrency(DefaultCurrency);
+
+        if (string.IsNullOrWhiteSpace(normalizedCurrency))
+        {
+            normalizedCurrency = Currencies.First().Code;
+        }
+
+        if (!Currencies.Any(x => x.Code.Equals(normalizedCurrency, StringComparison.OrdinalIgnoreCase)))
+        {
+            Currencies = Currencies
+                .Append(new CurrencyOption { Code = normalizedCurrency, Name = normalizedCurrency })
+                .OrderBy(x => x.Code, StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        SelectedCurrency = normalizedCurrency;
+    }
+
+    private static string NormalizeCurrency(string? currency)
+    {
+        return string.IsNullOrWhiteSpace(currency)
+            ? string.Empty
+            : currency.Trim().ToUpperInvariant();
     }
 
     private void Close() => MudDialog.Close(DialogResult.Ok(true));
