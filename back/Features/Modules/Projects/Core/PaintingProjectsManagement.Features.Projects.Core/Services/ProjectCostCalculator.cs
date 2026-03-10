@@ -23,10 +23,16 @@ public class ProjectCostCalculator(
             .First(x => x.Id == projectId);
 
         var projectMaterialsById = project.Materials.ToDictionary(x => x.MaterialId);
+        var projectMaterialIds = projectMaterialsById.Keys.ToArray();
 
-        var projectMaterials = context.Set<Material>()
+        var projectMaterialDefinitions = await context.Set<Material>()
             .AsNoTracking()
-            .Where(x => project.Materials.Select(x => x.MaterialId).Contains(x.Id))
+            .Where(x => x.Tenant == project.TenantId && projectMaterialIds.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+
+        var projectMaterials = projectMaterialDefinitions
+            .GroupBy(x => x.Id)
+            .Select(group => group.OrderByDescending(x => x.UpdatedUtc).First())
             .ToDictionary(
                 x => x.Id,
                 x => (MaterialDefinition: x, ProjectMaterial: projectMaterialsById[x.Id])

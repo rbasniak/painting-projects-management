@@ -1,4 +1,6 @@
-﻿namespace PaintingProjectsManagement.Features.Projects;
+using Microsoft.Extensions.Logging;
+
+namespace PaintingProjectsManagement.Features.Projects;
 
 public class GetProjectDetails : IEndpoint
 {
@@ -32,7 +34,11 @@ public class GetProjectDetails : IEndpoint
         }
     }
 
-    public class Handler(DbContext context, IProjectCostCalculator projectCostCalculator) : IQueryHandler<Request>
+    public class Handler(
+        DbContext context,
+        IProjectCostCalculator projectCostCalculator,
+        ILogger<Handler> logger
+    ) : IQueryHandler<Request>
     {
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
@@ -45,8 +51,24 @@ public class GetProjectDetails : IEndpoint
                     .ThenInclude(x => x.Sections)
                 .FirstAsync(x => x.Id == request.Id, cancellationToken);
 
-            // TODO: Get from proper projection table in the future
-            var projectCostBreakdown = await projectCostCalculator.CalculateCostAsync(project.Id, "DKK", cancellationToken);
+            // TODO: Get from proper projection table in the future.
+            // Cost failures should not block project details dialogs (references/colors/matching flows).
+            ProjectCostBreakdown projectCostBreakdown;
+            try
+            {
+                projectCostBreakdown = await projectCostCalculator.CalculateCostAsync(project.Id, "DKK", cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to calculate project cost for project {ProjectId}. Returning empty cost breakdown.", project.Id);
+                projectCostBreakdown = new ProjectCostBreakdown
+                {
+                    ProjectId = project.Id,
+                    Electricity = ElectricityCost.Empty(),
+                    Labor = new Dictionary<string, LaborCost>(),
+                    Materials = new Dictionary<string, IReadOnlyCollection<MaterialsCost>>()
+                };
+            }
 
             if (project.Materials.Any())
             {
