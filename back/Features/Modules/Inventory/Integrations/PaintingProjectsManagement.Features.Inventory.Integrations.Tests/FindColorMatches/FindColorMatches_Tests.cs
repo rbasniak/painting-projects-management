@@ -119,7 +119,7 @@ public class FindColorMatches_Tests
         // Assert
         response.ShouldNotBeNull();
         response.Data.ShouldNotBeNull();
-        response.Data.Count.ShouldBeLessThanOrEqualTo(5);
+        response.Data.Count.ShouldBe(6);
 
         // The closest match should be Mephiston Red (exact match)
         var closestMatch = response.Data.First();
@@ -158,14 +158,25 @@ public class FindColorMatches_Tests
     }
 
     [Test, NotInParallel(Order = 4)]
-    public async Task MaxResults_Limits_The_Number_Of_Results()
+    public async Task MaxResults_Limits_Results_Per_Paint_Line()
     {
         // Act
-        var response = await ExecuteQuery("rodrigo.basniak", "#FF0000", 3);
+        var response = await ExecuteQuery("rodrigo.basniak", "#FF0000", 2);
 
         // Assert
         response.Data.ShouldNotBeNull();
-        response.Data.Count.ShouldBe(3);
+        response.Data.Count.ShouldBe(5);
+
+        var matchesPerLine = response.Data
+            .GroupBy(x => $"{x.BrandName}::{x.LineName}")
+            .ToList();
+
+        matchesPerLine.ShouldNotBeEmpty();
+
+        foreach (var lineGroup in matchesPerLine)
+        {
+            lineGroup.Count().ShouldBeLessThanOrEqualTo(2);
+        }
     }
 
     [Test, NotInParallel(Order = 5)]
@@ -201,9 +212,9 @@ public class FindColorMatches_Tests
 
         // Assert
         response.Data.ShouldNotBeNull();
-        response.Data.Count.ShouldBe(1);
+        response.Data.Count.ShouldBe(3);
 
-        var match = response.Data.First();
+        var match = response.Data.First(x => x.Name == "Mephiston Red");
         match.PaintColorId.ShouldNotBe(Guid.Empty);
         match.Name.ShouldBe("Mephiston Red");
         match.HexColor.ShouldBe("#FF0000");
@@ -345,7 +356,7 @@ public class FindColorMatches_Tests
 
         // Assert
         response.Data.ShouldNotBeNull();
-        response.Data.Count.ShouldBe(3);
+        response.Data.Count.ShouldBe(6);
 
         // The closest match should be Blue Green
         var closestMatch = response.Data.First();

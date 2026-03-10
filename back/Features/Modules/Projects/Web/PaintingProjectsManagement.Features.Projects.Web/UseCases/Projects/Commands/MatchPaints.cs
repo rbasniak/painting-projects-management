@@ -67,7 +67,7 @@ public class MatchPaints : IEndpoint
                     var findMatchesCommand = new FindColorMatchesQuery
                     {
                         ReferenceColor = section.ReferenceColor,
-                        MaxResults = 10
+                        MaxResults = 5
                     };
                     // Note: Identity should be automatically set by the framework when the request
                     // goes through IDispatcher, based on the current authenticated user context
