@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.UI.Modules.Projects;
 
 namespace PaintingProjectsManagement.UI.Modules.Projects;
@@ -45,7 +46,7 @@ public interface IProjectsService
     Task UpdateColorSectionAsync(UpdateColorSectionRequest request, CancellationToken cancellationToken);
 
     // Color matching
-    Task MatchPaintsAsync(Guid projectId, CancellationToken cancellationToken);
+    Task MatchPaintsAsync(Guid projectId, MatchPaintsRequest request, CancellationToken cancellationToken);
     Task UpdatePickedColorAsync(UpdatePickedColorRequest request, CancellationToken cancellationToken);
 
     // Reference pictures
@@ -249,9 +250,12 @@ public class ProjectsService : IProjectsService
         response.EnsureSuccessStatusCode();
     }
 
-    public async Task MatchPaintsAsync(Guid projectId, CancellationToken cancellationToken)
+    public async Task MatchPaintsAsync(Guid projectId, MatchPaintsRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsync($"api/projects/{projectId}/color-sections/match-paints", null, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync(
+            $"api/projects/{projectId}/color-sections/match-paints",
+            request,
+            cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 

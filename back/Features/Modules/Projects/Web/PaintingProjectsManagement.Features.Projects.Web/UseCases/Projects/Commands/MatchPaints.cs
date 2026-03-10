@@ -1,4 +1,4 @@
-using System.Text.Json;
+using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.Features.Inventory.Integration;
 
 namespace PaintingProjectsManagement.Features.Projects;
@@ -7,9 +7,17 @@ public class MatchPaints : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/projects/{projectId}/color-sections/match-paints", async (Guid projectId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/api/projects/{projectId}/color-sections/match-paints", async (
+            Guid projectId,
+            MatchPaintsBody? body,
+            IDispatcher dispatcher,
+            CancellationToken cancellationToken) =>
         {
-            var request = new Request { ProjectId = projectId };
+            var request = new Request
+            {
+                ProjectId = projectId,
+                IncludedPaintTypes = body?.IncludedPaintTypes?.Distinct().ToArray() ?? Array.Empty<PaintType>()
+            };
             var result = await dispatcher.SendAsync(request, cancellationToken);
             return ResultsMapper.FromResponse(result);
         })
@@ -19,9 +27,15 @@ public class MatchPaints : IEndpoint
         .WithTags("Projects");
     }
 
+    public class MatchPaintsBody
+    {
+        public IReadOnlyCollection<PaintType> IncludedPaintTypes { get; set; } = Array.Empty<PaintType>();
+    }
+
     public class Request : AuthenticatedRequest, ICommand
     {
         public Guid ProjectId { get; set; }
+        public IReadOnlyCollection<PaintType> IncludedPaintTypes { get; set; } = Array.Empty<PaintType>();
     }
 
     public class Validator : SmartValidator<Request, Project>
@@ -43,6 +57,10 @@ public class MatchPaints : IEndpoint
                 .MustAsync((request, cancellationToken) =>
                     ArchivedProjectValidation.IsEditableProjectAsync(Context, request.Identity.Tenant, request.ProjectId, cancellationToken))
                 .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
+
+            RuleForEach(x => x.IncludedPaintTypes)
+                .IsInEnum()
+                .WithMessage("Paint type filter contains invalid values.");
         }
     }
 
@@ -67,7 +85,8 @@ public class MatchPaints : IEndpoint
                     var findMatchesCommand = new FindColorMatchesQuery
                     {
                         ReferenceColor = section.ReferenceColor,
-                        MaxResults = 5
+                        MaxResults = 5,
+                        IncludedPaintTypes = request.IncludedPaintTypes
                     };
                     // Note: Identity should be automatically set by the framework when the request
                     // goes through IDispatcher, based on the current authenticated user context

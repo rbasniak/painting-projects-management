@@ -1,4 +1,5 @@
 @using MudBlazor
+@using PaintingProjectsManagement.Features.Inventory
 @using PaintingProjectsManagement.Features.Projects.UI
 @using PaintingProjectsManagement.Features.Projects
 @using PaintingProjectsManagement.UI.Modules.Projects
@@ -18,7 +19,7 @@
                              Color="Color.Primary" 
                              Variant="Variant.Filled" 
                              Size="Size.Large"
-                             Disabled="@isMatching"
+                             Disabled="@(isMatching || !CanMatchColors)"
                              StartIcon="@Icons.Material.Filled.Search">
                         @if (isMatching)
                         {
@@ -31,6 +32,32 @@
                         }
                     </MudButton>
                 </MudStack>
+
+                <MudPaper Elevation="0" Class="pa-3" Style="border: 1px solid #e3e3e3; background-color: #fafafa;">
+                    <MudStack Spacing="2">
+                        <MudText Typo="Typo.subtitle2" Style="font-weight: 600;">
+                            Include Paint Types
+                        </MudText>
+                        <MudGrid Spacing="1">
+                            @foreach (var paintType in selectedPaintTypes.Keys.OrderBy(x => (int)x))
+                            {
+                                <MudItem xs="12" sm="6" md="4" lg="3">
+                                    <MudCheckBox T="bool"
+                                                 @bind-Value="selectedPaintTypes[paintType]"
+                                                 Label="@GetPaintTypeLabel(paintType)"
+                                                 Dense="true"
+                                                 Color="Color.Primary" />
+                                </MudItem>
+                            }
+                        </MudGrid>
+                        @if (!CanMatchColors)
+                        {
+                            <MudText Typo="Typo.caption" Color="Color.Warning">
+                                Select at least one paint type to find matches.
+                            </MudText>
+                        }
+                    </MudStack>
+                </MudPaper>
 
                 @if (Model?.Groups == null || !Model.Groups.Any())
                 {
@@ -183,6 +210,9 @@
 
     private List<ColorGroupDetails> colorGroups = new();
     private bool isMatching = false;
+    private Dictionary<PaintType, bool> selectedPaintTypes = Enum.GetValues<PaintType>()
+        .ToDictionary(type => type, _ => true);
+    private bool CanMatchColors => selectedPaintTypes.Values.Any(isSelected => isSelected);
 
     protected override void OnInitialized()
     {
@@ -198,13 +228,26 @@
     private async Task MatchColors()
     {
         if (Model == null) return;
+        if (!CanMatchColors)
+        {
+            Snackbar.Add("Select at least one paint type to find matches.", Severity.Warning);
+            return;
+        }
 
         isMatching = true;
         StateHasChanged();
 
         try
         {
-            await ProjectsService.MatchPaintsAsync(Model.Id, default);
+            var request = new MatchPaintsRequest
+            {
+                IncludedPaintTypes = selectedPaintTypes
+                    .Where(x => x.Value)
+                    .Select(x => x.Key)
+                    .ToArray()
+            };
+
+            await ProjectsService.MatchPaintsAsync(Model.Id, request, default);
             
             // Refresh project details to get updated matches
             var updatedProject = await ProjectsService.GetDetailsAsync(Model.Id, default);
@@ -257,6 +300,20 @@
             ColorZone.Midtone => "Midtones",
             ColorZone.Shadow => "Shadows",
             _ => zone.ToString()
+        };
+    }
+
+    private static string GetPaintTypeLabel(PaintType paintType)
+    {
+        return paintType switch
+        {
+            PaintType.Opaque => "Opaque / Acrylic",
+            PaintType.Metallic => "Metallic",
+            PaintType.Wash => "Wash",
+            PaintType.Ink => "Ink",
+            PaintType.Contrast => "Contrast",
+            PaintType.Transparent => "Transparent",
+            _ => paintType.ToString()
         };
     }
 

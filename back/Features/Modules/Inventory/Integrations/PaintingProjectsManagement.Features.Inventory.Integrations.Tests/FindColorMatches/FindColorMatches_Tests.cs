@@ -89,7 +89,11 @@ public class FindColorMatches_Tests
         }
     }
 
-    private async Task<QueryResponse<IReadOnlyCollection<ColorMatchResult>>> ExecuteQuery(string tenantId, string referenceColor, int maxResults)
+    private async Task<QueryResponse<IReadOnlyCollection<ColorMatchResult>>> ExecuteQuery(
+        string tenantId,
+        string referenceColor,
+        int maxResults,
+        IReadOnlyCollection<PaintType>? includedPaintTypes = null)
     {
         using var scope = TestingServer.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DbContext>();
@@ -99,7 +103,8 @@ public class FindColorMatches_Tests
         var query = new FindColorMatchesQuery
         {
             ReferenceColor = referenceColor,
-            MaxResults = maxResults
+            MaxResults = maxResults,
+            IncludedPaintTypes = includedPaintTypes?.ToArray() ?? Array.Empty<PaintType>()
         };
 
         // Manually set identity because we're bypassing http context
@@ -373,6 +378,31 @@ public class FindColorMatches_Tests
         // Assert
         response.Data.ShouldNotBeNull();
         response.Data.Count.ShouldBeGreaterThan(0);
+    }
+
+    [Test, NotInParallel(Order = 16)]
+    public async Task IncludedPaintTypes_Filters_Results()
+    {
+        // Rodrigo only has Opaque paints in test seed, so Metallic should return zero.
+        var rodrigoMetallicOnly = await ExecuteQuery(
+            "rodrigo.basniak",
+            "#FF0000",
+            5,
+            [PaintType.Metallic]);
+
+        rodrigoMetallicOnly.Data.ShouldNotBeNull();
+        rodrigoMetallicOnly.Data.Count.ShouldBe(0);
+
+        // Ricardo has one Metallic paint ("Purple") in test seed.
+        var ricardoMetallicOnly = await ExecuteQuery(
+            "ricardo.smarzaro",
+            "#FF0000",
+            10,
+            [PaintType.Metallic]);
+
+        ricardoMetallicOnly.Data.ShouldNotBeNull();
+        ricardoMetallicOnly.Data.Count.ShouldBe(1);
+        ricardoMetallicOnly.Data.First().Name.ShouldBe("Purple");
     }
 
     [Test, NotInParallel(Order = 99)]
