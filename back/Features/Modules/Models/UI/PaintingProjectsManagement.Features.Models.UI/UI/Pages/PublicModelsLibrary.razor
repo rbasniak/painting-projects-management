@@ -13,6 +13,7 @@
 
         <MudTextField @bind-Value="_globalSearch"
                       Label="Global search"
+                      Variant="Variant.Outlined"
                       Placeholder="Search characters, category, artist, franchise..."
                       Immediate="true"
                       Adornment="Adornment.Start"
@@ -39,18 +40,18 @@
             </MudItem>
         </MudGrid>
 
-        <MudStack Row="true" Spacing="1">
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
-                       StartIcon="@Icons.Material.Filled.Check"
-                       OnClick="ApplyFilters">
-                Apply filters
-            </MudButton>
+        <MudStack Row="true" Spacing="1" Justify="Justify.FlexEnd" Class="mb-3">
             <MudButton Variant="Variant.Outlined"
                        Color="Color.Default"
                        StartIcon="@Icons.Material.Filled.RestartAlt"
                        OnClick="ClearAndApplyFilters">
                 Clear
+            </MudButton>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Check"
+                       OnClick="ApplyFilters">
+                Apply filters
             </MudButton>
         </MudStack>
 
