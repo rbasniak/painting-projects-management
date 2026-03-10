@@ -1,6 +1,3 @@
-using PaintingProjectsManagement.Features.Subscriptions.Integration;
-using PaintingProjectsManagement.Infrastructure.Common;
-using rbkApiModules.Core.Utilities;
 using System.Text.Json.Serialization;
 
 namespace PaintingProjectsManagement.Features.Models.Integrations.Api;
@@ -29,17 +26,14 @@ public class UploadModelPicture : IEndpoint
 
     public class Validator : SmartValidator<Request, Model>
     {
-        private readonly ITenantStorageUsageService _storageUsageService;
-        private readonly IDispatcher _dispatcher;
+        private readonly IModelPictureUploadPolicyService _uploadPolicyService;
 
         public Validator(
             DbContext context,
             ILocalizationService localization,
-            ITenantStorageUsageService storageUsageService,
-            IDispatcher dispatcher) : base(context, localization)
+            IModelPictureUploadPolicyService uploadPolicyService) : base(context, localization)
         {
-            _storageUsageService = storageUsageService;
-            _dispatcher = dispatcher;
+            _uploadPolicyService = uploadPolicyService;
         }
 
         protected override void ValidateBusinessRules()
@@ -54,7 +48,7 @@ public class UploadModelPicture : IEndpoint
 
             RuleFor(x => x.Base64Image)
                 .NotEmpty()
-                .Must(HaveValidExtension)
+                .Must((_, base64Image) => _uploadPolicyService.HasValidImageExtension(base64Image))
                 .WithMessage("Invalid image format.");
 
             RuleFor(x => x.Base64Image)
@@ -66,55 +60,23 @@ public class UploadModelPicture : IEndpoint
                 .WithMessage("Model picture limit reached for current subscription tier.");
         }
 
-        private bool HaveValidExtension(Request request, string base64Image)
-        {
-            try
-            {
-                var extension = ImageUtilities.ExtractExtension(base64Image);
-                return extension.Equals("jpg", StringComparison.InvariantCultureIgnoreCase) ||
-                       extension.Equals("png", StringComparison.InvariantCultureIgnoreCase);
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         private async Task<bool> HaveAvailableQuota(Request request, string base64Image, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(base64Image) || !HaveValidExtension(request, base64Image))
-            {
-                return true;
-            }
-
-            return await _storageUsageService.HasQuotaForImageAsync(
+            return await _uploadPolicyService.HasAvailableQuotaAsync(
                 request.Identity.Tenant ?? string.Empty,
                 base64Image,
-                bytesToRelease: 0,
                 cancellationToken);
         }
 
         private async Task<bool> HaveAvailableModelPicturesLimit(Request request, CancellationToken cancellationToken)
         {
-            var entitlementResponse = await _dispatcher.SendAsync(
-                new GetSubscriptionEntitlementQuery { TenantId = request.Identity.Tenant },
-                cancellationToken);
-
-            if (!entitlementResponse.IsValid || entitlementResponse.Data is null)
-            {
-                return true;
-            }
-
-            var maxPictures = entitlementResponse.Data.MaxModelPicturesPerModel;
-            if (maxPictures == int.MaxValue)
-            {
-                return true;
-            }
-
             var model = await ResolveModelAsync(request, cancellationToken);
             var currentPictures = model?.Pictures.Length ?? 0;
 
-            return currentPictures < maxPictures;
+            return await _uploadPolicyService.HasAvailableModelPicturesLimitAsync(
+                request.Identity.Tenant ?? string.Empty,
+                currentPictures,
+                cancellationToken);
         }
 
         private async Task<bool> ModelExistsAsync(Request request, string id, CancellationToken cancellationToken)
@@ -147,7 +109,7 @@ public class UploadModelPicture : IEndpoint
         }
     }
 
-    public class Handler(DbContext context, IFileStorage fileStorage) : ICommandHandler<Request>
+    public class Handler(DbContext context, IModelPictureStorageService pictureStorageService) : ICommandHandler<Request>
     {
         public async Task<CommandResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
@@ -165,15 +127,10 @@ public class UploadModelPicture : IEndpoint
 
             model ??= await query.FirstAsync(x => x.Identity == normalizedId, cancellationToken);
 
-            var baseFileName = $"model_{model.Id:N}_{DateTime.UtcNow.Ticks}";
-            var fullFileName = $"{baseFileName}.{ImageUtilities.ExtractExtension(request.Base64Image)}";
-
-            var pictureUrl = await fileStorage.StoreFileFromBase64Async(
+            var pictureUrl = await pictureStorageService.StorePictureAsync(
+                model.Id,
+                request.Identity.Tenant ?? string.Empty,
                 request.Base64Image,
-                fullFileName,
-                Path.Combine(request.Identity.Tenant ?? string.Empty, "models"),
-                2048,
-                2048,
                 cancellationToken);
 
             model.AddPicture(pictureUrl);
