@@ -227,8 +227,7 @@ namespace PaintingProjectsManagment.Database.Migrations
                         .HasColumnType("character varying(75)");
 
                     b.Property<string>("Identity")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
+                        .HasColumnType("text");
 
                     b.Property<bool>("MustHave")
                         .ValueGeneratedOnAdd()
@@ -264,8 +263,6 @@ namespace PaintingProjectsManagment.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("TenantId", "Identity");
 
                     b.HasIndex("TenantId", "Name");
 
@@ -541,7 +538,7 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectStepData");
+                    b.ToTable("ProjectStepData", (string)null);
                 });
 
             modelBuilder.Entity("PaintingProjectsManagement.Features.Subscriptions.SubscriptionPayment", b =>
@@ -1165,7 +1162,7 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                             b1.HasKey("ModelId");
 
-                            b1.ToTable("models.models");
+                            b1.ToTable("models.models", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ModelId");
@@ -1329,7 +1326,7 @@ namespace PaintingProjectsManagment.Database.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("Users");
+                            b1.ToTable("Users", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
