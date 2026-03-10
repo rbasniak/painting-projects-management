@@ -20,52 +20,22 @@
 
         <MudGrid>
             <MudItem xs="12" md="4">
-                <MudTextField @bind-Value="_characterOptionsSearch"
-                              Label="Find character option"
-                              Immediate="true"
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.FilterList" />
-                <MudSelect T="string"
-                           Label="Characters"
-                           MultiSelection="true"
-                           @bind-SelectedValues="SelectedCharacters">
-                    @foreach (var option in CharacterOptions)
-                    {
-                        <MudSelectItem T="string" Value="@option">@option</MudSelectItem>
-                    }
-                </MudSelect>
+                <SearchableMultiSelect Label="Characters"
+                                       SearchPlaceholder="Search characters..."
+                                       Options="CharacterOptions"
+                                       @bind-SelectedValues="SelectedCharacters" />
             </MudItem>
             <MudItem xs="12" md="4">
-                <MudTextField @bind-Value="_categoryOptionsSearch"
-                              Label="Find category option"
-                              Immediate="true"
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.FilterList" />
-                <MudSelect T="string"
-                           Label="Category"
-                           MultiSelection="true"
-                           @bind-SelectedValues="SelectedCategories">
-                    @foreach (var option in CategoryOptions)
-                    {
-                        <MudSelectItem T="string" Value="@option">@option</MudSelectItem>
-                    }
-                </MudSelect>
+                <SearchableMultiSelect Label="Category"
+                                       SearchPlaceholder="Search categories..."
+                                       Options="CategoryOptions"
+                                       @bind-SelectedValues="SelectedCategories" />
             </MudItem>
             <MudItem xs="12" md="4">
-                <MudTextField @bind-Value="_franchiseOptionsSearch"
-                              Label="Find franchise option"
-                              Immediate="true"
-                              Adornment="Adornment.Start"
-                              AdornmentIcon="@Icons.Material.Filled.FilterList" />
-                <MudSelect T="string"
-                           Label="Franchise"
-                           MultiSelection="true"
-                           @bind-SelectedValues="SelectedFranchises">
-                    @foreach (var option in FranchiseOptions)
-                    {
-                        <MudSelectItem T="string" Value="@option">@option</MudSelectItem>
-                    }
-                </MudSelect>
+                <SearchableMultiSelect Label="Franchise"
+                                       SearchPlaceholder="Search franchises..."
+                                       Options="FranchiseOptions"
+                                       @bind-SelectedValues="SelectedFranchises" />
             </MudItem>
         </MudGrid>
 
@@ -147,9 +117,6 @@
     private List<ModelDetails> _galleryModels = new();
 
     private string _globalSearch = string.Empty;
-    private string _characterOptionsSearch = string.Empty;
-    private string _categoryOptionsSearch = string.Empty;
-    private string _franchiseOptionsSearch = string.Empty;
     private HashSet<string> _selectedCharacters = new(StringComparer.OrdinalIgnoreCase);
     private HashSet<string> _selectedCategories = new(StringComparer.OrdinalIgnoreCase);
     private HashSet<string> _selectedFranchises = new(StringComparer.OrdinalIgnoreCase);
@@ -174,17 +141,11 @@
         set => _selectedFranchises = ToHashSet(value);
     }
 
-    private IEnumerable<string> CharacterOptions => FilterOptionValues(
-        _allModels.SelectMany(x => x.Characters),
-        _characterOptionsSearch);
+    private IEnumerable<string> CharacterOptions => GetOptionValues(_allModels.SelectMany(x => x.Characters));
 
-    private IEnumerable<string> CategoryOptions => FilterOptionValues(
-        _allModels.Select(x => x.Category.Name),
-        _categoryOptionsSearch);
+    private IEnumerable<string> CategoryOptions => GetOptionValues(_allModels.Select(x => x.Category.Name));
 
-    private IEnumerable<string> FranchiseOptions => FilterOptionValues(
-        _allModels.Select(x => x.Franchise),
-        _franchiseOptionsSearch);
+    private IEnumerable<string> FranchiseOptions => GetOptionValues(_allModels.Select(x => x.Franchise));
 
     protected override async Task OnParametersSetAsync()
     {
@@ -256,9 +217,6 @@
     private void ResetFilters()
     {
         _globalSearch = string.Empty;
-        _characterOptionsSearch = string.Empty;
-        _categoryOptionsSearch = string.Empty;
-        _franchiseOptionsSearch = string.Empty;
         _selectedCharacters = new HashSet<string>(_valueComparer);
         _selectedCategories = new HashSet<string>(_valueComparer);
         _selectedFranchises = new HashSet<string>(_valueComparer);
@@ -310,21 +268,14 @@
                 .ToHashSet(_valueComparer);
     }
 
-    private IEnumerable<string> FilterOptionValues(IEnumerable<string?> values, string optionFilter)
+    private IEnumerable<string> GetOptionValues(IEnumerable<string?> values)
     {
-        var normalizedValues = values
+        return values
             .Where(x => !string.IsNullOrWhiteSpace(x))
             .Cast<string>()
             .Select(x => x.Trim())
             .Distinct(_valueComparer)
             .OrderBy(x => x, _valueComparer);
-
-        if (string.IsNullOrWhiteSpace(optionFilter))
-        {
-            return normalizedValues;
-        }
-
-        return normalizedValues.Where(x => x.Contains(optionFilter.Trim(), StringComparison.OrdinalIgnoreCase));
     }
 }
 
