@@ -7,7 +7,9 @@ public interface IProjectsService
 {
     Task<IReadOnlyCollection<ProjectDetails>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken);
+    Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken, string? currency = null);
+
+    Task<IReadOnlyCollection<CurrencyOption>> GetCurrenciesAsync(CancellationToken cancellationToken);
 
     Task<ProjectDetails> CreateAsync(CreateProjectRequest request, CancellationToken cancellationToken);
 
@@ -55,6 +57,11 @@ public interface IProjectsService
 
 public class ProjectsService : IProjectsService
 {
+    private static readonly IReadOnlyCollection<CurrencyOption> DefaultCurrencies =
+    [
+        new CurrencyOption { Code = "DKK", Name = "Danish Krone" }
+    ];
+
     private readonly HttpClient _httpClient;
 
     public ProjectsService(HttpClient httpClient) => this._httpClient = httpClient;
@@ -121,9 +128,17 @@ public class ProjectsService : IProjectsService
         await _httpClient.DeleteAsync($"api/projects/{id}", cancellationToken);
     }
 
-    public async Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken)
+    public async Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken, string? currency = null)
     {
-        var response = await _httpClient.GetAsync($"api/projects/{projectId}", cancellationToken);
+        var requestUri = $"api/projects/{projectId}";
+
+        if (!string.IsNullOrWhiteSpace(currency))
+        {
+            var normalizedCurrency = Uri.EscapeDataString(currency.Trim().ToUpperInvariant());
+            requestUri = $"{requestUri}?currency={normalizedCurrency}";
+        }
+
+        var response = await _httpClient.GetAsync(requestUri, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -138,6 +153,33 @@ public class ProjectsService : IProjectsService
         }
 
         return result;
+    }
+
+    public async Task<IReadOnlyCollection<CurrencyOption>> GetCurrenciesAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync("api/currencies", cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return DefaultCurrencies;
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<IReadOnlyCollection<CurrencyOption>>(cancellationToken: cancellationToken);
+
+            var currencies = result?
+                .Where(x => !string.IsNullOrWhiteSpace(x.Code))
+                .Select(x => x with { Code = x.Code.Trim().ToUpperInvariant() })
+                .OrderBy(x => x.Code, StringComparer.Ordinal)
+                .ToArray();
+
+            return currencies is { Length: > 0 } ? currencies : DefaultCurrencies;
+        }
+        catch (Exception) when (!cancellationToken.IsCancellationRequested)
+        {
+            return DefaultCurrencies;
+        }
     }
 
     public async Task<IReadOnlyCollection<ProjectMaterialDetails>> GetProjectMaterialsAsync(Guid projectId, CancellationToken cancellationToken)
