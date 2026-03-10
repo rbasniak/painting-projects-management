@@ -24,6 +24,10 @@ public class FindColorMatches
                 .GreaterThan(0)
                 .LessThanOrEqualTo(100)
                 .WithMessage("MaxResults must be between 1 and 100.");
+
+            RuleForEach(x => x.IncludedPaintTypes)
+                .IsInEnum()
+                .WithMessage("Paint type filter contains invalid values.");
         }
 
         private static bool IsValidHexColor(string color)
@@ -49,13 +53,23 @@ public class FindColorMatches
         public async Task<QueryResponse<IReadOnlyCollection<ColorMatchResult>>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var username = request.Identity.Tenant ?? string.Empty;
+            var includedPaintTypes = request.IncludedPaintTypes
+                .Distinct()
+                .ToArray();
 
-            var userPaints = await _context.Set<UserPaint>()
+            IQueryable<UserPaint> userPaintsQuery = _context.Set<UserPaint>()
                 .Where(up => up.Username.ToLower() == username.ToLower())
                 .Include(up => up.PaintColor)
                 .ThenInclude(x => x.Line)
-                .ThenInclude(x => x!.Brand)
-                .ToListAsync(cancellationToken);
+                .ThenInclude(x => x!.Brand);
+
+            if (includedPaintTypes.Length > 0)
+            {
+                userPaintsQuery = userPaintsQuery
+                    .Where(up => includedPaintTypes.Contains(up.PaintColor.Type));
+            }
+
+            var userPaints = await userPaintsQuery.ToListAsync(cancellationToken);
 
             var matches = userPaints
                 .Select(up => new
@@ -63,17 +77,26 @@ public class FindColorMatches
                     Paint = up,
                     Distance = ColorHelper.CalculateColorDistance(request.ReferenceColor, up.PaintColor.HexColor)
                 })
-                .OrderBy(x => x.Distance)
-                .Take(request.MaxResults)
-                .Select(x => new ColorMatchResult
+                .GroupBy(x => new
                 {
-                    PaintColorId = x.Paint.PaintColorId,
-                    Name = x.Paint.PaintColor.Name,
-                    HexColor = x.Paint.PaintColor.HexColor,
                     BrandName = x.Paint.PaintColor.Line.Brand.Name,
-                    LineName = x.Paint.PaintColor.Line.Name,
-                    Distance = x.Distance
+                    LineName = x.Paint.PaintColor.Line.Name
                 })
+                .SelectMany(lineGroup => lineGroup
+                    .OrderBy(x => x.Distance)
+                    .ThenBy(x => x.Paint.PaintColor.Name)
+                    .Take(request.MaxResults)
+                    .Select(x => new ColorMatchResult
+                    {
+                        PaintColorId = x.Paint.PaintColorId,
+                        Name = x.Paint.PaintColor.Name,
+                        HexColor = x.Paint.PaintColor.HexColor,
+                        BrandName = x.Paint.PaintColor.Line.Brand.Name,
+                        LineName = x.Paint.PaintColor.Line.Name,
+                        Distance = x.Distance
+                    }))
+                .OrderBy(x => x.Distance)
+                .ThenBy(x => x.Name)
                 .ToList();
 
             return QueryResponse<IReadOnlyCollection<ColorMatchResult>>.Success(matches);

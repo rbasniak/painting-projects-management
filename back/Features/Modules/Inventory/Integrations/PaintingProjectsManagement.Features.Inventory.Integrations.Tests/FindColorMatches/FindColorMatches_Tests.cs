@@ -89,7 +89,11 @@ public class FindColorMatches_Tests
         }
     }
 
-    private async Task<QueryResponse<IReadOnlyCollection<ColorMatchResult>>> ExecuteQuery(string tenantId, string referenceColor, int maxResults)
+    private async Task<QueryResponse<IReadOnlyCollection<ColorMatchResult>>> ExecuteQuery(
+        string tenantId,
+        string referenceColor,
+        int maxResults,
+        IReadOnlyCollection<PaintType>? includedPaintTypes = null)
     {
         using var scope = TestingServer.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DbContext>();
@@ -99,7 +103,8 @@ public class FindColorMatches_Tests
         var query = new FindColorMatchesQuery
         {
             ReferenceColor = referenceColor,
-            MaxResults = maxResults
+            MaxResults = maxResults,
+            IncludedPaintTypes = includedPaintTypes?.ToArray() ?? Array.Empty<PaintType>()
         };
 
         // Manually set identity because we're bypassing http context
@@ -119,7 +124,7 @@ public class FindColorMatches_Tests
         // Assert
         response.ShouldNotBeNull();
         response.Data.ShouldNotBeNull();
-        response.Data.Count.ShouldBeLessThanOrEqualTo(5);
+        response.Data.Count.ShouldBe(6);
 
         // The closest match should be Mephiston Red (exact match)
         var closestMatch = response.Data.First();
@@ -158,14 +163,25 @@ public class FindColorMatches_Tests
     }
 
     [Test, NotInParallel(Order = 4)]
-    public async Task MaxResults_Limits_The_Number_Of_Results()
+    public async Task MaxResults_Limits_Results_Per_Paint_Line()
     {
         // Act
-        var response = await ExecuteQuery("rodrigo.basniak", "#FF0000", 3);
+        var response = await ExecuteQuery("rodrigo.basniak", "#FF0000", 2);
 
         // Assert
         response.Data.ShouldNotBeNull();
-        response.Data.Count.ShouldBe(3);
+        response.Data.Count.ShouldBe(5);
+
+        var matchesPerLine = response.Data
+            .GroupBy(x => $"{x.BrandName}::{x.LineName}")
+            .ToList();
+
+        matchesPerLine.ShouldNotBeEmpty();
+
+        foreach (var lineGroup in matchesPerLine)
+        {
+            lineGroup.Count().ShouldBeLessThanOrEqualTo(2);
+        }
     }
 
     [Test, NotInParallel(Order = 5)]
@@ -201,9 +217,9 @@ public class FindColorMatches_Tests
 
         // Assert
         response.Data.ShouldNotBeNull();
-        response.Data.Count.ShouldBe(1);
+        response.Data.Count.ShouldBe(3);
 
-        var match = response.Data.First();
+        var match = response.Data.First(x => x.Name == "Mephiston Red");
         match.PaintColorId.ShouldNotBe(Guid.Empty);
         match.Name.ShouldBe("Mephiston Red");
         match.HexColor.ShouldBe("#FF0000");
@@ -345,7 +361,7 @@ public class FindColorMatches_Tests
 
         // Assert
         response.Data.ShouldNotBeNull();
-        response.Data.Count.ShouldBe(3);
+        response.Data.Count.ShouldBe(6);
 
         // The closest match should be Blue Green
         var closestMatch = response.Data.First();
@@ -362,6 +378,31 @@ public class FindColorMatches_Tests
         // Assert
         response.Data.ShouldNotBeNull();
         response.Data.Count.ShouldBeGreaterThan(0);
+    }
+
+    [Test, NotInParallel(Order = 16)]
+    public async Task IncludedPaintTypes_Filters_Results()
+    {
+        // Rodrigo only has Opaque paints in test seed, so Metallic should return zero.
+        var rodrigoMetallicOnly = await ExecuteQuery(
+            "rodrigo.basniak",
+            "#FF0000",
+            5,
+            [PaintType.Metallic]);
+
+        rodrigoMetallicOnly.Data.ShouldNotBeNull();
+        rodrigoMetallicOnly.Data.Count.ShouldBe(0);
+
+        // Ricardo has one Metallic paint ("Purple") in test seed.
+        var ricardoMetallicOnly = await ExecuteQuery(
+            "ricardo.smarzaro",
+            "#FF0000",
+            10,
+            [PaintType.Metallic]);
+
+        ricardoMetallicOnly.Data.ShouldNotBeNull();
+        ricardoMetallicOnly.Data.Count.ShouldBe(1);
+        ricardoMetallicOnly.Data.First().Name.ShouldBe("Purple");
     }
 
     [Test, NotInParallel(Order = 99)]

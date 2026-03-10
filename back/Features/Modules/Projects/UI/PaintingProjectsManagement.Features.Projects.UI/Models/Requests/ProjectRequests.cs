@@ -1,3 +1,5 @@
+using PaintingProjectsManagement.Features.Inventory;
+
 namespace PaintingProjectsManagement.UI.Modules.Projects;
 
 public enum ColorZone
@@ -51,6 +53,11 @@ public class UpdatePickedColorRequest
 {
     public Guid SectionId { get; init; }
     public Guid PaintColorId { get; init; }
+}
+
+public class MatchPaintsRequest
+{
+    public PaintType[] IncludedPaintTypes { get; init; } = Array.Empty<PaintType>();
 }
 
 public class UploadProjectReferencePictureRequest
