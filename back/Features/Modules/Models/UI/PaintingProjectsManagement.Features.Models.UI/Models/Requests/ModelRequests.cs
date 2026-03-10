@@ -2,6 +2,7 @@ namespace PaintingProjectsManagement.UI.Modules.Models;
 
 public class CreateModelRequest
 {
+    public string? Identity { get; init; }
     public string Name { get; init; } = string.Empty;
     public string Franchise { get; init; } = string.Empty;
     public string[] Characters { get; init; } = [];

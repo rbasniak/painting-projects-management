@@ -18,4 +18,5 @@ public interface IModelDetails
     object FigureSize { get; }
     int NumberOfFigures { get; }
     bool MustHave { get; }
+    string? Identity { get; }
 }

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="rbkApiModules.Commons.Core" />
+    <PackageReference Include="rbkApiModules.Identity.Core" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\PaintingProjectsManagement.Features.Models.Core\PaintingProjectsManagement.Features.Models.Core.csproj" />
+    <ProjectReference Include="..\..\..\Web\PaintingProjectsManagement.Features.Models.Web\PaintingProjectsManagement.Features.Models.Web.csproj" />
+  </ItemGroup>
+
+</Project>

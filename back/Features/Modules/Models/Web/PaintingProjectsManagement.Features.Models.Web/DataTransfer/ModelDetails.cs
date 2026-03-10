@@ -20,6 +20,7 @@ public class ModelDetails
     public EnumReference FigureSize { get; set; }
     public int NumberOfFigures { get; set; }
     public bool MustHave { get; set; }
+    public string? Identity { get; set; }
 
     public static ModelDetails FromModel(Model model)
     {
@@ -40,7 +41,8 @@ public class ModelDetails
             BaseSize = new EnumReference(model.BaseSize),
             FigureSize = new EnumReference(model.FigureSize),
             NumberOfFigures = model.NumberOfFigures,
-            MustHave = model.MustHave
+            MustHave = model.MustHave,
+            Identity = model.Identity
         };
     }
 }

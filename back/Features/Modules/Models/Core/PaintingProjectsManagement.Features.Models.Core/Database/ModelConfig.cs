@@ -24,6 +24,9 @@ public class ModelConfig : IEntityTypeConfiguration<Model>
         builder.Property(x => x.Franchise)
             .HasMaxLength(75);
 
+        builder.Property(x => x.Identity)
+            .HasMaxLength(512);
+
         builder.Property(x => x.MustHave)
             .IsRequired()
             .HasDefaultValue(false);
@@ -42,5 +45,6 @@ public class ModelConfig : IEntityTypeConfiguration<Model>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(x => new { x.TenantId, x.Name });
+        builder.HasIndex(x => new { x.TenantId, x.Identity });
     }
 }
