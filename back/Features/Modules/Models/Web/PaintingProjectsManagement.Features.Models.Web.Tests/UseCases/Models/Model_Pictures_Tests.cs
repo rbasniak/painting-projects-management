@@ -1,4 +1,6 @@
 using PaintingProjectsManagement.Features.Models;
+using PaintingProjectsManagement.Infrastructure.Common;
+using Microsoft.AspNetCore.Hosting;
 
 namespace PaintingProjectsManagement.Features.Models.Tests;
 
@@ -171,6 +173,72 @@ public class Model_Pictures_Tests
         updated.Pictures.ShouldNotContain(pictureUrl);
     }
 
+    [Test, NotInParallel(Order = 8)]
+    public async Task Upload_Model_Picture_Should_Fail_When_Quota_Is_Exceeded()
+    {
+        var usageService = TestingServer.Services.GetRequiredService<ITenantStorageUsageService>();
+        var env = TestingServer.Services.GetRequiredService<IWebHostEnvironment>();
+
+        var tenant = "RODRIGO.BASNIAK";
+        var tenantFolder = Path.Combine(env.WebRootPath, "uploads", tenant, "quota-tests");
+        Directory.CreateDirectory(tenantFolder);
+
+        var usedBytes = await usageService.GetUsageInBytesAsync(tenant, CancellationToken.None);
+        var fillerBytes = Math.Max(0, usageService.QuotaInBytes - usedBytes);
+        var fillerPath = Path.Combine(tenantFolder, $"{Guid.NewGuid():N}.bin");
+
+        await using (var fillerStream = new FileStream(fillerPath, FileMode.Create, FileAccess.Write, FileShare.None))
+        {
+            fillerStream.SetLength(fillerBytes);
+        }
+
+        try
+        {
+            var response = await TestingServer.PostAsync(
+                "api/models/picture",
+                new UploadModelPicture.Request
+                {
+                    ModelId = _modelId,
+                    Base64Image = _base64Image1
+                }, "rodrigo.basniak");
+
+            response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Storage quota exceeded.");
+        }
+        finally
+        {
+            File.Delete(fillerPath);
+        }
+    }
+
+    [Test, NotInParallel(Order = 9)]
+    public async Task Free_Tier_Model_Picture_Limit_Is_Enforced()
+    {
+        var model = await CreateTestModel($"cap-model-{Guid.NewGuid():N}");
+
+        for (var i = 0; i < 3; i++)
+        {
+            var success = await TestingServer.PostAsync(
+                "api/models/picture",
+                new UploadModelPicture.Request
+                {
+                    ModelId = model.Id,
+                    Base64Image = _base64Image1
+                }, "rodrigo.basniak");
+
+            success.ShouldBeSuccess();
+        }
+
+        var fourth = await TestingServer.PostAsync(
+            "api/models/picture",
+            new UploadModelPicture.Request
+            {
+                ModelId = model.Id,
+                Base64Image = _base64Image1
+            }, "rodrigo.basniak");
+
+        fourth.ShouldHaveErrors(HttpStatusCode.BadRequest, "Model picture limit reached for current subscription tier.");
+    }
+
     [Test, NotInParallel(Order = 99)]
     public async Task Cleanup()
     {
@@ -179,7 +247,7 @@ public class Model_Pictures_Tests
 
     private async Task<Model> CreateTestModel(string name)
     {
-        var category = new ModelCategory("rodrigo.basniak", "Test Category");
+        var category = new ModelCategory("rodrigo.basniak", $"Test Category {Guid.NewGuid():N}");
         var model = new Model(
             "rodrigo.basniak",
             name,

@@ -12,11 +12,14 @@ public class Delete_Project_Tests
         // Create test projects for different users
         var existingProject = new Project("rodrigo.basniak", "Existing Project", DateTime.UtcNow, null);
         var anotherUserProject = new Project("ricardo.smarzaro", "Another User Project", DateTime.UtcNow, null);
+        var archivedProject = new Project("rodrigo.basniak", "Archived Project", DateTime.UtcNow, null);
+        archivedProject.Archive(DateTime.UtcNow.AddDays(-1));
 
         using (var context = TestingServer.CreateContext())
         {
             await context.AddAsync(existingProject);
             await context.AddAsync(anotherUserProject);
+            await context.AddAsync(archivedProject);
             await context.SaveChangesAsync();
         }
 
@@ -81,6 +84,24 @@ public class Delete_Project_Tests
     }
 
     [Test, NotInParallel(Order = 5)]
+    public async Task User_Cannot_Delete_Archived_Project()
+    {
+        // Prepare
+        var archivedProject = TestingServer.CreateContext().Set<Project>().FirstOrDefault(x => x.Name == "Archived Project");
+        archivedProject.ShouldNotBeNull("Archived project should exist from seed");
+        archivedProject.EndDate.ShouldNotBeNull("Archived project should have an end date");
+
+        // Act
+        var response = await TestingServer.DeleteAsync($"api/projects/{archivedProject.Id}", "rodrigo.basniak");
+
+        // Assert
+        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Archived projects are read-only and cannot be edited.");
+
+        var stillExistingEntity = TestingServer.CreateContext().Set<Project>().FirstOrDefault(x => x.Id == archivedProject.Id);
+        stillExistingEntity.ShouldNotBeNull("Archived project should still exist in database");
+    }
+
+    [Test, NotInParallel(Order = 6)]
     public async Task User_Can_Delete_Project()
     {
         // Prepare - Load the project created by the same user

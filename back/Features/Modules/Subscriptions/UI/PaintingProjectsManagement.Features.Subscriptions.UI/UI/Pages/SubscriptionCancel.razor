@@ -1,0 +1,49 @@
+@page "/subscriptions/cancel"
+@using PaintingProjectsManagement.UI.Modules.Subscriptions
+@inject ISubscriptionsService SubscriptionsService
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-6">
+    <MudText Typo="Typo.h5" Class="mb-3">Cancel subscription</MudText>
+
+    <MudSwitch T="bool"
+               @bind-Value="_cancelAtPeriodEnd"
+               Label="Cancel at period end (recommended)" />
+
+    <MudButton Class="mt-3" Variant="Variant.Filled" Color="Color.Error" Disabled="_saving" OnClick="CancelAsync">
+        @(_saving ? "Processing..." : "Confirm cancellation")
+    </MudButton>
+
+    @if (!string.IsNullOrWhiteSpace(_message))
+    {
+        <MudAlert Severity="@_severity" Class="mt-3">@_message</MudAlert>
+    }
+</MudContainer>
+
+@code {
+    private bool _cancelAtPeriodEnd = true;
+    private bool _saving;
+    private string? _message;
+    private Severity _severity = Severity.Info;
+
+    private async Task CancelAsync()
+    {
+        _saving = true;
+        try
+        {
+            var result = await SubscriptionsService.CancelAsync(_cancelAtPeriodEnd, CancellationToken.None);
+            _severity = Severity.Success;
+            _message = _cancelAtPeriodEnd
+                ? "Subscription will cancel at period end."
+                : $"Subscription cancelled immediately. Current tier is now {result.Tier}.";
+        }
+        catch
+        {
+            _severity = Severity.Error;
+            _message = "Could not cancel subscription.";
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+}

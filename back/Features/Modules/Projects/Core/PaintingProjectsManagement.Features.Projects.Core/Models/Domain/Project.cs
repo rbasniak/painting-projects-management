@@ -32,6 +32,7 @@ public class Project : TenantEntity
     public string? PictureUrl { get; private set; } = string.Empty;
     public DateTime StartDate { get; private set; }
     public DateTime? EndDate { get; private set; }
+    public bool IsArchived => EndDate.HasValue;
     public Guid? ModelId { get; private set; }
 
     public IEnumerable<MaterialForProject> Materials => _materials.AsReadOnly();
@@ -46,6 +47,16 @@ public class Project : TenantEntity
         PictureUrl = pictureUrl;
         StartDate = startDate != null ? startDate.Value : StartDate;    
         EndDate = endDate;
+    }
+
+    public void Archive(DateTime? archivedAt = null)
+    {
+        if (IsArchived)
+        {
+            return;
+        }
+
+        EndDate = archivedAt ?? DateTime.UtcNow;
     }
 
     public void ConsumeMaterial(Guid materialId, double quantity, MaterialUnit unit)
@@ -209,6 +220,30 @@ public class Project : TenantEntity
         if (reference != null)
         {
             _references.Remove(reference);
+        }
+    }
+
+    public void AddFinishedPicture(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            throw new ArgumentException("URL cannot be null or empty.", nameof(url));
+        }
+
+        _pictures.Add(new ProjectPicture(Id, url));
+    }
+
+    public void RemoveFinishedPicture(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return;
+        }
+
+        var picture = _pictures.FirstOrDefault(x => x.Url == url);
+        if (picture is not null)
+        {
+            _pictures.Remove(picture);
         }
     }
 }

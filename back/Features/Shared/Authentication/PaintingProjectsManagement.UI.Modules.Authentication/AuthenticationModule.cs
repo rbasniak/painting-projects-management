@@ -23,6 +23,21 @@ public static class Builder
             return new AuthenticationService(httpClient);
         });
 
+        services.AddScoped<IUserProfileService>(sp =>
+        {
+            var bearer = sp.GetRequiredService<BearerDelegatingHandler>();
+            var errorHandler = sp.GetRequiredService<HttpErrorHandler>();
+
+            bearer.InnerHandler = new HttpClientHandler();
+            errorHandler.InnerHandler = bearer;
+
+            var httpClient = new HttpClient(errorHandler)
+            {
+                BaseAddress = new Uri("https://localhost:7236")
+            };
+            return new UserProfileService(httpClient);
+        });
+
         return services;
     }
 }

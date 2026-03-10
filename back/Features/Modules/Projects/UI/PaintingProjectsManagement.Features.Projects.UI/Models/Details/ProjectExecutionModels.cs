@@ -12,6 +12,28 @@ public class ProjectMaterialDetails
     public int Unit { get; set; }
 }
 
+public class AvailableProjectMaterialDetails
+{
+    public Guid MaterialId { get; set; }
+    public string MaterialName { get; set; } = string.Empty;
+    public int CategoryId { get; set; }
+    public string CategoryName { get; set; } = string.Empty;
+    public int DefaultUnit { get; set; }
+}
+
+public enum ExecutionMaterialUnit
+{
+    Drop = 1,
+    Unit = 2,
+    Centimeter = 3,
+    Meter = 4,
+    Gram = 5,
+    Kilogram = 6,
+    Liter = 7,
+    Mililiter = 8,
+    Spray = 9
+}
+
 public class ProjectStepDetails
 {
     public Guid Id { get; set; }

@@ -29,6 +29,10 @@ public class DeleteProject : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableProjectAsync(Context, request.Identity.Tenant, request.Id, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
     }
 

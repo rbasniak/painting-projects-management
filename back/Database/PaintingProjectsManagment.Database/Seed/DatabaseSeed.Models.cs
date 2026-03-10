@@ -29,13 +29,17 @@ public partial class DatabaseSeed
     {
         var rootPath = new DirectoryInfo(".");
 
-        var relativePath = Path.Combine("PaintingProjectsManagment.Database", "Seed", "models_seed.sql");
+        var relativePath = Path.Combine("Database", "PaintingProjectsManagment.Database", "Seed", "models_seed.sql");
 
         var seedSqlFile = new FileInfo(Path.Combine(rootPath.FullName, relativePath));
 
         while (!seedSqlFile.Exists)
         {
             rootPath = rootPath.Parent;
+            if (rootPath == null)
+            {
+                throw new FileNotFoundException($"Could not find seed file: {relativePath}");
+            }
             seedSqlFile = new FileInfo(Path.Combine(rootPath.FullName, relativePath));
         }
 

@@ -6,6 +6,7 @@ public class ProjectDetails
     public string PictureUrl { get; set; } = string.Empty;
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
+    public bool IsArchived { get; set; }
 
     public ProjectStepDataDetails[] Steps { get; set; } = Array.Empty<ProjectStepDataDetails>();
     // public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();
@@ -26,6 +27,7 @@ public class ProjectDetails
             PictureUrl = project.PictureUrl,
             StartDate = project.StartDate,
             EndDate = project.EndDate,
+            IsArchived = project.IsArchived,
             Steps = project.Steps.Select(x => ProjectStepDataDetails.FromModel(x)).ToArray(),
             // Materials = materialDetails ?? Array.Empty<MaterialDetails>(),
             CostBreakdown = ProjectCostDetails.FromModel(projectCostBreakdown),

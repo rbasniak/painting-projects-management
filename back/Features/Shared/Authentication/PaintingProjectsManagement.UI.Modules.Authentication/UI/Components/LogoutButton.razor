@@ -1,3 +1,4 @@
+@namespace PaintingProjectsManagement.UI.Modules.Authentication.UI.Components
 @using MudBlazor
 @using PaintingProjectsManagement.Blazor.Modules.Authentication
 
@@ -13,6 +14,6 @@
     private async Task HandleLogout()
     {
         await TokenService.ClearTokensAsync(CancellationToken.None);
-        NavigationManager.NavigateTo("/login");
+        NavigationManager.NavigateTo("/signin");
     }
 } 

@@ -1,7 +1,109 @@
-﻿@page "/"
+@page "/"
+@page "/login"
+@layout PublicLayout
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Painting Projects Management | Miniature Painter Workspace</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="landing-page">
+    <header class="hero">
+        <div class="hero-overlay"></div>
+        <div class="top-nav">
+            <a class="brand" href="/">Painting Projects Management</a>
+            <a class="top-login" href="/signin">Log in</a>
+        </div>
+        <div class="hero-content">
+            <p class="eyebrow">Built for miniature painters</p>
+            <h1>Turn every paint session into a masterpiece.</h1>
+            <p class="hero-subtitle">
+                Painting Projects Management gives hobby painters and professional artists one focused place to plan, track,
+                and finish stunning miniatures faster, cleaner, and with zero chaos.
+            </p>
+            <div class="hero-actions">
+                <a class="primary-cta" href="/signin">Start for free</a>
+                <a class="secondary-cta" href="#plans">See plans</a>
+            </div>
+            <div class="hero-proof">
+                <span>Organize projects with confidence</span>
+                <span>Control paint inventory and costs</span>
+                <span>Finish more miniatures every month</span>
+            </div>
+        </div>
+    </header>
 
-Welcome to your new app.
+    <main>
+        <section class="benefits-section">
+            <div class="section-heading">
+                <p class="section-kicker">Why painters choose us</p>
+                <h2>Your painting desk gets superpowers.</h2>
+            </div>
+
+            <div class="benefits-grid">
+                <article class="benefit-card">
+                    <h3>Focus on painting, not spreadsheets</h3>
+                    <p>Manage references, materials, color groups, and steps in one place. Spend your energy on brush control and creativity.</p>
+                </article>
+                <article class="benefit-card">
+                    <h3>Never run out of critical paints</h3>
+                    <p>Track inventory and material usage per project so your workflow stays smooth from basecoat to final highlights.</p>
+                </article>
+                <article class="benefit-card">
+                    <h3>Scale from one mini to a full army</h3>
+                    <p>From weekend projects to commission pipelines, build repeatable painting systems and hit deadlines with confidence.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="plans" class="plans-section">
+            <div class="section-heading centered">
+                <p class="section-kicker">Simple subscriptions</p>
+                <h2>Choose the plan that matches your ambition.</h2>
+                <p>Start free, upgrade as your painting collection grows.</p>
+            </div>
+
+            <div class="plans-grid">
+                <article class="plan-card">
+                    <p class="plan-name">Free</p>
+                    <p class="plan-price">$0<span>/month</span></p>
+                    <ul>
+                        <li>Up to 2 active projects for focused hobby work</li>
+                        <li>Gallery cap: 3 pictures per model</li>
+                        <li>Project media cap: 3 reference pictures per project and 3 finished pictures per project</li>
+                        <li>Inventory cap: up to 50 paints</li>
+                        <li>Compressed images only with limited storage space</li>
+                    </ul>
+                    <a class="plan-cta" href="/signin">Try free</a>
+                </article>
+
+                <article class="plan-card plan-card-featured">
+                    <p class="plan-badge">Most popular</p>
+                    <p class="plan-name">Basic</p>
+                    <p class="plan-price">$9<span>/month</span></p>
+                    <ul>
+                        <li>Raises image limits to 50 pictures per category (models, references, finished projects)</li>
+                        <li>Unlimited inventory tracking</li>
+                        <li>Unlimited solo workflow with unlimited projects and active projects</li>
+                        <li>High-resolution images and expanded storage capacity</li>
+                    </ul>
+                    <a class="plan-cta" href="/signin">Go basic</a>
+                </article>
+
+                <article class="plan-card">
+                    <p class="plan-name">Premium</p>
+                    <p class="plan-price">$29<span>/month</span></p>
+                    <ul>
+                        <li>Up to 250 images per category for large production pipelines</li>
+                        <li>Largest storage allocation with high-resolution media</li>
+                        <li>Unlimited projects and inventory for heavy workflows</li>
+                    </ul>
+                    <a class="plan-cta" href="/signin">Go premium</a>
+                </article>
+            </div>
+        </section>
+
+        <section class="final-cta-section">
+            <h2>Paint smarter. Finish stronger. Impress every client and club night.</h2>
+            <p>Your next award-winning miniature is already in your hands. Now give it a world-class workflow.</p>
+            <a class="primary-cta" href="/signin">Create your painter account</a>
+        </section>
+    </main>
+</div>

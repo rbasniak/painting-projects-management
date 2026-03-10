@@ -2,12 +2,13 @@ namespace PaintingProjectsManagement.UI.Modules.Models;
 
 public class CreateModelRequest
 {
+    public string? Identity { get; init; }
     public string Name { get; init; } = string.Empty;
     public string Franchise { get; init; } = string.Empty;
     public string[] Characters { get; init; } = [];
     public Guid CategoryId { get; init; }
     public ModelType Type { get; init; }
-    public string? Artist { get; init; }
+    public string Artist { get; init; } = string.Empty;
     public string[] Tags { get; init; } = [];
     public string? CoverPicture { get; init; }
     public BaseSize BaseSize { get; init; }

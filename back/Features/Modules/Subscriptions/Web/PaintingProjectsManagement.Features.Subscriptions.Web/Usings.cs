@@ -1,0 +1,10 @@
+global using FluentValidation;
+global using Microsoft.AspNetCore.Builder;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Routing;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.DependencyInjection;
+global using PaintingProjectsManagement.Features.Subscriptions;
+global using PaintingProjectsManagement.Features.Subscriptions.Integration;
+global using PaintingProjectsManagement.Features.Subscriptions.Web;
+global using rbkApiModules.Commons.Core;

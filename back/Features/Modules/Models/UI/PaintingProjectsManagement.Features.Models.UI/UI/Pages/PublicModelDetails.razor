@@ -1,0 +1,277 @@
+@page "/models/library/public/{OwnerKey}/model/{ModelId:guid}"
+
+<MudPaper Class="pa-4">
+    @if (_isLoading)
+    {
+        <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+    }
+    else if (_model is null)
+    {
+        <MudAlert Severity="Severity.Warning" Variant="Variant.Outlined" Class="mb-2">
+            This model is not available in the shared library.
+        </MudAlert>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="NavigateBackToLibrary">
+            Back to gallery
+        </MudButton>
+    }
+    else
+    {
+        <MudStack Spacing="2">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                <div>
+                    <MudText Typo="Typo.h5">@_model.Name</MudText>
+                    <MudText Typo="Typo.body2">Artist: @_model.Artist</MudText>
+                    <MudText Typo="Typo.body2">Category: @_model.Category.Name</MudText>
+                    <MudText Typo="Typo.body2">Franchise: @_model.Franchise</MudText>
+                    <MudText Typo="Typo.body2">Characters: @string.Join(", ", _model.Characters)</MudText>
+                </div>
+                <MudStack Row="true" Spacing="1">
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Secondary"
+                               StartIcon="@Icons.Material.Filled.Share"
+                               OnClick="CopyModelShareUrl">
+                        Share
+                    </MudButton>
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.ArrowBack"
+                               OnClick="NavigateBackToLibrary">
+                        Back to gallery
+                    </MudButton>
+                </MudStack>
+            </MudStack>
+
+            @if (_pictures.Count == 0)
+            {
+                <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                    This model has no pictures yet.
+                </MudAlert>
+            }
+            else
+            {
+                <div class="public-carousel-stage">
+                    <button type="button" class="public-carousel-nav" @onclick="PreviousPicture">
+                        <MudIcon Icon="@Icons.Material.Filled.ChevronLeft" />
+                    </button>
+                    <div class="public-carousel-picture-frame">
+                        <img src="@CurrentPictureUrl" alt="@_model.Name" class="public-carousel-picture" />
+                    </div>
+                    <button type="button" class="public-carousel-nav" @onclick="NextPicture">
+                        <MudIcon Icon="@Icons.Material.Filled.ChevronRight" />
+                    </button>
+                </div>
+
+                <MudText Typo="Typo.caption">
+                    Picture @(_currentPictureIndex + 1) of @_pictures.Count
+                </MudText>
+
+                <div class="public-carousel-thumbs">
+                    @for (var index = 0; index < _pictures.Count; index++)
+                    {
+                        var localIndex = index;
+                        <img src="@GetPictureAddress(_pictures[localIndex])"
+                             alt="@($"thumbnail-{localIndex + 1}")"
+                             class="@GetThumbnailClass(localIndex)"
+                             @onclick="@(() => SelectPicture(localIndex))" />
+                    }
+                </div>
+            }
+        </MudStack>
+    }
+</MudPaper>
+
+@code {
+    [Parameter] public string OwnerKey { get; set; } = string.Empty;
+    [Parameter] public Guid ModelId { get; set; }
+
+    [Inject] public IModelsService ModelsService { get; set; } = default!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] public IJSRuntime JsRuntime { get; set; } = default!;
+    [Inject] public ISnackbar Snackbar { get; set; } = default!;
+
+    private bool _isLoading;
+    private string _loadedOwnerKey = string.Empty;
+    private Guid _loadedModelId = Guid.Empty;
+    private ModelDetails? _model;
+    private List<string> _pictures = new();
+    private int _currentPictureIndex;
+
+    private string OwnerRouteKey => (OwnerKey ?? string.Empty).Trim();
+
+    private string CurrentPictureUrl => _pictures.Count == 0
+        ? string.Empty
+        : GetPictureAddress(_pictures[_currentPictureIndex]);
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (ModelId == Guid.Empty || string.IsNullOrWhiteSpace(OwnerRouteKey))
+        {
+            _model = null;
+            _pictures = new List<string>();
+            return;
+        }
+
+        if (_loadedModelId == ModelId && string.Equals(_loadedOwnerKey, OwnerRouteKey, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        await LoadModelAsync();
+    }
+
+    private async Task LoadModelAsync()
+    {
+        _isLoading = true;
+
+        var models = await ModelsService.GetPublicByOwnerAsync(OwnerRouteKey, CancellationToken.None);
+        _model = models.FirstOrDefault(x => x.Id == ModelId);
+        _pictures = BuildPictures(_model);
+        _currentPictureIndex = 0;
+
+        _loadedOwnerKey = OwnerRouteKey;
+        _loadedModelId = ModelId;
+        _isLoading = false;
+    }
+
+    private async Task CopyModelShareUrl()
+    {
+        var encodedOwner = Uri.EscapeDataString(OwnerRouteKey);
+        var shareUrl = NavigationManager
+            .ToAbsoluteUri($"/models/library/public/{encodedOwner}/model/{ModelId}")
+            .ToString();
+
+        await JsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", shareUrl);
+        Snackbar.Add("Public model link copied to clipboard.", Severity.Success);
+    }
+
+    private void NavigateBackToLibrary()
+    {
+        var encodedOwner = Uri.EscapeDataString(OwnerRouteKey);
+        NavigationManager.NavigateTo($"/models/library/public/{encodedOwner}");
+    }
+
+    private void NextPicture()
+    {
+        if (_pictures.Count == 0)
+        {
+            return;
+        }
+
+        _currentPictureIndex = (_currentPictureIndex + 1) % _pictures.Count;
+    }
+
+    private void PreviousPicture()
+    {
+        if (_pictures.Count == 0)
+        {
+            return;
+        }
+
+        _currentPictureIndex = (_currentPictureIndex - 1 + _pictures.Count) % _pictures.Count;
+    }
+
+    private void SelectPicture(int index)
+    {
+        if (index < 0 || index >= _pictures.Count)
+        {
+            return;
+        }
+
+        _currentPictureIndex = index;
+    }
+
+    private static List<string> BuildPictures(ModelDetails? model)
+    {
+        if (model is null)
+        {
+            return new List<string>();
+        }
+
+        var comparer = StringComparer.OrdinalIgnoreCase;
+        var pictures = new List<string>();
+
+        if (!string.IsNullOrWhiteSpace(model.CoverPicture))
+        {
+            pictures.Add(model.CoverPicture);
+        }
+
+        foreach (var picture in model.Pictures ?? Array.Empty<string>())
+        {
+            if (!string.IsNullOrWhiteSpace(picture) && !pictures.Contains(picture, comparer))
+            {
+                pictures.Add(picture);
+            }
+        }
+
+        return pictures;
+    }
+
+    private static string GetPictureAddress(string picture)
+    {
+        return $"https://localhost:7236/{picture.TrimStart('/')}";
+    }
+
+    private string GetThumbnailClass(int index)
+    {
+        return index == _currentPictureIndex
+            ? "public-carousel-thumb active"
+            : "public-carousel-thumb";
+    }
+}
+
+<style>
+    .public-carousel-stage {
+        display: grid;
+        grid-template-columns: 64px 1fr 64px;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .public-carousel-nav {
+        border: none;
+        background: transparent;
+        min-height: 380px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .public-carousel-nav:hover {
+        background: rgba(0, 0, 0, 0.06);
+    }
+
+    .public-carousel-picture-frame {
+        min-height: 380px;
+        background: var(--mud-palette-background-grey);
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+    }
+
+    .public-carousel-picture {
+        max-width: 100%;
+        max-height: 70vh;
+        width: auto;
+        height: auto;
+        display: block;
+    }
+
+    .public-carousel-thumbs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .public-carousel-thumb {
+        width: 84px;
+        height: 84px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid transparent;
+        cursor: pointer;
+    }
+
+    .public-carousel-thumb.active {
+        border-color: var(--mud-palette-primary);
+    }
+</style>

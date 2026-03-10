@@ -20,4 +20,5 @@ public record ModelDetails
     public EnumReference FigureSize { get; set; } = new(0, string.Empty);
     public int NumberOfFigures { get; set; }
     public bool MustHave { get; set; }
+    public string? Identity { get; set; }
 }

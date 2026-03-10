@@ -118,10 +118,12 @@ public class List_Projects_Tests
         var unfinishedProject1 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Unfinished Project 1");
         unfinishedProject1.ShouldNotBeNull();
         unfinishedProject1.EndDate.ShouldBeNull(); // Unfinished project
+        unfinishedProject1.IsArchived.ShouldBeFalse();
 
         var finishedProject1 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Finished Project 1");
         finishedProject1.ShouldNotBeNull();
         finishedProject1.EndDate.ShouldNotBeNull(); // Finished project
+        finishedProject1.IsArchived.ShouldBeTrue();
     }
 
     [Test, NotInParallel(Order = 6)]

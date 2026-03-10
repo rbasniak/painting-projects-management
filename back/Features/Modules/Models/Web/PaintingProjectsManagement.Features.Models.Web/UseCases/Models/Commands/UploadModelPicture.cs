@@ -1,4 +1,6 @@
 using rbkApiModules.Core.Utilities;
+using PaintingProjectsManagement.Infrastructure.Common;
+using PaintingProjectsManagement.Features.Subscriptions.Integration;
 
 namespace PaintingProjectsManagement.Features.Models;
 
@@ -26,8 +28,17 @@ public class UploadModelPicture : IEndpoint
 
     public class Validator : SmartValidator<Request, Model>
     {
-        public Validator(DbContext context, ILocalizationService localization) : base(context, localization)
+        private readonly ITenantStorageUsageService _storageUsageService;
+        private readonly IDispatcher _dispatcher;
+
+        public Validator(
+            DbContext context,
+            ILocalizationService localization,
+            ITenantStorageUsageService storageUsageService,
+            IDispatcher dispatcher) : base(context, localization)
         {
+            _storageUsageService = storageUsageService;
+            _dispatcher = dispatcher;
         }
 
         protected override void ValidateBusinessRules()
@@ -35,6 +46,13 @@ public class UploadModelPicture : IEndpoint
             RuleFor(x => x.Base64Image)
                 .NotEmpty()
                 .Must(HaveValidExtension).WithMessage("Invalid image format.");
+
+            RuleFor(x => x.Base64Image)
+                .MustAsync(HaveAvailableQuota).WithMessage("Storage quota exceeded.");
+
+            RuleFor(x => x)
+                .MustAsync(HaveAvailableModelPicturesLimit)
+                .WithMessage("Model picture limit reached for current subscription tier.");
         }
 
         private bool HaveValidExtension(Request request, string base64Image)
@@ -48,6 +66,45 @@ public class UploadModelPicture : IEndpoint
             {
                 return false;
             }
+        }
+
+        private async Task<bool> HaveAvailableQuota(Request request, string base64Image, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(base64Image) || !HaveValidExtension(request, base64Image))
+            {
+                return true;
+            }
+
+            return await _storageUsageService.HasQuotaForImageAsync(
+                request.Identity.Tenant ?? string.Empty,
+                base64Image,
+                bytesToRelease: 0,
+                cancellationToken);
+        }
+
+        private async Task<bool> HaveAvailableModelPicturesLimit(Request request, CancellationToken cancellationToken)
+        {
+            var entitlementResponse = await _dispatcher.SendAsync(
+                new GetSubscriptionEntitlementQuery { TenantId = request.Identity.Tenant },
+                cancellationToken);
+            if (!entitlementResponse.IsValid || entitlementResponse.Data is null)
+            {
+                return true;
+            }
+
+            var maxPictures = entitlementResponse.Data.MaxModelPicturesPerModel;
+
+            if (maxPictures == int.MaxValue)
+            {
+                return true;
+            }
+
+            var model = await Context.Set<Model>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.ModelId, cancellationToken);
+            var currentPictures = model?.Pictures.Length ?? 0;
+
+            return currentPictures < maxPictures;
         }
     }
 
