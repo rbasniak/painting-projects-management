@@ -71,6 +71,11 @@ public class UpdateColorGroup : IEndpoint
             RuleForEach(x => x.Zones)
                 .IsInEnum()
                 .WithMessage("Invalid zone value.");
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableProjectAsync(Context, request.Identity.Tenant, request.ProjectId, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
     }
 

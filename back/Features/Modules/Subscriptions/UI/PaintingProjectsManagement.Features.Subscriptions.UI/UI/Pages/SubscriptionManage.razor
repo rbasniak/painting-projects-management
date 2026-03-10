@@ -1,0 +1,40 @@
+@page "/subscriptions/manage"
+@using PaintingProjectsManagement.Features.Subscriptions
+@using PaintingProjectsManagement.UI.Modules.Subscriptions
+@inject ISubscriptionsService SubscriptionsService
+@inject NavigationManager Navigation
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6">
+    <MudText Typo="Typo.h4" Class="mb-3">Subscription</MudText>
+
+    @if (_loading)
+    {
+        <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+    }
+    else
+    {
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h6">Current tier: @_current.Tier</MudText>
+            <MudText Typo="Typo.body2">Status: @_current.Status</MudText>
+            <MudText Typo="Typo.body2">Price: $@_current.MonthlyPriceUsd / month</MudText>
+            <MudText Typo="Typo.body2">Period end: @(_current.CurrentPeriodEndUtc?.ToString("u") ?? "n/a")</MudText>
+
+            <MudStack Row="true" Spacing="2" Class="mt-3">
+                <MudButton OnClick="@(() => Navigation.NavigateTo("/subscriptions/subscribe"))" Variant="Variant.Filled" Color="Color.Primary">Subscribe</MudButton>
+                <MudButton OnClick="@(() => Navigation.NavigateTo("/subscriptions/upgrade"))" Variant="Variant.Outlined" Color="Color.Primary">Upgrade</MudButton>
+                <MudButton OnClick="@(() => Navigation.NavigateTo("/subscriptions/cancel"))" Variant="Variant.Text" Color="Color.Error">Cancel</MudButton>
+            </MudStack>
+        </MudPaper>
+    }
+</MudContainer>
+
+@code {
+    private bool _loading = true;
+    private CurrentSubscriptionResponse _current = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _current = await SubscriptionsService.GetCurrentAsync(CancellationToken.None);
+        _loading = false;
+    }
+}

@@ -19,7 +19,7 @@ public record MoneyDetails
 public record QuantityDetails
 {
     public double Amount { get; set; }
-    public EnumReference Unit { get; set; } = new(0, string.Empty);
+    public EnumReference Unit { get; set; } = EnumReference.FromValue(PackageContentUnit.Gram);
 }
 
 public enum PackageContentUnit

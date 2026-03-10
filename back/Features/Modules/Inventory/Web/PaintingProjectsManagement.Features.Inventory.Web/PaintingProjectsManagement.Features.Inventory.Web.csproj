@@ -8,6 +8,7 @@
     <ProjectReference Include="..\..\UI\PaintingProjectsManagement.Features.Inventory.UI\PaintingProjectsManagement.Features.Inventory.UI.csproj" />
     <ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory.Web.Contracts\PaintingProjectsManagement.Features.Inventory.Web.Contracts.csproj" />
     <ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Inventory\PaintingProjectsManagement.Features.Inventory.Core.csproj" />
+    <ProjectReference Include="..\..\..\Subscriptions\Integrations\PaintingProjectsManagement.Features.Subscriptions.Integrations.Contracts\PaintingProjectsManagement.Features.Subscriptions.Integrations.Contracts.csproj" />
     <ProjectReference Include="..\..\..\..\..\Infrastructure\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
   </ItemGroup>
 

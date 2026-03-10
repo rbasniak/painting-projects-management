@@ -46,6 +46,11 @@ public class DeleteProjectMaterial : IEndpoint
                     return project.Materials.Any(x => x.MaterialId == materialId);
                 })
                 .WithMessage("Material not found in project");
+
+            RuleFor(x => x)
+                .MustAsync((request, cancellationToken) =>
+                    ArchivedProjectValidation.IsEditableProjectAsync(Context, request.Identity.Tenant, request.ProjectId, cancellationToken))
+                .WithMessage(ArchivedProjectValidation.ReadOnlyMessage);
         }
     }
 

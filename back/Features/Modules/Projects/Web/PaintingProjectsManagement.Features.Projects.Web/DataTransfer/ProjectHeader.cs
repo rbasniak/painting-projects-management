@@ -6,6 +6,7 @@ public class ProjectHeader
     public string Name { get; set; } = string.Empty;
     public string PictureUrl { get; set; } = string.Empty;
     public DateTime? EndDate { get; set; }
+    public bool IsArchived { get; set; }
 
     public static ProjectHeader FromModel(Project project)
     {
@@ -17,7 +18,8 @@ public class ProjectHeader
             Id = project.Id,
             Name = project.Name,
             PictureUrl = project.PictureUrl,
-            EndDate = project.EndDate
+            EndDate = project.EndDate,
+            IsArchived = project.IsArchived
         };
     }
 }

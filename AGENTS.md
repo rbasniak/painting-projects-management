@@ -27,6 +27,12 @@ The Aspire AppHost orchestrates everything. Pass `--allow-unsecured-transport` t
 
 **Important**: Always access the UI via the **HTTPS** endpoint `https://localhost:7114`, not the HTTP endpoint on port 5251. The API enforces HTTPS redirect, so the Blazor WASM client must be served over HTTPS for API calls to work through Aspire's service discovery. Using `http://localhost:5251` will cause login and all API calls to fail silently.
 
+### UI routes (public landing vs auth)
+
+- Public marketing landing page: `https://localhost:7114/` (also available at `https://localhost:7114/login` for compatibility).
+- Actual sign-in form: `https://localhost:7114/signin`.
+- If validating subscription/marketing copy changes, go directly to `/` or `/login`.
+
 | Service | URL |
 |---------|-----|
 | UI | `https://localhost:7114` |

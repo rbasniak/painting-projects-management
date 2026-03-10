@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Hosting;
+using PaintingProjectsManagement.Infrastructure.Common;
+
 namespace PaintingProjectsManagement.Features.Projects.Tests;
 
 [HumanFriendlyDisplayName]
@@ -13,12 +16,15 @@ public class Update_Project_Tests
         var existingProject = new Project("rodrigo.basniak", "Existing Project",  DateTime.UtcNow, null);
         var anotherUserProject = new Project("ricardo.smarzaro", "Another User Project", DateTime.UtcNow, null);
         var duplicateNameProject = new Project("rodrigo.basniak", "Duplicate Name Project", DateTime.UtcNow, null);
+        var archivedProject = new Project("rodrigo.basniak", "Archived Project", DateTime.UtcNow, null);
+        archivedProject.Archive(DateTime.UtcNow.AddDays(-1));
 
         using (var context = TestingServer.CreateContext())
         {
             await context.AddAsync(existingProject);
             await context.AddAsync(anotherUserProject);
             await context.AddAsync(duplicateNameProject);
+            await context.AddAsync(archivedProject);
             await context.SaveChangesAsync();
         }
 
@@ -268,7 +274,6 @@ public class Update_Project_Tests
             Id = existingProject.Id,
             Name = "Updated Project",
             Base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=",
-            EndDate = DateTime.UtcNow,
         };
 
         // Act
@@ -279,13 +284,13 @@ public class Update_Project_Tests
 
         result.Id.ShouldBe(existingProject.Id);
         result.Name.ShouldBe("Updated Project");
-        result.EndDate.ShouldNotBeNull();
+        result.EndDate.ShouldBeNull();
 
         // Assert the database
         var updatedEntity = TestingServer.CreateContext().Set<Project>().FirstOrDefault(x => x.Id == existingProject.Id);
         updatedEntity.ShouldNotBeNull();
         updatedEntity.Name.ShouldBe("Updated Project");
-        updatedEntity.EndDate.ShouldNotBeNull();
+        updatedEntity.EndDate.ShouldBeNull();
     }
 
     [Test, NotInParallel(Order = 12)]
@@ -322,6 +327,71 @@ public class Update_Project_Tests
         var otherUserProject = TestingServer.CreateContext().Set<Project>().FirstOrDefault(x => x.Id == anotherUserProject.Id);
         otherUserProject.ShouldNotBeNull();
         otherUserProject.Name.ShouldBe("Another User Project");
+    }
+
+    [Test, NotInParallel(Order = 13)]
+    public async Task User_Cannot_Update_Archived_Project()
+    {
+        // Prepare
+        var archivedProject = TestingServer.CreateContext().Set<Project>().FirstOrDefault(x => x.Name == "Archived Project");
+        archivedProject.ShouldNotBeNull("Archived project should exist from seed");
+        archivedProject.EndDate.ShouldNotBeNull("Archived project should have an end date");
+
+        var updateRequest = new UpdateProject.Request
+        {
+            Id = archivedProject.Id,
+            Name = "Archived Project Updated Name",
+        };
+
+        // Act
+        var response = await TestingServer.PutAsync("api/projects", updateRequest, "rodrigo.basniak");
+
+        // Assert
+        response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Archived projects are read-only and cannot be edited.");
+
+        var unchanged = TestingServer.CreateContext().Set<Project>().FirstOrDefault(x => x.Id == archivedProject.Id);
+        unchanged.ShouldNotBeNull();
+        unchanged.Name.ShouldBe("Archived Project");
+    }
+
+    [Test, NotInParallel(Order = 14)]
+    public async Task User_Cannot_Update_Project_Image_When_Quota_Is_Exceeded()
+    {
+        var existingProject = TestingServer.CreateContext().Set<Project>()
+            .FirstOrDefault(x => x.Name == "Another User Project" && x.TenantId == "RODRIGO.BASNIAK");
+        existingProject.ShouldNotBeNull("Project should exist from previous tests");
+
+        var usageService = TestingServer.Services.GetRequiredService<ITenantStorageUsageService>();
+        var env = TestingServer.Services.GetRequiredService<IWebHostEnvironment>();
+
+        var tenant = "RODRIGO.BASNIAK";
+        var tenantFolder = Path.Combine(env.WebRootPath, "uploads", tenant, "quota-tests");
+        Directory.CreateDirectory(tenantFolder);
+
+        var fillerBytes = usageService.QuotaInBytes;
+        var fillerPath = Path.Combine(tenantFolder, $"{Guid.NewGuid():N}.bin");
+
+        await using (var fillerStream = new FileStream(fillerPath, FileMode.Create, FileAccess.Write, FileShare.None))
+        {
+            fillerStream.SetLength(fillerBytes);
+        }
+
+        try
+        {
+            var updateRequest = new UpdateProject.Request
+            {
+                Id = existingProject.Id,
+                Name = existingProject.Name,
+                Base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII="
+            };
+
+            var response = await TestingServer.PutAsync("api/projects", updateRequest, "rodrigo.basniak");
+            response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Storage quota exceeded.");
+        }
+        finally
+        {
+            File.Delete(fillerPath);
+        }
     }
 
 

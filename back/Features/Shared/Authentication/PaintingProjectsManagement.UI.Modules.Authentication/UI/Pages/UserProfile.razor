@@ -1,0 +1,255 @@
+@page "/users/profile"
+@using PaintingProjectsManagement.Blazor.Modules.Authentication
+
+@inject IUserProfileService UserProfileService
+@inject NavigationManager NavigationManager
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6 mb-6">
+    <MudText Typo="Typo.h4" Class="mb-4">User profile</MudText>
+
+    @if (_loading)
+    {
+        <MudPaper Class="pa-6 d-flex justify-center">
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+        </MudPaper>
+    }
+    else if (!string.IsNullOrWhiteSpace(_loadError))
+    {
+        <MudAlert Severity="Severity.Error">@_loadError</MudAlert>
+    }
+    else
+    {
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderAvatar>
+                    <MudAvatar Color="Color.Primary" Variant="Variant.Filled">
+                        @GetAvatarInitials()
+                    </MudAvatar>
+                </CardHeaderAvatar>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">@GetDisplayName()</MudText>
+                    <MudText Typo="Typo.body2">@_profile.Email</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="Typo.body2"><b>Username:</b> @_profile.Username</MudText>
+                <MudText Typo="Typo.body2"><b>Tenant:</b> @_profile.Tenant</MudText>
+                <MudText Typo="Typo.body2"><b>Subscription tier:</b> @_profile.SubscriptionTier</MudText>
+                <MudText Typo="Typo.body2"><b>Subscription status:</b> @_profile.SubscriptionStatus</MudText>
+                <MudText Typo="Typo.body2"><b>Subscription period end:</b> @(_profile.SubscriptionPeriodEndUtc?.ToString("u") ?? "n/a")</MudText>
+                <MudStack Row="true" Spacing="2" Class="mt-2">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               OnClick="OpenSubscribePage">
+                        Subscribe
+                    </MudButton>
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Primary"
+                               OnClick="OpenUpgradePage">
+                        Upgrade
+                    </MudButton>
+                    <MudButton Variant="Variant.Text"
+                               Color="Color.Error"
+                               OnClick="OpenCancelPage">
+                        Cancel
+                    </MudButton>
+                </MudStack>
+            </MudCardContent>
+        </MudCard>
+
+        <MudCard Class="mt-4">
+            <MudCardContent>
+                <MudText Typo="Typo.h6" Class="mb-2">Change password</MudText>
+                <MudTextField T="string"
+                              Label="Current password"
+                              InputType="InputType.Password"
+                              @bind-Value="_oldPassword"
+                              Variant="Variant.Outlined"
+                              Class="mb-2" />
+                <MudTextField T="string"
+                              Label="New password"
+                              InputType="InputType.Password"
+                              @bind-Value="_newPassword"
+                              Variant="Variant.Outlined"
+                              Class="mb-2" />
+                <MudTextField T="string"
+                              Label="Confirm new password"
+                              InputType="InputType.Password"
+                              @bind-Value="_confirmPassword"
+                              Variant="Variant.Outlined"
+                              Class="mb-2" />
+
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Disabled="_changingPassword"
+                           OnClick="HandleChangePasswordAsync">
+                    @(_changingPassword ? "Changing..." : "Change password")
+                </MudButton>
+
+                @if (!string.IsNullOrWhiteSpace(_passwordMessage))
+                {
+                    <MudAlert Severity="@_passwordMessageSeverity" Class="mt-3">@_passwordMessage</MudAlert>
+                }
+            </MudCardContent>
+        </MudCard>
+
+        <MudCard Class="mt-4">
+            <MudCardContent>
+                <MudText Typo="Typo.h6">Storage usage</MudText>
+                <MudText Typo="Typo.body2" Class="mb-2">
+                    @FormatBytes(_storage.UsedBytes) used of @FormatBytes(_storage.QuotaBytes)
+                </MudText>
+                <MudProgressLinear Value="@StoragePercentage"
+                                   Rounded="true"
+                                   Size="Size.Large"
+                                   Color="@GetStorageColor()" />
+                <MudText Typo="Typo.caption" Class="mt-2">
+                    @FormatBytes(_storage.RemainingBytes) remaining
+                </MudText>
+            </MudCardContent>
+        </MudCard>
+    }
+</MudContainer>
+
+@code {
+    private bool _loading = true;
+    private string? _loadError;
+    private bool _changingPassword;
+    private string? _passwordMessage;
+    private Severity _passwordMessageSeverity = Severity.Info;
+
+    private string _oldPassword = string.Empty;
+    private string _newPassword = string.Empty;
+    private string _confirmPassword = string.Empty;
+
+    private ProfileDetailsResponse _profile = new();
+    private StorageUsageResponse _storage = new();
+
+    private double StoragePercentage =>
+        _storage.QuotaBytes <= 0 ? 0 : Math.Clamp((_storage.UsedBytes / (double)_storage.QuotaBytes) * 100, 0, 100);
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _profile = await UserProfileService.GetProfileAsync(CancellationToken.None);
+            var currentSubscription = await UserProfileService.GetCurrentSubscriptionAsync(CancellationToken.None);
+            _profile = _profile with
+            {
+                SubscriptionTier = currentSubscription.Tier,
+                SubscriptionStatus = currentSubscription.Status,
+                SubscriptionPeriodEndUtc = currentSubscription.CurrentPeriodEndUtc,
+                SubscriptionCancelAtPeriodEnd = currentSubscription.CancelAtPeriodEnd
+            };
+            _storage = await UserProfileService.GetStorageUsageAsync(CancellationToken.None);
+        }
+        catch
+        {
+            _loadError = "Could not load profile information right now.";
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task HandleChangePasswordAsync()
+    {
+        if (_changingPassword)
+        {
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(_oldPassword) || string.IsNullOrWhiteSpace(_newPassword))
+        {
+            _passwordMessageSeverity = Severity.Warning;
+            _passwordMessage = "Current and new passwords are required.";
+            return;
+        }
+
+        if (_newPassword != _confirmPassword)
+        {
+            _passwordMessageSeverity = Severity.Warning;
+            _passwordMessage = "Password confirmation does not match.";
+            return;
+        }
+
+        _changingPassword = true;
+
+        try
+        {
+            var changed = await UserProfileService.ChangePasswordAsync(new ChangePasswordRequest
+            {
+                OldPassword = _oldPassword,
+                NewPassword = _newPassword,
+                PasswordConfirmation = _confirmPassword
+            }, CancellationToken.None);
+
+            if (!changed)
+            {
+                _passwordMessageSeverity = Severity.Error;
+                _passwordMessage = "Password change failed. Check your current password and try again.";
+                return;
+            }
+
+            _oldPassword = string.Empty;
+            _newPassword = string.Empty;
+            _confirmPassword = string.Empty;
+
+            _passwordMessageSeverity = Severity.Success;
+            _passwordMessage = "Password changed successfully.";
+        }
+        finally
+        {
+            _changingPassword = false;
+        }
+    }
+
+    private Color GetStorageColor()
+    {
+        if (StoragePercentage >= 90)
+        {
+            return Color.Error;
+        }
+
+        if (StoragePercentage >= 70)
+        {
+            return Color.Warning;
+        }
+
+        return Color.Success;
+    }
+
+    private string GetDisplayName()
+    {
+        return string.IsNullOrWhiteSpace(_profile.DisplayName)
+            ? _profile.Username
+            : _profile.DisplayName;
+    }
+
+    private string GetAvatarInitials()
+    {
+        var source = GetDisplayName();
+        if (string.IsNullOrWhiteSpace(source))
+        {
+            return "U";
+        }
+
+        var chunks = source
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Take(2)
+            .Select(x => char.ToUpperInvariant(x[0]));
+
+        return string.Concat(chunks);
+    }
+
+    private static string FormatBytes(long bytes)
+    {
+        const double mb = 1024d * 1024d;
+        return $"{bytes / mb:0.00} MB";
+    }
+
+    private void OpenSubscribePage() => NavigationManager.NavigateTo("/subscriptions/subscribe");
+    private void OpenUpgradePage() => NavigationManager.NavigateTo("/subscriptions/upgrade");
+    private void OpenCancelPage() => NavigationManager.NavigateTo("/subscriptions/cancel");
+}

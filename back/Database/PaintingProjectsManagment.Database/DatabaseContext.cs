@@ -3,6 +3,7 @@ using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.Features.Models;
 using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.Features.Projects;
+using PaintingProjectsManagement.Features.Subscriptions;
 using rbkApiModules.Authentication;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity;
@@ -29,6 +30,7 @@ public class DatabaseContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PaintColorConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ModelConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProjectConfig).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TenantSubscriptionConfig).Assembly);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DomainOutboxMessagesConfig).Assembly);
 
         modelBuilder.Entity<MaterialForProject>()

@@ -30,6 +30,7 @@ public class Model : TenantEntity
         Type = type;
         Franchise = franchise;
         SizeInMb = sizeInMb;
+        Identity = NormalizeIdentity(identity);
         MustHave = false;
 
         RaiseDomainEvent(new ModelCreated(
@@ -60,7 +61,7 @@ public class Model : TenantEntity
     public string? Identity { get; private set; }
 
     public void UpdateDetails(string name, ModelCategory category, string[] characters, string artist, string[] tags,
-        BaseSize baseSize, FigureSize figureSize, int numberOfFigures, string franchise, ModelType type, int sizeInMb)
+        BaseSize baseSize, FigureSize figureSize, int numberOfFigures, string franchise, ModelType type, int sizeInMb, string? identity = null)
     {
         var changed = false;
 
@@ -131,6 +132,13 @@ public class Model : TenantEntity
         if (SizeInMb != sizeInMb)
         {
             SizeInMb = sizeInMb;
+            changed = true;
+        }
+
+        var newIdentity = NormalizeIdentity(identity);
+        if (!string.Equals(Identity, newIdentity, StringComparison.Ordinal))
+        {
+            Identity = newIdentity;
             changed = true;
         }
 
@@ -251,5 +259,15 @@ public class Model : TenantEntity
         NumberOfFigures = newNumberOfFigures;
 
         RaiseDomainEvent(new ModelNumberOfFiguresChanged(Id, NumberOfFigures));
+    }
+
+    private static string? NormalizeIdentity(string? identity)
+    {
+        if (string.IsNullOrWhiteSpace(identity))
+        {
+            return null;
+        }
+
+        return identity.Trim();
     }
 }

@@ -9,16 +9,16 @@
         <MudStack Spacing="3">
             <MudText Typo="Typo.h6">Add Execution Step</MudText>
             
-            <MudSelect @bind-Value="selectedStepId" 
+            <MudSelect T="int?" @bind-Value="selectedStepId" 
                       Label="Step Type" 
                       Variant="Variant.Outlined"
                       Required="true">
-                <MudSelectItem Value="10">Planning</MudSelectItem>
-                <MudSelectItem Value="20">Supporting</MudSelectItem>
-                <MudSelectItem Value="30">Printing</MudSelectItem>
-                <MudSelectItem Value="40">Cleaning</MudSelectItem>
-                <MudSelectItem Value="50">PostProcessing</MudSelectItem>
-                <MudSelectItem Value="60">Painting</MudSelectItem>
+                <MudSelectItem T="int?" Value="@((int?)10)">Planning</MudSelectItem>
+                <MudSelectItem T="int?" Value="@((int?)20)">Supporting</MudSelectItem>
+                <MudSelectItem T="int?" Value="@((int?)30)">Printing</MudSelectItem>
+                <MudSelectItem T="int?" Value="@((int?)40)">Cleaning</MudSelectItem>
+                <MudSelectItem T="int?" Value="@((int?)50)">PostProcessing</MudSelectItem>
+                <MudSelectItem T="int?" Value="@((int?)60)">Painting</MudSelectItem>
             </MudSelect>
             
             <MudDatePicker @bind-Date="stepDate" 

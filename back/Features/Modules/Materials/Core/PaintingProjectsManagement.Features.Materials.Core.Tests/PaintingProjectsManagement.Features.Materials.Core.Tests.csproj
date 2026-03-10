@@ -2,6 +2,7 @@
 
 	<!-- Common properties are now in Directory.Build.props -->
 	<ItemGroup>
+		<PackageReference Include="TUnit" />
 		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
 		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
 	</ItemGroup>

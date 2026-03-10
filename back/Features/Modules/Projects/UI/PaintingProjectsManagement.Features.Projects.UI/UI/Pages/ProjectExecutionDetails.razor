@@ -24,6 +24,13 @@
         }
         else
         {
+            @if (IsArchivedProject)
+            {
+                <MudAlert Severity="Severity.Warning">
+                    This project is archived and read-only. You can review details and costs, but editing is disabled.
+                </MudAlert>
+            }
+
             <MudTabs Elevation="0" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-4">
                 <!-- Reference Pictures Tab -->
                 <MudTabPanel Text="Reference Pictures" Icon="@Icons.Material.Filled.Image">
@@ -188,6 +195,7 @@
                                       Color="Color.Primary" 
                                       Size="Size.Large"
                                       StartIcon="@Icons.Material.Filled.Add"
+                                      Disabled="@IsArchivedProject"
                                       OnClick="AddMaterial">
                                 Add Material
                             </MudButton>
@@ -214,10 +222,12 @@
                                         <MudIconButton Icon="@Icons.Material.Filled.Edit" 
                                                       OnClick="() => EditQuantity(context)" 
                                                       Color="Color.Primary" 
+                                                      Disabled="@IsArchivedProject"
                                                       Size="Size.Small" />
                                         <MudIconButton Icon="@Icons.Material.Filled.Delete" 
                                                       OnClick="() => DeleteMaterial(context)" 
                                                       Color="Color.Error" 
+                                                      Disabled="@IsArchivedProject"
                                                       Size="Size.Small" />
                                     </MudTd>
                                 </RowTemplate>
@@ -239,6 +249,7 @@
                                       Color="Color.Primary" 
                                       Size="Size.Large"
                                       StartIcon="@Icons.Material.Filled.Add"
+                                      Disabled="@IsArchivedProject"
                                       OnClick="AddStep">
                                 Add Step
                             </MudButton>
@@ -274,10 +285,12 @@
                                                         <MudIconButton Icon="@Icons.Material.Filled.Edit" 
                                                                       OnClick="() => EditStep(context)" 
                                                                       Color="Color.Primary" 
+                                                                      Disabled="@IsArchivedProject"
                                                                       Size="Size.Small" />
                                                         <MudIconButton Icon="@Icons.Material.Filled.Delete" 
                                                                       OnClick="() => DeleteStep(context)" 
                                                                       Color="Color.Error" 
+                                                                      Disabled="@IsArchivedProject"
                                                                       Size="Size.Small" />
                                                     </MudTd>
                                                 </RowTemplate>
@@ -323,6 +336,7 @@
     // Execution Steps
     private ProjectStepsGrouped stepsGrouped = new();
     private bool isLoadingSteps = false;
+    private bool IsArchivedProject => projectDetails?.IsArchived == true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -506,11 +520,17 @@
     // Materials Methods
     private async Task AddMaterial()
     {
+        if (IsArchivedProject)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
         var parameters = new DialogParameters 
         { 
             ["ProjectId"] = ProjectId
         };
-        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<AddMaterialWizardDialog>("Add Material", parameters, options);
         var result = await dialog.Result;
         
@@ -522,6 +542,12 @@
 
     private async Task EditQuantity(ProjectMaterialDetails material)
     {
+        if (IsArchivedProject)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
         var parameters = new DialogParameters 
         { 
             ["Material"] = material,
@@ -539,6 +565,12 @@
 
     private async Task DeleteMaterial(ProjectMaterialDetails material)
     {
+        if (IsArchivedProject)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
         bool? confirm = await DialogService.ShowMessageBox(
             "Delete Material",
             $"Remove '{material.MaterialName}' from this project?",
@@ -563,6 +595,12 @@
     // Execution Steps Methods
     private async Task AddStep()
     {
+        if (IsArchivedProject)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
         var parameters = new DialogParameters 
         { 
             ["ProjectId"] = ProjectId
@@ -579,6 +617,12 @@
 
     private async Task EditStep(ProjectStepDetails step)
     {
+        if (IsArchivedProject)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
         var parameters = new DialogParameters 
         { 
             ["Step"] = step,
@@ -596,6 +640,12 @@
 
     private async Task DeleteStep(ProjectStepDetails step)
     {
+        if (IsArchivedProject)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
         bool? confirm = await DialogService.ShowMessageBox(
             "Delete Step",
             $"Delete this execution step?",

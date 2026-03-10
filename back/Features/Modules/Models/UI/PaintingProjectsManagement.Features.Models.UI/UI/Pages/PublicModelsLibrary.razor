@@ -1,0 +1,353 @@
+@page "/models/library/public/{OwnerKey}"
+
+<MudPaper Class="pa-4">
+    <MudStack Spacing="3">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+            <MudText Typo="Typo.h5">Public 3D Models Library</MudText>
+            <MudChip T="string" Color="Color.Info" Variant="Variant.Outlined">Readonly view</MudChip>
+        </MudStack>
+
+        <MudText Typo="Typo.body2">
+            Search globally by name, characters, category, artist, or franchise. Configure filters and apply to refresh the gallery.
+        </MudText>
+
+        <MudTextField @bind-Value="_globalSearch"
+                      Label="Global search"
+                      Placeholder="Search characters, category, artist, franchise..."
+                      Immediate="true"
+                      Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" />
+
+        <MudGrid>
+            <MudItem xs="12" md="4">
+                <MudTextField @bind-Value="_characterOptionsSearch"
+                              Label="Find character option"
+                              Immediate="true"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.FilterList" />
+                <MudSelect T="string"
+                           Label="Characters"
+                           MultiSelection="true"
+                           @bind-SelectedValues="SelectedCharacters">
+                    @foreach (var option in CharacterOptions)
+                    {
+                        <MudSelectItem T="string" Value="@option">@option</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudTextField @bind-Value="_categoryOptionsSearch"
+                              Label="Find category option"
+                              Immediate="true"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.FilterList" />
+                <MudSelect T="string"
+                           Label="Category"
+                           MultiSelection="true"
+                           @bind-SelectedValues="SelectedCategories">
+                    @foreach (var option in CategoryOptions)
+                    {
+                        <MudSelectItem T="string" Value="@option">@option</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudTextField @bind-Value="_franchiseOptionsSearch"
+                              Label="Find franchise option"
+                              Immediate="true"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.FilterList" />
+                <MudSelect T="string"
+                           Label="Franchise"
+                           MultiSelection="true"
+                           @bind-SelectedValues="SelectedFranchises">
+                    @foreach (var option in FranchiseOptions)
+                    {
+                        <MudSelectItem T="string" Value="@option">@option</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+
+        <MudStack Row="true" Spacing="1">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Check"
+                       OnClick="ApplyFilters">
+                Apply filters
+            </MudButton>
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Default"
+                       StartIcon="@Icons.Material.Filled.RestartAlt"
+                       OnClick="ClearAndApplyFilters">
+                Clear
+            </MudButton>
+        </MudStack>
+
+        @if (_isLoading)
+        {
+            <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+        }
+        else if (_allModels.Count == 0)
+        {
+            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                No public models were found for this user.
+            </MudAlert>
+        }
+        else if (_galleryModels.Count == 0)
+        {
+            <MudAlert Severity="Severity.Info" Variant="Variant.Outlined">
+                No models match the selected filters.
+            </MudAlert>
+        }
+        else
+        {
+            <MudGrid>
+                @foreach (var model in _galleryModels)
+                {
+                    <MudItem xs="12" sm="6" md="4" lg="3">
+                        <MudCard Class="public-model-card"
+                                 Style="cursor:pointer"
+                                 @onclick="() => OpenModel(model.Id)">
+                            @if (GetCoverImageUrl(model) is { } coverImage)
+                            {
+                                <img src="@coverImage" alt="@model.Name" class="public-model-cover" />
+                            }
+                            else
+                            {
+                                <div class="public-model-placeholder">
+                                    <MudIcon Icon="@Icons.Material.Filled.ImageNotSupported" Size="Size.Large" />
+                                </div>
+                            }
+                            <MudCardContent>
+                                <MudText Typo="Typo.subtitle1">@model.Name</MudText>
+                                <MudText Typo="Typo.body2">Category: @model.Category.Name</MudText>
+                                <MudText Typo="Typo.body2">Franchise: @model.Franchise</MudText>
+                                <MudText Typo="Typo.body2">Artist: @model.Artist</MudText>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Parameter] public string OwnerKey { get; set; } = string.Empty;
+
+    [Inject] public IModelsService ModelsService { get; set; } = default!;
+    [Inject] public NavigationManager NavigationManager { get; set; } = default!;
+
+    private readonly StringComparer _valueComparer = StringComparer.OrdinalIgnoreCase;
+    private string _loadedOwnerKey = string.Empty;
+    private bool _isLoading;
+
+    private List<ModelDetails> _allModels = new();
+    private List<ModelDetails> _galleryModels = new();
+
+    private string _globalSearch = string.Empty;
+    private string _characterOptionsSearch = string.Empty;
+    private string _categoryOptionsSearch = string.Empty;
+    private string _franchiseOptionsSearch = string.Empty;
+    private HashSet<string> _selectedCharacters = new(StringComparer.OrdinalIgnoreCase);
+    private HashSet<string> _selectedCategories = new(StringComparer.OrdinalIgnoreCase);
+    private HashSet<string> _selectedFranchises = new(StringComparer.OrdinalIgnoreCase);
+
+    private string OwnerRouteKey => (OwnerKey ?? string.Empty).Trim();
+
+    private IEnumerable<string> SelectedCharacters
+    {
+        get => _selectedCharacters;
+        set => _selectedCharacters = ToHashSet(value);
+    }
+
+    private IEnumerable<string> SelectedCategories
+    {
+        get => _selectedCategories;
+        set => _selectedCategories = ToHashSet(value);
+    }
+
+    private IEnumerable<string> SelectedFranchises
+    {
+        get => _selectedFranchises;
+        set => _selectedFranchises = ToHashSet(value);
+    }
+
+    private IEnumerable<string> CharacterOptions => FilterOptionValues(
+        _allModels.SelectMany(x => x.Characters),
+        _characterOptionsSearch);
+
+    private IEnumerable<string> CategoryOptions => FilterOptionValues(
+        _allModels.Select(x => x.Category.Name),
+        _categoryOptionsSearch);
+
+    private IEnumerable<string> FranchiseOptions => FilterOptionValues(
+        _allModels.Select(x => x.Franchise),
+        _franchiseOptionsSearch);
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (string.IsNullOrWhiteSpace(OwnerRouteKey))
+        {
+            _allModels = new List<ModelDetails>();
+            _galleryModels = new List<ModelDetails>();
+            return;
+        }
+
+        if (string.Equals(_loadedOwnerKey, OwnerRouteKey, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        await LoadModelsAsync();
+    }
+
+    private async Task LoadModelsAsync()
+    {
+        _isLoading = true;
+
+        _allModels = (await ModelsService.GetPublicByOwnerAsync(OwnerRouteKey, CancellationToken.None))
+            .OrderBy(x => x.Name, _valueComparer)
+            .ToList();
+
+        _loadedOwnerKey = OwnerRouteKey;
+        ResetFilters();
+        ApplyFilters();
+
+        _isLoading = false;
+    }
+
+    private void ApplyFilters()
+    {
+        var filtered = _allModels.AsEnumerable();
+
+        var searchValue = _globalSearch.Trim();
+        if (!string.IsNullOrWhiteSpace(searchValue))
+        {
+            filtered = filtered.Where(x => MatchesGlobalSearch(x, searchValue));
+        }
+
+        if (_selectedCharacters.Count > 0)
+        {
+            filtered = filtered.Where(x => (x.Characters ?? Array.Empty<string>())
+                .Any(character => _selectedCharacters.Contains(character)));
+        }
+
+        if (_selectedCategories.Count > 0)
+        {
+            filtered = filtered.Where(x => _selectedCategories.Contains(x.Category.Name));
+        }
+
+        if (_selectedFranchises.Count > 0)
+        {
+            filtered = filtered.Where(x => _selectedFranchises.Contains(x.Franchise));
+        }
+
+        _galleryModels = filtered.ToList();
+    }
+
+    private void ClearAndApplyFilters()
+    {
+        ResetFilters();
+        ApplyFilters();
+    }
+
+    private void ResetFilters()
+    {
+        _globalSearch = string.Empty;
+        _characterOptionsSearch = string.Empty;
+        _categoryOptionsSearch = string.Empty;
+        _franchiseOptionsSearch = string.Empty;
+        _selectedCharacters = new HashSet<string>(_valueComparer);
+        _selectedCategories = new HashSet<string>(_valueComparer);
+        _selectedFranchises = new HashSet<string>(_valueComparer);
+    }
+
+    private void OpenModel(Guid modelId)
+    {
+        var encodedOwner = Uri.EscapeDataString(OwnerRouteKey);
+        NavigationManager.NavigateTo($"/models/library/public/{encodedOwner}/model/{modelId}");
+    }
+
+    private static string? GetCoverImageUrl(ModelDetails model)
+    {
+        var picture = !string.IsNullOrWhiteSpace(model.CoverPicture)
+            ? model.CoverPicture
+            : model.Pictures.FirstOrDefault();
+
+        if (string.IsNullOrWhiteSpace(picture))
+        {
+            return null;
+        }
+
+        return $"https://localhost:7236/{picture.TrimStart('/')}";
+    }
+
+    private static bool MatchesGlobalSearch(ModelDetails model, string searchValue)
+    {
+        return Contains(model.Name, searchValue)
+               || Contains(model.Category.Name, searchValue)
+               || Contains(model.Artist, searchValue)
+               || Contains(model.Franchise, searchValue)
+               || (model.Characters ?? Array.Empty<string>()).Any(character => Contains(character, searchValue));
+    }
+
+    private static bool Contains(string? value, string searchValue)
+    {
+        return !string.IsNullOrWhiteSpace(value)
+               && value.Contains(searchValue, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private HashSet<string> ToHashSet(IEnumerable<string>? values)
+    {
+        return values is null
+            ? new HashSet<string>(_valueComparer)
+            : values
+                .Select(x => x?.Trim())
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .Cast<string>()
+                .ToHashSet(_valueComparer);
+    }
+
+    private IEnumerable<string> FilterOptionValues(IEnumerable<string?> values, string optionFilter)
+    {
+        var normalizedValues = values
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Cast<string>()
+            .Select(x => x.Trim())
+            .Distinct(_valueComparer)
+            .OrderBy(x => x, _valueComparer);
+
+        if (string.IsNullOrWhiteSpace(optionFilter))
+        {
+            return normalizedValues;
+        }
+
+        return normalizedValues.Where(x => x.Contains(optionFilter.Trim(), StringComparison.OrdinalIgnoreCase));
+    }
+}
+
+<style>
+    .public-model-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .public-model-cover {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        background: var(--mud-palette-background-grey);
+    }
+
+    .public-model-placeholder {
+        width: 100%;
+        height: 220px;
+        display: grid;
+        place-items: center;
+        background: var(--mud-palette-background-grey);
+        color: var(--mud-palette-text-secondary);
+    }
+</style>
