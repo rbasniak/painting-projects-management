@@ -2,6 +2,7 @@
 @using PaintingProjectsManagement.Blazor.Modules.Authentication
 
 @inject IUserProfileService UserProfileService
+@inject NavigationManager NavigationManager
 
 <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6 mb-6">
     <MudText Typo="Typo.h4" Class="mb-4">User profile</MudText>
@@ -33,6 +34,26 @@
             <MudCardContent>
                 <MudText Typo="Typo.body2"><b>Username:</b> @_profile.Username</MudText>
                 <MudText Typo="Typo.body2"><b>Tenant:</b> @_profile.Tenant</MudText>
+                <MudText Typo="Typo.body2"><b>Subscription tier:</b> @_profile.SubscriptionTier</MudText>
+                <MudText Typo="Typo.body2"><b>Subscription status:</b> @_profile.SubscriptionStatus</MudText>
+                <MudText Typo="Typo.body2"><b>Subscription period end:</b> @(_profile.SubscriptionPeriodEndUtc?.ToString("u") ?? "n/a")</MudText>
+                <MudStack Row="true" Spacing="2" Class="mt-2">
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               OnClick="OpenSubscribePage">
+                        Subscribe
+                    </MudButton>
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Primary"
+                               OnClick="OpenUpgradePage">
+                        Upgrade
+                    </MudButton>
+                    <MudButton Variant="Variant.Text"
+                               Color="Color.Error"
+                               OnClick="OpenCancelPage">
+                        Cancel
+                    </MudButton>
+                </MudStack>
             </MudCardContent>
         </MudCard>
 
@@ -112,6 +133,14 @@
         try
         {
             _profile = await UserProfileService.GetProfileAsync(CancellationToken.None);
+            var currentSubscription = await UserProfileService.GetCurrentSubscriptionAsync(CancellationToken.None);
+            _profile = _profile with
+            {
+                SubscriptionTier = currentSubscription.Tier,
+                SubscriptionStatus = currentSubscription.Status,
+                SubscriptionPeriodEndUtc = currentSubscription.CurrentPeriodEndUtc,
+                SubscriptionCancelAtPeriodEnd = currentSubscription.CancelAtPeriodEnd
+            };
             _storage = await UserProfileService.GetStorageUsageAsync(CancellationToken.None);
         }
         catch
@@ -219,4 +248,8 @@
         const double mb = 1024d * 1024d;
         return $"{bytes / mb:0.00} MB";
     }
+
+    private void OpenSubscribePage() => NavigationManager.NavigateTo("/subscriptions/subscribe");
+    private void OpenUpgradePage() => NavigationManager.NavigateTo("/subscriptions/upgrade");
+    private void OpenCancelPage() => NavigationManager.NavigateTo("/subscriptions/cancel");
 }

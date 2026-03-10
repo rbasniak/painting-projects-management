@@ -1,12 +1,17 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using PaintingProjectsManagement.Features.Subscriptions;
 using PaintingProjectsManagement.Infrastructure.Common;
 
 namespace PaintingProjectsManagement.Api;
 
 public sealed class TenantStorageUsageService(
     IWebHostEnvironment environment,
-    IOptions<StorageQuotaOptions> options) : ITenantStorageUsageService
+    IOptions<StorageQuotaOptions> options,
+    IServiceScopeFactory scopeFactory,
+    ISubscriptionTierPolicyCatalog policyCatalog) : ITenantStorageUsageService
 {
     public long QuotaInBytes => options.Value.QuotaInBytes <= 0
         ? StorageQuotaOptions.DefaultQuotaInBytes
@@ -21,9 +26,38 @@ public sealed class TenantStorageUsageService(
 
         var incomingBytes = GetImageBytes(base64Image);
         var usedBytes = await GetUsageInBytesAsync(tenant, cancellationToken);
+        var quota = await GetQuotaInBytesAsync(tenant, cancellationToken);
         var effectiveUsage = Math.Max(0, usedBytes - Math.Max(0, bytesToRelease));
 
-        return effectiveUsage + incomingBytes <= QuotaInBytes;
+        return effectiveUsage + incomingBytes <= quota;
+    }
+
+    public async Task<long> GetQuotaInBytesAsync(string tenant, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(tenant))
+        {
+            return QuotaInBytes;
+        }
+
+        using var scope = scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<DbContext>();
+        var subscription = await context.Set<TenantSubscription>()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.TenantId == tenant, cancellationToken);
+
+        var tier = subscription?.Tier ?? SubscriptionTier.Free;
+        var isExpired = subscription is not null
+            && subscription.Tier != SubscriptionTier.Free
+            && subscription.CurrentPeriodEndUtc.HasValue
+            && subscription.CurrentPeriodEndUtc.Value <= DateTime.UtcNow;
+
+        if (isExpired)
+        {
+            tier = SubscriptionTier.Free;
+        }
+
+        var policy = policyCatalog.Get(tier);
+        return policy.MaxStorageBytes;
     }
 
     public long GetImageBytes(string base64Image)

@@ -222,4 +222,28 @@ public class Project : TenantEntity
             _references.Remove(reference);
         }
     }
+
+    public void AddFinishedPicture(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            throw new ArgumentException("URL cannot be null or empty.", nameof(url));
+        }
+
+        _pictures.Add(new ProjectPicture(Id, url));
+    }
+
+    public void RemoveFinishedPicture(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return;
+        }
+
+        var picture = _pictures.FirstOrDefault(x => x.Url == url);
+        if (picture is not null)
+        {
+            _pictures.Remove(picture);
+        }
+    }
 }

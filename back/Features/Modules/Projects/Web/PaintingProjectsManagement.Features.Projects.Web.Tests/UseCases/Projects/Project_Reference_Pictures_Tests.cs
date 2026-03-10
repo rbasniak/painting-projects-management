@@ -64,6 +64,39 @@ public class Project_Reference_Pictures_Tests
     }
 
     [Test, NotInParallel(Order = 4)]
+    public async Task Free_Tier_Project_Reference_Picture_Limit_Is_Enforced()
+    {
+        var second = await TestingServer.PostAsync<UrlReference[]>(
+            "api/projects/reference-picture",
+            new UploadProjectReferencePicture.Request
+            {
+                ProjectId = _projectId,
+                Base64Image = _base64Image
+            }, "rodrigo.basniak");
+
+        var third = await TestingServer.PostAsync<UrlReference[]>(
+            "api/projects/reference-picture",
+            new UploadProjectReferencePicture.Request
+            {
+                ProjectId = _projectId,
+                Base64Image = _base64Image
+            }, "rodrigo.basniak");
+
+        second.ShouldBeSuccess();
+        third.ShouldBeSuccess();
+
+        var fourth = await TestingServer.PostAsync(
+            "api/projects/reference-picture",
+            new UploadProjectReferencePicture.Request
+            {
+                ProjectId = _projectId,
+                Base64Image = _base64Image
+            }, "rodrigo.basniak");
+
+        fourth.ShouldHaveErrors(HttpStatusCode.BadRequest, "Project reference picture limit reached for current subscription tier.");
+    }
+
+    [Test, NotInParallel(Order = 5)]
     public async Task Upload_Project_Reference_Picture_Should_Fail_When_Quota_Is_Exceeded()
     {
         var usageService = TestingServer.Services.GetRequiredService<ITenantStorageUsageService>();

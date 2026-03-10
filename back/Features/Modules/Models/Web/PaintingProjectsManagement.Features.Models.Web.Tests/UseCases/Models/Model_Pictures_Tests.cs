@@ -210,6 +210,35 @@ public class Model_Pictures_Tests
         }
     }
 
+    [Test, NotInParallel(Order = 9)]
+    public async Task Free_Tier_Model_Picture_Limit_Is_Enforced()
+    {
+        var model = await CreateTestModel($"cap-model-{Guid.NewGuid():N}");
+
+        for (var i = 0; i < 3; i++)
+        {
+            var success = await TestingServer.PostAsync(
+                "api/models/picture",
+                new UploadModelPicture.Request
+                {
+                    ModelId = model.Id,
+                    Base64Image = _base64Image1
+                }, "rodrigo.basniak");
+
+            success.ShouldBeSuccess();
+        }
+
+        var fourth = await TestingServer.PostAsync(
+            "api/models/picture",
+            new UploadModelPicture.Request
+            {
+                ModelId = model.Id,
+                Base64Image = _base64Image1
+            }, "rodrigo.basniak");
+
+        fourth.ShouldHaveErrors(HttpStatusCode.BadRequest, "Model picture limit reached for current subscription tier.");
+    }
+
     [Test, NotInParallel(Order = 99)]
     public async Task Cleanup()
     {
@@ -218,7 +247,7 @@ public class Model_Pictures_Tests
 
     private async Task<Model> CreateTestModel(string name)
     {
-        var category = new ModelCategory("rodrigo.basniak", "Test Category");
+        var category = new ModelCategory("rodrigo.basniak", $"Test Category {Guid.NewGuid():N}");
         var model = new Model(
             "rodrigo.basniak",
             name,

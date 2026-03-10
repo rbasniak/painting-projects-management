@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Common properties are now in Directory.Build.props -->
+
+  <PropertyGroup>
+    <DisableImplicitAspNetCoreFrameworkReference>true</DisableImplicitAspNetCoreFrameworkReference>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

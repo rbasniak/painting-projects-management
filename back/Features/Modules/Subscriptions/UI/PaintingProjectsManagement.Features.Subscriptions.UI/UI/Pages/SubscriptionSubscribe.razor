@@ -1,0 +1,55 @@
+@page "/subscriptions/subscribe"
+@using PaintingProjectsManagement.Features.Subscriptions
+@using PaintingProjectsManagement.UI.Modules.Subscriptions
+@inject ISubscriptionsService SubscriptionsService
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-6">
+    <MudText Typo="Typo.h5" Class="mb-3">Subscribe</MudText>
+
+    <MudSelect T="SubscriptionTier" Label="Tier" Value="_tier" ValueChanged="OnTierChanged">
+        <MudSelectItem Value="SubscriptionTier.Basic">Basic</MudSelectItem>
+        <MudSelectItem Value="SubscriptionTier.Premium">Premium</MudSelectItem>
+    </MudSelect>
+
+    <MudButton Class="mt-3" Variant="Variant.Filled" Color="Color.Primary" Disabled="_saving" OnClick="SubscribeAsync">
+        @(_saving ? "Processing..." : "Confirm subscription")
+    </MudButton>
+
+    @if (!string.IsNullOrWhiteSpace(_message))
+    {
+        <MudAlert Severity="@_severity" Class="mt-3">@_message</MudAlert>
+    }
+</MudContainer>
+
+@code {
+    private SubscriptionTier _tier = SubscriptionTier.Basic;
+    private bool _saving;
+    private string? _message;
+    private Severity _severity = Severity.Info;
+
+    private Task OnTierChanged(SubscriptionTier tier)
+    {
+        _tier = tier;
+        return Task.CompletedTask;
+    }
+
+    private async Task SubscribeAsync()
+    {
+        _saving = true;
+        try
+        {
+            var result = await SubscriptionsService.SubscribeAsync(_tier, CancellationToken.None);
+            _severity = Severity.Success;
+            _message = $"Subscribed to {result.Tier} successfully.";
+        }
+        catch
+        {
+            _severity = Severity.Error;
+            _message = "Could not complete subscription.";
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+}
