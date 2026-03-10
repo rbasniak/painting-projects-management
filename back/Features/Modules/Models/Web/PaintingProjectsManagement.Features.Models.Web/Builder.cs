@@ -6,6 +6,10 @@ public static class Builder
 {
     public static IServiceCollection AddModelsFeature(this IServiceCollection services)
     {
+        services.AddScoped<IModelPictureEntitlementProvider, ModelPictureEntitlementProvider>();
+        services.AddScoped<IModelPictureUploadPolicyService, ModelPictureUploadPolicyService>();
+        services.AddScoped<IModelPictureStorageService, ModelPictureStorageService>();
+
         services.AddScoped<IDomainEventHandler<ModelCreated>, ModelCreatedHandler>();
         services.AddScoped<IDomainEventHandler<ModelDeleted>, ModelDeletedHandler>();
         services.AddScoped<IDomainEventHandler<ModelDetailsChanged>, ModelUpdatedHandler>();
