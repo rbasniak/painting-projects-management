@@ -45,7 +45,7 @@ public class GetProjectDetails : IEndpoint
         ILogger<Handler> logger
     ) : IQueryHandler<Request>
     {
-        private const string DefaultCurrency = "DKK";
+        private const string DefaultCurrency = "USD";
 
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
@@ -63,7 +63,11 @@ public class GetProjectDetails : IEndpoint
             ProjectCostBreakdown projectCostBreakdown;
             try
             {
-                projectCostBreakdown = await projectCostCalculator.CalculateCostAsync(project.Id, "DKK", cancellationToken);
+                var selectedCurrency = string.IsNullOrWhiteSpace(request.Currency)
+                    ? DefaultCurrency
+                    : request.Currency.Trim().ToUpperInvariant();
+
+                projectCostBreakdown = await projectCostCalculator.CalculateCostAsync(project.Id, selectedCurrency, cancellationToken);
             }
             catch (Exception ex)
             {
@@ -76,12 +80,7 @@ public class GetProjectDetails : IEndpoint
                     Materials = new Dictionary<string, IReadOnlyCollection<MaterialsCost>>()
                 };
             }
-            var selectedCurrency = string.IsNullOrWhiteSpace(request.Currency)
-                ? DefaultCurrency
-                : request.Currency.Trim().ToUpperInvariant();
 
-            // TODO: Get from proper projection table in the future
-            var projectCostBreakdown = await projectCostCalculator.CalculateCostAsync(project.Id, selectedCurrency, cancellationToken);
 
             if (project.Materials.Any())
             {
