@@ -10,46 +10,46 @@
     <DialogContent>
         <MudPaper Class="pa-4" Style="height: calc(100vh - 120px); display: flex; flex-direction: column;">
             <MudStack Spacing="3">
-                <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween">
-                    <div>
-                        <MudText Typo="Typo.h4">@Model?.Name</MudText>
-                        <MudText Typo="Typo.subtitle1" Color="Color.Secondary">Paint Color Matching</MudText>
-                    </div>
-                    <MudButton OnClick="MatchColors" 
-                             Color="Color.Primary" 
-                             Variant="Variant.Filled" 
-                             Size="Size.Large"
-                             Disabled="@(isMatching || !CanMatchColors)"
-                             StartIcon="@Icons.Material.Filled.Search">
-                        @if (isMatching)
-                        {
-                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                            <text>Matching...</text>
-                        }
-                        else
-                        {
-                            <text>Find Matches</text>
-                        }
-                    </MudButton>
-                </MudStack>
+                <div>
+                    <MudText Typo="Typo.h4">@Model?.Name</MudText>
+                    <MudText Typo="Typo.subtitle1" Color="Color.Secondary">Paint Color Matching</MudText>
+                </div>
 
                 <MudPaper Elevation="0" Class="pa-3" Style="border: 1px solid #e3e3e3; background-color: #fafafa;">
                     <MudStack Spacing="2">
                         <MudText Typo="Typo.subtitle2" Style="font-weight: 600;">
                             Include Paint Types
                         </MudText>
-                        <MudGrid Spacing="1">
-                            @foreach (var paintType in selectedPaintTypes.Keys.OrderBy(x => (int)x))
-                            {
-                                <MudItem xs="12" sm="6" md="4" lg="3">
+                        <div class="match-controls-row">
+                            <div class="paint-types-inline">
+                                @foreach (var paintType in selectedPaintTypes.Keys.OrderBy(x => (int)x))
+                                {
                                     <MudCheckBox T="bool"
+                                                 Class="paint-type-checkbox"
                                                  @bind-Value="selectedPaintTypes[paintType]"
                                                  Label="@GetPaintTypeLabel(paintType)"
                                                  Dense="true"
                                                  Color="Color.Primary" />
-                                </MudItem>
-                            }
-                        </MudGrid>
+                                }
+                            </div>
+                            <MudButton Class="find-matches-button"
+                                       OnClick="MatchColors" 
+                                       Color="Color.Primary" 
+                                       Variant="Variant.Filled" 
+                                       Size="Size.Large"
+                                       Disabled="@(isMatching || !CanMatchColors)"
+                                       StartIcon="@Icons.Material.Filled.Search">
+                                @if (isMatching)
+                                {
+                                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                                    <text>Matching...</text>
+                                }
+                                else
+                                {
+                                    <text>Find Matches</text>
+                                }
+                            </MudButton>
+                        </div>
                         @if (!CanMatchColors)
                         {
                             <MudText Typo="Typo.caption" Color="Color.Warning">
@@ -386,6 +386,38 @@
 
     .match-paints-dialog .reference-color-container {
         width: 100%;
+    }
+
+    .match-paints-dialog .match-controls-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+    .match-paints-dialog .paint-types-inline {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        min-width: 0;
+        padding-bottom: 4px;
+    }
+
+    .match-paints-dialog .paint-type-checkbox {
+        margin: 0;
+    }
+
+    .match-paints-dialog .paint-type-checkbox .mud-checkbox-label {
+        white-space: nowrap;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    .match-paints-dialog .find-matches-button {
+        flex-shrink: 0;
+        white-space: nowrap;
     }
 
     .match-paints-dialog .match-card {
