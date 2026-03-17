@@ -1,0 +1,27 @@
+Feature 1:
+Add a toast on every successfull write API call.
+
+Feature 2: 
+Add a favorite currency feature, in which the user can select which currencies the uses and then all currency dropdwons will show just those currencies.
+
+Bug 1:
+When a new material is created, add it as the first item of the list, not the last
+
+Bug 2: 
+Materials now have a category, add this category to the create/update dialogs
+
+Bug 3: 
+Dialog ui components do not have consistency (some have oulined controls, some not)
+
+Bug 4:
+Remove Must Have from the model creation/update? If not removed, it's not being saved
+Add size in Mb to creation/update.
+
+Bug 5:
+Models list search performance is poor
+
+Feature 3:
+Add a classify button to the models list, that takes the user to the classification route for that model
+
+Bug 6: 
+When there's no image for a model, the dialog is awckaward
