@@ -9,8 +9,16 @@
 
 	<ItemGroup>
 		<PackageReference Include="rbkApiModules.Testing.Core" />
+		<PackageReference Include="rbkApiModules.Messaging.Core" />
 		<PackageReference Include="Microsoft.Playwright" />
 		<PackageReference Include="TUnit" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="rbkApiModules.Analysers">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
 	</ItemGroup>
 	
 </Project>

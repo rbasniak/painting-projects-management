@@ -1,4 +1,4 @@
-dotnet ef migrations add Initial --context DatabaseContext --project PaintingProjectsManagment.Database --startup-project PaintingProjectsManagement.Api
+dotnet ef migrations add Initial --context DatabaseContext --project Database\PaintingProjectsManagment.Database\PaintingProjectsManagment.Database.csproj --startup-project Application\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj
 
 
 cd .\back\rbkApiModules\Demo1\
@@ -6,3 +6,14 @@ dotnet ef migrations add Initial --context DatabaseContext --project Demo1.cspro
 
 
 Get-ChildItem -include bin,obj -recurse | remove-item -force -recurse
+
+
+
+
+
+dotnet nuget locals http-cache --clear
+dotnet nuget locals temp --clear
+
+Get-ChildItem -Path . -Recurse -Filter "project.assets.json" | Remove-Item -Force
+dotnet restore
+dotnet build ./PaintingProjectsManagement.slnx

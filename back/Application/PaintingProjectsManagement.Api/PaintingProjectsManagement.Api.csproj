@@ -23,8 +23,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
-	  <PackageReference Include="rbkApiModules.Identity.Core" />
-	  <PackageReference Include="rbkApiModules.Commons.Core" />
+	<PackageReference Include="rbkApiModules.Identity.Core" />
+	<PackageReference Include="rbkApiModules.Commons.Core" />
+	<PackageReference Include="rbkApiModules.Messaging.Core" />
+	  
   </ItemGroup>
 
   <ItemGroup>

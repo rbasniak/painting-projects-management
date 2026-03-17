@@ -1,3 +1,5 @@
+using rbkApiModules.Testing.Core;
+
 namespace PaintingProjectsManagement.Features.Materials.UI.Tests;
 
 [HumanFriendlyDisplayName, Skip("Requires a running UI host in CI; temporarily disabled in solution-wide test runs.")]
