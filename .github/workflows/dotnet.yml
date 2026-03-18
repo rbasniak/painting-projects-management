@@ -35,8 +35,8 @@ jobs:
 
       - name: Install Playwright browsers
         run: |
-          pwsh "Features/Modules/Inventory/UI/PaintingProjectsManagement.Features.Inventory.UI.Tests/bin/Release/net10.0/playwright.ps1" install --with-deps
-          pwsh "Features/Modules/Materials/UI/PaintingProjectsManagement.Features.Materials.UI.Tests/bin/Release/net10.0/playwright.ps1" install --with-deps
+          pwsh "Features/Modules/Inventory/UI/UI.Tests/bin/Release/net10.0/playwright.ps1" install --with-deps
+          pwsh "Features/Modules/Materials/UI/UI.Tests/bin/Release/net10.0/playwright.ps1" install --with-deps
 
       - name: Run tests
         env:
