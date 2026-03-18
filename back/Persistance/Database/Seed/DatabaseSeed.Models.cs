@@ -29,7 +29,7 @@ public partial class DatabaseSeed
     {
         var rootPath = new DirectoryInfo(".");
 
-        var relativePath = Path.Combine("Database", "PaintingProjectsManagment.Database", "Seed", "models_seed.sql");
+        var relativePath = Path.Combine("..", "..", "Persistance", "Database", "Seed", "models_seed.sql");
 
         var seedSqlFile = new FileInfo(Path.Combine(rootPath.FullName, relativePath));
 

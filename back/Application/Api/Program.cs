@@ -229,6 +229,12 @@ public class Program
         builder.Services.Configure<StorageQuotaOptions>(builder.Configuration.GetSection(StorageQuotaOptions.SectionName));
         builder.Services.AddSingleton<ITenantStorageUsageService, TenantStorageUsageService>();
 
+        builder.Services.AddDeferredSeedRunner(options =>
+        {
+            options.AddDeferredSeed<DatabaseContext>(new MaterialsFixSeed());
+            options.AddDeferredSeed<DatabaseContext>(new ProjectsSeed());
+        });
+
         var app = builder.Build();
 
         app.UseRbkApiCoreSetup();
