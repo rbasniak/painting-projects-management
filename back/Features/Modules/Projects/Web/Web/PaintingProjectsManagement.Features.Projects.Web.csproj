@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Common properties are now in Directory.Build.props -->
+  <ItemGroup>
+    <PackageReference Include="rbkApiModules.Identity.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Core\PaintingProjectsManagement.Features.Projects.Core.csproj" />
+    <ProjectReference Include="..\Web.Contracts\PaintingProjectsManagement.Features.Projects.Web.Contracts.csproj" />
+    <ProjectReference Include="..\..\Core\Core.Contracts\PaintingProjectsManagement.Features.Projects.Core.Contracts.csproj" />
+    <ProjectReference Include="..\..\Integrations\Integrations\PaintingProjectsManagement.Features.Projects.Integrations.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Features\Shared\Currency\PaintingProjectsManagement.Features.Currency.csproj" />
+    <ProjectReference Include="..\..\..\Inventory\Integrations\Integrations\PaintingProjectsManagement.Features.Inventory.Integrations.csproj" />
+    <ProjectReference Include="..\..\..\Materials\Integrations\Integrations.Contracts\PaintingProjectsManagement.Features.Materials.Integrations.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Subscriptions\Integrations\Integrations.Contracts\PaintingProjectsManagement.Features.Subscriptions.Integrations.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Infrastructure\Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="rbkApiModules.Analysers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

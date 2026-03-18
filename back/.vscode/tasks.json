@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/PaintingProjectsManagment.sln",
+                "${workspaceFolder}/PaintingProjectsManagment.slnx",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/PaintingProjectsManagment.sln",
+                "${workspaceFolder}/PaintingProjectsManagment.slnx",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/PaintingProjectsManagment.sln"
+                "${workspaceFolder}/PaintingProjectsManagment.slnx"
             ],
             "problemMatcher": "$msCompile"
         }

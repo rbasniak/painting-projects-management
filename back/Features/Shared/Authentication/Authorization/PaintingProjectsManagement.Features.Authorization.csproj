@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Common properties are now in Directory.Build.props -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="rbkApiModules.Commons.Core" />
+    <PackageReference Include="rbkApiModules.Identity.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Infrastructure\Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Subscriptions\Integrations\Integrations.Contracts\PaintingProjectsManagement.Features.Subscriptions.Integrations.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Modules\Subscriptions\Core\Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="rbkApiModules.Analysers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

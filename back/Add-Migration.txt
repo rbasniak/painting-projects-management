@@ -1,3 +1,4 @@
+// TODO: upgrade relative paths
 dotnet ef migrations add Initial --context DatabaseContext --project Database\PaintingProjectsManagment.Database\PaintingProjectsManagment.Database.csproj --startup-project Application\PaintingProjectsManagement.Api\PaintingProjectsManagement.Api.csproj
 
 
