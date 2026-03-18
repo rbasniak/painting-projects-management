@@ -13,4 +13,10 @@
 		<ProjectReference Include="..\PaintingProjectsManagement.Features.Inventory.Web\PaintingProjectsManagement.Features.Inventory.Web.csproj" />
 		<ProjectReference Include="..\..\..\..\Shared\Testing\PaintingProjectsManagement.Testing.Core\PaintingProjectsManagement.Testing.Core.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Update="rbkApiModules.Analysers">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
 </Project>

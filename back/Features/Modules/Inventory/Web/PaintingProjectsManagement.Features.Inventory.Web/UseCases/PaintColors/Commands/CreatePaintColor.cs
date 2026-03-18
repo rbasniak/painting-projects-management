@@ -11,7 +11,7 @@ public class CreatePaintColor : IEndpoint
             return ResultsMapper.FromResponse(result);
         })
         .Produces<PaintColorDetails>(StatusCodes.Status200OK)
-        .RequireAuthorization(Claims.MANAGE_PAINTS)
+        .RequireAuthorizationClaim(Claims.MANAGE_PAINTS)
         .WithName("Create Paint Color")
         .WithTags("Paint Colors");
     }

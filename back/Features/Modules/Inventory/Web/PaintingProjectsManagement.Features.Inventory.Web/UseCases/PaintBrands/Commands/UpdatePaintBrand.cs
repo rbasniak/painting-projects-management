@@ -11,7 +11,7 @@ public class UpdatePaintBrand : IEndpoint
             return ResultsMapper.FromResponse(result);
         })
         .Produces<PaintBrandDetails>(StatusCodes.Status200OK)
-        .RequireAuthorization(Claims.MANAGE_PAINTS)
+        .RequireAuthorizationClaim(Claims.MANAGE_PAINTS)
         .WithName("Update Paint Brand")
         .WithTags("Paint Brands");
     }

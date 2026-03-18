@@ -21,4 +21,11 @@
     <ProjectReference Include="..\..\Features\Modules\Materials\UI\PaintingProjectsManagement.Features.Materials.UI.Tests\PaintingProjectsManagement.Features.Materials.UI.Tests.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="rbkApiModules.Analysers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>

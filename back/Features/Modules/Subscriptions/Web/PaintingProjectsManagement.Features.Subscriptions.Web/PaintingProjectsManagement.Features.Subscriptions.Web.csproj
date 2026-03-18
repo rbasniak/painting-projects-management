@@ -16,4 +16,11 @@
     <ProjectReference Include="..\..\Integrations\PaintingProjectsManagement.Features.Subscriptions.Integrations.Contracts\PaintingProjectsManagement.Features.Subscriptions.Integrations.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="rbkApiModules.Analysers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>

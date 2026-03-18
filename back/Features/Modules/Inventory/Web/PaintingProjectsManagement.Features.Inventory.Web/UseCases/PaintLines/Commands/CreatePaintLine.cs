@@ -11,7 +11,7 @@ public class CreatePaintLine : IEndpoint
             return ResultsMapper.FromResponse(result);
         })
         .Produces<PaintLineDetails>(StatusCodes.Status200OK)
-        .RequireAuthorization(Claims.MANAGE_PAINTS)
+        .RequireAuthorizationClaim(Claims.MANAGE_PAINTS)
         .WithName("Create Brand Line")
         .WithTags("Paint Lines");
     }

@@ -15,4 +15,11 @@
 		<ProjectReference Include="..\PaintingProjectsManagement.Features.Materials.Web.Contracts\PaintingProjectsManagement.Features.Materials.Web.Contracts.csproj" />
 		<ProjectReference Include="..\..\..\..\..\Infrastructure\PaintingProjectsManagement.Infrastructure.Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="rbkApiModules.Analysers">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
 </Project>

@@ -11,7 +11,7 @@ public class UpdatePaintLine : IEndpoint
             return ResultsMapper.FromResponse(result);
         })
         .Produces<PaintLineDetails>(StatusCodes.Status200OK)
-        .RequireAuthorization(Claims.MANAGE_PAINTS)
+        .RequireAuthorizationClaim(Claims.MANAGE_PAINTS)
         .WithName("Update Brand Line")
         .WithTags("Paint Lines");
     }

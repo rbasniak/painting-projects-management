@@ -9,4 +9,11 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Core\PaintingProjectsManagement.Features.Inventory.Core.Contracts\PaintingProjectsManagement.Features.Inventory.Core.Contracts.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="rbkApiModules.Analysers">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
 </Project>

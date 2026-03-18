@@ -11,7 +11,7 @@ public class DeletePaintBrand : IEndpoint
             return ResultsMapper.FromResponse(result);
         })
         .Produces(StatusCodes.Status200OK)
-        .RequireAuthorization(Claims.MANAGE_PAINTS)
+        .RequireAuthorizationClaim(Claims.MANAGE_PAINTS)
         .WithName("Delete Paint Brand")
         .WithTags("Paint Brands");
     }

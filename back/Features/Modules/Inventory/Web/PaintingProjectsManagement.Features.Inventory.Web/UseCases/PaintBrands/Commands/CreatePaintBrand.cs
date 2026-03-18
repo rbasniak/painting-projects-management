@@ -11,7 +11,7 @@ public class CreatePaintBrand : IEndpoint
             return ResultsMapper.FromResponse(result);
         })
         .Produces<PaintBrandDetails>(StatusCodes.Status200OK)
-        .RequireAuthorization(Claims.MANAGE_PAINTS)
+        .RequireAuthorizationClaim(Claims.MANAGE_PAINTS)
         .WithName("Create Paint Brand")
         .WithTags("Paint Brands");
     }
