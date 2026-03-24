@@ -6,6 +6,8 @@ public class MaterialDetails
 {
     public Guid Id { get; init; }
     public string Name { get; init; } = string.Empty;
+    public int CategoryId { get; init; }
+    public string CategoryName { get; init; } = string.Empty;
     public MoneyDetails PackagePrice { get; init; } = MoneyDetails.Empty;
     public QuantityDetails PackageContent { get; init; } = QuantityDetails.Empty;
 
@@ -15,6 +17,8 @@ public class MaterialDetails
         {
             Id = material.Id,
             Name = material.Name,
+            CategoryId = (int)material.Category,
+            CategoryName = material.Category.ToString(),
             PackagePrice = new MoneyDetails
             {
                 Amount = material.PackagePrice.Amount,

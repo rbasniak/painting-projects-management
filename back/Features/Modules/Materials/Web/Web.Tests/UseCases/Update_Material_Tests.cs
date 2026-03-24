@@ -55,6 +55,7 @@ public class Update_Material_Tests
         {
             Id = existingMaterial.Id,
             Name = "Updated Material",
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 2,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 25.0,
@@ -87,6 +88,7 @@ public class Update_Material_Tests
         {
             Id = nonExistentId,
             Name = "Updated Material",
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 2,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 25.0,
@@ -121,6 +123,7 @@ public class Update_Material_Tests
         {
             Id = anotherUserMaterial.Id,
             Name = "Hacked Material",
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 2,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 100.0,
@@ -156,6 +159,7 @@ public class Update_Material_Tests
         {
             Id = existingMaterial.Id,
             Name = "Duplicate Name Material", // This name already exists for the same user
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 2,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 25.0,
@@ -190,6 +194,7 @@ public class Update_Material_Tests
         {
             Id = duplicateNameMaterial.Id,
             Name = "Another User Material", // This name exists for another user (ricardo.smarzaro)
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 2,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 30.0,
@@ -236,6 +241,7 @@ public class Update_Material_Tests
         {
             Id = existingMaterial.Id,
             Name = "Existing Material", // Same name as itself
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 2,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 50.0, // Change price
@@ -276,6 +282,7 @@ public class Update_Material_Tests
         {
             Id = existingMaterial.Id,
             Name = "Updated Material Name",
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 5,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 25.50,

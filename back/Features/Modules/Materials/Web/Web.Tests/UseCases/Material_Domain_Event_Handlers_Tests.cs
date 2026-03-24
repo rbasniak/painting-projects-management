@@ -31,6 +31,7 @@ public class Material_Domain_Event_Handlers_Tests
         var request = new CreateMaterial.Request
         {
             Name = materialName,
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = packageContent.Amount,
             PackageContentUnit = (int)packageContent.Unit,
             PackagePriceAmount = packagePrice.Amount,
@@ -47,6 +48,8 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.AssertOutboxMessageAfterAsync<MaterialCreatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == materialDetails.Id &&
             envelope.Event.Name == materialName &&
+            envelope.Event.CategoryId == (int)MaterialCategory.Paints &&
+            envelope.Event.CategoryName == MaterialCategory.Paints.ToString() &&
             envelope.Event.PackageContentAmount == packageContent.Amount &&
             envelope.Event.PackageContentUnit == packageContent.Unit.ToString() &&
             envelope.Event.PackagePriceAmount == packagePrice.Amount &&
@@ -66,6 +69,7 @@ public class Material_Domain_Event_Handlers_Tests
         {
             Id = material.Id,
             Name = "Updated Name",
+            CategoryId = material.CategoryId,
             PackageContentAmount = material.PackageContent.Amount,
             PackageContentUnit = material.PackageContent.Unit.Id,
             PackagePriceAmount = material.PackagePrice.Amount,
@@ -82,6 +86,8 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == "Updated Name" &&
+            envelope.Event.CategoryId == material.CategoryId &&
+            envelope.Event.CategoryName == material.CategoryName &&
             envelope.Event.PackageContentAmount == material.PackageContent.Amount &&
             envelope.Event.PackageContentUnit == material.PackageContent.Unit.Value &&
             envelope.Event.PackagePriceAmount == material.PackagePrice.Amount &&
@@ -102,6 +108,7 @@ public class Material_Domain_Event_Handlers_Tests
         {
             Id = material.Id,
             Name = material.Name,
+            CategoryId = material.CategoryId,
             PackageContentAmount = newPackageContent.Amount,
             PackageContentUnit = (int)newPackageContent.Unit,
             PackagePriceAmount = material.PackagePrice.Amount,
@@ -118,6 +125,8 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == material.Name &&
+            envelope.Event.CategoryId == material.CategoryId &&
+            envelope.Event.CategoryName == material.CategoryName &&
             envelope.Event.PackageContentAmount == newPackageContent.Amount &&
             envelope.Event.PackageContentUnit == newPackageContent.Unit.ToString() &&
             envelope.Event.PackagePriceAmount == material.PackagePrice.Amount &&
@@ -138,6 +147,7 @@ public class Material_Domain_Event_Handlers_Tests
         {
             Id = material.Id,
             Name = material.Name,
+            CategoryId = material.CategoryId,
             PackageContentAmount = material.PackageContent.Amount,
             PackageContentUnit = material.PackageContent.Unit.Id,
             PackagePriceAmount = newPackagePrice.Amount,
@@ -154,6 +164,8 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == material.Name &&
+            envelope.Event.CategoryId == material.CategoryId &&
+            envelope.Event.CategoryName == material.CategoryName &&
             envelope.Event.PackageContentAmount == material.PackageContent.Amount &&
             envelope.Event.PackageContentUnit == material.PackageContent.Unit.Value &&
             envelope.Event.PackagePriceAmount == newPackagePrice.Amount &&
@@ -175,6 +187,7 @@ public class Material_Domain_Event_Handlers_Tests
         {
             Id = material.Id,
             Name = "Updated Name 2",
+            CategoryId = material.CategoryId,
             PackageContentAmount = newPackageContent.Amount,
             PackageContentUnit = (int)newPackageContent.Unit,
             PackagePriceAmount = newPackagePrice.Amount,
@@ -191,6 +204,8 @@ public class Material_Domain_Event_Handlers_Tests
         await TestingServer.AssertOutboxMessageAfterAsync<MaterialUpdatedV1>(TestContext.Current.Execution.TestStart.Value.UtcDateTime, envelope =>
             envelope.Event.MaterialId == material.Id &&
             envelope.Event.Name == "Updated Name 2" &&
+            envelope.Event.CategoryId == material.CategoryId &&
+            envelope.Event.CategoryName == material.CategoryName &&
             envelope.Event.PackageContentAmount == newPackageContent.Amount &&
             envelope.Event.PackageContentUnit == newPackageContent.Unit.ToString() &&
             envelope.Event.PackagePriceAmount == newPackagePrice.Amount &&
@@ -230,6 +245,7 @@ public class Material_Domain_Event_Handlers_Tests
         {
             Id = material.Id,
             Name = material.Name,
+            CategoryId = material.CategoryId,
             PackageContentAmount = material.PackageContent.Amount,
             PackageContentUnit = material.PackageContent.Unit.Id,
             PackagePriceAmount = material.PackagePrice.Amount,
@@ -264,6 +280,7 @@ public class Material_Domain_Event_Handlers_Tests
         var request = new CreateMaterial.Request
         {
             Name = name,
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 100.0,
             PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 25.50,

@@ -35,6 +35,7 @@ public class Material_End_To_End_Event_Flow_Tests
         var request = new CreateMaterial.Request
         {
             Name = materialName,
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = packageContent.Amount,
             PackageContentUnit = (int)packageContent.Unit,
             PackagePriceAmount = packagePrice.Amount,
@@ -77,6 +78,7 @@ public class Material_End_To_End_Event_Flow_Tests
         {
             Id = material.Id,
             Name = "Updated Material",
+            CategoryId = material.CategoryId,
             PackageContentAmount = 200.0,
             PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 35.75,
@@ -155,6 +157,7 @@ public class Material_End_To_End_Event_Flow_Tests
         {
             Id = material1.Id,
             Name = "Updated Material 1",
+            CategoryId = material1.CategoryId,
             PackageContentAmount = 150.0,
             PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 30.00,
@@ -169,6 +172,7 @@ public class Material_End_To_End_Event_Flow_Tests
         var createRequest = new CreateMaterial.Request
         {
             Name = "Material 3",
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 75.0,
             PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 15.00,
@@ -224,6 +228,7 @@ public class Material_End_To_End_Event_Flow_Tests
         {
             Id = material.Id,
             Name = "Update 1",
+            CategoryId = material.CategoryId,
             PackageContentAmount = material.PackageContent.Amount,
             PackageContentUnit = material.PackageContent.Unit.Id,
             PackagePriceAmount = 40.00,
@@ -236,6 +241,7 @@ public class Material_End_To_End_Event_Flow_Tests
         {
             Id = material.Id,
             Name = "Update 2",
+            CategoryId = material.CategoryId,
             PackageContentAmount = 300.0,
             PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = update1.PackagePriceAmount,
@@ -279,6 +285,7 @@ public class Material_End_To_End_Event_Flow_Tests
         var request = new CreateMaterial.Request
         {
             Name = name,
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 100.0,
             PackageContentUnit = (int)PackageContentUnit.Mililiter,
             PackagePriceAmount = 25.50,

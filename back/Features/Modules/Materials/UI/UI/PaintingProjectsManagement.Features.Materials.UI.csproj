@@ -11,6 +11,7 @@
     <PackageReference Include="MudBlazor" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\Core.Contracts\PaintingProjectsManagement.Features.Materials.Core.Contracts.csproj" />
     <ProjectReference Include="..\..\Web\Web.Contracts\PaintingProjectsManagement.Features.Materials.Web.Contracts.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\Authentication\Authentication\PaintingProjectsManagement.Features.Authorization.UI.csproj" />
     <ProjectReference Include="..\..\..\..\Shared\Common\Shared\PaintingProjectsManagement.Features.Shared.UI.csproj" />

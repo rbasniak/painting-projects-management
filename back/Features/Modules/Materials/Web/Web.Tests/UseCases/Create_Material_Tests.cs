@@ -47,6 +47,7 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "Test Material",
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 1,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 19,
@@ -78,6 +79,7 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "Invalid Amount",
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = packageAmount,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 19,
@@ -107,6 +109,7 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "Existing Material", // This name was created in Seed test
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 1,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 15,
@@ -136,6 +139,7 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "Existing Material", // This name was created by rodrigo.basniak in Seed test
+            CategoryId = (int)MaterialCategory.Paints,
             PackageContentAmount = 1,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 25,
@@ -185,6 +189,7 @@ public class Create_Material_Tests
         var request = new CreateMaterial.Request
         {
             Name = "8x4 magnet for test",
+            CategoryId = (int)MaterialCategory.Magnets,
             PackageContentAmount = 1,
             PackageContentUnit = (int)PackageContentUnit.Each,
             PackagePriceAmount = 19,
@@ -209,6 +214,7 @@ public class Create_Material_Tests
         entity.Name.ShouldBe("8x4 magnet for test");
         entity.UnitPriceAmount.ShouldBe(19);
         entity.UnitPriceUnit.ShouldBe(PackageContentUnit.Each);
+        entity.Category.ShouldBe(MaterialCategory.Magnets);
 
         // Assert the messages
         TestingServer.ShouldHaveCreatedDomainEvents(testStartTime, new Dictionary<Type, int>

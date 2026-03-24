@@ -1,9 +1,12 @@
+using PaintingProjectsManagement.Features.Materials;
+
 namespace PaintingProjectsManagement.UI.Modules.Materials;
 
 // DOCS: Simple crud requests for create/update that don't differ much such be in the same file
 public class CreateMaterialRequest
 {
     public string Name { get; init; } = string.Empty;
+    public int CategoryId { get; init; } = (int)MaterialCategory.Others;
     public double PackageContentAmount { get; init; }
     public PackageContentUnit PackageContentUnit { get; init; } = PackageContentUnit.Gram;
     public double PackagePriceAmount { get; init; }
