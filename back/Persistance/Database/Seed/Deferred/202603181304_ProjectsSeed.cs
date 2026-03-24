@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PaintingProjectsManagement.Features.Projects;
 using rbkApiModules.Commons.Relational;
 using System.Diagnostics;
@@ -878,82 +878,216 @@ public class ProjectsSeed : IDeferredSeedStep
 
         #endregion
 
-        #region SAMPLE 
+        #region DemoProject
 
-        var lastOfUsProject = new Project("rodrigo.basniak", "Last Of Us", new DateTime(2026, 01, 23), modelId: null);
+        var demoProject = new Project("rodrigo.basniak", "DemoProject", new DateTime(2026, 01, 23), modelId: null);
 
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2026, 01, 23), (000000000) / 15.0);
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialSunluWaterWashableStandardResin, 000000000, MaterialUnit.Gram).GetAwaiter().GetResult();
+        // Two records for each project step
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2026, 01, 23), 1.5);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2026, 01, 24), 1.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2026, 01, 25), (160 + 145) / 15.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2026, 01, 26), (130 + 120) / 15.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2026, 01, 27), 3.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2026, 01, 28), 2.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2026, 01, 27), 1.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2026, 01, 28), 0.75);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2026, 01, 28), 2.25);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2026, 01, 29), 1.5);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2026, 01, 30), 6.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2026, 02, 02), 5.5);
 
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2026, 01, 23), 1);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2026, 01, 23), 000000000);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2026, 01, 23), 000000000);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2026, 01, 23), 000000000);
+        // Materials: 2-3 from each category
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialSunluWaterWashableStandardResin, 420, MaterialUnit.Gram).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialJayoAbsResin, 210, MaterialUnit.Gram).GetAwaiter().GetResult();
 
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet10x5, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet8x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet6x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialMagnet10x5, 8, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialMagnet8x4, 10, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialMagnet6x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoPrimer, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialVallejoPrimer, 160, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialGswPrimer, 120, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialArmyPainterAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialAtomAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialArmyPainterAcrylic, 260, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialVallejoAcrylic, 120, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialAtomAcrylic, 75, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoVarnish, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialVallejoVarnish, 90, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 35, MaterialUnit.Spray).GetAwaiter().GetResult();
 
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 000000000);
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialMaskingTapeGeneric10mm, 120, MaterialUnit.Centimeter).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialMaskingTapeTamiya10mm, 90, MaterialUnit.Centimeter).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialVallejoLiquidMask, 12, MaterialUnit.Mililiter).GetAwaiter().GetResult();
 
-        context.Add(lastOfUsProject);
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialDisposableBrush, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialPaintMixingCupCorrugated, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialNailWoodSwab, 30, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        var sampleDirectory = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "PaintingProjectsManagement.Api", "wwwroot", "uploads", "sample", "LastOfUs");
-        if (Directory.Exists(sampleDirectory))
+        context.Add(demoProject);
+
+        // Finished pictures (>= 3)
+        var sampleFinishedPictures = new[]
         {
-            var imageFiles = Directory.GetFiles(sampleDirectory)
-                .OrderBy(x => x)
+            "uploads\\sample\\last_of_us\\project_01.png",
+            "uploads\\sample\\last_of_us\\project_02.png",
+            "uploads\\sample\\last_of_us\\project_03.png"
+        };
+        foreach (var x in sampleFinishedPictures)
+        {
+            demoProject.AddFinishedPicture(x);
+        }
+
+        // Reference pictures (>= 3)
+        var sampleReferencePictures = new[]
+        {
+            "uploads\\sample\\last_of_us\\reference_01.png",
+            "uploads\\sample\\last_of_us\\reference_02.png",
+            "uploads\\sample\\last_of_us\\reference_03.png"
+        };
+        foreach (var x in sampleReferencePictures)
+        {
+            demoProject.AddReferencePicture(x);
+        }
+
+        List<PaintingProjectsManagement.Features.Inventory.Integration.ColorMatchResult> FindPaintMatches(string referenceColor, int maxResults = 5)
+        {
+            var userPaints = context.Set<PaintingProjectsManagement.Features.Inventory.UserPaint>()
+                .Where(x => x.Username.ToLower() == "rodrigo.basniak")
+                .Include(x => x.PaintColor)
+                .ThenInclude(x => x.Line)
+                .ThenInclude(x => x.Brand)
                 .ToList();
 
-            foreach (var imageFile in imageFiles)
+            return userPaints
+                .Select(x => new PaintingProjectsManagement.Features.Inventory.Integration.ColorMatchResult
+                {
+                    PaintColorId = x.PaintColorId,
+                    Name = x.PaintColor.Name,
+                    HexColor = x.PaintColor.HexColor,
+                    BrandName = x.PaintColor.Line.Brand.Name,
+                    LineName = x.PaintColor.Line.Name,
+                    Distance = PaintingProjectsManagement.Features.Inventory.ColorHelper.CalculateColorDistance(referenceColor, x.PaintColor.HexColor)
+                })
+                .OrderBy(x => x.Distance)
+                .ThenBy(x => x.Name)
+                .Take(maxResults)
+                .ToList();
+        }
+
+        void AddSectionWithMatches(ColorGroup colorGroup, ColorZone zone, string referenceColor, bool includeMatches = true)
+        {
+            colorGroup.AddSection(zone, referenceColor);
+            var colorSection = colorGroup.Sections.First(x => x.Zone == zone);
+
+            if (includeMatches)
             {
-                var fileName = Path.GetFileName(imageFile);
-                lastOfUsProject.AddReferencePicture($"uploads\\sample\\LastOfUs\\{fileName}");
+                var matches = FindPaintMatches(referenceColor);
+                if (matches.Count > 0)
+                {
+                    colorSection.UpdateSuggestedColors(matches);
+                    colorSection.SetPickedColor(matches[0].PaintColorId);
+                }
             }
         }
+
+        void AddColorGroup(Project project, string name, params (ColorZone Zone, string ReferenceColor, bool IncludeMatches)[] sections)
+        {
+            var colorGroup = new ColorGroup(project, name);
+            context.Add(colorGroup);
+            project.AddColorGroup(colorGroup);
+
+            foreach (var x in sections)
+            {
+                AddSectionWithMatches(colorGroup, x.Zone, x.ReferenceColor, x.IncludeMatches);
+            }
+        }
+
+        // >= 5 zones/groups, with mixed complexity (some triads, some partial sections)
+        AddColorGroup(
+            demoProject,
+            "Skin",
+            (ColorZone.Midtone, "#C29681", true),
+            (ColorZone.Highlight, "#E0B59D", true),
+            (ColorZone.Shadow, "#8C5F4F", true));
+
+        AddColorGroup(
+            demoProject,
+            "Jacket Leather",
+            (ColorZone.Midtone, "#6D4A33", true),
+            (ColorZone.Highlight, "#9A6E4D", true),
+            (ColorZone.Shadow, "#3A2A20", true));
+
+        AddColorGroup(
+            demoProject,
+            "Jeans Denim",
+            (ColorZone.Midtone, "#3D5E7A", true),
+            (ColorZone.Highlight, "#6D8FAE", true),
+            (ColorZone.Shadow, "#24384A", true));
+
+        AddColorGroup(
+            demoProject,
+            "Backpack Canvas",
+            (ColorZone.Midtone, "#5B6E4A", true),
+            (ColorZone.Shadow, "#35422A", true));
+
+        AddColorGroup(
+            demoProject,
+            "Metal Details",
+            (ColorZone.Midtone, "#7A7F87", true),
+            (ColorZone.Highlight, "#B6BCC4", true));
+
+        AddColorGroup(
+            demoProject,
+            "Base Vegetation",
+            (ColorZone.Midtone, "#4E603A", false));
 
         context.SaveChanges();
 
         #endregion
 
         //#region SAMPLE 
-
-        //var newProject = new Project("rodrigo.basniak", "New_Project", new DateTime(2025, 01, 01), modelId: null);
-
-        //newProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (000000000) / 15.0);
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialSunluWaterWashableStandardResin, 000000000, MaterialUnit.Gram).GetAwaiter().GetResult();
-
-        //newProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
-        //newProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 000000000);
-        //newProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 11, 01), 000000000);
-        //newProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 11, 01), 000000000);
-
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialMagnet10x5, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialMagnet8x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialMagnet6x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
-
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialVallejoPrimer, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialArmyPainterAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialVallejoAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialAtomAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialVallejoVarnish, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-
-        //newProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 000000000);
-
-        //context.Add(newProject);
-
+        //
+        //var lastOfUsProject = new Project("rodrigo.basniak", "Last Of Us", new DateTime(2026, 01, 23), modelId: null);
+        //
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2026, 01, 23), (000000000) / 15.0);
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialSunluWaterWashableStandardResin, 000000000, MaterialUnit.Gram).GetAwaiter().GetResult();
+        //
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2026, 01, 23), 1);
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2026, 01, 23), 000000000);
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2026, 01, 23), 000000000);
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2026, 01, 23), 000000000);
+        //
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet10x5, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet8x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet6x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
+        //
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoPrimer, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        //
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialArmyPainterAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialAtomAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        //
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoVarnish, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        //
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 000000000);
+        //
+        //context.Add(lastOfUsProject);
+        //
+        //var sampleDirectory = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "PaintingProjectsManagement.Api", "wwwroot", "uploads", "sample", "LastOfUs");
+        //if (Directory.Exists(sampleDirectory))
+        //{
+        //    var imageFiles = Directory.GetFiles(sampleDirectory)
+        //        .OrderBy(x => x)
+        //        .ToList();
+        //
+        //    foreach (var imageFile in imageFiles)
+        //    {
+        //        var fileName = Path.GetFileName(imageFile);
+        //        lastOfUsProject.AddReferencePicture($"uploads\\sample\\LastOfUs\\{fileName}");
+        //    }
+        //}
+        //
         //context.SaveChanges();
-
+        //
         //#endregion
     }
 }
