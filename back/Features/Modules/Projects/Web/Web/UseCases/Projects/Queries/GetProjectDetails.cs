@@ -1,3 +1,5 @@
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace PaintingProjectsManagement.Features.Projects;
@@ -36,6 +38,12 @@ public class GetProjectDetails : IEndpoint
 
         protected override void ValidateBusinessRules()
         {
+            RuleFor(x => x.Id)
+                .MustAsync(async (request, id, cancellationToken) =>
+                    await Context.Set<Project>().AnyAsync(
+                        x => x.Id == id && x.TenantId == request.Identity.Tenant,
+                        cancellationToken))
+                .WithMessage("Id references a non-existent record.");
         }
     }
 
@@ -45,7 +53,7 @@ public class GetProjectDetails : IEndpoint
         ILogger<Handler> logger
     ) : IQueryHandler<Request>
     {
-        private const string DefaultCurrency = "USD";
+        private const string DefaultCurrency = "DKK";
 
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
@@ -56,7 +64,9 @@ public class GetProjectDetails : IEndpoint
                 .Include(x => x.Materials)
                 .Include(x => x.ColorGroups)
                     .ThenInclude(x => x.Sections)
-                .FirstAsync(x => x.Id == request.Id, cancellationToken);
+                .FirstAsync(
+                    x => x.Id == request.Id && x.TenantId == request.Identity.Tenant,
+                    cancellationToken);
 
             // TODO: Get from proper projection table in the future.
             // Cost failures should not block project details dialogs (references/colors/matching flows).

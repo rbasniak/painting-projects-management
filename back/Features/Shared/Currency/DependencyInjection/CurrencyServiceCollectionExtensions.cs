@@ -8,7 +8,8 @@ public static class CurrencyServiceCollectionExtensions
     public static IServiceCollection AddCurrencyConverter(this IServiceCollection services)
     {
         services.AddMemoryCache();
-        services.AddHttpClient<ICurrencyConverter, CurrencyConverter>();
+        services.AddHttpClient<ICurrencyConverter, CurrencyConverter>()
+            .ConfigureHttpClient(static client => client.Timeout = TimeSpan.FromSeconds(20));
         
         return services;
     }

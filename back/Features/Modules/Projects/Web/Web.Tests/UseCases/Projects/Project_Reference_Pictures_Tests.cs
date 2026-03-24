@@ -160,6 +160,14 @@ public class Project_Reference_Pictures_Tests
             limitProjectId = project.Id;
         }
 
+        var first = await TestingServer.PostAsync<UrlReference[]>(
+            "api/projects/reference-picture",
+            new UploadProjectReferencePicture.Request
+            {
+                ProjectId = limitProjectId,
+                Base64Image = _base64Image
+            }, "rodrigo.basniak");
+
         var second = await TestingServer.PostAsync<UrlReference[]>(
             "api/projects/reference-picture",
             new UploadProjectReferencePicture.Request
@@ -176,9 +184,11 @@ public class Project_Reference_Pictures_Tests
                 Base64Image = _base64Image
             }, "rodrigo.basniak");
 
+        first.ShouldBeSuccess();
         second.ShouldBeSuccess();
         third.ShouldBeSuccess();
 
+        // Free tier allows MaxProjectReferencePicturesPerProject (3); the 4th upload must be rejected.
         var fourth = await TestingServer.PostAsync(
             "api/projects/reference-picture",
             new UploadProjectReferencePicture.Request

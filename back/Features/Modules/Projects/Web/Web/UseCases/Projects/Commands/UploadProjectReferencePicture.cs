@@ -1,6 +1,7 @@
 using rbkApiModules.Core.Utilities;
-using PaintingProjectsManagement.Infrastructure.Common;
+using PaintingProjectsManagement.Features.Subscriptions;
 using PaintingProjectsManagement.Features.Subscriptions.Integration;
+using PaintingProjectsManagement.Infrastructure.Common;
 
 namespace PaintingProjectsManagement.Features.Projects;
 
@@ -30,15 +31,18 @@ public class UploadProjectReferencePicture : IEndpoint
     {
         private readonly ITenantStorageUsageService _storageUsageService;
         private readonly IDispatcher _dispatcher;
+        private readonly ISubscriptionTierPolicyCatalog _subscriptionTierPolicyCatalog;
 
         public Validator(
             DbContext context,
             ILocalizationService localization,
             ITenantStorageUsageService storageUsageService,
-            IDispatcher dispatcher) : base(context, localization)
+            IDispatcher dispatcher,
+            ISubscriptionTierPolicyCatalog subscriptionTierPolicyCatalog) : base(context, localization)
         {
             _storageUsageService = storageUsageService;
             _dispatcher = dispatcher;
+            _subscriptionTierPolicyCatalog = subscriptionTierPolicyCatalog;
         }
 
         protected override void ValidateBusinessRules()
@@ -92,12 +96,9 @@ public class UploadProjectReferencePicture : IEndpoint
             var entitlementResponse = await _dispatcher.SendAsync(
                 new GetSubscriptionEntitlementQuery { TenantId = request.Identity.Tenant },
                 cancellationToken);
-            if (!entitlementResponse.IsValid || entitlementResponse.Data is null)
-            {
-                return true;
-            }
-
-            var maxReferences = entitlementResponse.Data.MaxProjectReferencePicturesPerProject;
+            var maxReferences = !entitlementResponse.IsValid || entitlementResponse.Data is null
+                ? _subscriptionTierPolicyCatalog.Get(SubscriptionTier.Free).MaxProjectReferencePicturesPerProject
+                : entitlementResponse.Data.MaxProjectReferencePicturesPerProject;
 
             if (maxReferences == int.MaxValue)
             {
