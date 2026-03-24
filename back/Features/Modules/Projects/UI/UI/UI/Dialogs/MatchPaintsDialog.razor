@@ -201,13 +201,76 @@
 
     protected override void OnInitialized()
     {
+        // #region agent log
+        WriteDebugLog(
+            hypothesisId: "B",
+            location: "MatchPaintsDialog.razor:OnInitialized:entry",
+            message: "Dialog OnInitialized entered",
+            data: new
+            {
+                modelIsNull = Model is null,
+                modelId = Model?.Id,
+                modelName = Model?.Name,
+                groupsCount = Model?.Groups?.Length
+            });
+        // #endregion
         LoadColorGroups();
     }
 
     private void LoadColorGroups()
     {
+        // #region agent log
+        WriteDebugLog(
+            hypothesisId: "C",
+            location: "MatchPaintsDialog.razor:LoadColorGroups:before",
+            message: "Loading color groups",
+            data: new
+            {
+                modelIsNull = Model is null,
+                groupsIsNull = Model?.Groups is null
+            });
+        // #endregion
+
         colorGroups = Model?.Groups?.ToList() ?? new List<ColorGroupDetails>();
+
+        // #region agent log
+        WriteDebugLog(
+            hypothesisId: "D",
+            location: "MatchPaintsDialog.razor:LoadColorGroups:after",
+            message: "Color groups loaded",
+            data: new
+            {
+                colorGroupsCount = colorGroups.Count,
+                hasNullGroup = colorGroups.Any(g => g is null),
+                hasNullSections = colorGroups.Any(g => g?.Sections is null),
+                hasNullReferenceColor = colorGroups
+                    .Where(g => g?.Sections is not null)
+                    .SelectMany(g => g!.Sections)
+                    .Any(s => s is null || s.ReferenceColor is null),
+                hasNullSuggestedCollection = colorGroups
+                    .Where(g => g?.Sections is not null)
+                    .SelectMany(g => g!.Sections)
+                    .Any(s => s is not null && s.SuggestedColors is null)
+            });
+        // #endregion
+
         StateHasChanged();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        // #region agent log
+        WriteDebugLog(
+            hypothesisId: "E",
+            location: "MatchPaintsDialog.razor:OnAfterRender:firstRender",
+            message: "Dialog first render completed",
+            data: new { colorGroupsCount = colorGroups.Count });
+        // #endregion
     }
 
     private async Task MatchColors()
@@ -331,6 +394,28 @@
     }
 
     private void Close() => MudDialog.Close(DialogResult.Ok(true));
+
+    private static void WriteDebugLog(string hypothesisId, string location, string message, object? data = null)
+    {
+        try
+        {
+            var payload = new
+            {
+                hypothesisId,
+                location,
+                message,
+                data = data ?? new { },
+                timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+            };
+
+            System.IO.File.AppendAllText(
+                "/opt/cursor/logs/debug.log",
+                System.Text.Json.JsonSerializer.Serialize(payload) + "\n");
+        }
+        catch
+        {
+        }
+    }
 }
 
 <style>

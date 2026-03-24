@@ -161,17 +161,61 @@
 
     private async Task OpenMatchPaints(ProjectDetails project)
     {
+        // #region agent log
+        WriteDebugLog(
+            hypothesisId: "A",
+            location: "ProjectsList.razor:OpenMatchPaints:entry",
+            message: "OpenMatchPaints invoked",
+            data: new { projectId = project?.Id, projectName = project?.Name, isArchived = project?.IsArchived });
+        // #endregion
+
         if (project.IsArchived)
         {
             Snackbar.Add("Archived projects are read-only.", Severity.Info);
             return;
         }
 
-        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+        try
+        {
+            var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
 
-        var parameters = new DialogParameters { ["Model"] = projectDetails };
-        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
-        var dialog = DialogService.Show<MatchPaintsDialog>(title: null, parameters, options);
+            // #region agent log
+            WriteDebugLog(
+                hypothesisId: "B",
+                location: "ProjectsList.razor:OpenMatchPaints:details-loaded",
+                message: "Project details loaded for Match Paints",
+                data: new
+                {
+                    projectId = projectDetails.Id,
+                    groupsCount = projectDetails.Groups?.Length,
+                    hasNullGroup = projectDetails.Groups?.Any(g => g is null),
+                    hasNullSections = projectDetails.Groups?.Any(g => g?.Sections is null)
+                });
+            // #endregion
+
+            var parameters = new DialogParameters { ["Model"] = projectDetails };
+            var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+            var dialog = DialogService.Show<MatchPaintsDialog>(title: null, parameters, options);
+
+            // #region agent log
+            WriteDebugLog(
+                hypothesisId: "C",
+                location: "ProjectsList.razor:OpenMatchPaints:dialog-show",
+                message: "MatchPaintsDialog show invoked",
+                data: new { projectId = projectDetails.Id });
+            // #endregion
+        }
+        catch (Exception ex)
+        {
+            // #region agent log
+            WriteDebugLog(
+                hypothesisId: "A",
+                location: "ProjectsList.razor:OpenMatchPaints:exception",
+                message: "Exception before dialog render",
+                data: new { exceptionType = ex.GetType().FullName, ex.Message });
+            // #endregion
+            throw;
+        }
     }
 
     private async Task OpenReferencePictures(ProjectDetails project)
@@ -317,6 +361,28 @@
     private static string GetPictureAddress(string url)
     {
         return $"https://localhost:7236/{url.Trim('/')}";
+    }
+
+    private static void WriteDebugLog(string hypothesisId, string location, string message, object? data = null)
+    {
+        try
+        {
+            var payload = new
+            {
+                hypothesisId,
+                location,
+                message,
+                data = data ?? new { },
+                timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+            };
+
+            System.IO.File.AppendAllText(
+                "/opt/cursor/logs/debug.log",
+                System.Text.Json.JsonSerializer.Serialize(payload) + "\n");
+        }
+        catch
+        {
+        }
     }
 } 
 
