@@ -66,116 +66,123 @@
                 else
                 {
                     <MudPaper Elevation="0" Style="flex: 1; overflow-y: auto;" Class="scrollable-content">
-                        <MudStack Spacing="4">
+                        <MudExpansionPanels MultiExpansion="true">
                             @foreach (var group in colorGroups)
                             {
-                                <div class="group-container">
-                                    <MudText Typo="Typo.h6" Class="mb-3" Style="color: var(--mud-palette-primary);">
-                                        <MudIcon Icon="@Icons.Material.Filled.Palette" Class="mr-2" />
-                                        @group.Name
-                                    </MudText>
-
-                                    <MudExpansionPanels MultiExpansion="true">
-                                        @foreach (var colorSection in group.Sections)
-                                        {
-                                            <MudExpansionPanel>
-                                                <TitleContent>
-                                                    <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween" Style="width: 100%;">
-                                                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
-                                                            <div class="zone-chip-color" style="@($"background-color: {colorSection.ReferenceColor};")"></div>
-                                                            <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">
-                                                                @GetZoneLabel(colorSection.Zone)
-                                                            </MudText>
-                                                            <MudText Typo="Typo.caption" Color="Color.Secondary">
-                                                                @colorSection.ReferenceColor.ToUpper()
-                                                            </MudText>
-                                                        </MudStack>
-                                                        @{
-                                                            var picked = colorSection.SuggestedColors?.FirstOrDefault(x => x.PaintColorId == colorSection.PickedColorId);
-                                                        }
-                                                        @if (picked is not null)
-                                                        {
-                                                            <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" Icon="@Icons.Material.Filled.CheckCircle">
-                                                                @picked.Name
-                                                            </MudChip>
-                                                        }
-                                                    </MudStack>
-                                                </TitleContent>
-                                                <ChildContent>
-                                                    <MudStack Spacing="2" Class="pt-2">
-                                                        @if (colorSection.SuggestedColors != null && colorSection.SuggestedColors.Any())
-                                                        {
-                                                            <MudGrid Spacing="2">
-                                                                @foreach (var match in colorSection.SuggestedColors.OrderBy(x => x.Distance).ThenBy(x => x.Name))
-                                                                {
-                                                                    var isPicked = colorSection.PickedColorId == match.PaintColorId;
-                                                                    var matchQuality = GetMatchQuality(match.Distance);
-                                                                    <MudItem xs="12" sm="6" md="4" lg="3">
-                                                                        <MudPaper Elevation="@(isPicked ? 3 : 1)" Class="@($"compact-match-card {(isPicked ? "selected" : string.Empty)}")">
-                                                                            <MudStack Spacing="1">
-                                                                                <div class="compact-color-preview" style="@($"background-color: {match.HexColor};")"></div>
-                                                                                <MudText Typo="Typo.body2" Style="font-weight: 600;" Class="truncate-one-line">@match.Name</MudText>
-                                                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Class="truncate-one-line">
-                                                                                    @match.BrandName · @match.LineName
-                                                                                </MudText>
-                                                                                <MudText Typo="Typo.caption" Color="Color.Secondary">
-                                                                                    @match.HexColor.ToUpper()
-                                                                                </MudText>
-                                                                                <MudChip T="string"
-                                                                                         Size="Size.Small"
-                                                                                         Color="@matchQuality.Color"
-                                                                                         Variant="Variant.Filled"
-                                                                                         Style="font-weight: 600; width: fit-content;">
-                                                                                    @matchQuality.Label
-                                                                                </MudChip>
-                                                                                @if (isPicked)
-                                                                                {
-                                                                                    <MudChip T="string"
-                                                                                             Size="Size.Small"
-                                                                                             Color="Color.Primary"
-                                                                                             Icon="@Icons.Material.Filled.CheckCircle"
-                                                                                             Variant="Variant.Filled">
-                                                                                        Selected
-                                                                                    </MudChip>
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    <MudButton Size="Size.Small"
-                                                                                               Variant="Variant.Outlined"
-                                                                                               Color="Color.Primary"
-                                                                                               Style="text-transform: none;"
-                                                                                               OnClick="() => SelectColor(colorSection.Id, match.PaintColorId)">
-                                                                                        Select
-                                                                                    </MudButton>
-                                                                                }
-                                                                            </MudStack>
-                                                                        </MudPaper>
-                                                                    </MudItem>
-                                                                }
-                                                            </MudGrid>
-                                                        }
-                                                        else
-                                                        {
-                                                            <MudPaper Elevation="0" Class="pa-4" Style="background-color: #f5f5f5; border: 2px dashed #ccc;">
-                                                                <MudStack AlignItems="AlignItems.Center" Spacing="2">
-                                                                    <MudIcon Icon="@Icons.Material.Filled.Search" Size="Size.Large" Color="Color.Secondary" />
-                                                                    <MudText Typo="Typo.body1" Color="Color.Secondary" Align="Align.Center">
-                                                                        No matches found yet
+                                <MudExpansionPanel>
+                                    <TitleContent>
+                                        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                            <MudIcon Icon="@Icons.Material.Filled.Palette" />
+                                            <MudText Typo="Typo.h6" Style="color: var(--mud-palette-primary);">
+                                                @group.Name
+                                            </MudText>
+                                        </MudStack>
+                                    </TitleContent>
+                                    <ChildContent>
+                                        <div class="group-container">
+                                            <MudExpansionPanels MultiExpansion="true">
+                                                @foreach (var colorSection in group.Sections)
+                                                {
+                                                    <MudExpansionPanel>
+                                                        <TitleContent>
+                                                            <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween" Style="width: 100%;">
+                                                                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                                                                    <div class="zone-chip-color" style="@($"background-color: {colorSection.ReferenceColor};")"></div>
+                                                                    <MudText Typo="Typo.subtitle1" Style="font-weight: 600;">
+                                                                        @GetZoneLabel(colorSection.Zone)
                                                                     </MudText>
-                                                                    <MudText Typo="Typo.caption" Color="Color.Secondary" Align="Align.Center">
-                                                                        Click "Find Matches" to search for similar colors in your collection
+                                                                    <MudText Typo="Typo.caption" Color="Color.Secondary">
+                                                                        @colorSection.ReferenceColor.ToUpper()
                                                                     </MudText>
                                                                 </MudStack>
-                                                            </MudPaper>
-                                                        }
-                                                    </MudStack>
-                                                </ChildContent>
-                                            </MudExpansionPanel>
-                                        }
-                                    </MudExpansionPanels>
-                                </div>
+                                                                @{
+                                                                    var picked = colorSection.SuggestedColors?.FirstOrDefault(x => x.PaintColorId == colorSection.PickedColorId);
+                                                                }
+                                                                @if (picked is not null)
+                                                                {
+                                                                    <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Filled" Icon="@Icons.Material.Filled.CheckCircle">
+                                                                        @picked.Name
+                                                                    </MudChip>
+                                                                }
+                                                            </MudStack>
+                                                        </TitleContent>
+                                                        <ChildContent>
+                                                            <MudStack Spacing="2" Class="pt-2">
+                                                                @if (colorSection.SuggestedColors != null && colorSection.SuggestedColors.Any())
+                                                                {
+                                                                    <MudGrid Spacing="1">
+                                                                        @foreach (var match in colorSection.SuggestedColors.OrderBy(x => x.Distance).ThenBy(x => x.Name))
+                                                                        {
+                                                                            var isPicked = colorSection.PickedColorId == match.PaintColorId;
+                                                                            var matchQuality = GetMatchQuality(match.Distance);
+                                                                            <MudItem xs="6" sm="4" md="3" lg="2" xl="2">
+                                                                                <MudPaper Elevation="@(isPicked ? 3 : 1)" Class="@($"compact-match-card {(isPicked ? "selected" : string.Empty)}")">
+                                                                                    <MudStack Spacing="1">
+                                                                                        <div class="compact-color-preview" style="@($"background-color: {match.HexColor};")"></div>
+                                                                                        <MudText Typo="Typo.caption" Style="font-weight: 700;" Class="truncate-one-line">@match.Name</MudText>
+                                                                                        <MudText Typo="Typo.caption" Color="Color.Secondary" Class="truncate-one-line">
+                                                                                            @match.BrandName
+                                                                                        </MudText>
+                                                                                        <MudText Typo="Typo.caption" Color="Color.Secondary" Class="truncate-one-line">
+                                                                                            @match.LineName
+                                                                                        </MudText>
+                                                                                        <MudChip T="string"
+                                                                                                 Size="Size.Small"
+                                                                                                 Color="@matchQuality.Color"
+                                                                                                 Variant="Variant.Filled"
+                                                                                                 Style="font-weight: 600; width: fit-content;">
+                                                                                            @matchQuality.Label
+                                                                                        </MudChip>
+                                                                                        @if (isPicked)
+                                                                                        {
+                                                                                            <MudChip T="string"
+                                                                                                     Size="Size.Small"
+                                                                                                     Color="Color.Primary"
+                                                                                                     Icon="@Icons.Material.Filled.CheckCircle"
+                                                                                                     Variant="Variant.Filled">
+                                                                                                Selected
+                                                                                            </MudChip>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            <MudButton Size="Size.Small"
+                                                                                                       Variant="Variant.Outlined"
+                                                                                                       Color="Color.Primary"
+                                                                                                       Style="text-transform: none;"
+                                                                                                       OnClick="() => SelectColor(colorSection.Id, match.PaintColorId)">
+                                                                                                Select
+                                                                                            </MudButton>
+                                                                                        }
+                                                                                    </MudStack>
+                                                                                </MudPaper>
+                                                                            </MudItem>
+                                                                        }
+                                                                    </MudGrid>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <MudPaper Elevation="0" Class="pa-4" Style="background-color: #f5f5f5; border: 2px dashed #ccc;">
+                                                                        <MudStack AlignItems="AlignItems.Center" Spacing="2">
+                                                                            <MudIcon Icon="@Icons.Material.Filled.Search" Size="Size.Large" Color="Color.Secondary" />
+                                                                            <MudText Typo="Typo.body1" Color="Color.Secondary" Align="Align.Center">
+                                                                                No matches found yet
+                                                                            </MudText>
+                                                                            <MudText Typo="Typo.caption" Color="Color.Secondary" Align="Align.Center">
+                                                                                Click "Find Matches" to search for similar colors in your collection
+                                                                            </MudText>
+                                                                        </MudStack>
+                                                                    </MudPaper>
+                                                                }
+                                                            </MudStack>
+                                                        </ChildContent>
+                                                    </MudExpansionPanel>
+                                                }
+                                            </MudExpansionPanels>
+                                        </div>
+                                    </ChildContent>
+                                </MudExpansionPanel>
                             }
-                        </MudStack>
+                        </MudExpansionPanels>
                     </MudPaper>
                 }
             </MudStack>
@@ -201,76 +208,14 @@
 
     protected override void OnInitialized()
     {
-        // #region agent log
-        WriteDebugLog(
-            hypothesisId: "B",
-            location: "MatchPaintsDialog.razor:OnInitialized:entry",
-            message: "Dialog OnInitialized entered",
-            data: new
-            {
-                modelIsNull = Model is null,
-                modelId = Model?.Id,
-                modelName = Model?.Name,
-                groupsCount = Model?.Groups?.Length
-            });
-        // #endregion
         LoadColorGroups();
     }
 
     private void LoadColorGroups()
     {
-        // #region agent log
-        WriteDebugLog(
-            hypothesisId: "C",
-            location: "MatchPaintsDialog.razor:LoadColorGroups:before",
-            message: "Loading color groups",
-            data: new
-            {
-                modelIsNull = Model is null,
-                groupsIsNull = Model?.Groups is null
-            });
-        // #endregion
-
         colorGroups = Model?.Groups?.ToList() ?? new List<ColorGroupDetails>();
 
-        // #region agent log
-        WriteDebugLog(
-            hypothesisId: "D",
-            location: "MatchPaintsDialog.razor:LoadColorGroups:after",
-            message: "Color groups loaded",
-            data: new
-            {
-                colorGroupsCount = colorGroups.Count,
-                hasNullGroup = colorGroups.Any(g => g is null),
-                hasNullSections = colorGroups.Any(g => g?.Sections is null),
-                hasNullReferenceColor = colorGroups
-                    .Where(g => g?.Sections is not null)
-                    .SelectMany(g => g!.Sections)
-                    .Any(s => s is null || s.ReferenceColor is null),
-                hasNullSuggestedCollection = colorGroups
-                    .Where(g => g?.Sections is not null)
-                    .SelectMany(g => g!.Sections)
-                    .Any(s => s is not null && s.SuggestedColors is null)
-            });
-        // #endregion
-
         StateHasChanged();
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (!firstRender)
-        {
-            return;
-        }
-
-        // #region agent log
-        WriteDebugLog(
-            hypothesisId: "E",
-            location: "MatchPaintsDialog.razor:OnAfterRender:firstRender",
-            message: "Dialog first render completed",
-            data: new { colorGroupsCount = colorGroups.Count });
-        // #endregion
     }
 
     private async Task MatchColors()
@@ -395,27 +340,6 @@
 
     private void Close() => MudDialog.Close(DialogResult.Ok(true));
 
-    private static void WriteDebugLog(string hypothesisId, string location, string message, object? data = null)
-    {
-        try
-        {
-            var payload = new
-            {
-                hypothesisId,
-                location,
-                message,
-                data = data ?? new { },
-                timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-            };
-
-            System.IO.File.AppendAllText(
-                "/opt/cursor/logs/debug.log",
-                System.Text.Json.JsonSerializer.Serialize(payload) + "\n");
-        }
-        catch
-        {
-        }
-    }
 }
 
 <style>
@@ -427,8 +351,8 @@
     .match-paints-dialog .group-container {
         background-color: white;
         border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        padding: 12px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.08);
     }
 
     .match-paints-dialog .reference-color-container {
@@ -475,7 +399,7 @@
     }
 
     .match-paints-dialog .compact-match-card {
-        padding: 10px;
+        padding: 6px;
         border: 2px solid transparent;
         border-radius: 10px;
         height: 100%;
@@ -488,7 +412,7 @@
 
     .match-paints-dialog .compact-color-preview {
         width: 100%;
-        height: 52px;
+        height: 34px;
         border-radius: 6px;
         border: 1px solid rgba(0,0,0,0.2);
     }
