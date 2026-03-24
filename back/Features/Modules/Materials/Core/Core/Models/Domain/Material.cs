@@ -17,6 +17,7 @@ public sealed class Material : TenantEntity
         Id = Guid.CreateVersion7();
         TenantId = tenantId;
         Name = name;
+        Category = category;
         PackageContent = packageContent;
         PackagePrice = packagePrice;
 
