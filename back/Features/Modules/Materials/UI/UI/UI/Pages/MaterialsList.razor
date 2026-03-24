@@ -101,7 +101,7 @@
                 PackagePriceCurrency = input.PackagePrice.CurrencyCode
             };
             var created = await MaterialsService.CreateAsync(request, CancellationToken.None);
-            materials.Add(created);
+            materials.Insert(0, created);
         }
     }
 
