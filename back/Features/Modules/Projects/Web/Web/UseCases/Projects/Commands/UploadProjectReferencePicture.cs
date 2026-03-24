@@ -121,6 +121,7 @@ public class UploadProjectReferencePicture : IEndpoint
 
             var project = await _context.Set<Project>()
                 .Include(x => x.References)
+                .Include(x => x.Pictures)
                 .FirstAsync(x => x.Id == request.ProjectId, cancellationToken);
 
             string baseFileName = $"reference_{project.Id:N}_{DateTime.UtcNow.Ticks}";

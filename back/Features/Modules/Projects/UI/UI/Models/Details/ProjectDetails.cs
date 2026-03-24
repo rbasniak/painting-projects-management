@@ -23,7 +23,7 @@ public class ProjectDetails
     //public ProjectStepDataDetails[] Steps { get; set; } = Array.Empty<ProjectStepDataDetails>();
     //// public MaterialDetails[] Materials { get; set; } = Array.Empty<MaterialDetails>();
     public UrlReference[] References { get; set; } = [];
-    //public UrlReference[] Pictures { get; set; } = Array.Empty<UrlReference>();
+    public UrlReference[] Pictures { get; set; } = [];
     public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();
     public ProjectCostDetails CostBreakdown { get; set; }  
 }

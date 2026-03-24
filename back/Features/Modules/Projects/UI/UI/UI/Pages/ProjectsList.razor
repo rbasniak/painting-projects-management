@@ -3,7 +3,6 @@
 @using PaintingProjectsManagement.UI.Modules.Projects 
 @using PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 @using PaintingProjectsManagement.UI.Modules.Shared
-@using System.Text.Json
 
 <MudPaper Class="pa-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
@@ -13,77 +12,94 @@
 
     <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Immediate="true" Class="mb-2" />
 
-    <MudTable Items="sortedProjects" Hover="true" Dense="true" RowsPerPage="10" SortLabel="Sort by" @bind-TableState="tableState">
-        <HeaderContent>
-            <MudTh Style="width: 50%">
-                <MudTableSortLabel SortBy="new Func<ProjectDetails, object>(x => x.Name)">Name</MudTableSortLabel>
-            </MudTh>
-            <MudTh Style="width: 100px"></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Name" Style="width: 50%">
-                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
-                    <MudText>@context.Name</MudText>
-                    @if (context.IsArchived)
-                    {
-                        <MudChip T="string" Color="Color.Default" Variant="Variant.Outlined" Size="Size.Small" StartIcon="@Icons.Material.Filled.Lock">
-                            Archived
-                        </MudChip>
-                    }
-                </MudStack>
-            </MudTd>
-            <MudTd Style="width: 150px">
-                <MudIconButton Icon="@Icons.Material.Filled.Edit"
-                               OnClick="() => Edit(context)"
-                               Color="Color.Primary"
-                               Disabled="@context.IsArchived"
-                               Title="@(context.IsArchived ? "Archived projects are read-only." : "Edit")" />
-                <MudIconButton Icon="@Icons.Material.Filled.PlayArrow" OnClick="() => NavigateToExecution(context)" Color="Color.Success" Title="Execution" />
-                <MudMenu>
-                    <ActivatorContent>
-                        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Primary" />
-                    </ActivatorContent>
-                    <ChildContent>
-                        <MudMenuItem OnClick="() => GetProjectCost(context)">
-                            <MudIcon Icon="@Icons.Material.Filled.CurrencyExchange" Class="mr-3" />
-                            Costs
-                        </MudMenuItem>
-                        <MudMenuItem OnClick="() => OpenUsedColors(context)">
-                            <MudIcon Icon="@Icons.Material.Filled.FormatColorFill" Class="mr-3" />
-                            Used Colors by Zone
-                        </MudMenuItem>
-                        <MudMenuItem OnClick="() => OpenColorZones(context)">
-                            <MudIcon Icon="@Icons.Material.Filled.Palette" Class="mr-3" />
-                            Color Zones
-                        </MudMenuItem>
-                        <MudMenuItem OnClick="() => OpenMatchPaints(context)">
-                            <MudIcon Icon="@Icons.Material.Filled.Colorize" Class="mr-3" />
-                            Match Paints
-                        </MudMenuItem>
-                        <MudMenuItem OnClick="() => OpenReferencePictures(context)">
-                            <MudIcon Icon="@Icons.Material.Filled.Image" Class="mr-3" />
-                            Reference Pictures
-                        </MudMenuItem>
-                        @if (!context.IsArchived)
-                        {
-                            <MudMenuItem OnClick="() => Archive(context)">
-                                <MudIcon Icon="@Icons.Material.Filled.Archive" Class="mr-3" />
-                                Archive Project
-                            </MudMenuItem>
-                        }
-                    </ChildContent>
-                </MudMenu>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                               OnClick="() => Delete(context)"
-                               Color="Color.Error"
-                               Disabled="@context.IsArchived"
-                               Title="@(context.IsArchived ? "Archived projects are read-only." : "Delete")" />
-            </MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
-    </MudTable>
+    <MudGrid Spacing="2">
+        @foreach (var project in sortedProjects)
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3">
+                <MudCard Class="project-card">
+                    <MudCardContent Class="project-card-content pa-0">
+                        <div class="project-image-frame">
+                            @if (!string.IsNullOrWhiteSpace(project.PictureUrl))
+                            {
+                                <img src="@GetPictureAddress(project.PictureUrl)" alt="@project.Name" class="project-image" />
+                            }
+                            else
+                            {
+                                <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center" Class="project-image-placeholder">
+                                    <MudIcon Icon="@Icons.Material.Filled.Image" Size="Size.Large" />
+                                </MudStack>
+                            }
+                        </div>
+                    </MudCardContent>
+                    <MudCardActions Class="project-card-actions">
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Style="width: 100%;">
+                            <MudStack Spacing="0">
+                                <MudText Typo="Typo.subtitle1" Class="project-name">@project.Name</MudText>
+                                @if (project.IsArchived)
+                                {
+                                    <MudChip T="string" Color="Color.Default" Variant="Variant.Outlined" Size="Size.Small" StartIcon="@Icons.Material.Filled.Lock">
+                                        Archived
+                                    </MudChip>
+                                }
+                            </MudStack>
+                            <MudMenu>
+                                <ActivatorContent>
+                                    <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Primary" />
+                                </ActivatorContent>
+                                <ChildContent>
+                                    <MudMenuItem OnClick="() => Edit(project)">
+                                        <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3" />
+                                        Edit
+                                    </MudMenuItem>
+                                    <MudMenuItem OnClick="() => OpenReferencePictures(project)">
+                                        <MudIcon Icon="@Icons.Material.Filled.Collections" Class="mr-3" />
+                                        Reference Pictures
+                                    </MudMenuItem>
+
+                                    <MudDivider />
+
+                                    <MudMenuItem OnClick="() => OpenColorZones(project)">
+                                        <MudIcon Icon="@Icons.Material.Filled.Palette" Class="mr-3" />
+                                        Color Zones
+                                    </MudMenuItem>
+                                    <MudMenuItem OnClick="() => OpenMatchPaints(project)">
+                                        <MudIcon Icon="@Icons.Material.Filled.Colorize" Class="mr-3" />
+                                        Match Paints
+                                    </MudMenuItem>
+                                    <MudMenuItem OnClick="() => OpenUsedColors(project)">
+                                        <MudIcon Icon="@Icons.Material.Filled.FormatColorFill" Class="mr-3" />
+                                        Colors Summary
+                                    </MudMenuItem>
+
+                                    <MudDivider />
+
+                                    <MudMenuItem OnClick="() => NavigateToExecution(project)">
+                                        <MudIcon Icon="@Icons.Material.Filled.PlayArrow" Class="mr-3" />
+                                        Progress Details
+                                    </MudMenuItem>
+                                    <MudMenuItem OnClick="() => OpenFinalPictures(project)">
+                                        <MudIcon Icon="@Icons.Material.Filled.PhotoLibrary" Class="mr-3" />
+                                        Final Pictures
+                                    </MudMenuItem>
+
+                                    <MudDivider />
+
+                                    <MudMenuItem OnClick="() => Archive(project)" Disabled="@project.IsArchived">
+                                        <MudIcon Icon="@Icons.Material.Filled.Archive" Class="mr-3" />
+                                        Archive Project
+                                    </MudMenuItem>
+                                    <MudMenuItem OnClick="() => Delete(project)" Disabled="@project.IsArchived">
+                                        <MudIcon Icon="@Icons.Material.Filled.Delete" Class="mr-3" />
+                                        Delete Project
+                                    </MudMenuItem>
+                                </ChildContent>
+                            </MudMenu>
+                        </MudStack>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
 </MudPaper>
 
 @code {
@@ -94,7 +110,6 @@
 
     private List<ProjectDetails> projects = new();
     private string searchString = string.Empty;
-    private TableState tableState = new();
 
     private IEnumerable<ProjectDetails> sortedProjects
     {
@@ -102,15 +117,7 @@
         {
             var filtered = projects.Where(x => string.IsNullOrWhiteSpace(searchString) ||
                 x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
-
-            if (tableState.SortLabel == "Name")
-            {
-                filtered = tableState.SortDirection == SortDirection.Ascending 
-                    ? filtered.OrderBy(x => x.Name)
-                    : filtered.OrderByDescending(x => x.Name);
-            } 
-
-            return filtered;
+            return filtered.OrderBy(x => x.Name);
         }
     }
 
@@ -135,15 +142,6 @@
             var created = await ProjectsService.CreateAsync(request, default);
             projects.Add(created);
         }
-    }
-
-    private async Task GetProjectCost(ProjectDetails project)
-    {
-        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
-
-        var parameters = new DialogParameters { ["Model"] = projectDetails };
-        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
-        var dialog = DialogService.Show<ProjectCostBreakdownDialog>(title: null, parameters, options);
     }
 
     private async Task OpenColorZones(ProjectDetails project)
@@ -197,6 +195,28 @@
 
         var dialogTitle = projectDetails.Name;
         await DialogService.ShowAsync<ProjectReferencePicturesDialog>(dialogTitle, parameters, options);
+    }
+
+    private async Task OpenFinalPictures(ProjectDetails project)
+    {
+        if (project.IsArchived)
+        {
+            Snackbar.Add("Archived projects are read-only.", Severity.Info);
+            return;
+        }
+
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var options = new DialogOptions
+        {
+            MaxWidth = MaxWidth.ExtraLarge,
+            FullWidth = true,
+            CloseButton = true,
+            CloseOnEscapeKey = true
+        };
+
+        await DialogService.ShowAsync<ProjectFinalPicturesDialog>(projectDetails.Name, parameters, options);
     }
 
     private async Task OpenUsedColors(ProjectDetails project)
@@ -291,8 +311,54 @@
 
     private void NavigateToExecution(ProjectDetails project)
     {
-        Console.WriteLine(JsonSerializer.Serialize(project));
-
         NavigationManager.NavigateTo($"/projects/{project.Id}/execution");
     }
+
+    private static string GetPictureAddress(string url)
+    {
+        return $"https://localhost:7236/{url.Trim('/')}";
+    }
 } 
+
+<style>
+    .project-card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .project-card-content {
+        flex: 1;
+    }
+
+    .project-image-frame {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        background-color: #f5f5f5;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+    }
+
+    .project-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+    .project-image-placeholder {
+        width: 100%;
+        height: 100%;
+        color: var(--mud-palette-text-secondary);
+    }
+
+    .project-card-actions {
+        min-height: 72px;
+    }
+
+    .project-name {
+        word-break: break-word;
+        max-width: 170px;
+    }
+</style>

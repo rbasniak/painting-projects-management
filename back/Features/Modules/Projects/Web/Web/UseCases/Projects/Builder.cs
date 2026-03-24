@@ -32,6 +32,8 @@ internal static class ProjectsEndpointsMap
         UploadProjectReferencePicture.MapEndpoint(app);
         UploadProjectFinishedPicture.MapEndpoint(app);
         DeleteProjectReferencePicture.MapEndpoint(app);
+        DeleteProjectFinishedPicture.MapEndpoint(app);
+        PromoteProjectPictureToCover.MapEndpoint(app);
 
         return app;
     }

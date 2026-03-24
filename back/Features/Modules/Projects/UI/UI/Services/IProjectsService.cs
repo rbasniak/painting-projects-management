@@ -54,6 +54,9 @@ public interface IProjectsService
     // Reference pictures
     Task<UrlReference[]> UploadReferencePictureAsync(UploadProjectReferencePictureRequest request, CancellationToken cancellationToken);
     Task DeleteReferencePictureAsync(Guid projectId, string pictureUrl, CancellationToken cancellationToken);
+    Task<UrlReference[]> UploadFinishedPictureAsync(UploadProjectFinishedPictureRequest request, CancellationToken cancellationToken);
+    Task DeleteFinishedPictureAsync(Guid projectId, string pictureUrl, CancellationToken cancellationToken);
+    Task PromotePictureToCoverAsync(PromoteProjectPictureRequest request, CancellationToken cancellationToken);
 }
 
 public class ProjectsService : IProjectsService
@@ -323,6 +326,33 @@ public class ProjectsService : IProjectsService
     public async Task DeleteReferencePictureAsync(Guid projectId, string pictureUrl, CancellationToken cancellationToken)
     {
         var request = new { ProjectId = projectId, PictureUrl = pictureUrl };
-        await _httpClient.PostAsJsonAsync("api/projects/reference-picture/delete", request, cancellationToken);
+        using var response = await _httpClient.PostAsJsonAsync("api/projects/reference-picture/delete", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<UrlReference[]> UploadFinishedPictureAsync(UploadProjectFinishedPictureRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/projects/finished-picture", request, cancellationToken);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<UrlReference[]>();
+            return result ?? Array.Empty<UrlReference>();
+        }
+
+        return Array.Empty<UrlReference>();
+    }
+
+    public async Task DeleteFinishedPictureAsync(Guid projectId, string pictureUrl, CancellationToken cancellationToken)
+    {
+        var request = new { ProjectId = projectId, PictureUrl = pictureUrl };
+        using var response = await _httpClient.PostAsJsonAsync("api/projects/finished-picture/delete", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task PromotePictureToCoverAsync(PromoteProjectPictureRequest request, CancellationToken cancellationToken)
+    {
+        using var response = await _httpClient.PostAsJsonAsync("api/projects/picture/promote", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
     }
 }

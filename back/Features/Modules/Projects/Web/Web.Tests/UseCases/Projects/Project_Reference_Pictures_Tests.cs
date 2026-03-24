@@ -133,6 +133,39 @@ public class Project_Reference_Pictures_Tests
         }
     }
 
+    [Test, NotInParallel(Order = 6)]
+    public async Task Promote_Reference_Picture_To_Cover_Should_Update_Project_Picture_Url()
+    {
+        var upload = await TestingServer.PostAsync<UrlReference[]>(
+            "api/projects/reference-picture",
+            new UploadProjectReferencePicture.Request
+            {
+                ProjectId = _projectId,
+                Base64Image = _base64Image
+            }, "rodrigo.basniak");
+        upload.ShouldBeSuccess();
+        upload.Data.ShouldNotBeNull();
+        upload.Data.Length.ShouldBeGreaterThan(0);
+
+        var pictureUrl = upload.Data.Last().Url;
+
+        var promote = await TestingServer.PostAsync(
+            "api/projects/picture/promote",
+            new PromoteProjectPictureToCover.Request
+            {
+                ProjectId = _projectId,
+                PictureUrl = pictureUrl
+            },
+            "rodrigo.basniak");
+
+        promote.ShouldBeSuccess();
+
+        var project = await TestingServer.CreateContext()
+            .Set<Project>()
+            .FirstAsync(x => x.Id == _projectId);
+        project.PictureUrl.ShouldBe(pictureUrl);
+    }
+
     [Test, NotInParallel(Order = 99)]
     public async Task Cleanup()
     {

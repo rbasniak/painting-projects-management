@@ -49,6 +49,11 @@ public class Project : TenantEntity
         EndDate = endDate;
     }
 
+    public void UpdateCoverPicture(string? pictureUrl)
+    {
+        PictureUrl = pictureUrl ?? string.Empty;
+    }
+
     public void Archive(DateTime? archivedAt = null)
     {
         if (IsArchived)
@@ -221,6 +226,11 @@ public class Project : TenantEntity
         {
             _references.Remove(reference);
         }
+
+        if (string.Equals(PictureUrl, url, StringComparison.Ordinal))
+        {
+            PictureUrl = string.Empty;
+        }
     }
 
     public void AddFinishedPicture(string url)
@@ -244,6 +254,11 @@ public class Project : TenantEntity
         if (picture is not null)
         {
             _pictures.Remove(picture);
+        }
+
+        if (string.Equals(PictureUrl, url, StringComparison.Ordinal))
+        {
+            PictureUrl = string.Empty;
         }
     }
 }
