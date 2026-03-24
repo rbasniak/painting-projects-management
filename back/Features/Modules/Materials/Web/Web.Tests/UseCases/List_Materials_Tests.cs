@@ -67,6 +67,10 @@ public class List_Materials_Tests
         var materialNames = response.Data.Select(x => x.Name).ToList();
         materialNames.ShouldContain("Ricardo Material 1");
         materialNames.ShouldContain("Ricardo Material 2");
+
+        // Newest first (Id is version 7, time-ordered)
+        response.Data.First().Name.ShouldBe("Ricardo Material 2");
+        response.Data.ElementAt(1).Name.ShouldBe("Ricardo Material 1");
     }
 
     [Test, NotInParallel(Order = 6)]
