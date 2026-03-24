@@ -22,14 +22,14 @@ public class Profile_Endpoints_Tests
     [Test, NotInParallel(Order = 2)]
     public async Task Non_Authenticated_User_Cannot_Get_Profile_Details()
     {
-        var response = await TestingServer.GetAsync<ProfileDetails>("api/profile/me");
+        var response = await TestingServer.GetAsync<ProfileDetails>("profile/me");
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
     }
 
     [Test, NotInParallel(Order = 3)]
     public async Task Authenticated_User_Can_Get_Profile_Details()
     {
-        var response = await TestingServer.GetAsync<ProfileDetails>("api/profile/me", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<ProfileDetails>("profile/me", "rodrigo.basniak");
 
         response.ShouldBeSuccess(out var profile);
         profile.Username.ShouldBe("rodrigo.basniak");
@@ -43,14 +43,14 @@ public class Profile_Endpoints_Tests
     [Test, NotInParallel(Order = 4)]
     public async Task Non_Authenticated_User_Cannot_Get_Storage_Usage()
     {
-        var response = await TestingServer.GetAsync<StorageUsageDetails>("api/profile/storage-usage");
+        var response = await TestingServer.GetAsync<StorageUsageDetails>("profile/storage-usage");
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
     }
 
     [Test, NotInParallel(Order = 5)]
     public async Task Storage_Usage_Reflects_Disk_Consumption_For_User_Files()
     {
-        var baselineResponse = await TestingServer.GetAsync<StorageUsageDetails>("api/profile/storage-usage", "rodrigo.basniak");
+        var baselineResponse = await TestingServer.GetAsync<StorageUsageDetails>("profile/storage-usage", "rodrigo.basniak");
         baselineResponse.ShouldBeSuccess(out var baseline);
 
         var env = TestingServer.Services.GetRequiredService<IWebHostEnvironment>();
@@ -64,7 +64,7 @@ public class Profile_Endpoints_Tests
             fileStream.SetLength(expectedBytes);
         }
 
-        var updatedResponse = await TestingServer.GetAsync<StorageUsageDetails>("api/profile/storage-usage", "rodrigo.basniak");
+        var updatedResponse = await TestingServer.GetAsync<StorageUsageDetails>("profile/storage-usage", "rodrigo.basniak");
         updatedResponse.ShouldBeSuccess(out var updated);
 
         updated.QuotaBytes.ShouldBe(StorageQuotaOptions.DefaultQuotaInBytes);

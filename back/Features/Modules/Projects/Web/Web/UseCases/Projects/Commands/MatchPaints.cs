@@ -7,7 +7,7 @@ public class MatchPaints : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/projects/{projectId}/color-sections/match-paints", async (
+        endpoints.MapPost("/projects/{projectId}/color-sections/match-paints", async (
             Guid projectId,
             MatchPaintsBody? body,
             IDispatcher dispatcher,

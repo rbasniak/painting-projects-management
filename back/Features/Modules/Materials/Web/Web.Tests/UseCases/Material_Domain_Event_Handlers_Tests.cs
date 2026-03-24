@@ -38,7 +38,7 @@ public class Material_Domain_Event_Handlers_Tests
             PackagePriceCurrency = packagePrice.CurrencyCode
         };
 
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, TestUser);
+        var response = await TestingServer.PostAsync<MaterialDetails>("materials", request, TestUser);
         response.ShouldBeSuccess(out var materialDetails);
 
         // Wait for domain events to be processed
@@ -76,7 +76,7 @@ public class Material_Domain_Event_Handlers_Tests
             PackagePriceCurrency = material.PackagePrice.CurrencyCode
         };
 
-        var response = await TestingServer.PutAsync($"api/materials", updateRequest, TestUser);
+        var response = await TestingServer.PutAsync($"materials", updateRequest, TestUser);
         response.ShouldBeSuccess();
 
         // Wait for domain events to be processed
@@ -115,7 +115,7 @@ public class Material_Domain_Event_Handlers_Tests
             PackagePriceCurrency = material.PackagePrice.CurrencyCode
         };
 
-        var response = await TestingServer.PutAsync($"api/materials", updateRequest, TestUser);
+        var response = await TestingServer.PutAsync($"materials", updateRequest, TestUser);
         response.ShouldBeSuccess();
 
         // Wait for domain events to be processed
@@ -154,7 +154,7 @@ public class Material_Domain_Event_Handlers_Tests
             PackagePriceCurrency = newPackagePrice.CurrencyCode
         };
 
-        var response = await TestingServer.PutAsync($"api/materials", updateRequest, TestUser);
+        var response = await TestingServer.PutAsync($"materials", updateRequest, TestUser);
         response.ShouldBeSuccess();
 
         // Wait for domain events to be processed
@@ -194,7 +194,7 @@ public class Material_Domain_Event_Handlers_Tests
             PackagePriceCurrency = newPackagePrice.CurrencyCode
         };
 
-        var response = await TestingServer.PutAsync($"api/materials", updateRequest, TestUser);
+        var response = await TestingServer.PutAsync($"materials", updateRequest, TestUser);
         response.ShouldBeSuccess();
 
         // Wait for domain events to be processed
@@ -221,7 +221,7 @@ public class Material_Domain_Event_Handlers_Tests
         var material = await CreateTestMaterialAsync("Test Material For Deletion");
 
         // Act - Delete material (this will raise MaterialDeleted domain event)
-        var response = await TestingServer.DeleteAsync($"api/materials/{material.Id}", TestUser);
+        var response = await TestingServer.DeleteAsync($"materials/{material.Id}", TestUser);
         response.ShouldBeSuccess();
 
         // Wait for domain events to be processed
@@ -252,7 +252,7 @@ public class Material_Domain_Event_Handlers_Tests
             PackagePriceCurrency = material.PackagePrice.CurrencyCode
         };
 
-        var response = await TestingServer.PutAsync($"api/materials", updateRequest, TestUser);
+        var response = await TestingServer.PutAsync($"materials", updateRequest, TestUser);
         response.ShouldBeSuccess();
 
         // Wait a bit to ensure no events are processed
@@ -287,7 +287,7 @@ public class Material_Domain_Event_Handlers_Tests
             PackagePriceCurrency = "USD"
         };
 
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, TestUser);
+        var response = await TestingServer.PostAsync<MaterialDetails>("materials", request, TestUser);
         response.ShouldBeSuccess(out var materialDetails);
         return materialDetails;
     }

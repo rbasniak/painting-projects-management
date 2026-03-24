@@ -8,7 +8,7 @@ internal static class CurrencyEndpoint
 {
     public static IEndpointRouteBuilder MapCurrencyEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/currencies", async (ICurrencyCatalog currencyCatalog, CancellationToken cancellationToken) =>
+        app.MapGet("/currencies", async (ICurrencyCatalog currencyCatalog, CancellationToken cancellationToken) =>
         {
             try
             {

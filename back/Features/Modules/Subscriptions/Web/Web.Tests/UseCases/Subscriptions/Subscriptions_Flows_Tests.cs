@@ -24,14 +24,14 @@ public class Subscriptions_Flows_Tests
     [Test, NotInParallel(Order = 2)]
     public async Task Non_Authenticated_User_Cannot_Get_Current_Subscription()
     {
-        var response = await TestingServer.GetAsync<CurrentSubscriptionDetails>("api/subscriptions/me");
+        var response = await TestingServer.GetAsync<CurrentSubscriptionDetails>("subscriptions/me");
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
     }
 
     [Test, NotInParallel(Order = 3)]
     public async Task Authenticated_User_Can_Get_Current_Subscription()
     {
-        var response = await TestingServer.GetAsync<CurrentSubscriptionDetails>("api/subscriptions/me", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<CurrentSubscriptionDetails>("subscriptions/me", "rodrigo.basniak");
 
         response.ShouldBeSuccess(out var result);
         result.Tier.ShouldBe(SubscriptionTier.Free);
@@ -42,7 +42,7 @@ public class Subscriptions_Flows_Tests
     public async Task User_Can_Subscribe_To_Basic()
     {
         var response = await TestingServer.PostAsync<CurrentSubscriptionDetails>(
-            "api/subscriptions/subscribe",
+            "subscriptions/subscribe",
             new Subscribe.Request
             {
                 Tier = SubscriptionTier.Basic
@@ -63,7 +63,7 @@ public class Subscriptions_Flows_Tests
     public async Task User_Can_Upgrade_To_Premium()
     {
         var response = await TestingServer.PostAsync<CurrentSubscriptionDetails>(
-            "api/subscriptions/upgrade",
+            "subscriptions/upgrade",
             new UpgradeSubscription.Request
             {
                 Tier = SubscriptionTier.Premium
@@ -79,7 +79,7 @@ public class Subscriptions_Flows_Tests
     public async Task User_Can_Cancel_At_Period_End()
     {
         var response = await TestingServer.PostAsync<CurrentSubscriptionDetails>(
-            "api/subscriptions/cancel",
+            "subscriptions/cancel",
             new CancelSubscription.Request
             {
                 CancelAtPeriodEnd = true
@@ -95,7 +95,7 @@ public class Subscriptions_Flows_Tests
     public async Task User_Can_Cancel_Immediately()
     {
         var response = await TestingServer.PostAsync<CurrentSubscriptionDetails>(
-            "api/subscriptions/cancel",
+            "subscriptions/cancel",
             new CancelSubscription.Request
             {
                 CancelAtPeriodEnd = false

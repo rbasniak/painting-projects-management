@@ -4,7 +4,7 @@ public class RemoveFromMyPaints : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/api/inventory/my-paints/{paintColorId}", async (Guid paintColorId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/inventory/my-paints/{paintColorId}", async (Guid paintColorId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var request = new Request { PaintColorId = paintColorId };
             try

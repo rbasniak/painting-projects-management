@@ -42,7 +42,7 @@ public class Material_End_To_End_Event_Flow_Tests
             PackagePriceCurrency = packagePrice.CurrencyCode
         };
 
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, TestUser);
+        var response = await TestingServer.PostAsync<MaterialDetails>("materials", request, TestUser);
         response.ShouldBeSuccess(out var materialDetails);
 
         // Wait for all events to be processed (domain events → integration events → consumers)
@@ -85,7 +85,7 @@ public class Material_End_To_End_Event_Flow_Tests
             PackagePriceCurrency = "USD"
         };
 
-        var response = await TestingServer.PutAsync($"api/materials", updateRequest, TestUser);
+        var response = await TestingServer.PutAsync($"materials", updateRequest, TestUser);
         response.ShouldBeSuccess();
 
         // Wait for all events to be processed
@@ -123,7 +123,7 @@ public class Material_End_To_End_Event_Flow_Tests
         }
 
         // Act - Delete material through API (triggers domain event → integration event → consumer)
-        var response = await TestingServer.DeleteAsync($"api/materials/{material.Id}", TestUser);
+        var response = await TestingServer.DeleteAsync($"materials/{material.Id}", TestUser);
         response.ShouldBeSuccess();
 
         // Wait for all events to be processed
@@ -163,10 +163,10 @@ public class Material_End_To_End_Event_Flow_Tests
             PackagePriceAmount = 30.00,
             PackagePriceCurrency = "USD"
         };
-        await TestingServer.PutAsync($"api/materials", updateRequest1, TestUser);
+        await TestingServer.PutAsync($"materials", updateRequest1, TestUser);
 
         // Delete material 2
-        await TestingServer.DeleteAsync($"api/materials/{material2.Id}", TestUser);
+        await TestingServer.DeleteAsync($"materials/{material2.Id}", TestUser);
 
         // Create material 3
         var createRequest = new CreateMaterial.Request
@@ -178,7 +178,7 @@ public class Material_End_To_End_Event_Flow_Tests
             PackagePriceAmount = 15.00,
             PackagePriceCurrency = "USD"
         };
-        var createResponse = await TestingServer.PostAsync<MaterialDetails>("api/materials", createRequest, TestUser);
+        var createResponse = await TestingServer.PostAsync<MaterialDetails>("materials", createRequest, TestUser);
         createResponse.ShouldBeSuccess(out var material3);
 
         // Wait for all events to be processed
@@ -234,7 +234,7 @@ public class Material_End_To_End_Event_Flow_Tests
             PackagePriceAmount = 40.00,
             PackagePriceCurrency = "USD"
         };
-        var updateResponse1 = await TestingServer.PutAsync($"api/materials", update1, TestUser);
+        var updateResponse1 = await TestingServer.PutAsync($"materials", update1, TestUser);
         updateResponse1.ShouldBeSuccess();
 
         var update2 = new UpdateMaterial.Request
@@ -247,7 +247,7 @@ public class Material_End_To_End_Event_Flow_Tests
             PackagePriceAmount = update1.PackagePriceAmount,
             PackagePriceCurrency = update1.PackagePriceCurrency
         };
-        var updateResponse2 = await TestingServer.PutAsync($"api/materials", update2, TestUser);
+        var updateResponse2 = await TestingServer.PutAsync($"materials", update2, TestUser);
         updateResponse2.ShouldBeSuccess();
 
         // Wait for all events to be processed
@@ -292,7 +292,7 @@ public class Material_End_To_End_Event_Flow_Tests
             PackagePriceCurrency = "USD"
         };
 
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, TestUser);
+        var response = await TestingServer.PostAsync<MaterialDetails>("materials", request, TestUser);
         response.ShouldBeSuccess(out var materialDetails);
         return materialDetails;
     }

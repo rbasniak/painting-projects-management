@@ -4,7 +4,7 @@ public class ListPriorityModels : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/models/must-have", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/models/must-have", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 

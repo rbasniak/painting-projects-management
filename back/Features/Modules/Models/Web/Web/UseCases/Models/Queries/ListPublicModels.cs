@@ -4,7 +4,7 @@ public sealed class ListPublicModels : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/models/public/{owner}", async (string owner, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/models/public/{owner}", async (string owner, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request
             {

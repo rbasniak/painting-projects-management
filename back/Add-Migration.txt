@@ -18,3 +18,9 @@ dotnet nuget locals temp --clear
 Get-ChildItem -Path . -Recurse -Filter "project.assets.json" | Remove-Item -Force
 dotnet restore
 dotnet build ./PaintingProjectsManagement.slnx
+
+
+
+
+dotnet publish .\Application\api\PaintingProjectsManagement.api.csproj -c release -o .\_output\back
+dotnet publish .\Application\UI\PaintingProjectsManagement.UI.csproj -c release -o .\_output\front

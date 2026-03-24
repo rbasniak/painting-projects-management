@@ -20,7 +20,7 @@ public static class Builder
 
             var httpClient = new HttpClient(errorHandler)
             {
-                BaseAddress = new Uri("https://localhost:7236")
+                BaseAddress = new Uri("https://localhost:7236/")
             };
             return new ProjectsService(httpClient);
         });

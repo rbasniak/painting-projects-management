@@ -78,7 +78,7 @@ public class Set_Model_Must_Have_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync($"api/models/must-have", request);
+        var response = await TestingServer.PutAsync($"models/must-have", request);
 
         // Assert
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -95,7 +95,7 @@ public class Set_Model_Must_Have_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync($"api/models/must-have", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync($"models/must-have", request, "rodrigo.basniak");
 
         // Assert
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -119,7 +119,7 @@ public class Set_Model_Must_Have_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.PutAsync($"api/models/must-have", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync($"models/must-have", request, "rodrigo.basniak");
 
         // Assert
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -136,7 +136,7 @@ public class Set_Model_Must_Have_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync($"api/models/must-have", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync($"models/must-have", request, "rodrigo.basniak");
 
         // Assert
         response.ShouldBeSuccess();
@@ -162,7 +162,7 @@ public class Set_Model_Must_Have_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync($"api/models/must-have", setFalseRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync($"models/must-have", setFalseRequest, "rodrigo.basniak");
 
         // Assert
         response.ShouldBeSuccess();
@@ -181,7 +181,7 @@ public class Set_Model_Must_Have_Tests
             Id = _tenant1ModelId,
             MustHave = true
         };
-        var tenant1Response = await TestingServer.PutAsync($"api/models/must-have", tenant1Request, "rodrigo.basniak");
+        var tenant1Response = await TestingServer.PutAsync($"models/must-have", tenant1Request, "rodrigo.basniak");
         tenant1Response.ShouldBeSuccess();
 
         // Tenant 2 sets their model to false
@@ -190,7 +190,7 @@ public class Set_Model_Must_Have_Tests
             Id = _tenant2ModelId,
             MustHave = false
         };
-        var tenant2Response = await TestingServer.PutAsync($"api/models/must-have", tenant2Request, "ricardo.smarzaro");
+        var tenant2Response = await TestingServer.PutAsync($"models/must-have", tenant2Request, "ricardo.smarzaro");
         tenant2Response.ShouldBeSuccess();
 
         // Verify both models have correct values
@@ -216,7 +216,7 @@ public class Set_Model_Must_Have_Tests
                 MustHave = i % 2 == 0 // Alternate between true and false
             };
 
-            var response = await TestingServer.PutAsync($"api/models/must-have", request, "rodrigo.basniak");
+            var response = await TestingServer.PutAsync($"models/must-have", request, "rodrigo.basniak");
             response.ShouldBeSuccess();
 
             // Verify the model was updated correctly

@@ -4,7 +4,7 @@ public class UpdateProjectStep : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/api/projects/{projectId}/steps/{stepId}", async (Guid projectId, Guid stepId, Request body, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/projects/{projectId}/steps/{stepId}", async (Guid projectId, Guid stepId, Request body, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             body.ProjectId = projectId;
             body.StepId = stepId;

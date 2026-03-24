@@ -73,7 +73,7 @@ public class ProjectsService : IProjectsService
     public async Task<IReadOnlyCollection<ProjectDetails>> GetAllAsync(
       CancellationToken cancellationToken)
     {
-        var response = await _httpClient.GetAsync("api/projects", cancellationToken);
+        var response = await _httpClient.GetAsync("projects", cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -88,7 +88,7 @@ public class ProjectsService : IProjectsService
       CreateProjectRequest request,
       CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/projects", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync("projects", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -103,7 +103,7 @@ public class ProjectsService : IProjectsService
       UpdateProjectRequest request,
       CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/projects", request, cancellationToken);
+        var response = await _httpClient.PutAsJsonAsync("projects", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -116,7 +116,7 @@ public class ProjectsService : IProjectsService
 
     public async Task<ProjectDetails> ArchiveAsync(Guid id, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsync($"api/projects/{id}/archive", null, cancellationToken);
+        var response = await _httpClient.PostAsync($"projects/{id}/archive", null, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -129,12 +129,12 @@ public class ProjectsService : IProjectsService
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        await _httpClient.DeleteAsync($"api/projects/{id}", cancellationToken);
+        await _httpClient.DeleteAsync($"projects/{id}", cancellationToken);
     }
 
     public async Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken, string? currency = null)
     {
-        var requestUri = $"api/projects/{projectId}";
+        var requestUri = $"projects/{projectId}";
 
         if (!string.IsNullOrWhiteSpace(currency))
         {
@@ -163,7 +163,7 @@ public class ProjectsService : IProjectsService
     {
         try
         {
-            var response = await _httpClient.GetAsync("api/currencies", cancellationToken);
+            var response = await _httpClient.GetAsync("currencies", cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -188,7 +188,7 @@ public class ProjectsService : IProjectsService
 
     public async Task<IReadOnlyCollection<ProjectMaterialDetails>> GetProjectMaterialsAsync(Guid projectId, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.GetAsync($"api/projects/{projectId}/execution/materials", cancellationToken);
+        var response = await _httpClient.GetAsync($"projects/{projectId}/execution/materials", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -201,7 +201,7 @@ public class ProjectsService : IProjectsService
 
     public async Task<IReadOnlyCollection<AvailableProjectMaterialDetails>> GetExecutionMaterialsCatalogAsync(Guid projectId, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.GetAsync("api/projects/execution/materials/available", cancellationToken);
+        var response = await _httpClient.GetAsync("projects/execution/materials/available", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -214,7 +214,7 @@ public class ProjectsService : IProjectsService
 
     public async Task<ProjectStepsGrouped> GetProjectStepsAsync(Guid projectId, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.GetAsync($"api/projects/{projectId}/execution/steps", cancellationToken);
+        var response = await _httpClient.GetAsync($"projects/{projectId}/execution/steps", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -227,43 +227,43 @@ public class ProjectsService : IProjectsService
 
     public async Task UpdateProjectMaterialAsync(UpdateProjectMaterialRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PutAsJsonAsync($"api/projects/{request.ProjectId}/materials/{request.MaterialId}", request, cancellationToken);
+        var response = await _httpClient.PutAsJsonAsync($"projects/{request.ProjectId}/materials/{request.MaterialId}", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 
     public async Task DeleteProjectMaterialAsync(Guid projectId, Guid materialId, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.DeleteAsync($"api/projects/{projectId}/materials/{materialId}", cancellationToken);
+        var response = await _httpClient.DeleteAsync($"projects/{projectId}/materials/{materialId}", cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 
     public async Task AddProjectMaterialAsync(AddProjectMaterialRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/projects/materials", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync("projects/materials", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 
     public async Task AddProjectStepAsync(AddProjectStepRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync($"api/projects/{request.ProjectId}/steps", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync($"projects/{request.ProjectId}/steps", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 
     public async Task UpdateProjectStepAsync(UpdateProjectStepRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PutAsJsonAsync($"api/projects/{request.ProjectId}/steps/{request.StepId}", request, cancellationToken);
+        var response = await _httpClient.PutAsJsonAsync($"projects/{request.ProjectId}/steps/{request.StepId}", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 
     public async Task DeleteProjectStepAsync(Guid projectId, Guid stepId, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.DeleteAsync($"api/projects/{projectId}/steps/{stepId}", cancellationToken);
+        var response = await _httpClient.DeleteAsync($"projects/{projectId}/steps/{stepId}", cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 
     public async Task<ColorGroupDetails> CreateColorGroupAsync(CreateColorGroupRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/projects/color-groups", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync("projects/color-groups", request, cancellationToken);
         response.EnsureSuccessStatusCode();
         var result = await response.Content.ReadFromJsonAsync<ColorGroupDetails>();
         return result ?? throw new Exception("Failed to deserialize ColorGroupDetails from response.");
@@ -271,7 +271,7 @@ public class ProjectsService : IProjectsService
 
     public async Task<ColorGroupDetails> UpdateColorGroupAsync(UpdateColorGroupRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/projects/color-groups", request, cancellationToken);
+        var response = await _httpClient.PutAsJsonAsync("projects/color-groups", request, cancellationToken);
         response.EnsureSuccessStatusCode();
         var result = await response.Content.ReadFromJsonAsync<ColorGroupDetails>();
         return result ?? throw new Exception("Failed to deserialize ColorGroupDetails from response.");
@@ -280,7 +280,7 @@ public class ProjectsService : IProjectsService
     public async Task DeleteColorGroupAsync(DeleteColorGroupRequest request, CancellationToken cancellationToken)
     {
         // For DELETE with body, we need to use a custom request
-        var httpRequest = new HttpRequestMessage(HttpMethod.Delete, "api/projects/color-groups")
+        var httpRequest = new HttpRequestMessage(HttpMethod.Delete, "projects/color-groups")
         {
             Content = JsonContent.Create(request)
         };
@@ -290,7 +290,7 @@ public class ProjectsService : IProjectsService
 
     public async Task UpdateColorSectionAsync(UpdateColorSectionRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/projects/color-sections/reference-color", request, cancellationToken);
+        var response = await _httpClient.PutAsJsonAsync("projects/color-sections/reference-color", request, cancellationToken);
                                                         
         response.EnsureSuccessStatusCode();
     }
@@ -298,7 +298,7 @@ public class ProjectsService : IProjectsService
     public async Task MatchPaintsAsync(Guid projectId, MatchPaintsRequest request, CancellationToken cancellationToken)
     {
         var response = await _httpClient.PostAsJsonAsync(
-            $"api/projects/{projectId}/color-sections/match-paints",
+            $"projects/{projectId}/color-sections/match-paints",
             request,
             cancellationToken);
         response.EnsureSuccessStatusCode();
@@ -306,13 +306,13 @@ public class ProjectsService : IProjectsService
 
     public async Task UpdatePickedColorAsync(UpdatePickedColorRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/projects/color-sections/picked-color", request, cancellationToken);
+        var response = await _httpClient.PutAsJsonAsync("projects/color-sections/picked-color", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 
     public async Task<UrlReference[]> UploadReferencePictureAsync(UploadProjectReferencePictureRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/projects/reference-picture", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync("projects/reference-picture", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -326,13 +326,13 @@ public class ProjectsService : IProjectsService
     public async Task DeleteReferencePictureAsync(Guid projectId, string pictureUrl, CancellationToken cancellationToken)
     {
         var request = new { ProjectId = projectId, PictureUrl = pictureUrl };
-        using var response = await _httpClient.PostAsJsonAsync("api/projects/reference-picture/delete", request, cancellationToken);
+        using var response = await _httpClient.PostAsJsonAsync("projects/reference-picture/delete", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 
     public async Task<UrlReference[]> UploadFinishedPictureAsync(UploadProjectFinishedPictureRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/projects/finished-picture", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync("projects/finished-picture", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -346,13 +346,13 @@ public class ProjectsService : IProjectsService
     public async Task DeleteFinishedPictureAsync(Guid projectId, string pictureUrl, CancellationToken cancellationToken)
     {
         var request = new { ProjectId = projectId, PictureUrl = pictureUrl };
-        using var response = await _httpClient.PostAsJsonAsync("api/projects/finished-picture/delete", request, cancellationToken);
+        using var response = await _httpClient.PostAsJsonAsync("projects/finished-picture/delete", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 
     public async Task PromotePictureToCoverAsync(PromoteProjectPictureRequest request, CancellationToken cancellationToken)
     {
-        using var response = await _httpClient.PostAsJsonAsync("api/projects/picture/promote", request, cancellationToken);
+        using var response = await _httpClient.PostAsJsonAsync("projects/picture/promote", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 }

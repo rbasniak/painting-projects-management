@@ -46,7 +46,7 @@ public class Delete_Material_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/materials/{nonExistentId}");
+        var response = await TestingServer.DeleteAsync($"materials/{nonExistentId}");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -67,7 +67,7 @@ public class Delete_Material_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/materials/{nonExistentId}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"materials/{nonExistentId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -90,7 +90,7 @@ public class Delete_Material_Tests
         anotherUserMaterial.ShouldNotBeNull("Material should exist from seed");
 
         // Act - Try to delete as rodrigo.basniak (different user)
-        var response = await TestingServer.DeleteAsync($"api/materials/{anotherUserMaterial.Id}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"materials/{anotherUserMaterial.Id}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -129,7 +129,7 @@ public class Delete_Material_Tests
         existingMaterial.ShouldNotBeNull("Material should exist from seed");
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/materials/{existingMaterial.Id}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"materials/{existingMaterial.Id}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();

@@ -63,7 +63,7 @@ public class Update_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/materials", updateRequest);
+        var response = await TestingServer.PutAsync("materials", updateRequest);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -96,7 +96,7 @@ public class Update_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/materials", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("materials", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -131,7 +131,7 @@ public class Update_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/materials", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("materials", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -167,7 +167,7 @@ public class Update_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/materials", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("materials", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "A material with this name already exists.");
@@ -202,7 +202,7 @@ public class Update_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/materials", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("materials", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -249,7 +249,7 @@ public class Update_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/materials", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("materials", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -290,7 +290,7 @@ public class Update_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/materials", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("materials", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();

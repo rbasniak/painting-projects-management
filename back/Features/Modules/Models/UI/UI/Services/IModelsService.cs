@@ -36,7 +36,7 @@ public class ModelsService : IModelsService
 
     public async Task<IReadOnlyCollection<ModelDetails>> GetAllAsync(CancellationToken cancellationToken)
     {
-        var response = await _httpClient.GetAsync("api/models", cancellationToken);
+        var response = await _httpClient.GetAsync("models", cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -55,7 +55,7 @@ public class ModelsService : IModelsService
         }
 
         var escapedOwnerKey = Uri.EscapeDataString(ownerKey.Trim());
-        var response = await _httpClient.GetAsync($"api/models/public/{escapedOwnerKey}", cancellationToken);
+        var response = await _httpClient.GetAsync($"models/public/{escapedOwnerKey}", cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -68,7 +68,7 @@ public class ModelsService : IModelsService
 
     public async Task<string> GetPublicOwnerKeyAsync(CancellationToken cancellationToken)
     {
-        var response = await _httpClient.GetAsync("api/models/public/owner-key", cancellationToken);
+        var response = await _httpClient.GetAsync("models/public/owner-key", cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -81,7 +81,7 @@ public class ModelsService : IModelsService
 
     public async Task<ModelDetails> CreateAsync(CreateModelRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/models", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync("models", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -94,7 +94,7 @@ public class ModelsService : IModelsService
 
     public async Task<ModelDetails> UpdateAsync(UpdateModelRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/models", request, cancellationToken);
+        var response = await _httpClient.PutAsJsonAsync("models", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -107,42 +107,42 @@ public class ModelsService : IModelsService
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        await _httpClient.DeleteAsync($"api/models/{id}", cancellationToken);
+        await _httpClient.DeleteAsync($"models/{id}", cancellationToken);
     }
 
     public async Task SetMustHaveAsync(Guid id, bool mustHave, CancellationToken cancellationToken)
     {
         var request = new { Id = id, MustHave = mustHave };
-        await _httpClient.PutAsJsonAsync("api/models/must-have", request, cancellationToken);
+        await _httpClient.PutAsJsonAsync("models/must-have", request, cancellationToken);
     }
 
     public async Task RateModelAsync(Guid id, int score, CancellationToken cancellationToken)
     {
         var request = new { Id = id, Score = score };
-        await _httpClient.PostAsJsonAsync("api/models/rate", request, cancellationToken);
+        await _httpClient.PostAsJsonAsync("models/rate", request, cancellationToken);
     }
 
     public async Task SetBaseSizeAsync(Guid id, BaseSize baseSize, CancellationToken cancellationToken)
     {
         var request = new { Id = id, BaseSize = baseSize };
-        await _httpClient.PutAsJsonAsync("api/models/base-size", request, cancellationToken);
+        await _httpClient.PutAsJsonAsync("models/base-size", request, cancellationToken);
     }
 
     public async Task SetFigureSizeAsync(Guid id, FigureSize figureSize, CancellationToken cancellationToken)
     {
         var request = new { Id = id, FigureSize = figureSize };
-        await _httpClient.PutAsJsonAsync("api/models/figure-size", request, cancellationToken);
+        await _httpClient.PutAsJsonAsync("models/figure-size", request, cancellationToken);
     }
 
     public async Task SetFigureCountAsync(Guid id, int numberOfFigures, CancellationToken cancellationToken)
     {
         var request = new { Id = id, NumberOfFigures = numberOfFigures };
-        await _httpClient.PutAsJsonAsync("api/models/figure-count", request, cancellationToken);
+        await _httpClient.PutAsJsonAsync("models/figure-count", request, cancellationToken);
     }
 
     public async Task<ModelDetails> UploadPictureAsync(UploadModelPictureRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/models/picture", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync("models/picture", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -155,7 +155,7 @@ public class ModelsService : IModelsService
 
     public async Task PromotePictureToCoverAsync(PromoteModelPictureRequest request, CancellationToken cancellationToken)
     {
-        using var response = await _httpClient.PostAsJsonAsync("api/models/picture/promote", request, cancellationToken);
+        using var response = await _httpClient.PostAsJsonAsync("models/picture/promote", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 
@@ -167,7 +167,7 @@ public class ModelsService : IModelsService
             PictureUrl = pictureUrl
         };
 
-        using var response = await _httpClient.PostAsJsonAsync("api/models/picture/delete", request, cancellationToken);
+        using var response = await _httpClient.PostAsJsonAsync("models/picture/delete", request, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 }
@@ -180,7 +180,7 @@ public class ModelCategoriesService : IModelCategoriesService
 
     public async Task<IReadOnlyCollection<ModelCategoryDetails>> GetAllAsync(CancellationToken cancellationToken)
     {
-        var response = await _httpClient.GetAsync("api/models/categories", cancellationToken);
+        var response = await _httpClient.GetAsync("models/categories", cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -193,7 +193,7 @@ public class ModelCategoriesService : IModelCategoriesService
 
     public async Task<ModelCategoryDetails> CreateAsync(CreateModelCategoryRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/models/categories", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync("models/categories", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -206,7 +206,7 @@ public class ModelCategoriesService : IModelCategoriesService
 
     public async Task<ModelCategoryDetails> UpdateAsync(UpdateModelCategoryRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/models/categories", request, cancellationToken);
+        var response = await _httpClient.PutAsJsonAsync("models/categories", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -219,6 +219,6 @@ public class ModelCategoriesService : IModelCategoriesService
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        await _httpClient.DeleteAsync($"api/models/categories/{id}", cancellationToken);
+        await _httpClient.DeleteAsync($"models/categories/{id}", cancellationToken);
     }
 }

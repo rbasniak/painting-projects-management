@@ -7,7 +7,7 @@ public class GetCatalog : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/inventory/catalog", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/inventory/catalog", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
             return ResultsMapper.FromResponse(result);

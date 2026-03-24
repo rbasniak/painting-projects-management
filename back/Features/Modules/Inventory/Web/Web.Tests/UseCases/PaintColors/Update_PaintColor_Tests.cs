@@ -62,7 +62,7 @@ public class Update_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/colors", updateRequest);
+        var response = await TestingServer.PutAsync("/paints/colors", updateRequest);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -93,7 +93,7 @@ public class Update_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/colors", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/colors", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -122,7 +122,7 @@ public class Update_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/colors", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/colors", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Another paint color with this name already exists in this paint line.");
@@ -152,7 +152,7 @@ public class Update_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/colors", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/colors", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Another paint color with this hex color already exists in this paint line.");
@@ -182,7 +182,7 @@ public class Update_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/colors", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/colors", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Hex color must be in format #RRGGBB");
@@ -212,7 +212,7 @@ public class Update_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<PaintColorDetails>("/api/paints/colors", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync<PaintColorDetails>("/paints/colors", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);

@@ -4,7 +4,7 @@ public class ListModels : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/models", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/models", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 

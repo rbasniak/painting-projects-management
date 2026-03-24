@@ -4,7 +4,7 @@ public sealed class DeleteProjectFinishedPicture : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/projects/finished-picture/delete", async (Request data, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/projects/finished-picture/delete", async (Request data, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(data, cancellationToken);
 

@@ -56,7 +56,7 @@ public class List_PaintColors_Tests
     public async Task Non_Authenticated_User_Cannot_List_Paint_Colors()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintColorDetails>>("/api/paints/colors");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintColorDetails>>("/paints/colors");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -66,7 +66,7 @@ public class List_PaintColors_Tests
     public async Task User_Can_List_Paint_Colors()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintColorDetails>>("/api/paints/colors", "superuser");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintColorDetails>>("/paints/colors", "superuser");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -84,7 +84,7 @@ public class List_PaintColors_Tests
     public async Task Colors_Are_Ordered_By_Brand_Then_Line_Then_Name()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintColorDetails>>("/api/paints/colors", "superuser");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintColorDetails>>("/paints/colors", "superuser");
 
         // Assert the response
         response.ShouldBeSuccess();

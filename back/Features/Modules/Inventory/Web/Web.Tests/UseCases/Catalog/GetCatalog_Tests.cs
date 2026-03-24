@@ -66,7 +66,7 @@ public class GetCatalog_Tests
     public async Task Non_Authenticated_User_Cannot_Get_Catalog()
     {
         // Act
-        var response = await TestingServer.GetAsync<CatalogDetails>("/api/inventory/catalog");
+        var response = await TestingServer.GetAsync<CatalogDetails>("/inventory/catalog");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -76,7 +76,7 @@ public class GetCatalog_Tests
     public async Task User_Can_Get_Complete_Catalog()
     {
         // Act
-        var response = await TestingServer.GetAsync<CatalogDetails>("/api/inventory/catalog", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<CatalogDetails>("/inventory/catalog", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -113,7 +113,7 @@ public class GetCatalog_Tests
     public async Task Catalog_Contains_Correct_Paint_Details()
     {
         // Act
-        var response = await TestingServer.GetAsync<CatalogDetails>("/api/inventory/catalog", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<CatalogDetails>("/inventory/catalog", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -147,7 +147,7 @@ public class GetCatalog_Tests
         }
 
         // Act
-        var response = await TestingServer.GetAsync<CatalogDetails>("/api/inventory/catalog", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<CatalogDetails>("/inventory/catalog", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();

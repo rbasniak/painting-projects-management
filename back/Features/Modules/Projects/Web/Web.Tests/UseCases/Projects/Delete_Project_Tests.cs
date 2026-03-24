@@ -45,7 +45,7 @@ public class Delete_Project_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/projects/{nonExistentId}");
+        var response = await TestingServer.DeleteAsync($"projects/{nonExistentId}");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -58,7 +58,7 @@ public class Delete_Project_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/projects/{nonExistentId}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"projects/{nonExistentId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -73,7 +73,7 @@ public class Delete_Project_Tests
         anotherUserProject.ShouldNotBeNull("Project should exist from seed");
 
         // Act - Try to delete as rodrigo.basniak (different user)
-        var response = await TestingServer.DeleteAsync($"api/projects/{anotherUserProject.Id}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"projects/{anotherUserProject.Id}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -92,7 +92,7 @@ public class Delete_Project_Tests
         archivedProject.EndDate.ShouldNotBeNull("Archived project should have an end date");
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/projects/{archivedProject.Id}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"projects/{archivedProject.Id}", "rodrigo.basniak");
 
         // Assert
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Archived projects are read-only and cannot be edited.");
@@ -110,7 +110,7 @@ public class Delete_Project_Tests
         existingProject.ShouldNotBeNull("Project should exist from seed");
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/projects/{existingProject.Id}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"projects/{existingProject.Id}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();

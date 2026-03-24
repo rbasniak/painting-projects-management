@@ -9,7 +9,7 @@ public partial class DatabaseSeed
 
     private void DevelopmentModelsSeed(DatabaseContext context, IServiceProvider provider)
     {
-        if (Environment.MachineName == "RB-DESKTOP")
+        if (Environment.MachineName == "RB-DESKTOP!")
         {
             // On the specific computer - seed from library and generate SQL file
             ModelsSeeder.SeedFromDisk(context);

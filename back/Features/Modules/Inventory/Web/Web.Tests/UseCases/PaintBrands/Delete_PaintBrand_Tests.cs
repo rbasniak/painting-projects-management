@@ -49,7 +49,7 @@ public class Delete_PaintBrand_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/paints/brands/{nonExistentId}");
+        var response = await TestingServer.DeleteAsync($"/paints/brands/{nonExistentId}");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -62,7 +62,7 @@ public class Delete_PaintBrand_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/paints/brands/{nonExistentId}", "superuser");
+        var response = await TestingServer.DeleteAsync($"/paints/brands/{nonExistentId}", "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -76,7 +76,7 @@ public class Delete_PaintBrand_Tests
         brandWithLines.ShouldNotBeNull("Brand should exist from seed");
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/paints/brands/{brandWithLines.Id}", "superuser");
+        var response = await TestingServer.DeleteAsync($"/paints/brands/{brandWithLines.Id}", "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Cannot delete a paint brand that has associated paint lines. Remove the paint lines first.");
@@ -94,7 +94,7 @@ public class Delete_PaintBrand_Tests
         brandToDelete.ShouldNotBeNull("Brand should exist from seed");
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/paints/brands/{brandToDelete.Id}", "superuser");
+        var response = await TestingServer.DeleteAsync($"/paints/brands/{brandToDelete.Id}", "superuser");
 
         // Assert the response
         response.ShouldBeSuccess();

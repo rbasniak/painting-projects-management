@@ -4,7 +4,7 @@ public class DeleteProjectMaterial : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/api/projects/{projectId}/materials/{materialId}", async (Guid projectId, Guid materialId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/projects/{projectId}/materials/{materialId}", async (Guid projectId, Guid materialId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var request = new Request
             {

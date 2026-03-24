@@ -4,7 +4,7 @@ public class DeleteProjectReferencePicture : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/projects/reference-picture/delete", async (Request data, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/projects/reference-picture/delete", async (Request data, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(data, cancellationToken);
 

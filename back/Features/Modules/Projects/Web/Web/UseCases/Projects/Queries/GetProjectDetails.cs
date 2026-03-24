@@ -8,7 +8,7 @@ public class GetProjectDetails : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/projects/{projectId}", async (Guid projectId, string? currency, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/projects/{projectId}", async (Guid projectId, string? currency, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request
             {

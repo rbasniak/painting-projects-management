@@ -56,7 +56,7 @@ public class Update_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelCategoryDetails>("api/models/categories", request);
+        var response = await TestingServer.PutAsync<ModelCategoryDetails>("models/categories", request);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -78,7 +78,7 @@ public class Update_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelCategoryDetails>("models/categories", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -102,7 +102,7 @@ public class Update_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelCategoryDetails>("models/categories", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -124,7 +124,7 @@ public class Update_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelCategoryDetails>("models/categories", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name cannot exceed 100 characters.");
@@ -146,7 +146,7 @@ public class Update_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelCategoryDetails>("models/categories", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "A model category with this name already exists.");
@@ -168,7 +168,7 @@ public class Update_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelCategoryDetails>("models/categories", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -199,7 +199,7 @@ public class Update_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelCategoryDetails>("api/models/categories", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelCategoryDetails>("models/categories", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -225,7 +225,7 @@ public class Update_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelCategoryDetails>("models/categories", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");

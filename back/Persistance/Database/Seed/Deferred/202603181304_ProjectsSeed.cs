@@ -19,7 +19,7 @@ public class ProjectsSeed : IDeferredSeedStep
         {
             Material? material = null;
 
-            var timeout = DateTime.UtcNow.AddSeconds(15);
+            var timeout = DateTime.UtcNow.AddSeconds(60);
 
             do
             {

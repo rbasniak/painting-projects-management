@@ -165,7 +165,7 @@ public class List_Priority_Models_Tests
     public async Task Non_Authenticated_User_Cannot_List_Priority_Models()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/models/must-have");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("models/must-have");
 
         // Assert
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -175,7 +175,7 @@ public class List_Priority_Models_Tests
     public async Task Authenticated_User_Can_List_Only_Their_Tenant_Must_Have_Models()
     {
         // Act
-        var response = await TestingServer.GetAsync<List<ModelDetails>>("api/models/must-have", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<List<ModelDetails>>("models/must-have", "rodrigo.basniak");
 
         // Assert
         response.ShouldBeSuccess(out var result);
@@ -196,7 +196,7 @@ public class List_Priority_Models_Tests
     public async Task Must_Have_Models_Are_Ordered_By_Score_Descending_Then_Category_Name_Then_Model_Name()
     {
         // Act
-        var response = await TestingServer.GetAsync<List<ModelDetails>>("api/models/must-have", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<List<ModelDetails>>("models/must-have", "rodrigo.basniak");
 
         // Assert
         response.ShouldBeSuccess(out var result);
@@ -221,7 +221,7 @@ public class List_Priority_Models_Tests
     public async Task Must_Have_Model_Details_Are_Correctly_Mapped()
     {
         // Act
-        var response = await TestingServer.GetAsync<List<ModelDetails>>("api/models/must-have", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<List<ModelDetails>>("models/must-have", "rodrigo.basniak");
 
         // Assert
         response.ShouldBeSuccess(out var result);
@@ -253,7 +253,7 @@ public class List_Priority_Models_Tests
     public async Task Different_Tenant_User_Sees_Only_Their_Must_Have_Models()
     {
         // Act
-        var response = await TestingServer.GetAsync<List<ModelDetails>>("api/models/must-have", "ricardo.smarzaro");
+        var response = await TestingServer.GetAsync<List<ModelDetails>>("models/must-have", "ricardo.smarzaro");
 
         // Assert
         response.ShouldBeSuccess(out var result);

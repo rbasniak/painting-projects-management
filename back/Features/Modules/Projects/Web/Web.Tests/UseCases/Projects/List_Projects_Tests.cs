@@ -60,7 +60,7 @@ public class List_Projects_Tests
     public async Task Non_Authenticated_User_Cannot_List_Projects()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("api/projects");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("projects");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -70,7 +70,7 @@ public class List_Projects_Tests
     public async Task User_Can_List_Their_Own_Projects()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("api/projects", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("projects", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -89,7 +89,7 @@ public class List_Projects_Tests
     public async Task User_Cannot_See_Projects_From_Other_Users()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("api/projects", "ricardo.smarzaro");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("projects", "ricardo.smarzaro");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -107,7 +107,7 @@ public class List_Projects_Tests
     public async Task Projects_Are_Returned_With_Correct_Properties()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("api/projects", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("projects", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -130,7 +130,7 @@ public class List_Projects_Tests
     public async Task Projects_Are_Ordered_Correctly()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("api/projects", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("projects", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -168,7 +168,7 @@ public class List_Projects_Tests
     public async Task Project_Ids_Are_Correctly_Mapped()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("api/projects", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ProjectHeader>>("projects", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();

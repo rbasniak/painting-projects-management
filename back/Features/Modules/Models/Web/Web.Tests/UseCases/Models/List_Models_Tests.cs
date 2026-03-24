@@ -107,7 +107,7 @@ public class List_Models_Tests
     public async Task Non_Authenticated_User_Cannot_List_Models()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/models");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("models");
 
         // Assert
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -117,7 +117,7 @@ public class List_Models_Tests
     public async Task Authenticated_User_Can_List_Only_Their_Tenant_Models()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/models", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("models", "rodrigo.basniak");
 
         // Assert
         response.ShouldBeSuccess();
@@ -136,7 +136,7 @@ public class List_Models_Tests
     public async Task Models_Are_Ordered_By_Category_Name_Then_By_Model_Name()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/models", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("models", "rodrigo.basniak");
 
         // Assert
         response.ShouldBeSuccess();
@@ -155,7 +155,7 @@ public class List_Models_Tests
     public async Task Model_Details_Are_Correctly_Mapped()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/models", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("models", "rodrigo.basniak");
 
         // Assert
         response.ShouldBeSuccess();
@@ -188,7 +188,7 @@ public class List_Models_Tests
     public async Task Different_Tenant_User_Sees_Only_Their_Models()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/models", "ricardo.smarzaro");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("models", "ricardo.smarzaro");
 
         // Assert
         response.ShouldBeSuccess();

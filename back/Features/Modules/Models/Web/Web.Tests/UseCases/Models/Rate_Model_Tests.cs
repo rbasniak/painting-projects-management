@@ -73,7 +73,7 @@ public class Rate_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ModelDetails>("api/models/rate", request);
+        var response = await TestingServer.PostAsync<ModelDetails>("models/rate", request);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -95,7 +95,7 @@ public class Rate_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ModelDetails>("api/models/rate", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ModelDetails>("models/rate", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -117,7 +117,7 @@ public class Rate_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ModelDetails>("api/models/rate", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ModelDetails>("models/rate", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -141,7 +141,7 @@ public class Rate_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ModelDetails>("api/models/rate", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ModelDetails>("models/rate", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Score must be a value between 1 and 5.");
@@ -168,7 +168,7 @@ public class Rate_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ModelDetails>("api/models/rate", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ModelDetails>("models/rate", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -191,7 +191,7 @@ public class Rate_Model_Tests
             Score = 3
         };
 
-        var response1 = await TestingServer.PostAsync<ModelDetails>("api/models/rate", request1, "rodrigo.basniak");
+        var response1 = await TestingServer.PostAsync<ModelDetails>("models/rate", request1, "rodrigo.basniak");
         response1.ShouldBeSuccess(out var result);
         result.ShouldNotBeNull();
         result.Score.ShouldBe(3);
@@ -203,7 +203,7 @@ public class Rate_Model_Tests
             Score = 5
         };
 
-        var response2 = await TestingServer.PostAsync<ModelDetails>("api/models/rate", request2, "ricardo.smarzaro");
+        var response2 = await TestingServer.PostAsync<ModelDetails>("models/rate", request2, "ricardo.smarzaro");
         response2.ShouldBeSuccess(out var result2);
         result2.ShouldNotBeNull();
         result2.Score.ShouldBe(5);

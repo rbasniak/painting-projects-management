@@ -6,7 +6,7 @@ public class GetExecutionMaterialsCatalog : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/projects/execution/materials/available", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/projects/execution/materials/available", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
             return ResultsMapper.FromResponse(result);

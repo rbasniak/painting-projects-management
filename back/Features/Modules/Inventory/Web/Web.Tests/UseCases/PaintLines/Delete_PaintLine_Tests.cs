@@ -54,7 +54,7 @@ public class Delete_PaintLine_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/paints/lines/{nonExistentId}");
+        var response = await TestingServer.DeleteAsync($"/paints/lines/{nonExistentId}");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -67,7 +67,7 @@ public class Delete_PaintLine_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/paints/lines/{nonExistentId}", "superuser");
+        var response = await TestingServer.DeleteAsync($"/paints/lines/{nonExistentId}", "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -81,7 +81,7 @@ public class Delete_PaintLine_Tests
         lineWithColors.ShouldNotBeNull("Line should exist from seed");
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/paints/lines/{lineWithColors.Id}", "superuser");
+        var response = await TestingServer.DeleteAsync($"/paints/lines/{lineWithColors.Id}", "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Cannot delete a paint line that has associated paint colors. Remove the paint colors first.");
@@ -99,7 +99,7 @@ public class Delete_PaintLine_Tests
         lineToDelete.ShouldNotBeNull("Line should exist from seed");
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/paints/lines/{lineToDelete.Id}", "superuser");
+        var response = await TestingServer.DeleteAsync($"/paints/lines/{lineToDelete.Id}", "superuser");
 
         // Assert the response
         response.ShouldBeSuccess();

@@ -39,7 +39,7 @@ public class Create_PaintBrand_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintBrandDetails>("/api/paints/brands", request);
+        var response = await TestingServer.PostAsync<PaintBrandDetails>("/paints/brands", request);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -62,7 +62,7 @@ public class Create_PaintBrand_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintBrandDetails>("/api/paints/brands", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintBrandDetails>("/paints/brands", request, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -82,7 +82,7 @@ public class Create_PaintBrand_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintBrandDetails>("/api/paints/brands", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintBrandDetails>("/paints/brands", request, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name cannot exceed 100 characters.");
@@ -102,7 +102,7 @@ public class Create_PaintBrand_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintBrandDetails>("/api/paints/brands", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintBrandDetails>("/paints/brands", request, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "A brand with this name already exists.");
@@ -122,7 +122,7 @@ public class Create_PaintBrand_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintBrandDetails>("/api/paints/brands", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintBrandDetails>("/paints/brands", request, "superuser");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);

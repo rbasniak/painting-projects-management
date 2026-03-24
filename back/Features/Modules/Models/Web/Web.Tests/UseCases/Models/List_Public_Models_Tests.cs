@@ -80,7 +80,7 @@ public class List_Public_Models_Tests
     [Test, NotInParallel(Order = 2)]
     public async Task Anonymous_User_Can_List_Public_Models_For_An_Owner()
     {
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/models/public/rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("models/public/rodrigo.basniak");
 
         response.ShouldBeSuccess();
         response.Data.Count.ShouldBe(2);
@@ -91,7 +91,7 @@ public class List_Public_Models_Tests
     [Test, NotInParallel(Order = 3)]
     public async Task Public_List_Does_Not_Return_Models_From_Other_Owners()
     {
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/models/public/rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("models/public/rodrigo.basniak");
 
         response.ShouldBeSuccess();
         response.Data.ShouldNotContain(x => x.Id == _otherOwnerModelId);
@@ -100,7 +100,7 @@ public class List_Public_Models_Tests
     [Test, NotInParallel(Order = 4)]
     public async Task Public_List_Accepts_Uppercase_Owner_Key()
     {
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/models/public/RODRIGO.BASNIAK");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("models/public/RODRIGO.BASNIAK");
 
         response.ShouldBeSuccess();
         response.Data.Count.ShouldBe(2);
@@ -109,7 +109,7 @@ public class List_Public_Models_Tests
     [Test, NotInParallel(Order = 5)]
     public async Task Anonymous_User_Cannot_Read_Their_Owner_Key()
     {
-        var response = await TestingServer.GetAsync<PublicModelsOwnerKey>("api/models/public/owner-key");
+        var response = await TestingServer.GetAsync<PublicModelsOwnerKey>("models/public/owner-key");
 
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
     }
@@ -117,13 +117,13 @@ public class List_Public_Models_Tests
     [Test, NotInParallel(Order = 6)]
     public async Task Authenticated_User_Can_Read_Their_Public_Owner_Key()
     {
-        var response = await TestingServer.GetAsync<PublicModelsOwnerKey>("api/models/public/owner-key", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<PublicModelsOwnerKey>("models/public/owner-key", "rodrigo.basniak");
 
         response.ShouldBeSuccess();
         response.Data.OwnerKey.ShouldNotBeNullOrWhiteSpace();
         response.Data.OwnerKey.ShouldNotContain(".");
 
-        var listResponse = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>($"api/models/public/{response.Data.OwnerKey}");
+        var listResponse = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>($"models/public/{response.Data.OwnerKey}");
         listResponse.ShouldBeSuccess();
         listResponse.Data.Count.ShouldBe(2);
     }

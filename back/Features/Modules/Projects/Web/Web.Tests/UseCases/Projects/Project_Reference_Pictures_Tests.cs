@@ -31,7 +31,7 @@ public class Project_Reference_Pictures_Tests
     public async Task Upload_Project_Reference_Picture_Should_Succeed()
     {
         var response = await TestingServer.PostAsync<UrlReference[]>(
-            "api/projects/reference-picture",
+            "projects/reference-picture",
             new UploadProjectReferencePicture.Request
             {
                 ProjectId = _projectId,
@@ -53,7 +53,7 @@ public class Project_Reference_Pictures_Tests
     public async Task Upload_Project_Reference_Picture_Should_Fail_For_Invalid_Image()
     {
         var response = await TestingServer.PostAsync(
-            "api/projects/reference-picture",
+            "projects/reference-picture",
             new UploadProjectReferencePicture.Request
             {
                 ProjectId = _projectId,
@@ -76,7 +76,7 @@ public class Project_Reference_Pictures_Tests
         }
 
         var upload = await TestingServer.PostAsync<UrlReference[]>(
-            "api/projects/reference-picture",
+            "projects/reference-picture",
             new UploadProjectReferencePicture.Request
             {
                 ProjectId = isolatedProjectId,
@@ -89,7 +89,7 @@ public class Project_Reference_Pictures_Tests
         var pictureUrl = upload.Data.Last().Url;
 
         var promote = await TestingServer.PostAsync(
-            "api/projects/picture/promote",
+            "projects/picture/promote",
             new PromoteProjectPictureToCover.Request
             {
                 ProjectId = isolatedProjectId,
@@ -127,7 +127,7 @@ public class Project_Reference_Pictures_Tests
         try
         {
             var response = await TestingServer.PostAsync(
-                "api/projects/reference-picture",
+                "projects/reference-picture",
                 new UploadProjectReferencePicture.Request
                 {
                     ProjectId = _projectId,
@@ -161,7 +161,7 @@ public class Project_Reference_Pictures_Tests
         }
 
         var first = await TestingServer.PostAsync<UrlReference[]>(
-            "api/projects/reference-picture",
+            "projects/reference-picture",
             new UploadProjectReferencePicture.Request
             {
                 ProjectId = limitProjectId,
@@ -169,7 +169,7 @@ public class Project_Reference_Pictures_Tests
             }, "rodrigo.basniak");
 
         var second = await TestingServer.PostAsync<UrlReference[]>(
-            "api/projects/reference-picture",
+            "projects/reference-picture",
             new UploadProjectReferencePicture.Request
             {
                 ProjectId = limitProjectId,
@@ -177,7 +177,7 @@ public class Project_Reference_Pictures_Tests
             }, "rodrigo.basniak");
 
         var third = await TestingServer.PostAsync<UrlReference[]>(
-            "api/projects/reference-picture",
+            "projects/reference-picture",
             new UploadProjectReferencePicture.Request
             {
                 ProjectId = limitProjectId,
@@ -190,7 +190,7 @@ public class Project_Reference_Pictures_Tests
 
         // Free tier allows MaxProjectReferencePicturesPerProject (3); the 4th upload must be rejected.
         var fourth = await TestingServer.PostAsync(
-            "api/projects/reference-picture",
+            "projects/reference-picture",
             new UploadProjectReferencePicture.Request
             {
                 ProjectId = limitProjectId,

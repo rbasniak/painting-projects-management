@@ -40,7 +40,7 @@ public class List_Model_Categories_Tests
     public async Task User_Can_List_Model_Categories()
     {
         // Act
-        var response = await TestingServer.GetAsync<ModelCategoryDetails[]>("api/models/categories", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<ModelCategoryDetails[]>("models/categories", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -58,7 +58,7 @@ public class List_Model_Categories_Tests
     public async Task Non_Authenticated_User_Cannot_List_Model_Categories()
     {
         // Act
-        var response = await TestingServer.GetAsync<ModelCategoryDetails[]>("api/models/categories");
+        var response = await TestingServer.GetAsync<ModelCategoryDetails[]>("models/categories");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -68,10 +68,10 @@ public class List_Model_Categories_Tests
     public async Task Different_Users_See_Their_Own_Categories()
     {
         // Act - rodrigo.basniak
-        var rodrigoResponse = await TestingServer.GetAsync<ModelCategoryDetails[]>("api/models/categories", "rodrigo.basniak");
+        var rodrigoResponse = await TestingServer.GetAsync<ModelCategoryDetails[]>("models/categories", "rodrigo.basniak");
 
         // Act - ricardo.smarzaro
-        var ricardoResponse = await TestingServer.GetAsync<ModelCategoryDetails[]>("api/models/categories", "ricardo.smarzaro");
+        var ricardoResponse = await TestingServer.GetAsync<ModelCategoryDetails[]>("models/categories", "ricardo.smarzaro");
 
         // Assert rodrigo's response
         rodrigoResponse.ShouldBeSuccess(out var rodrigoResult);
@@ -99,7 +99,7 @@ public class List_Model_Categories_Tests
         }
 
         // Act
-        var response = await TestingServer.GetAsync<ModelCategoryDetails[]>("api/models/categories", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<ModelCategoryDetails[]>("models/categories", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);

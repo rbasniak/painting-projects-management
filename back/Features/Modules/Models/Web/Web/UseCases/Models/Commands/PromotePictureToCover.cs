@@ -4,7 +4,7 @@ public class PromotePictureToCover : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/models/picture/promote", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/models/picture/promote", async (Request request, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         { 
             var result = await dispatcher.SendAsync(request, cancellationToken);
 

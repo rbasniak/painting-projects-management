@@ -4,7 +4,7 @@ public class UpdateProjectMaterial : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPut("/api/projects/{projectId}/materials/{materialId}", async (Guid projectId, Guid materialId, Request body, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPut("/projects/{projectId}/materials/{materialId}", async (Guid projectId, Guid materialId, Request body, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             body.ProjectId = projectId;
             body.MaterialId = materialId;

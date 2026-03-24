@@ -44,7 +44,7 @@ public class Create_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ModelCategoryDetails>("api/models/categories", request);
+        var response = await TestingServer.PostAsync<ModelCategoryDetails>("models/categories", request);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -67,7 +67,7 @@ public class Create_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ModelCategoryDetails>("models/categories", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -87,7 +87,7 @@ public class Create_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ModelCategoryDetails>("models/categories", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name cannot exceed 100 characters.");
@@ -107,7 +107,7 @@ public class Create_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ModelCategoryDetails>("models/categories", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "A model category with this name already exists.");
@@ -127,7 +127,7 @@ public class Create_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ModelCategoryDetails>("api/models/categories", request, "ricardo.smarzaro");
+        var response = await TestingServer.PostAsync<ModelCategoryDetails>("models/categories", request, "ricardo.smarzaro");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -161,7 +161,7 @@ public class Create_Model_Category_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ModelCategoryDetails>("api/models/categories", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ModelCategoryDetails>("models/categories", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);

@@ -69,7 +69,7 @@ public class Integrations_Models_Api_Tests
     [Test, NotInParallel(Order = 2)]
     public async Task Integrations_Api_Requires_Api_Key()
     {
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("api/integrations/models");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<ModelDetails>>("integrations/models");
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
     }
 
@@ -92,7 +92,7 @@ public class Integrations_Models_Api_Tests
             SizeInMb = 88
         };
 
-        var response = await TestingServer.PutAsync<ModelDetails>("api/integrations/models", request, new ApiKey(_tenant1ApiKey));
+        var response = await TestingServer.PutAsync<ModelDetails>("integrations/models", request, new ApiKey(_tenant1ApiKey));
         response.ShouldBeSuccess(out var result);
         result.ShouldNotBeNull();
         result.Name.ShouldBe("External Created Model");
@@ -126,7 +126,7 @@ public class Integrations_Models_Api_Tests
             SizeInMb = 45
         };
 
-        var response = await TestingServer.PutAsync<ModelDetails>("api/integrations/models", request, new ApiKey(_tenant1ApiKey));
+        var response = await TestingServer.PutAsync<ModelDetails>("integrations/models", request, new ApiKey(_tenant1ApiKey));
         response.ShouldBeSuccess(out var result);
         result.ShouldNotBeNull();
         result.Id.ShouldBe(_existingModelId);
@@ -145,7 +145,7 @@ public class Integrations_Models_Api_Tests
     {
         var request = new { Id = _guidDeleteModelId.ToString() };
 
-        var response = await TestingServer.PostAsync("api/integrations/models/delete", request, new ApiKey(_tenant1ApiKey));
+        var response = await TestingServer.PostAsync("integrations/models/delete", request, new ApiKey(_tenant1ApiKey));
         response.ShouldBeSuccess();
 
         using var context = TestingServer.CreateContext();
@@ -180,7 +180,7 @@ public class Integrations_Models_Api_Tests
         await setupContext.SaveChangesAsync();
 
         var response = await TestingServer.PostAsync(
-            "api/integrations/models/delete",
+            "integrations/models/delete",
             new { Id = "external-delete-me" },
             new ApiKey(_tenant1ApiKey));
         response.ShouldBeSuccess();
@@ -195,7 +195,7 @@ public class Integrations_Models_Api_Tests
     [Test, NotInParallel(Order = 7)]
     public async Task List_Returns_All_Models_For_Api_Key_User()
     {
-        var response = await TestingServer.GetAsync("api/integrations/models", new ApiKey(_tenant1ApiKey));
+        var response = await TestingServer.GetAsync("integrations/models", new ApiKey(_tenant1ApiKey));
         response.ShouldBeSuccess();
 
         var models = JsonSerializer.Deserialize<List<ModelDetails>>(
@@ -218,7 +218,7 @@ public class Integrations_Models_Api_Tests
         var beforeCount = beforeModel.Pictures.Length;
 
         var response = await TestingServer.PostAsync<ModelDetails>(
-            "api/integrations/models/picture",
+            "integrations/models/picture",
             new
             {
                 Id = "external-existing",
@@ -240,7 +240,7 @@ public class Integrations_Models_Api_Tests
     public async Task Upload_Picture_Fails_When_Image_Format_Is_Invalid()
     {
         var response = await TestingServer.PostAsync(
-            "api/integrations/models/picture",
+            "integrations/models/picture",
             new
             {
                 Id = "external-existing",

@@ -70,7 +70,7 @@ public class Get_Execution_Materials_Catalog_Tests
     [Test, NotInParallel(Order = 2)]
     public async Task Non_Authenticated_User_Cannot_Get_Catalog()
     {
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<AvailableProjectMaterialDetails>>("api/projects/execution/materials/available");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<AvailableProjectMaterialDetails>>("projects/execution/materials/available");
 
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
     }
@@ -78,7 +78,7 @@ public class Get_Execution_Materials_Catalog_Tests
     [Test, NotInParallel(Order = 3)]
     public async Task Authenticated_User_Gets_Only_Their_Materials_Ordered_By_Category_Then_Name()
     {
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<AvailableProjectMaterialDetails>>("api/projects/execution/materials/available", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<AvailableProjectMaterialDetails>>("projects/execution/materials/available", "rodrigo.basniak");
 
         response.ShouldBeSuccess();
         response.Data.ShouldNotBeNull();
@@ -102,7 +102,7 @@ public class Get_Execution_Materials_Catalog_Tests
     [Test, NotInParallel(Order = 4)]
     public async Task User_Cannot_See_Other_Tenant_Materials_In_Catalog()
     {
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<AvailableProjectMaterialDetails>>("api/projects/execution/materials/available", "ricardo.smarzaro");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<AvailableProjectMaterialDetails>>("projects/execution/materials/available", "ricardo.smarzaro");
 
         response.ShouldBeSuccess();
         response.Data.ShouldNotBeNull();
@@ -123,7 +123,7 @@ public class Get_Execution_Materials_Catalog_Tests
             await context.SaveChangesAsync();
         }
 
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<AvailableProjectMaterialDetails>>("api/projects/execution/materials/available", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<AvailableProjectMaterialDetails>>("projects/execution/materials/available", "rodrigo.basniak");
 
         response.ShouldBeSuccess();
         response.Data.ShouldNotBeNull();

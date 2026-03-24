@@ -4,7 +4,7 @@ public class DeleteModelPicture : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/models/picture/delete", async (Request data,  IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/models/picture/delete", async (Request data,  IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(data, cancellationToken);
 

@@ -11,7 +11,7 @@ public class GetProfile : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/profile/me", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/profile/me", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
             return ResultsMapper.FromResponse(result);

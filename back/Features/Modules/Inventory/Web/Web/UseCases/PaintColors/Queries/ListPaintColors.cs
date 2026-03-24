@@ -4,7 +4,7 @@ public class ListPaintColors : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/paints/colors", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/paints/colors", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 

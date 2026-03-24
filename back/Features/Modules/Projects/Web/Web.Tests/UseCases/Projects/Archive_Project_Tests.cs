@@ -29,14 +29,14 @@ public class Archive_Project_Tests
         var project = TestingServer.CreateContext().Set<Project>().FirstOrDefault(x => x.Name == "Active Project");
         project.ShouldNotBeNull();
 
-        var response = await TestingServer.PostAsync<ProjectHeader>($"api/projects/{project.Id}/archive", new { });
+        var response = await TestingServer.PostAsync<ProjectHeader>($"projects/{project.Id}/archive", new { });
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
     }
 
     [Test, NotInParallel(Order = 3)]
     public async Task User_Cannot_Archive_Project_That_Does_Not_Exist()
     {
-        var response = await TestingServer.PostAsync<ProjectHeader>($"api/projects/{Guid.NewGuid()}/archive", new { }, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ProjectHeader>($"projects/{Guid.NewGuid()}/archive", new { }, "rodrigo.basniak");
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
     }
 
@@ -47,7 +47,7 @@ public class Archive_Project_Tests
         project.ShouldNotBeNull();
         project.EndDate.ShouldBeNull();
 
-        var response = await TestingServer.PostAsync<ProjectHeader>($"api/projects/{project.Id}/archive", new { }, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ProjectHeader>($"projects/{project.Id}/archive", new { }, "rodrigo.basniak");
 
         response.ShouldBeSuccess(out var result);
         result.IsArchived.ShouldBeTrue();
@@ -65,7 +65,7 @@ public class Archive_Project_Tests
         project.ShouldNotBeNull();
         project.EndDate.ShouldNotBeNull();
 
-        var response = await TestingServer.PostAsync<ProjectHeader>($"api/projects/{project.Id}/archive", new { }, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ProjectHeader>($"projects/{project.Id}/archive", new { }, "rodrigo.basniak");
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Project is already archived.");
     }
 

@@ -6,7 +6,7 @@ public class GetProjectMaterials : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/projects/{projectId}/execution/materials", async (Guid projectId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/projects/{projectId}/execution/materials", async (Guid projectId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request { ProjectId = projectId }, cancellationToken);
             return ResultsMapper.FromResponse(result);

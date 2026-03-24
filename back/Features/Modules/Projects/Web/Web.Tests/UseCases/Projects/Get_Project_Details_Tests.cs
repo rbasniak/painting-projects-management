@@ -35,7 +35,7 @@ public class Get_Project_Details_Tests
     public async Task Non_Authenticated_User_Cannot_Get_Project_Details()
     {
         // Act
-        var response = await TestingServer.GetAsync<ProjectDetails>($"api/projects/{_testProjectId}");
+        var response = await TestingServer.GetAsync<ProjectDetails>($"projects/{_testProjectId}");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -45,7 +45,7 @@ public class Get_Project_Details_Tests
     public async Task User_Can_Get_Their_Own_Project_Details()
     {
         // Act
-        var response = await TestingServer.GetAsync<ProjectDetails>($"api/projects/{_testProjectId}", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<ProjectDetails>($"projects/{_testProjectId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -61,7 +61,7 @@ public class Get_Project_Details_Tests
     public async Task Project_Details_Returns_Empty_Collections_When_No_Related_Data()
     {
         // Act
-        var response = await TestingServer.GetAsync<ProjectDetails>($"api/projects/{_testProjectId}", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<ProjectDetails>($"projects/{_testProjectId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -95,7 +95,7 @@ public class Get_Project_Details_Tests
         }
 
         // Act
-        var response = await TestingServer.GetAsync<ProjectDetails>($"api/projects/{_testProjectId}", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<ProjectDetails>($"projects/{_testProjectId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -118,7 +118,7 @@ public class Get_Project_Details_Tests
         }
 
         // Act
-        var response = await TestingServer.GetAsync<ProjectDetails>($"api/projects/{_testProjectId}", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<ProjectDetails>($"projects/{_testProjectId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -146,7 +146,7 @@ public class Get_Project_Details_Tests
         }
 
         // Act
-        var response = await TestingServer.GetAsync<ProjectDetails>($"api/projects/{_testProjectId}", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<ProjectDetails>($"projects/{_testProjectId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -174,7 +174,7 @@ public class Get_Project_Details_Tests
         }
 
         // Act
-        var response = await TestingServer.GetAsync<ProjectDetails>($"api/projects/{_testProjectId}", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<ProjectDetails>($"projects/{_testProjectId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -203,7 +203,7 @@ public class Get_Project_Details_Tests
         //}
 
         //// Act
-        //var response = await TestingServer.GetAsync<ProjectDetails>($"api/projects/{_testProjectId}", "rodrigo.basniak");
+        //var response = await TestingServer.GetAsync<ProjectDetails>($"projects/{_testProjectId}", "rodrigo.basniak");
 
         //// Assert the response
         //response.ShouldBeSuccess();
@@ -234,7 +234,7 @@ public class Get_Project_Details_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.GetAsync<ProjectDetails>($"api/projects/{nonExistentId}", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<ProjectDetails>($"projects/{nonExistentId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -253,7 +253,7 @@ public class Get_Project_Details_Tests
         }
 
         // Act
-        var response = await TestingServer.GetAsync<ProjectDetails>($"api/projects/{otherUserProject.Id}", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<ProjectDetails>($"projects/{otherUserProject.Id}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -294,7 +294,7 @@ public class Get_Project_Details_Tests
         //}
 
         //// Act
-        //var response = await TestingServer.GetAsync<ProjectDetails>($"api/projects/{comprehensiveProject.Id}", "rodrigo.basniak");
+        //var response = await TestingServer.GetAsync<ProjectDetails>($"projects/{comprehensiveProject.Id}", "rodrigo.basniak");
 
         //// Assert the response
         //response.ShouldBeSuccess();

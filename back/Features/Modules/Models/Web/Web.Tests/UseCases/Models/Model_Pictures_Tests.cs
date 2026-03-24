@@ -30,7 +30,7 @@ public class Model_Pictures_Tests
     {
         // Act
         var response = await TestingServer.PostAsync(
-            "api/models/picture",
+            "models/picture",
             new UploadModelPicture.Request
             {
                 ModelId = _modelId,
@@ -52,7 +52,7 @@ public class Model_Pictures_Tests
     {
         // Act
         var response1 = await TestingServer.PostAsync(
-            "api/models/picture",
+            "models/picture",
             new UploadModelPicture.Request
             {
                 ModelId = _modelId,
@@ -60,7 +60,7 @@ public class Model_Pictures_Tests
             }, "rodrigo.basniak");
 
         var response2 = await TestingServer.PostAsync(
-            "api/models/picture",
+            "models/picture",
             new UploadModelPicture.Request
             {
                 ModelId = _modelId,
@@ -86,7 +86,7 @@ public class Model_Pictures_Tests
 
         // Act
         var response = await TestingServer.PostAsync(
-            $"api/models/picture/promote",
+            $"models/picture/promote",
             new PromotePictureToCover.Request
             {
                 ModelId = _modelId,
@@ -110,7 +110,7 @@ public class Model_Pictures_Tests
 
         // Act
         var response = await TestingServer.PostAsync(
-            $"api/models/picture/promote",
+            $"models/picture/promote",
             new PromotePictureToCover.Request
             {
                 ModelId = _modelId,
@@ -129,7 +129,7 @@ public class Model_Pictures_Tests
 
         // Act
         var response = await TestingServer.PostAsync(
-            "api/models/picture",
+            "models/picture",
             new UploadModelPicture.Request
             {
                 ModelId = _modelId,
@@ -146,7 +146,7 @@ public class Model_Pictures_Tests
         // Arrange
         // Act
         var response = await TestingServer.PostAsync(
-            "api/models/picture",
+            "models/picture",
             new UploadModelPicture.Request
             {
                 ModelId = _modelId,
@@ -163,7 +163,7 @@ public class Model_Pictures_Tests
         var model = await TestingServer.CreateContext().Set<Model>().FirstAsync(x => x.Id == _modelId);
         var pictureUrl = model.Pictures.First();
 
-        var response = await TestingServer.PostAsync($"api/models/picture/delete", 
+        var response = await TestingServer.PostAsync($"models/picture/delete", 
             new DeleteModelPicture.Request { ModelId = _modelId, PictureUrl = pictureUrl }, 
             "rodrigo.basniak");
 
@@ -195,7 +195,7 @@ public class Model_Pictures_Tests
         try
         {
             var response = await TestingServer.PostAsync(
-                "api/models/picture",
+                "models/picture",
                 new UploadModelPicture.Request
                 {
                     ModelId = _modelId,
@@ -218,7 +218,7 @@ public class Model_Pictures_Tests
         for (var i = 0; i < 3; i++)
         {
             var success = await TestingServer.PostAsync(
-                "api/models/picture",
+                "models/picture",
                 new UploadModelPicture.Request
                 {
                     ModelId = model.Id,
@@ -229,7 +229,7 @@ public class Model_Pictures_Tests
         }
 
         var fourth = await TestingServer.PostAsync(
-            "api/models/picture",
+            "models/picture",
             new UploadModelPicture.Request
             {
                 ModelId = model.Id,

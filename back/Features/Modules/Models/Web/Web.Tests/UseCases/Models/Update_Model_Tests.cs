@@ -87,7 +87,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request);
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -119,7 +119,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -151,7 +151,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -182,7 +182,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "CategoryId references a non-existent record.");
@@ -214,7 +214,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "CategoryId references a non-existent record.");
@@ -249,7 +249,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Artist is required.");
@@ -281,7 +281,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Artist cannot exceed 50 characters.");
@@ -313,7 +313,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Tags is required.");
@@ -348,7 +348,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Each tag cannot be empty");
@@ -380,7 +380,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Each tag cannot exceed 25 characters");
@@ -412,7 +412,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Characters is required.");
@@ -447,7 +447,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Each character cannot be empty");
@@ -479,7 +479,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Each character cannot exceed 50 characters");
@@ -514,7 +514,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -546,7 +546,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name cannot exceed 100 characters.");
@@ -578,7 +578,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "BaseSize has an invalid value.");
@@ -610,7 +610,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "FigureSize has an invalid value.");
@@ -642,7 +642,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "NumberOfFigures must be greater than zero");
@@ -677,7 +677,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Franchise is required.");
@@ -709,7 +709,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Franchise cannot exceed 75 characters.");
@@ -741,7 +741,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Type has an invalid value.");
@@ -773,7 +773,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "SizeInMb must be greater than or equal to zero");
@@ -805,7 +805,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -841,7 +841,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -877,7 +877,7 @@ public class Update_Model_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ModelDetails>("api/models", request, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ModelDetails>("models", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);

@@ -69,7 +69,7 @@ public class Delete_Model_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/models/{nonExistentId}");
+        var response = await TestingServer.DeleteAsync($"models/{nonExistentId}");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -82,7 +82,7 @@ public class Delete_Model_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/models/{nonExistentId}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"models/{nonExistentId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -97,7 +97,7 @@ public class Delete_Model_Tests
         anotherUserModel.TenantId.ShouldBe("RICARDO.SMARZARO", "Model should belong to another user");
 
         // Act - Try to delete as rodrigo.basniak (different user)
-        var response = await TestingServer.DeleteAsync($"api/models/{anotherUserModel.Id}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"models/{anotherUserModel.Id}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -116,7 +116,7 @@ public class Delete_Model_Tests
         existingModel.TenantId.ShouldBe("RODRIGO.BASNIAK", "Model should belong to the current user");
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/models/{existingModel.Id}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"models/{existingModel.Id}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();

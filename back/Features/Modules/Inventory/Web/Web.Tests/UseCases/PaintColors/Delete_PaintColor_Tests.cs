@@ -44,7 +44,7 @@ public class Delete_PaintColor_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/paints/colors/{nonExistentId}");
+        var response = await TestingServer.DeleteAsync($"/paints/colors/{nonExistentId}");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -57,7 +57,7 @@ public class Delete_PaintColor_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/paints/colors/{nonExistentId}", "superuser");
+        var response = await TestingServer.DeleteAsync($"/paints/colors/{nonExistentId}", "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -71,7 +71,7 @@ public class Delete_PaintColor_Tests
         colorToDelete.ShouldNotBeNull("Color should exist from seed");
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/paints/colors/{colorToDelete.Id}", "superuser");
+        var response = await TestingServer.DeleteAsync($"/paints/colors/{colorToDelete.Id}", "superuser");
 
         // Assert the response
         response.ShouldBeSuccess();

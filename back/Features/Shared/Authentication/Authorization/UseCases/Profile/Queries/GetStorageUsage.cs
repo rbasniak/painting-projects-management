@@ -10,7 +10,7 @@ public class GetStorageUsage : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/profile/storage-usage", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/profile/storage-usage", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
             return ResultsMapper.FromResponse(result);

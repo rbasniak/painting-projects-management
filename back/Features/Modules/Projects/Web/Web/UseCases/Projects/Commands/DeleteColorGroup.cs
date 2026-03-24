@@ -4,7 +4,7 @@ public class DeleteColorGroup : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapDelete("/api/projects/color-groups", async (Guid colorGroupId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapDelete("/projects/color-groups", async (Guid colorGroupId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request { ColorGroupId = colorGroupId }, cancellationToken);
 

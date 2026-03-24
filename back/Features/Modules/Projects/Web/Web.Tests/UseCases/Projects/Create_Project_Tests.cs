@@ -41,7 +41,7 @@ public class Create_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ProjectHeader>("api/projects", request);
+        var response = await TestingServer.PostAsync<ProjectHeader>("projects", request);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -64,7 +64,7 @@ public class Create_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ProjectHeader>("api/projects", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ProjectHeader>("projects", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -84,7 +84,7 @@ public class Create_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ProjectHeader>("api/projects", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ProjectHeader>("projects", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name cannot exceed 100 characters.");
@@ -104,7 +104,7 @@ public class Create_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ProjectHeader>("api/projects", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ProjectHeader>("projects", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "A project with this name already exists.");
@@ -124,7 +124,7 @@ public class Create_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ProjectHeader>("api/projects", request, "ricardo.smarzaro");
+        var response = await TestingServer.PostAsync<ProjectHeader>("projects", request, "ricardo.smarzaro");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -155,7 +155,7 @@ public class Create_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<ProjectHeader>("api/projects", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<ProjectHeader>("projects", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);

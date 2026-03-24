@@ -55,7 +55,7 @@ public class Create_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintColorDetails>("/api/paints/colors", request);
+        var response = await TestingServer.PostAsync<PaintColorDetails>("/paints/colors", request);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -86,7 +86,7 @@ public class Create_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintColorDetails>("/api/paints/colors", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintColorDetails>("/paints/colors", request, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -114,7 +114,7 @@ public class Create_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintColorDetails>("/api/paints/colors", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintColorDetails>("/paints/colors", request, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name cannot exceed 100 characters.");
@@ -141,7 +141,7 @@ public class Create_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintColorDetails>("/api/paints/colors", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintColorDetails>("/paints/colors", request, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "LineId references a non-existent record.");
@@ -169,7 +169,7 @@ public class Create_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintColorDetails>("/api/paints/colors", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintColorDetails>("/paints/colors", request, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Hex color must be in format #RRGGBB");
@@ -197,7 +197,7 @@ public class Create_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintColorDetails>("/api/paints/colors", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintColorDetails>("/paints/colors", request, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Bottle size must be greater than zero.");
@@ -225,7 +225,7 @@ public class Create_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintColorDetails>("/api/paints/colors", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintColorDetails>("/paints/colors", request, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "A paint color with this name already exists in this paint line.");
@@ -253,7 +253,7 @@ public class Create_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintColorDetails>("/api/paints/colors", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintColorDetails>("/paints/colors", request, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "A paint color with this hex color already exists in this paint line.");
@@ -281,7 +281,7 @@ public class Create_PaintColor_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<PaintColorDetails>("/api/paints/colors", request, "superuser");
+        var response = await TestingServer.PostAsync<PaintColorDetails>("/paints/colors", request, "superuser");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);

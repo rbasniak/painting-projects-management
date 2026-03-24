@@ -61,7 +61,7 @@ public class Update_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/projects", updateRequest);
+        var response = await TestingServer.PutAsync("projects", updateRequest);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -85,7 +85,7 @@ public class Update_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/projects", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("projects", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -111,7 +111,7 @@ public class Update_Project_Tests
         };
 
         // Act - Try to update as rodrigo.basniak (different user)
-        var response = await TestingServer.PutAsync("api/projects", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("projects", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -140,7 +140,7 @@ public class Update_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/projects", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("projects", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -168,7 +168,7 @@ public class Update_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/projects", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("projects", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "A project with this name already exists.");
@@ -194,7 +194,7 @@ public class Update_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/projects", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("projects", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Invalid base64 image format. Must be a valid base64 encoded image with proper header.");
@@ -220,7 +220,7 @@ public class Update_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/projects", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("projects", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "End date cannot be in the future.");
@@ -248,7 +248,7 @@ public class Update_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ProjectHeader>("api/projects", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ProjectHeader>("projects", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -277,7 +277,7 @@ public class Update_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ProjectHeader>("api/projects", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ProjectHeader>("projects", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -310,7 +310,7 @@ public class Update_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<ProjectHeader>("api/projects", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync<ProjectHeader>("projects", updateRequest, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -344,7 +344,7 @@ public class Update_Project_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("api/projects", updateRequest, "rodrigo.basniak");
+        var response = await TestingServer.PutAsync("projects", updateRequest, "rodrigo.basniak");
 
         // Assert
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Archived projects are read-only and cannot be edited.");
@@ -385,7 +385,7 @@ public class Update_Project_Tests
                 Base64Image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII="
             };
 
-            var response = await TestingServer.PutAsync("api/projects", updateRequest, "rodrigo.basniak");
+            var response = await TestingServer.PutAsync("projects", updateRequest, "rodrigo.basniak");
             response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Storage quota exceeded.");
         }
         finally

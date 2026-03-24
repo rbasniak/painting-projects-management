@@ -32,7 +32,7 @@ public class MaterialsService : IMaterialsService
     public async Task<IReadOnlyCollection<MaterialDetails>> GetAllAsync(
       CancellationToken cancellationToken)
     {
-        var response = await _httpClient.GetAsync("api/materials", cancellationToken);
+        var response = await _httpClient.GetAsync("materials", cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -47,7 +47,7 @@ public class MaterialsService : IMaterialsService
     {
         try
         {
-            var response = await _httpClient.GetAsync("api/currencies", cancellationToken);
+            var response = await _httpClient.GetAsync("currencies", cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -74,7 +74,7 @@ public class MaterialsService : IMaterialsService
       CreateMaterialRequest request,
       CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/materials", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync("materials", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -89,7 +89,7 @@ public class MaterialsService : IMaterialsService
       UpdateMaterialRequest request,
       CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PutAsJsonAsync("api/materials", request, cancellationToken);
+        var response = await _httpClient.PutAsJsonAsync("materials", request, cancellationToken);
 
         if (response.IsSuccessStatusCode)
         {
@@ -102,6 +102,6 @@ public class MaterialsService : IMaterialsService
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        await _httpClient.DeleteAsync($"api/materials/{id}", cancellationToken);
+        await _httpClient.DeleteAsync($"materials/{id}", cancellationToken);
     }
 }

@@ -16,33 +16,33 @@ public sealed class SubscriptionsService(HttpClient httpClient) : ISubscriptions
 {
     public async Task<CurrentSubscriptionResponse> GetCurrentAsync(CancellationToken cancellationToken)
     {
-        var response = await httpClient.GetFromJsonAsync<CurrentSubscriptionResponse>("api/subscriptions/me", cancellationToken);
+        var response = await httpClient.GetFromJsonAsync<CurrentSubscriptionResponse>("subscriptions/me", cancellationToken);
         return response ?? new CurrentSubscriptionResponse();
     }
 
     public async Task<IReadOnlyCollection<SubscriptionTierResponse>> ListTiersAsync(CancellationToken cancellationToken)
     {
-        var response = await httpClient.GetFromJsonAsync<IReadOnlyCollection<SubscriptionTierResponse>>("api/subscriptions/tiers", cancellationToken);
+        var response = await httpClient.GetFromJsonAsync<IReadOnlyCollection<SubscriptionTierResponse>>("subscriptions/tiers", cancellationToken);
         return response ?? Array.Empty<SubscriptionTierResponse>();
     }
 
     public async Task<CurrentSubscriptionResponse> SubscribeAsync(SubscriptionTier tier, CancellationToken cancellationToken)
     {
-        var response = await httpClient.PostAsJsonAsync("api/subscriptions/subscribe", new { Tier = tier }, cancellationToken);
+        var response = await httpClient.PostAsJsonAsync("subscriptions/subscribe", new { Tier = tier }, cancellationToken);
         var data = await response.Content.ReadFromJsonAsync<CurrentSubscriptionResponse>(cancellationToken);
         return data ?? new CurrentSubscriptionResponse();
     }
 
     public async Task<CurrentSubscriptionResponse> UpgradeAsync(SubscriptionTier tier, CancellationToken cancellationToken)
     {
-        var response = await httpClient.PostAsJsonAsync("api/subscriptions/upgrade", new { Tier = tier }, cancellationToken);
+        var response = await httpClient.PostAsJsonAsync("subscriptions/upgrade", new { Tier = tier }, cancellationToken);
         var data = await response.Content.ReadFromJsonAsync<CurrentSubscriptionResponse>(cancellationToken);
         return data ?? new CurrentSubscriptionResponse();
     }
 
     public async Task<CurrentSubscriptionResponse> CancelAsync(bool cancelAtPeriodEnd, CancellationToken cancellationToken)
     {
-        var response = await httpClient.PostAsJsonAsync("api/subscriptions/cancel", new { CancelAtPeriodEnd = cancelAtPeriodEnd }, cancellationToken);
+        var response = await httpClient.PostAsJsonAsync("subscriptions/cancel", new { CancelAtPeriodEnd = cancelAtPeriodEnd }, cancellationToken);
         var data = await response.Content.ReadFromJsonAsync<CurrentSubscriptionResponse>(cancellationToken);
         return data ?? new CurrentSubscriptionResponse();
     }

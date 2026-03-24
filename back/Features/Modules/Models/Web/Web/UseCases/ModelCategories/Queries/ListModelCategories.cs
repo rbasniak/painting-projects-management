@@ -4,7 +4,7 @@ public class ListModelCategories : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/models/categories", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/models/categories", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 

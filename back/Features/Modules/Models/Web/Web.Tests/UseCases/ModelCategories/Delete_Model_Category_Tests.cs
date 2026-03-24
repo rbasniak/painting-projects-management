@@ -47,7 +47,7 @@ public class Delete_Model_Category_Tests
     public async Task Non_Authenticated_User_Cannot_Delete_Model_Category()
     {
         // Act
-        var response = await TestingServer.DeleteAsync($"api/models/categories/{_categoryId}");
+        var response = await TestingServer.DeleteAsync($"models/categories/{_categoryId}");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -65,7 +65,7 @@ public class Delete_Model_Category_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/models/categories/{nonExistentId}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"models/categories/{nonExistentId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -79,7 +79,7 @@ public class Delete_Model_Category_Tests
     public async Task User_Cannot_Delete_Model_Category_Of_Another_User()
     {
         // Act
-        var response = await TestingServer.DeleteAsync($"api/models/categories/{_otherUserCategoryId}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"models/categories/{_otherUserCategoryId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -95,7 +95,7 @@ public class Delete_Model_Category_Tests
     public async Task User_Can_Delete_Own_Model_Category()
     {
         // Act
-        var response = await TestingServer.DeleteAsync($"api/models/categories/{_categoryId}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"models/categories/{_categoryId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -117,7 +117,7 @@ public class Delete_Model_Category_Tests
         var invalidGuid = "invalid-guid-format";
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/models/categories/{invalidGuid}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"models/categories/{invalidGuid}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest);
@@ -134,7 +134,7 @@ public class Delete_Model_Category_Tests
         var emptyGuid = Guid.Empty;
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/models/categories/{emptyGuid}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"models/categories/{emptyGuid}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id is required.");
@@ -159,7 +159,7 @@ public class Delete_Model_Category_Tests
         }
 
         // Act
-        var response = await TestingServer.DeleteAsync($"api/models/categories/{anotherCategoryId}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"models/categories/{anotherCategoryId}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();

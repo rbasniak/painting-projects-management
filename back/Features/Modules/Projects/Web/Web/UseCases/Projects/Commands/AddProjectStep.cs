@@ -4,7 +4,7 @@ public class AddProjectStep : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapPost("/api/projects/{projectId}/steps", async (Guid projectId, Request body, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapPost("/projects/{projectId}/steps", async (Guid projectId, Request body, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             body.ProjectId = projectId;
             var result = await dispatcher.SendAsync(body, cancellationToken);

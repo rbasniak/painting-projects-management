@@ -61,7 +61,7 @@ public class MyPaints_Tests
     public async Task Non_Authenticated_User_Cannot_List_My_Paints()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<MyPaintDetails>>("/api/inventory/my-paints");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<MyPaintDetails>>("/inventory/my-paints");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -71,7 +71,7 @@ public class MyPaints_Tests
     public async Task User_Can_List_Their_Own_Paints()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<MyPaintDetails>>("/api/inventory/my-paints", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<MyPaintDetails>>("/inventory/my-paints", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -90,7 +90,7 @@ public class MyPaints_Tests
     public async Task User_Cannot_See_Paints_From_Other_Users()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<MyPaintDetails>>("/api/inventory/my-paints", "ricardo.smarzaro");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<MyPaintDetails>>("/inventory/my-paints", "ricardo.smarzaro");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -111,7 +111,7 @@ public class MyPaints_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync("/api/inventory/my-paints", request);
+        var response = await TestingServer.PostAsync("/inventory/my-paints", request);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -134,7 +134,7 @@ public class MyPaints_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync("/api/inventory/my-paints", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync("/inventory/my-paints", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -144,7 +144,7 @@ public class MyPaints_Tests
         userPaint.ShouldNotBeNull();
 
         // Verify the list now contains 2 paints
-        var listResponse = await TestingServer.GetAsync<IReadOnlyCollection<MyPaintDetails>>("/api/inventory/my-paints", "rodrigo.basniak");
+        var listResponse = await TestingServer.GetAsync<IReadOnlyCollection<MyPaintDetails>>("/inventory/my-paints", "rodrigo.basniak");
         listResponse.ShouldBeSuccess();
         listResponse.Data.Count.ShouldBe(2);
     }
@@ -162,7 +162,7 @@ public class MyPaints_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync("/api/inventory/my-paints", request, "ricardo.smarzaro");
+        var response = await TestingServer.PostAsync("/inventory/my-paints", request, "ricardo.smarzaro");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -185,7 +185,7 @@ public class MyPaints_Tests
         };
 
         // Act - Try to add the same paint again
-        var response = await TestingServer.PostAsync("/api/inventory/my-paints", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync("/inventory/my-paints", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -203,7 +203,7 @@ public class MyPaints_Tests
         color.ShouldNotBeNull();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/inventory/my-paints/{color.Id}");
+        var response = await TestingServer.DeleteAsync($"/inventory/my-paints/{color.Id}");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -221,7 +221,7 @@ public class MyPaints_Tests
         color.ShouldNotBeNull();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/inventory/my-paints/{color.Id}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"/inventory/my-paints/{color.Id}", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -231,7 +231,7 @@ public class MyPaints_Tests
         userPaint.ShouldBeNull();
 
         // Verify the list now contains 1 paint
-        var listResponse = await TestingServer.GetAsync<IReadOnlyCollection<MyPaintDetails>>("/api/inventory/my-paints", "rodrigo.basniak");
+        var listResponse = await TestingServer.GetAsync<IReadOnlyCollection<MyPaintDetails>>("/inventory/my-paints", "rodrigo.basniak");
         listResponse.ShouldBeSuccess();
         listResponse.Data.Count.ShouldBe(1);
     }
@@ -243,7 +243,7 @@ public class MyPaints_Tests
         var nonExistentId = Guid.NewGuid();
 
         // Act
-        var response = await TestingServer.DeleteAsync($"/api/inventory/my-paints/{nonExistentId}", "rodrigo.basniak");
+        var response = await TestingServer.DeleteAsync($"/inventory/my-paints/{nonExistentId}", "rodrigo.basniak");
 
         // Assert the response 
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "PaintColorId references a non-existent record.");
@@ -269,7 +269,7 @@ public class MyPaints_Tests
         }
 
         var response = await TestingServer.PostAsync(
-            "/api/inventory/my-paints",
+            "/inventory/my-paints",
             new AddToMyPaints.Request
             {
                 PaintColorIds = newColorIds

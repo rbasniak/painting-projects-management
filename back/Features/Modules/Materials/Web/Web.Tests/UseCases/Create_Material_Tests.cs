@@ -55,7 +55,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request);
+        var response = await TestingServer.PostAsync<MaterialDetails>("materials", request);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -87,7 +87,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<MaterialDetails>("materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Package amount must be greater than zero.");
@@ -117,7 +117,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<MaterialDetails>("materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "A material with this name already exists.");
@@ -147,7 +147,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "ricardo.smarzaro");
+        var response = await TestingServer.PostAsync<MaterialDetails>("materials", request, "ricardo.smarzaro");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);
@@ -197,7 +197,7 @@ public class Create_Material_Tests
         };
 
         // Act
-        var response = await TestingServer.PostAsync<MaterialDetails>("api/materials", request, "rodrigo.basniak");
+        var response = await TestingServer.PostAsync<MaterialDetails>("materials", request, "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);

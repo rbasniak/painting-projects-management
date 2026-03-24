@@ -4,7 +4,7 @@ public sealed class GetPublicModelsOwnerKey : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/models/public/owner-key", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/models/public/owner-key", async (IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request(), cancellationToken);
 

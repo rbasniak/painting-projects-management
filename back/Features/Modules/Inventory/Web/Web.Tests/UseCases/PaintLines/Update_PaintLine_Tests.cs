@@ -53,7 +53,7 @@ public class Update_PaintLine_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/lines", updateRequest);
+        var response = await TestingServer.PutAsync("/paints/lines", updateRequest);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -76,7 +76,7 @@ public class Update_PaintLine_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/lines", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/lines", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -103,7 +103,7 @@ public class Update_PaintLine_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/lines", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/lines", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -128,7 +128,7 @@ public class Update_PaintLine_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/lines", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/lines", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Another paint line with this name already exists for this brand.");
@@ -153,7 +153,7 @@ public class Update_PaintLine_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/lines", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/lines", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name cannot exceed 100 characters.");
@@ -178,7 +178,7 @@ public class Update_PaintLine_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<PaintLineDetails>("/api/paints/lines", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync<PaintLineDetails>("/paints/lines", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);

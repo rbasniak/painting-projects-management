@@ -40,7 +40,7 @@ public class List_PaintBrands_Tests
     public async Task Non_Authenticated_User_Cannot_List_Paint_Brands()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintBrandDetails>>("/api/paints/brands");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintBrandDetails>>("/paints/brands");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -50,7 +50,7 @@ public class List_PaintBrands_Tests
     public async Task User_Can_List_Paint_Brands()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintBrandDetails>>("/api/paints/brands", "superuser");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintBrandDetails>>("/paints/brands", "superuser");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -68,7 +68,7 @@ public class List_PaintBrands_Tests
     public async Task Brands_Are_Ordered_Alphabetically()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintBrandDetails>>("/api/paints/brands", "superuser");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<PaintBrandDetails>>("/paints/brands", "superuser");
 
         // Assert the response
         response.ShouldBeSuccess();

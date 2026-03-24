@@ -48,7 +48,7 @@ public class Update_PaintBrand_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/brands", updateRequest);
+        var response = await TestingServer.PutAsync("/paints/brands", updateRequest);
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -71,7 +71,7 @@ public class Update_PaintBrand_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/brands", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/brands", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Id references a non-existent record.");
@@ -98,7 +98,7 @@ public class Update_PaintBrand_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/brands", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/brands", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name is required.");
@@ -123,7 +123,7 @@ public class Update_PaintBrand_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/brands", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/brands", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Another brand with this name already exists.");
@@ -148,7 +148,7 @@ public class Update_PaintBrand_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync("/api/paints/brands", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync("/paints/brands", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.BadRequest, "Name cannot exceed 100 characters.");
@@ -173,7 +173,7 @@ public class Update_PaintBrand_Tests
         };
 
         // Act
-        var response = await TestingServer.PutAsync<PaintBrandDetails>("/api/paints/brands", updateRequest, "superuser");
+        var response = await TestingServer.PutAsync<PaintBrandDetails>("/paints/brands", updateRequest, "superuser");
 
         // Assert the response
         response.ShouldBeSuccess(out var result);

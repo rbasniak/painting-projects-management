@@ -46,7 +46,7 @@ public class List_Materials_Tests
     public async Task Non_Authenticated_User_Cannot_List_Materials()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<MaterialDetails>>("api/materials");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<MaterialDetails>>("materials");
 
         // Assert the response
         response.ShouldHaveErrors(HttpStatusCode.Unauthorized);
@@ -56,7 +56,7 @@ public class List_Materials_Tests
     public async Task User_Can_List_Their_Own_Materials()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<MaterialDetails>>("api/materials", "ricardo.smarzaro");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<MaterialDetails>>("materials", "ricardo.smarzaro");
 
         // Assert the response
         response.ShouldBeSuccess();
@@ -73,7 +73,7 @@ public class List_Materials_Tests
     public async Task Materials_Are_Returned_With_Correct_Properties()
     {
         // Act
-        var response = await TestingServer.GetAsync<IReadOnlyCollection<MaterialDetails>>("api/materials", "rodrigo.basniak");
+        var response = await TestingServer.GetAsync<IReadOnlyCollection<MaterialDetails>>("materials", "rodrigo.basniak");
 
         // Assert the response
         response.ShouldBeSuccess();

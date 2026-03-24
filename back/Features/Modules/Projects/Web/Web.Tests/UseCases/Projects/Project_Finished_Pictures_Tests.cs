@@ -33,7 +33,7 @@ public class Project_Finished_Pictures_Tests
         var isolatedProjectId = await CreateProjectAsync("Project With Finished Pictures For Promote");
 
         var upload = await TestingServer.PostAsync<UrlReference[]>(
-            "api/projects/finished-picture",
+            "projects/finished-picture",
             new UploadProjectFinishedPicture.Request
             {
                 ProjectId = isolatedProjectId,
@@ -47,7 +47,7 @@ public class Project_Finished_Pictures_Tests
         var uploadedUrl = upload.Data.Last().Url;
 
         var promote = await TestingServer.PostAsync(
-            "api/projects/picture/promote",
+            "projects/picture/promote",
             new PromoteProjectPictureToCover.Request
             {
                 ProjectId = isolatedProjectId,
@@ -70,7 +70,7 @@ public class Project_Finished_Pictures_Tests
         for (var i = 0; i < 3; i++)
         {
             var upload = await TestingServer.PostAsync<UrlReference[]>(
-                "api/projects/finished-picture",
+                "projects/finished-picture",
                 new UploadProjectFinishedPicture.Request
                 {
                     ProjectId = _projectId,
@@ -81,7 +81,7 @@ public class Project_Finished_Pictures_Tests
         }
 
         var fourth = await TestingServer.PostAsync(
-            "api/projects/finished-picture",
+            "projects/finished-picture",
             new UploadProjectFinishedPicture.Request
             {
                 ProjectId = _projectId,

@@ -15,21 +15,21 @@ public sealed class UserProfileService(HttpClient httpClient) : IUserProfileServ
 {
     public async Task<ProfileDetailsResponse> GetProfileAsync(CancellationToken cancellationToken)
     {
-        var profile = await httpClient.GetFromJsonAsync<ProfileDetailsResponse>("api/profile/me", cancellationToken);
+        var profile = await httpClient.GetFromJsonAsync<ProfileDetailsResponse>("profile/me", cancellationToken);
         return profile ?? new ProfileDetailsResponse();
     }
 
     public async Task<CurrentSubscriptionSnapshotResponse> GetCurrentSubscriptionAsync(CancellationToken cancellationToken)
     {
         var subscription = await httpClient.GetFromJsonAsync<CurrentSubscriptionSnapshotResponse>(
-            "api/subscriptions/me",
+            "subscriptions/me",
             cancellationToken);
         return subscription ?? new CurrentSubscriptionSnapshotResponse();
     }
 
     public async Task<StorageUsageResponse> GetStorageUsageAsync(CancellationToken cancellationToken)
     {
-        var usage = await httpClient.GetFromJsonAsync<StorageUsageResponse>("api/profile/storage-usage", cancellationToken);
+        var usage = await httpClient.GetFromJsonAsync<StorageUsageResponse>("profile/storage-usage", cancellationToken);
         return usage ?? new StorageUsageResponse();
     }
 
