@@ -84,10 +84,13 @@ public class List_Materials_Tests
         var material1 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Material 1");
         material1.ShouldNotBeNull();
         material1.PackagePrice.Amount.ShouldBe(10.0);
+        material1.CategoryId.ShouldBe((int)MaterialCategory.Paints);
+        material1.CategoryName.ShouldBe(MaterialCategory.Paints.ToString());
 
         var material2 = response.Data.FirstOrDefault(x => x.Name == "Rodrigo Material 2");
         material2.ShouldNotBeNull();
         material2.PackagePrice.Amount.ShouldBe(5.0);
+        material2.CategoryId.ShouldBe((int)MaterialCategory.Paints);
     }
 
     [Test, NotInParallel(Order = 99)]
