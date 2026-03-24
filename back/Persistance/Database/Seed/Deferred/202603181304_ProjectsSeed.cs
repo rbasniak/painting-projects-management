@@ -878,51 +878,51 @@ public class ProjectsSeed : IDeferredSeedStep
 
         #endregion
 
-        #region SAMPLE
+        #region DemoProject
 
-        var lastOfUsProject = new Project("rodrigo.basniak", "Last Of Us", new DateTime(2026, 01, 23), modelId: null);
+        var demoProject = new Project("rodrigo.basniak", "DemoProject", new DateTime(2026, 01, 23), modelId: null);
 
         // Two records for each project step
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2026, 01, 23), 1.5);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2026, 01, 24), 1.0);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2026, 01, 25), (160 + 145) / 15.0);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2026, 01, 26), (130 + 120) / 15.0);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2026, 01, 27), 3.0);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2026, 01, 28), 2.0);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2026, 01, 27), 1.0);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2026, 01, 28), 0.75);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2026, 01, 28), 2.25);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2026, 01, 29), 1.5);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2026, 01, 30), 6.0);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2026, 02, 02), 5.5);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2026, 01, 23), 1.5);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2026, 01, 24), 1.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2026, 01, 25), (160 + 145) / 15.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2026, 01, 26), (130 + 120) / 15.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2026, 01, 27), 3.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2026, 01, 28), 2.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2026, 01, 27), 1.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2026, 01, 28), 0.75);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2026, 01, 28), 2.25);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2026, 01, 29), 1.5);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2026, 01, 30), 6.0);
+        demoProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2026, 02, 02), 5.5);
 
         // Materials: 2-3 from each category
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialSunluWaterWashableStandardResin, 420, MaterialUnit.Gram).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialJayoAbsResin, 210, MaterialUnit.Gram).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialSunluWaterWashableStandardResin, 420, MaterialUnit.Gram).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialJayoAbsResin, 210, MaterialUnit.Gram).GetAwaiter().GetResult();
 
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet10x5, 8, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet8x4, 10, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet6x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialMagnet10x5, 8, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialMagnet8x4, 10, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialMagnet6x4, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoPrimer, 160, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialGswPrimer, 120, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialVallejoPrimer, 160, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialGswPrimer, 120, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialArmyPainterAcrylic, 260, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoAcrylic, 120, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialAtomAcrylic, 75, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialArmyPainterAcrylic, 260, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialVallejoAcrylic, 120, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialAtomAcrylic, 75, MaterialUnit.Drop).GetAwaiter().GetResult();
 
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoVarnish, 90, MaterialUnit.Drop).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 35, MaterialUnit.Spray).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialVallejoVarnish, 90, MaterialUnit.Drop).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 35, MaterialUnit.Spray).GetAwaiter().GetResult();
 
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMaskingTapeGeneric10mm, 120, MaterialUnit.Centimeter).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMaskingTapeTamiya10mm, 90, MaterialUnit.Centimeter).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoLiquidMask, 12, MaterialUnit.Mililiter).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialMaskingTapeGeneric10mm, 120, MaterialUnit.Centimeter).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialMaskingTapeTamiya10mm, 90, MaterialUnit.Centimeter).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialVallejoLiquidMask, 12, MaterialUnit.Mililiter).GetAwaiter().GetResult();
 
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialDisposableBrush, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialPaintMixingCupCorrugated, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
-        ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialNailWoodSwab, 30, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialDisposableBrush, 4, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialPaintMixingCupCorrugated, 6, MaterialUnit.Unit).GetAwaiter().GetResult();
+        ConsumeMaterial(demoProject, DatabaseSeed.MaterialNailWoodSwab, 30, MaterialUnit.Unit).GetAwaiter().GetResult();
 
-        context.Add(lastOfUsProject);
+        context.Add(demoProject);
 
         // Finished pictures (>= 3)
         var sampleFinishedPictures = new[]
@@ -933,7 +933,7 @@ public class ProjectsSeed : IDeferredSeedStep
         };
         foreach (var x in sampleFinishedPictures)
         {
-            lastOfUsProject.AddFinishedPicture(x);
+            demoProject.AddFinishedPicture(x);
         }
 
         // Reference pictures (>= 3)
@@ -945,7 +945,7 @@ public class ProjectsSeed : IDeferredSeedStep
         };
         foreach (var x in sampleReferencePictures)
         {
-            lastOfUsProject.AddReferencePicture(x);
+            demoProject.AddReferencePicture(x);
         }
 
         List<PaintingProjectsManagement.Features.Inventory.Integration.ColorMatchResult> FindPaintMatches(string referenceColor, int maxResults = 5)
@@ -1003,40 +1003,40 @@ public class ProjectsSeed : IDeferredSeedStep
 
         // >= 5 zones/groups, with mixed complexity (some triads, some partial sections)
         AddColorGroup(
-            lastOfUsProject,
+            demoProject,
             "Skin",
             (ColorZone.Midtone, "#C29681", true),
             (ColorZone.Highlight, "#E0B59D", true),
             (ColorZone.Shadow, "#8C5F4F", true));
 
         AddColorGroup(
-            lastOfUsProject,
+            demoProject,
             "Jacket Leather",
             (ColorZone.Midtone, "#6D4A33", true),
             (ColorZone.Highlight, "#9A6E4D", true),
             (ColorZone.Shadow, "#3A2A20", true));
 
         AddColorGroup(
-            lastOfUsProject,
+            demoProject,
             "Jeans Denim",
             (ColorZone.Midtone, "#3D5E7A", true),
             (ColorZone.Highlight, "#6D8FAE", true),
             (ColorZone.Shadow, "#24384A", true));
 
         AddColorGroup(
-            lastOfUsProject,
+            demoProject,
             "Backpack Canvas",
             (ColorZone.Midtone, "#5B6E4A", true),
             (ColorZone.Shadow, "#35422A", true));
 
         AddColorGroup(
-            lastOfUsProject,
+            demoProject,
             "Metal Details",
             (ColorZone.Midtone, "#7A7F87", true),
             (ColorZone.Highlight, "#B6BCC4", true));
 
         AddColorGroup(
-            lastOfUsProject,
+            demoProject,
             "Base Vegetation",
             (ColorZone.Midtone, "#4E603A", false));
 
@@ -1045,35 +1045,49 @@ public class ProjectsSeed : IDeferredSeedStep
         #endregion
 
         //#region SAMPLE 
-
-        //var newProject = new Project("rodrigo.basniak", "New_Project", new DateTime(2025, 01, 01), modelId: null);
-
-        //newProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2025, 11, 01), (000000000) / 15.0);
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialSunluWaterWashableStandardResin, 000000000, MaterialUnit.Gram).GetAwaiter().GetResult();
-
-        //newProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2025, 11, 01), 1);
-        //newProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2025, 11, 01), 000000000);
-        //newProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2025, 11, 01), 000000000);
-        //newProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2025, 11, 01), 000000000);
-
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialMagnet10x5, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialMagnet8x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialMagnet6x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
-
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialVallejoPrimer, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialArmyPainterAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialVallejoAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialAtomAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-
-        //ConsumeMaterial(newProject, DatabaseSeed.MaterialVallejoVarnish, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
-
-        //newProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 000000000);
-
-        //context.Add(newProject);
-
+        //
+        //var lastOfUsProject = new Project("rodrigo.basniak", "Last Of Us", new DateTime(2026, 01, 23), modelId: null);
+        //
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Printing, new DateTime(2026, 01, 23), (000000000) / 15.0);
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialSunluWaterWashableStandardResin, 000000000, MaterialUnit.Gram).GetAwaiter().GetResult();
+        //
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Planning, new DateTime(2026, 01, 23), 1);
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Supporting, new DateTime(2026, 01, 23), 000000000);
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, new DateTime(2026, 01, 23), 000000000);
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, new DateTime(2026, 01, 23), 000000000);
+        //
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet10x5, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet8x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet6x4, 000000000, MaterialUnit.Unit).GetAwaiter().GetResult();
+        //
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoPrimer, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        //
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialArmyPainterAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialAtomAcrylic, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        //
+        //ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoVarnish, 000000000, MaterialUnit.Drop).GetAwaiter().GetResult();
+        //
+        //lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Painting, new DateTime(2025, 11, 01), 000000000);
+        //
+        //context.Add(lastOfUsProject);
+        //
+        //var sampleDirectory = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "PaintingProjectsManagement.Api", "wwwroot", "uploads", "sample", "LastOfUs");
+        //if (Directory.Exists(sampleDirectory))
+        //{
+        //    var imageFiles = Directory.GetFiles(sampleDirectory)
+        //        .OrderBy(x => x)
+        //        .ToList();
+        //
+        //    foreach (var imageFile in imageFiles)
+        //    {
+        //        var fileName = Path.GetFileName(imageFile);
+        //        lastOfUsProject.AddReferencePicture($"uploads\\sample\\LastOfUs\\{fileName}");
+        //    }
+        //}
+        //
         //context.SaveChanges();
-
+        //
         //#endregion
     }
 }
