@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+using PaintingProjectsManagement.Features.Materials;
 using PaintingProjectsManagement.UI.Modules.Shared;
 
 namespace PaintingProjectsManagement.UI.Modules.Materials;
@@ -6,6 +8,15 @@ public record MaterialDetails
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;
+    public int CategoryId { get; set; } = (int)MaterialCategory.Others;
+
+    [JsonIgnore]
+    public MaterialCategory Category
+    {
+        get => (MaterialCategory)CategoryId;
+        set => CategoryId = (int)value;
+    }
+
     public MoneyDetails PackagePrice { get; set; } = new();
     public QuantityDetails PackageContent { get; set; } = new();
 }

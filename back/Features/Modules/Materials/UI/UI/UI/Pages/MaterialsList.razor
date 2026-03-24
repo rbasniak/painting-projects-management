@@ -95,6 +95,7 @@
             var request = new CreateMaterialRequest
             {
                 Name = input.Name,
+                CategoryId = input.CategoryId,
                 PackageContentAmount = input.PackageContent.Amount,
                 PackageContentUnit = (PackageContentUnit)input.PackageContent.Unit.Id,
                 PackagePriceAmount = input.PackagePrice.Amount,
@@ -111,6 +112,7 @@
         {
             Id = material.Id,
             Name = material.Name,
+            CategoryId = material.CategoryId,
             PackageContent = new QuantityDetails
             {
                 Amount = material.PackageContent.Amount,
@@ -136,6 +138,7 @@
             {
                 Id = updatedInput.Id,
                 Name = updatedInput.Name,
+                CategoryId = updatedInput.CategoryId,
                 PackageContentAmount = updatedInput.PackageContent.Amount,
                 PackageContentUnit = (PackageContentUnit)updatedInput.PackageContent.Unit.Id,
                 PackagePriceAmount = updatedInput.PackagePrice.Amount,

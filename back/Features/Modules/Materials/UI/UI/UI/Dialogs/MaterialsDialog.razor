@@ -1,4 +1,5 @@
 @using MudBlazor
+@using PaintingProjectsManagement.Features.Materials
 @using PaintingProjectsManagement.UI.Modules.Materials
 @using PaintingProjectsManagement.UI.Modules.Shared
 
@@ -8,6 +9,13 @@
     <DialogContent>
         <MudStack Spacing="3">
             <MudTextField @bind-Value="Model.Name" Label="Name" />
+
+            <MudSelect @bind-Value="Model.Category" Label="Category">
+                @foreach (var category in MaterialCategoriesForSelect)
+                {
+                    <MudSelectItem Value="category">@category.ToString()</MudSelectItem>
+                }
+            </MudSelect>
 
             <MudGrid>
                 <MudItem xs="6">
@@ -61,6 +69,9 @@
         get => (PackageContentUnit)Model.PackageContent.Unit.Id;
         set => Model.PackageContent.Unit = new EnumReference((int)value, value.ToString());
     }
+
+    private static readonly MaterialCategory[] MaterialCategoriesForSelect =
+        Enum.GetValues<MaterialCategory>().Where(x => x != MaterialCategory.Unknown).ToArray();
 
     protected override async Task OnInitializedAsync()
     {
