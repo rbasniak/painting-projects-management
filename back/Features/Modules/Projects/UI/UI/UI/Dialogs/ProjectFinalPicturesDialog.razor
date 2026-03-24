@@ -20,27 +20,28 @@
       </MudFileUpload>
 
             <MudGrid Class="cards-grid">
-                @foreach (var reference in _vm.References)
+                @foreach (var picture in _vm.Pictures)
                 {
                     <MudItem xs="12" sm="6" md="4" lg="3">
-                        <MudCard Class=@($"pic-card {(IsCover(reference) ? "is-cover" : "")}")>
-                            @if (IsCover(reference))
+                        <MudCard Class=@($"pic-card {(IsCover(picture.Url) ? "is-cover" : "")}")>
+                            @if (IsCover(picture.Url))
                             {
                                 <div class="cover-ribbon">COVER</div>
                             }
 
                             <MudCardContent Class="p-0">
                                 <div class="img-frame">
-                                    <img src="@GetPictureAddress(reference.Url)" alt="reference picture" class="img-fit" />
+                                    <img src="@GetPictureAddress(picture.Url)" alt="final picture" class="img-fit" />
                                 </div>
                             </MudCardContent>
 
                             <MudCardActions Class="pic-actions">
-                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error"
-                                               OnClick="@(() => DeletePicture(reference.Url))" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                               Color="Color.Error"
+                                               OnClick="@(() => DeletePicture(picture.Url))" />
                                 <MudIconButton Icon="@Icons.Material.Filled.Star"
-                                               Color="@(IsCover(reference) ? Color.Warning : Color.Default)"
-                                               OnClick="@(() => PromotePicture(reference.Url))" />
+                                               Color="@(IsCover(picture.Url) ? Color.Warning : Color.Default)"
+                                               OnClick="@(() => PromotePicture(picture.Url))" />
                             </MudCardActions>
                         </MudCard>
                     </MudItem>
@@ -77,10 +78,9 @@
         return $"https://localhost:7236/{url.Trim('/')}";
     }
 
-    private bool IsCover(UrlReference reference)
+    private bool IsCover(string pictureUrl)
     {
-        ArgumentNullException.ThrowIfNull(reference);
-        return string.Equals(_vm.CoverPicture, reference.Url, StringComparison.Ordinal);
+        return string.Equals(_vm.CoverPictureUrl, pictureUrl, StringComparison.Ordinal);
     }
 
     private async Task UploadFiles(IBrowserFile file)
@@ -95,12 +95,9 @@
 
         var fileBytes = memoryStream.ToArray();
         var base64Data = Convert.ToBase64String(fileBytes);
-
-        // Determine MIME type from file content type or extension
         var mimeType = file.ContentType;
         if (string.IsNullOrWhiteSpace(mimeType))
         {
-            // Fallback to extension-based MIME type detection
             var extension = Path.GetExtension(file.Name).ToLowerInvariant();
             mimeType = extension switch
             {
@@ -109,35 +106,35 @@
                 ".gif" => "image/gif",
                 ".webp" => "image/webp",
                 ".bmp" => "image/bmp",
-                _ => "image/jpeg" // default fallback
+                _ => "image/jpeg"
             };
         }
 
-        // Format as data URI: data:image/png;base64,<bytes>
         var base64Image = $"data:{mimeType};base64,{base64Data}";
 
-        var updatedReferences = await ProjectsService.UploadReferencePictureAsync(new UploadProjectReferencePictureRequest
+        var updatedPictures = await ProjectsService.UploadFinishedPictureAsync(new UploadProjectFinishedPictureRequest
         {
             ProjectId = _vm.Id,
             Base64Image = base64Image,
             FileExtension = Path.GetExtension(file.Name)
         }, cancellationToken: default);
 
-        // Update only the references in the VM
-        _vm.References = updatedReferences;
-
+        _vm.Pictures = updatedPictures;
+        _vm.CoverPictureUrl = updatedPictures.LastOrDefault()?.Url;
         StateHasChanged();
     }
 
     private async Task DeletePicture(string pictureUrl)
     {
-        await ProjectsService.DeleteReferencePictureAsync(_vm.Id, pictureUrl, CancellationToken.None);
+        await ProjectsService.DeleteFinishedPictureAsync(_vm.Id, pictureUrl, CancellationToken.None);
 
-        // Update local VM immediately for responsive UI
-        _vm.References = _vm.References.Where(x => !string.Equals(x.Url, pictureUrl, StringComparison.Ordinal)).ToArray();
-        if (string.Equals(_vm.CoverPicture, pictureUrl, StringComparison.Ordinal))
+        _vm.Pictures = _vm.Pictures
+            .Where(x => !string.Equals(x.Url, pictureUrl, StringComparison.Ordinal))
+            .ToArray();
+
+        if (string.Equals(_vm.CoverPictureUrl, pictureUrl, StringComparison.Ordinal))
         {
-            _vm.CoverPicture = string.Empty;
+            _vm.CoverPictureUrl = string.Empty;
         }
 
         StateHasChanged();
@@ -151,15 +148,15 @@
             PictureUrl = pictureUrl
         }, CancellationToken.None);
 
-        _vm.CoverPicture = pictureUrl;
+        _vm.CoverPictureUrl = pictureUrl;
         StateHasChanged();
     }
 
     private sealed class ProjectDetailsViewModel
     {
         public Guid Id { get; set; }
-        public string CoverPicture { get; set; } = string.Empty;
-        public UrlReference[] References { get; set; } = Array.Empty<UrlReference>();
+        public string CoverPictureUrl { get; set; } = string.Empty;
+        public UrlReference[] Pictures { get; set; } = Array.Empty<UrlReference>();
 
         public static ProjectDetailsViewModel From(ProjectDetails project)
         {
@@ -168,25 +165,14 @@
             return new ProjectDetailsViewModel
             {
                 Id = project.Id,
-                CoverPicture = project.PictureUrl ?? string.Empty,
-                References = project.References?.ToArray() ?? Array.Empty<UrlReference>()
+                CoverPictureUrl = project.PictureUrl,
+                Pictures = project.Pictures?.ToArray() ?? Array.Empty<UrlReference>()
             };
-        }
-
-        public void Apply(ProjectDetails project)
-        {
-            ArgumentNullException.ThrowIfNull(project);
-
-            Id = project.Id;
-            CoverPicture = project.PictureUrl ?? string.Empty;
-            References = project.References?.ToArray() ?? Array.Empty<UrlReference>();
         }
     }
 }
 
-
 <style>
-    /* Bigger dialog */
     .pics-dialog .mud-dialog {
         width: min(1200px, 95vw);
     }
@@ -196,7 +182,6 @@
         overflow: auto;
     }
 
-    /* Uniform cards */
     .pic-card {
         position: relative;
         display: flex;
@@ -210,13 +195,13 @@
         background: var(--mud-palette-background);
         display: grid;
         place-items: center;
-        overflow: hidden; /* keep anything from leaking out */
+        overflow: hidden;
     }
 
     .img-fit {
-        width: 100%; /* must be explicit for object-fit to apply */
-        height: 100%; /* must be explicit for object-fit to apply */
-        object-fit: contain; /* now it will letterbox instead of stretching */
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
         display: block;
     }
 

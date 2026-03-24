@@ -28,6 +28,43 @@ public class Project_Finished_Pictures_Tests
     }
 
     [Test, NotInParallel(Order = 2)]
+    public async Task Promote_Finished_Picture_To_Cover_Should_Update_Project_Picture_Url()
+    {
+        var isolatedProjectId = await CreateProjectAsync("Project With Finished Pictures For Promote");
+
+        var upload = await TestingServer.PostAsync<UrlReference[]>(
+            "api/projects/finished-picture",
+            new UploadProjectFinishedPicture.Request
+            {
+                ProjectId = isolatedProjectId,
+                Base64Image = _base64Image
+            }, "rodrigo.basniak");
+
+        upload.ShouldBeSuccess();
+        upload.Data.ShouldNotBeNull();
+        upload.Data.Length.ShouldBeGreaterThan(0);
+
+        var uploadedUrl = upload.Data.Last().Url;
+
+        var promote = await TestingServer.PostAsync(
+            "api/projects/picture/promote",
+            new PromoteProjectPictureToCover.Request
+            {
+                ProjectId = isolatedProjectId,
+                PictureUrl = uploadedUrl
+            },
+            "rodrigo.basniak");
+
+        promote.ShouldBeSuccess();
+
+        using var context = TestingServer.CreateContext();
+        var project = await context.Set<Project>()
+            .FirstAsync(x => x.Id == isolatedProjectId);
+
+        project.PictureUrl.ShouldBe(uploadedUrl);
+    }
+
+    [Test, NotInParallel(Order = 3)]
     public async Task Free_Tier_Finished_Project_Picture_Limit_Is_Enforced()
     {
         for (var i = 0; i < 3; i++)
@@ -58,5 +95,16 @@ public class Project_Finished_Pictures_Tests
     public async Task Cleanup()
     {
         await TestingServer.DisposeAsync();
+    }
+
+    private async Task<Guid> CreateProjectAsync(string name)
+    {
+        var project = new Project("rodrigo.basniak", name, DateTime.UtcNow, null);
+
+        using var context = TestingServer.CreateContext();
+        await context.AddAsync(project);
+        await context.SaveChangesAsync();
+
+        return project.Id;
     }
 }
