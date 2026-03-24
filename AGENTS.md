@@ -1,8 +1,18 @@
 ## Cursor Cloud specific instructions
 
+This file is the primary onboarding guide for AI agents and developers working in this repository: stack overview, how to build and test, how to run the full stack locally, and known environment pitfalls.
+
 ### Overview
 
 This is a .NET 10 / ASP.NET Core + Blazor WASM application for managing miniature painting projects ("Painting Projects Management"). It uses .NET Aspire to orchestrate all services (PostgreSQL, RabbitMQ, API, UI, pgAdmin).
+
+### Repository layout
+
+| Path | Purpose |
+|------|---------|
+| `/workspace` | Git repository root; this file lives here. |
+| `/workspace/back` | .NET solution root (`PaintingProjectsManagment.slnx`), Aspire AppHost, API, Blazor UI, feature modules, and `global.json`. |
+| `/workspace/back/Database/PaintingProjectsManagment.Database` | Database project and SQL seed files. |
 
 ### Prerequisites (installed by VM snapshot)
 
@@ -58,9 +68,9 @@ Additionally, the Projects seed depends on Materials being propagated via Rabbit
 
 ### Testing notes
 
-- Tests use **TUnit** with `Microsoft.Testing.Platform` (configured in `global.json`). The `--filter` flag is not supported; use `--treenode-filter` for TUnit-based filtering.
+- Tests use **TUnit** with `Microsoft.Testing.Platform` (configured in `back/global.json`). The `--filter` flag is not supported; use `--treenode-filter` for TUnit-based filtering.
 - Integration tests use **Testcontainers** and automatically spin up ephemeral PostgreSQL + RabbitMQ Docker containers.
-- Playwright UI tests require browser binaries (`pwsh bin/Debug/net10/playwright.ps1 install`); they will fail without them.
+- Playwright UI tests require browser binaries. From `/workspace/back`, after a build: `pwsh bin/Debug/net10.0/playwright.ps1 install` (or the matching `$(Configuration)` / `$(TargetFramework)` output folder). They will fail without installed browsers.
 - The project explicitly sets `TreatWarningsAsErrors=false` in `Directory.Build.props`. Some NU1903/NU1506 warnings are expected.
 
 ### Seeded user accounts
