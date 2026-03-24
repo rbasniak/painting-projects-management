@@ -32,7 +32,7 @@ public class ListMaterials : IEndpoint
         {
             var materials = await _context.Set<Material>()
                 .Where(x => x.TenantId == request.Identity.Tenant)
-                .OrderByDescending(x => x.Id)
+                .OrderBy(x => x.Name)
                 .ToListAsync(cancellationToken);
 
             var result = materials.Select(MaterialDetails.FromModel).AsReadOnly();
