@@ -274,11 +274,8 @@
             };
 
             await ProjectsService.UpdatePickedColorAsync(request, default);
-            
-            // Refresh project details
-            var updatedProject = await ProjectsService.GetDetailsAsync(Model.Id, default);
-            Model = updatedProject;
-            LoadColorGroups();
+
+            ApplyPickedColor(sectionId, paintColorId);
             
             Snackbar.Add("Color selected successfully", Severity.Success);
         }
@@ -286,6 +283,21 @@
         {
             Snackbar.Add($"Error selecting color: {ex.Message}", Severity.Error);
         }
+    }
+
+    private void ApplyPickedColor(Guid sectionId, Guid paintColorId)
+    {
+        var section = Model.Groups
+            .SelectMany(x => x.Sections)
+            .FirstOrDefault(x => x.Id == sectionId);
+
+        if (section is null)
+        {
+            return;
+        }
+
+        section.PickedColorId = paintColorId;
+        StateHasChanged();
     }
 
     private string GetZoneLabel(ColorZone zone)
