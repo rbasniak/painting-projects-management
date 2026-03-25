@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.UI.Modules.Projects;
+using PaintingProjectsManagement.UI.Modules.Shared;
 
 namespace PaintingProjectsManagement.UI.Modules.Projects;
 
@@ -167,7 +168,13 @@ public class ProjectsService : IProjectsService
 
         if (!response.IsSuccessStatusCode)
         {
-            throw new Exception($"Failed to get project costs for project ID {projectId}. Status code: {response.StatusCode}");
+            var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(cancellationToken: cancellationToken);
+            var detail = problem?.Detail ?? problem?.Title;
+            var suffix = string.IsNullOrWhiteSpace(detail)
+                ? $"Status code: {response.StatusCode}"
+                : detail;
+
+            throw new Exception($"Failed to get project costs for project ID {projectId}. {suffix}");
         }
 
         var result = await response.Content.ReadFromJsonAsync<ProjectCostDetails>();

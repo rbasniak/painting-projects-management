@@ -11,15 +11,26 @@ public class GetProjectCosts : IEndpoint
     {
         endpoints.MapGet("/projects/{projectId}/costs", async (Guid projectId, string? currency, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
-            var result = await dispatcher.SendAsync(new Request
+            try
             {
-                ProjectId = projectId,
-                Currency = currency
-            }, cancellationToken);
+                var result = await dispatcher.SendAsync(new Request
+                {
+                    ProjectId = projectId,
+                    Currency = currency
+                }, cancellationToken);
 
-            return ResultsMapper.FromResponse(result);
+                return ResultsMapper.FromResponse(result);
+            }
+            catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException)
+            {
+                return Results.Problem(
+                    title: "Project cost recalculation unavailable",
+                    detail: ex.Message,
+                    statusCode: StatusCodes.Status503ServiceUnavailable);
+            }
         })
         .Produces<ProjectCostDetails>(StatusCodes.Status200OK)
+        .ProducesProblem(StatusCodes.Status503ServiceUnavailable)
         .RequireAuthorization()
         .WithName("Get Project Costs")
         .WithTags("Projects");
@@ -88,17 +99,10 @@ public class GetProjectCosts : IEndpoint
             {
                 logger.LogWarning(
                     ex,
-                    "Failed to calculate project cost for project {ProjectId} in currency {Currency}. Returning empty cost breakdown.",
+                    "Failed to calculate project cost for project {ProjectId} in currency {Currency}.",
                     project.Id,
                     selectedCurrency);
-
-                return QueryResponse.Success(new ProjectCostDetails
-                {
-                    Id = project.Id,
-                    Electricity = ProjectCostDetails.Empty.Electricity,
-                    Labor = ProjectCostDetails.Empty.Labor,
-                    Materials = ProjectCostDetails.Empty.Materials
-                });
+                throw;
             }
 
             try

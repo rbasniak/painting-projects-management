@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace PaintingProjectsManagement.Features.Currency;
 
@@ -18,6 +19,11 @@ internal class CurrencyConverter : ICurrencyConverter
     private readonly ILogger<CurrencyConverter> _logger;
     private const string ApiBaseUrl = "https://api.frankfurter.app";
     private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(1);
+    private static readonly TimeSpan[] RetryDelays =
+    [
+        TimeSpan.FromMilliseconds(250),
+        TimeSpan.FromMilliseconds(750)
+    ];
 
     public CurrencyConverter(HttpClient httpClient, IMemoryCache cache, ILogger<CurrencyConverter> logger)
     {
@@ -56,8 +62,7 @@ internal class CurrencyConverter : ICurrencyConverter
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/latest?from={from}");
-                var content = await response.Content.ReadAsStringAsync();
+                var (response, content) = await GetLatestRatesAsync(from);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -139,6 +144,44 @@ internal class CurrencyConverter : ICurrencyConverter
         {
             throw new InvalidOperationException($"Failed to fetch available currencies: {ex.Message}", ex);
         }
+    }
+
+    private async Task<(HttpResponseMessage Response, string Content)> GetLatestRatesAsync(string from)
+    {
+        HttpResponseMessage? lastResponse = null;
+        string lastContent = string.Empty;
+
+        for (var attempt = 0; attempt <= RetryDelays.Length; attempt++)
+        {
+            lastResponse?.Dispose();
+            lastResponse = await _httpClient.GetAsync($"/latest?from={from}");
+            lastContent = await lastResponse.Content.ReadAsStringAsync();
+
+            if (lastResponse.IsSuccessStatusCode || !ShouldRetry(lastResponse.StatusCode) || attempt == RetryDelays.Length)
+            {
+                return (lastResponse, lastContent);
+            }
+
+            _logger.LogWarning(
+                "Retrying Frankfurter latest rates request for base {From} after transient HTTP {Status}. Attempt {Attempt} of {TotalAttempts}.",
+                from,
+                (int)lastResponse.StatusCode,
+                attempt + 1,
+                RetryDelays.Length + 1);
+
+            await Task.Delay(RetryDelays[attempt]);
+        }
+
+        return (lastResponse!, lastContent);
+    }
+
+    private static bool ShouldRetry(HttpStatusCode statusCode)
+    {
+        return statusCode is HttpStatusCode.TooManyRequests
+            or HttpStatusCode.BadGateway
+            or HttpStatusCode.GatewayTimeout
+            or HttpStatusCode.ServiceUnavailable
+            or HttpStatusCode.Forbidden;
     }
 
     private class FrankfurterResponse

@@ -38,6 +38,13 @@
                     </MudStack>
                 </MudStack>
 
+                @if (!string.IsNullOrWhiteSpace(CostLoadError))
+                {
+                    <MudAlert Severity="Severity.Warning" Dense="true" Variant="Variant.Outlined">
+                        @CostLoadError
+                    </MudAlert>
+                }
+
                 <MudGrid Spacing="3">
                     <MudItem xs="12" md="4">
                         <MudPaper Class="stat-card" Elevation="1">
@@ -203,6 +210,7 @@
     private bool IsLoadingCurrencies { get; set; }
     private ProjectCostDetails CostBreakdown { get; set; } = EmptyCostBreakdown;
     private bool IsLoadingCosts { get; set; }
+    private string CostLoadError { get; set; } = string.Empty;
     private bool IsCurrencySelectionDisabled => IsLoadingCurrencies || IsLoadingCosts || Model is null || Model.Id == Guid.Empty;
     private static ProjectCostDetails EmptyCostBreakdown => new()
     {
@@ -288,7 +296,7 @@
         catch (Exception ex)
         {
             SelectedCurrency = previousCurrency;
-            Snackbar.Add($"Could not recalculate costs in {normalizedCurrency}: {ex.Message}", Severity.Error);
+            Snackbar.Add($"Could not recalculate costs in {normalizedCurrency}: {GetErrorMessage(ex)}", Severity.Error);
         }
     }
 
@@ -332,19 +340,39 @@
         if (Model is null || Model.Id == Guid.Empty)
         {
             CostBreakdown = EmptyCostBreakdown;
+            CostLoadError = string.Empty;
             return;
         }
 
         IsLoadingCosts = true;
+        CostLoadError = string.Empty;
 
         try
         {
             CostBreakdown = await ProjectsService.GetCostsAsync(Model.Id, CancellationToken.None, currency);
         }
+        catch (Exception ex)
+        {
+            CostLoadError = GetErrorMessage(ex);
+            throw;
+        }
         finally
         {
             IsLoadingCosts = false;
         }
+    }
+
+    private static string GetErrorMessage(Exception ex)
+    {
+        var message = ex.Message;
+        const string statusPrefix = "Failed to get project costs";
+
+        if (message.StartsWith(statusPrefix, StringComparison.Ordinal))
+        {
+            return "Currency conversion is temporarily unavailable. Existing costs are still shown.";
+        }
+
+        return message;
     }
 
     private void Close() => MudDialog.Close(DialogResult.Ok(true));
