@@ -6,21 +6,21 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class Builder
 {
-    public static IServiceCollection AddInventoryModule(this IServiceCollection services)
+    public static IServiceCollection AddInventoryModule(this IServiceCollection services, Uri apiBaseAddress)
     {
         services.AddSingleton<IModule, Menu>();
 
-        services.AddScoped<IInventoryService>(sp =>
+        services.AddScoped<IInventoryService>(x =>
         {
-            var bearer = sp.GetRequiredService<BearerDelegatingHandler>();
-            var errorHandler = sp.GetRequiredService<HttpErrorHandler>();
+            var bearer = x.GetRequiredService<BearerDelegatingHandler>();
+            var errorHandler = x.GetRequiredService<HttpErrorHandler>();
 
             bearer.InnerHandler = new HttpClientHandler();
             errorHandler.InnerHandler = bearer;
 
             var httpClient = new HttpClient(errorHandler)
             {
-                BaseAddress = new Uri("https://localhost:7236/")
+                BaseAddress = apiBaseAddress
             };
             return new InventoryService(httpClient);
         });
