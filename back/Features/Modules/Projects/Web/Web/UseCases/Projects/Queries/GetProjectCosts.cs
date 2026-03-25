@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -75,6 +76,32 @@ public class GetProjectCosts : IEndpoint
             catch (Exception ex)
             {
                 logger.LogWarning(ex, "Failed to calculate project cost for project {ProjectId}. Returning empty cost breakdown.", project.Id);
+
+                // #region agent log
+                try
+                {
+                    System.IO.File.AppendAllText(
+                        "/opt/cursor/logs/debug.log",
+                        JsonSerializer.Serialize(new
+                        {
+                            hypothesisId = "H1",
+                            location = "GetProjectCosts.cs:Handler",
+                            message = ex.GetType().FullName,
+                            data = new
+                            {
+                                ex.Message,
+                                inner = ex.InnerException?.Message,
+                                projectId = project.Id,
+                                request.Currency
+                            },
+                            timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                        }) + "\n");
+                }
+                catch
+                {
+                    /* ignore debug log I/O errors */
+                }
+                // #endregion
 
                 return QueryResponse.Success(new ProjectCostDetails
                 {

@@ -39,6 +39,16 @@ public static class MoneyExtensions
 {
     public static async Task<Money> Convert(this Money money, string currency, ICurrencyConverter converter)
     {
+        if (string.IsNullOrWhiteSpace(money.Currency))
+        {
+            throw new InvalidOperationException("Cannot convert money with an unspecified currency.");
+        }
+
+        if (string.IsNullOrWhiteSpace(currency))
+        {
+            throw new ArgumentException("Target currency is required.", nameof(currency));
+        }
+
         if (string.Equals(money.Currency, currency, StringComparison.OrdinalIgnoreCase))
         {
             return money;
@@ -46,6 +56,6 @@ public static class MoneyExtensions
 
         var conversionRate = await converter.GetConversionRate(money.Currency, currency);
 
-        return new Money(conversionRate * money.Amount, currency);
+        return new Money(conversionRate * money.Amount, currency.Trim().ToUpperInvariant());
     }
 }

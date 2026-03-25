@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -26,41 +26,117 @@ internal class CurrencyConverter : ICurrencyConverter
 
     public async Task<double> GetConversionRate(string fromCurrency, string toCurrency)
     {
-        if (fromCurrency.Equals(toCurrency, StringComparison.InvariantCultureIgnoreCase))
+        if (string.IsNullOrWhiteSpace(fromCurrency))
+        {
+            throw new ArgumentException("From currency is required.", nameof(fromCurrency));
+        }
+
+        if (string.IsNullOrWhiteSpace(toCurrency))
+        {
+            throw new ArgumentException("To currency is required.", nameof(toCurrency));
+        }
+
+        var from = fromCurrency.Trim().ToUpperInvariant();
+        var to = toCurrency.Trim().ToUpperInvariant();
+
+        if (string.Equals(from, to, StringComparison.Ordinal))
         {
             return 1.0;
         }
 
-        var cacheKey = $"conversion_rate_{fromCurrency.ToUpper()}_{toCurrency.ToUpper()}";
-        
-        if (_cache.TryGetValue(cacheKey, out double cachedRate))
+        // Cache the full ECB rate table for the base currency (one HTTP call per distinct "from"
+        // per hour). Resolves target via case-insensitive lookup instead of relying on Frankfurter's
+        // optional `to=` filter, which can behave inconsistently for some pairs or API versions.
+        var tableCacheKey = $"latest_rates_{from}";
+
+        if (!_cache.TryGetValue(tableCacheKey, out Dictionary<string, double>? ratesTable) || ratesTable is null)
         {
-            return cachedRate;
+            try
+            {
+                var response = await _httpClient.GetAsync($"/latest?from={from}");
+                var content = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    // #region agent log
+                    try
+                    {
+                        var snippet = content.Length > 240 ? content[..240] : content;
+                        System.IO.File.AppendAllText(
+                            "/opt/cursor/logs/debug.log",
+                            JsonSerializer.Serialize(new
+                            {
+                                hypothesisId = "H2",
+                                location = "ICurrencyConverter.cs:GetConversionRate",
+                                message = "Frankfurter non-success",
+                                data = new { from, to, status = (int)response.StatusCode, bodySnippet = snippet },
+                                timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                            }) + "\n");
+                    }
+                    catch
+                    {
+                        /* ignore debug log I/O errors */
+                    }
+                    // #endregion
+
+                    throw new InvalidOperationException(
+                        $"Frankfurter HTTP {(int)response.StatusCode} when loading rates for base {from}.");
+                }
+
+                var result = JsonSerializer.Deserialize<FrankfurterResponse>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (result?.Rates is null || result.Rates.Count == 0)
+                {
+                    throw new InvalidOperationException($"Frankfurter returned no rates for base currency {from}.");
+                }
+
+                ratesTable = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase);
+                foreach (var kv in result.Rates)
+                {
+                    ratesTable[kv.Key] = kv.Value;
+                }
+
+                _cache.Set(tableCacheKey, ratesTable, CacheDuration);
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new InvalidOperationException($"Failed to fetch currency conversion rate: {ex.Message}", ex);
+            }
+            catch (JsonException ex)
+            {
+                throw new InvalidOperationException("Failed to parse Frankfurter currency response.", ex);
+            }
         }
 
+        if (ratesTable.TryGetValue(to, out var rate))
+        {
+            return rate;
+        }
+
+        // #region agent log
         try
         {
-            var response = await _httpClient.GetAsync($"/latest?from={fromCurrency.ToUpper()}&to={toCurrency.ToUpper()}");
-            response.EnsureSuccessStatusCode();
-
-            var content = await response.Content.ReadAsStringAsync();
-            var result = JsonSerializer.Deserialize<FrankfurterResponse>(content, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-
-            if (result?.Rates != null && result.Rates.TryGetValue(toCurrency.ToUpper(), out var rate))
-            {
-                _cache.Set(cacheKey, rate, CacheDuration);
-                return rate;
-            }
-
-            throw new InvalidOperationException($"Unable to get conversion rate from {fromCurrency} to {toCurrency}");
+            System.IO.File.AppendAllText(
+                "/opt/cursor/logs/debug.log",
+                JsonSerializer.Serialize(new
+                {
+                    hypothesisId = "H2b",
+                    location = "ICurrencyConverter.cs:GetConversionRate",
+                    message = "Target currency missing in rates table",
+                    data = new { from, to, rateKeyCount = ratesTable.Count },
+                    timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                }) + "\n");
         }
-        catch (HttpRequestException ex)
+        catch
         {
-            throw new InvalidOperationException($"Failed to fetch currency conversion rate: {ex.Message}", ex);
+            /* ignore */
         }
+        // #endregion
+
+        throw new InvalidOperationException($"Unable to get conversion rate from {from} to {to}.");
     }
 
     public async Task<Dictionary<string, string>> GetAvailableCurrencies()
