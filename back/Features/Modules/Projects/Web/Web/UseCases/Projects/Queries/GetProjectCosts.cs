@@ -1,7 +1,7 @@
-using System.Text.Json;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using PaintingProjectsManagement.Features.Currency;
 
 namespace PaintingProjectsManagement.Features.Projects;
 
@@ -64,44 +64,33 @@ public class GetProjectCosts : IEndpoint
                     x => x.Id == request.ProjectId && x.TenantId == request.Identity.Tenant,
                     cancellationToken);
 
+            var selectedCurrency = string.IsNullOrWhiteSpace(request.Currency)
+                ? DefaultCurrency
+                : CurrencyCode.Normalize(request.Currency);
+            if (string.IsNullOrWhiteSpace(selectedCurrency))
+            {
+                selectedCurrency = DefaultCurrency;
+            }
+
+            ProjectCostBreakdown projectCostBreakdown;
             try
             {
-                var selectedCurrency = string.IsNullOrWhiteSpace(request.Currency)
-                    ? DefaultCurrency
-                    : request.Currency.Trim().ToUpperInvariant();
-
-                var projectCostBreakdown = await projectCostCalculator.CalculateCostAsync(project.Id, selectedCurrency, cancellationToken);
-                return QueryResponse.Success(ProjectCostDetails.FromModel(projectCostBreakdown));
+                projectCostBreakdown = await projectCostCalculator.CalculateCostAsync(
+                    project.Id,
+                    selectedCurrency,
+                    cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                logger.LogWarning(ex, "Failed to calculate project cost for project {ProjectId}. Returning empty cost breakdown.", project.Id);
-
-                // #region agent log
-                try
-                {
-                    System.IO.File.AppendAllText(
-                        "/opt/cursor/logs/debug.log",
-                        JsonSerializer.Serialize(new
-                        {
-                            hypothesisId = "H1",
-                            location = "GetProjectCosts.cs:Handler",
-                            message = ex.GetType().FullName,
-                            data = new
-                            {
-                                ex.Message,
-                                inner = ex.InnerException?.Message,
-                                projectId = project.Id,
-                                request.Currency
-                            },
-                            timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-                        }) + "\n");
-                }
-                catch
-                {
-                    /* ignore debug log I/O errors */
-                }
-                // #endregion
+                logger.LogWarning(
+                    ex,
+                    "Failed to calculate project cost for project {ProjectId} in currency {Currency}. Returning empty cost breakdown.",
+                    project.Id,
+                    selectedCurrency);
 
                 return QueryResponse.Success(new ProjectCostDetails
                 {
@@ -110,6 +99,20 @@ public class GetProjectCosts : IEndpoint
                     Labor = ProjectCostDetails.Empty.Labor,
                     Materials = ProjectCostDetails.Empty.Materials
                 });
+            }
+
+            try
+            {
+                return QueryResponse.Success(ProjectCostDetails.FromModel(projectCostBreakdown));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(
+                    ex,
+                    "Failed to map project cost breakdown for project {ProjectId} in currency {Currency}.",
+                    project.Id,
+                    selectedCurrency);
+                throw;
             }
         }
     }

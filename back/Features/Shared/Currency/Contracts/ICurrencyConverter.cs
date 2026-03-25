@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace PaintingProjectsManagement.Features.Currency;
 
@@ -14,30 +15,32 @@ internal class CurrencyConverter : ICurrencyConverter
 {
     private readonly HttpClient _httpClient;
     private readonly IMemoryCache _cache;
+    private readonly ILogger<CurrencyConverter> _logger;
     private const string ApiBaseUrl = "https://api.frankfurter.app";
     private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(1);
 
-    public CurrencyConverter(HttpClient httpClient, IMemoryCache cache)
+    public CurrencyConverter(HttpClient httpClient, IMemoryCache cache, ILogger<CurrencyConverter> logger)
     {
         _httpClient = httpClient;
         _cache = cache;
+        _logger = logger;
         _httpClient.BaseAddress = new Uri(ApiBaseUrl);
     }
 
     public async Task<double> GetConversionRate(string fromCurrency, string toCurrency)
     {
-        if (string.IsNullOrWhiteSpace(fromCurrency))
+        var from = CurrencyCode.Normalize(fromCurrency);
+        var to = CurrencyCode.Normalize(toCurrency);
+
+        if (string.IsNullOrWhiteSpace(from))
         {
             throw new ArgumentException("From currency is required.", nameof(fromCurrency));
         }
 
-        if (string.IsNullOrWhiteSpace(toCurrency))
+        if (string.IsNullOrWhiteSpace(to))
         {
             throw new ArgumentException("To currency is required.", nameof(toCurrency));
         }
-
-        var from = fromCurrency.Trim().ToUpperInvariant();
-        var to = toCurrency.Trim().ToUpperInvariant();
 
         if (string.Equals(from, to, StringComparison.Ordinal))
         {
@@ -58,26 +61,13 @@ internal class CurrencyConverter : ICurrencyConverter
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    // #region agent log
-                    try
-                    {
-                        var snippet = content.Length > 240 ? content[..240] : content;
-                        System.IO.File.AppendAllText(
-                            "/opt/cursor/logs/debug.log",
-                            JsonSerializer.Serialize(new
-                            {
-                                hypothesisId = "H2",
-                                location = "ICurrencyConverter.cs:GetConversionRate",
-                                message = "Frankfurter non-success",
-                                data = new { from, to, status = (int)response.StatusCode, bodySnippet = snippet },
-                                timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-                            }) + "\n");
-                    }
-                    catch
-                    {
-                        /* ignore debug log I/O errors */
-                    }
-                    // #endregion
+                    var snippet = content.Length > 240 ? content[..240] : content;
+                    _logger.LogWarning(
+                        "Frankfurter non-success when loading rates for base {From} (target {To}): HTTP {Status} body: {BodySnippet}",
+                        from,
+                        to,
+                        (int)response.StatusCode,
+                        snippet);
 
                     throw new InvalidOperationException(
                         $"Frankfurter HTTP {(int)response.StatusCode} when loading rates for base {from}.");
@@ -116,25 +106,11 @@ internal class CurrencyConverter : ICurrencyConverter
             return rate;
         }
 
-        // #region agent log
-        try
-        {
-            System.IO.File.AppendAllText(
-                "/opt/cursor/logs/debug.log",
-                JsonSerializer.Serialize(new
-                {
-                    hypothesisId = "H2b",
-                    location = "ICurrencyConverter.cs:GetConversionRate",
-                    message = "Target currency missing in rates table",
-                    data = new { from, to, rateKeyCount = ratesTable.Count },
-                    timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-                }) + "\n");
-        }
-        catch
-        {
-            /* ignore */
-        }
-        // #endregion
+        _logger.LogWarning(
+            "Target currency {To} missing in Frankfurter rate table for base {From} ({RateCount} keys).",
+            to,
+            from,
+            ratesTable.Count);
 
         throw new InvalidOperationException($"Unable to get conversion rate from {from} to {to}.");
     }
