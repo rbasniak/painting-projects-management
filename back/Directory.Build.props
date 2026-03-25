@@ -10,6 +10,8 @@
     <LangVersion>latest</LangVersion>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn> <!-- Missing XML comment warnings -->
+    <!-- Exclude any nested build artifacts (e.g. accidental ProjectName/obj folders) -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);**/[Bb]in/**;**/[Oo]bj/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <!-- Properties specific to test projects -->
