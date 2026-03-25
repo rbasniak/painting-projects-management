@@ -1,6 +1,5 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace PaintingProjectsManagement.Features.Projects;
 
@@ -8,12 +7,11 @@ public class GetProjectDetails : IEndpoint
 {
     public static void MapEndpoint(IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/projects/{projectId}", async (Guid projectId, string? currency, IDispatcher dispatcher, CancellationToken cancellationToken) =>
+        endpoints.MapGet("/projects/{projectId}", async (Guid projectId, IDispatcher dispatcher, CancellationToken cancellationToken) =>
         {
             var result = await dispatcher.SendAsync(new Request
             {
-                Id = projectId,
-                Currency = currency
+                Id = projectId
             }, cancellationToken);
             
             return ResultsMapper.FromResponse(result);
@@ -27,7 +25,6 @@ public class GetProjectDetails : IEndpoint
     public class Request : AuthenticatedRequest, IQuery
     {
         public Guid Id { get; set; }
-        public string? Currency { get; set; }
     }
 
     internal class Validator : SmartValidator<Request, Project>
@@ -47,77 +44,21 @@ public class GetProjectDetails : IEndpoint
         }
     }
 
-    public class Handler(
-        DbContext context,
-        IProjectCostCalculator projectCostCalculator,
-        ILogger<Handler> logger
-    ) : IQueryHandler<Request>
+    public class Handler(DbContext context) : IQueryHandler<Request>
     {
-        private const string DefaultCurrency = "DKK";
-
         public async Task<QueryResponse> HandleAsync(Request request, CancellationToken cancellationToken)
         {
             var project = await context.Set<Project>()
                 .Include(x => x.Steps)
                 .Include(x => x.References)
                 .Include(x => x.Pictures)
-                .Include(x => x.Materials)
                 .Include(x => x.ColorGroups)
                     .ThenInclude(x => x.Sections)
                 .FirstAsync(
                     x => x.Id == request.Id && x.TenantId == request.Identity.Tenant,
                     cancellationToken);
 
-            // TODO: Get from proper projection table in the future.
-            // Cost failures should not block project details dialogs (references/colors/matching flows).
-            ProjectCostBreakdown projectCostBreakdown;
-            try
-            {
-                var selectedCurrency = string.IsNullOrWhiteSpace(request.Currency)
-                    ? DefaultCurrency
-                    : request.Currency.Trim().ToUpperInvariant();
-
-                projectCostBreakdown = await projectCostCalculator.CalculateCostAsync(project.Id, selectedCurrency, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Failed to calculate project cost for project {ProjectId}. Returning empty cost breakdown.", project.Id);
-                projectCostBreakdown = new ProjectCostBreakdown
-                {
-                    ProjectId = project.Id,
-                    Electricity = ElectricityCost.Empty(),
-                    Labor = new Dictionary<string, LaborCost>(),
-                    Materials = new Dictionary<string, IReadOnlyCollection<MaterialsCost>>()
-                };
-            }
-
-
-            if (project.Materials.Any())
-            {
-                var materialIds = project.Materials.Select(x => x.MaterialId).ToArray();
-
-                //var materialsRequest = new GetMaterialsForProject.Request
-                //{
-                //    MaterialIds = materialIds
-                //};
-
-                //var materialsResponse = await _dispatcher.SendAsync(materialsRequest, cancellationToken);
-                
-                //if (!materialsResponse.IsValid)
-                //{
-                //    return QueryResponse.Failure(materialsResponse.Error);
-                //}
-
-                //var materialDetails = materialsResponse.Data
-                //    .Select(materialData =>
-                //    {
-                //        var projectMaterial = project.Materials.First(projectMaterial => projectMaterial.MaterialId == materialData.Id);
-                //        return MaterialDetails.FromModel(materialData, projectMaterial);
-                //    })
-                //    .ToArray();
-            }
-
-            return QueryResponse.Success(ProjectDetails.FromModel(project, projectCostBreakdown));
+            return QueryResponse.Success(ProjectDetails.FromModel(project));
         }
     }
 }

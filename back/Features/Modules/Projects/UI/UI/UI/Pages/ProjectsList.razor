@@ -70,6 +70,10 @@
                                         <MudIcon Icon="@Icons.Material.Filled.FormatColorFill" Class="mr-3" />
                                         Colors Summary
                                     </MudMenuItem>
+                                    <MudMenuItem OnClick="() => OpenCosts(project)">
+                                        <MudIcon Icon="@Icons.Material.Filled.Payments" Class="mr-3" />
+                                        Costs
+                                    </MudMenuItem>
 
                                     <MudDivider />
 
@@ -269,6 +273,14 @@
         var parameters = new DialogParameters { ["Model"] = projectDetails };
         var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = true };
         DialogService.Show<UsedColorsByZoneDialog>(title: null, parameters, options);
+    }
+
+    private async Task OpenCosts(ProjectDetails project)
+    {
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+        DialogService.Show<ProjectCostBreakdownDialog>(title: null, parameters, options);
     }
 
     private async Task Edit(ProjectDetails project)

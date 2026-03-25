@@ -39,13 +39,26 @@ public static class MoneyExtensions
 {
     public static async Task<Money> Convert(this Money money, string currency, ICurrencyConverter converter)
     {
-        if (string.Equals(money.Currency, currency, StringComparison.OrdinalIgnoreCase))
+        var fromCode = CurrencyCode.Normalize(money.Currency);
+        var toCode = CurrencyCode.Normalize(currency);
+
+        if (string.IsNullOrWhiteSpace(fromCode))
         {
-            return money;
+            throw new InvalidOperationException("Cannot convert money with an unspecified currency.");
         }
 
-        var conversionRate = await converter.GetConversionRate(money.Currency, currency);
+        if (string.IsNullOrWhiteSpace(toCode))
+        {
+            throw new ArgumentException("Target currency is required.", nameof(currency));
+        }
 
-        return new Money(conversionRate * money.Amount, currency);
+        if (string.Equals(fromCode, toCode, StringComparison.Ordinal))
+        {
+            return new Money(money.Amount, toCode);
+        }
+
+        var conversionRate = await converter.GetConversionRate(fromCode, toCode);
+
+        return new Money(conversionRate * money.Amount, toCode);
     }
 }

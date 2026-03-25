@@ -67,11 +67,25 @@ public class ProjectCostCalculator(
             costBreakdown.Labor.Add(stepGroup.Key.ToString(), laborCost);
         }
 
+        // Group by CategoryId for resin waste, but bucket output by display name so duplicate CategoryName
+        // values (bad projection data or enum/id drift) do not throw on Dictionary.Add.
+        var materialsByCategoryName = new Dictionary<string, List<MaterialsCost>>(StringComparer.Ordinal);
+
         foreach (var categoryGroup in projectMaterials.GroupBy(x => x.Value.MaterialDefinition.CategoryId).OrderBy(x => x.Key))
         {
-            var materialsCosts = new List<MaterialsCost>();
-
             var resinWasteFactor = categoryGroup.Key == 10 ? projectSettings.ResinWasteFactor : 1.0; // TODO: Dangerous hardcoded value (resins)
+
+            var categoryName = categoryGroup.First().Value.MaterialDefinition.CategoryName;
+            if (string.IsNullOrWhiteSpace(categoryName))
+            {
+                categoryName = "Uncategorized";
+            }
+
+            if (!materialsByCategoryName.TryGetValue(categoryName, out var materialsCosts))
+            {
+                materialsCosts = new List<MaterialsCost>();
+                materialsByCategoryName[categoryName] = materialsCosts;
+            }
 
             foreach (var pm in categoryGroup)
             {
@@ -88,8 +102,11 @@ public class ProjectCostCalculator(
                     CostPerUnit = await materiaDefinition.PricePerUnit.Convert(currency, currencyConverter)
                 });
             }
+        }
 
-            costBreakdown.Materials.Add(categoryGroup.First().Value.MaterialDefinition.CategoryName, materialsCosts.AsReadOnly());
+        foreach (var (name, list) in materialsByCategoryName)
+        {
+            costBreakdown.Materials.Add(name, list.AsReadOnly());
         }
 
         return costBreakdown;

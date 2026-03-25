@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using PaintingProjectsManagement.Features.Inventory;
 using PaintingProjectsManagement.UI.Modules.Projects;
+using PaintingProjectsManagement.UI.Modules.Shared;
 
 namespace PaintingProjectsManagement.UI.Modules.Projects;
 
@@ -8,7 +9,9 @@ public interface IProjectsService
 {
     Task<IReadOnlyCollection<ProjectDetails>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken, string? currency = null);
+    Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken);
+
+    Task<ProjectCostDetails> GetCostsAsync(Guid projectId, CancellationToken cancellationToken, string? currency = null);
 
     Task<IReadOnlyCollection<CurrencyOption>> GetCurrenciesAsync(CancellationToken cancellationToken);
 
@@ -132,17 +135,9 @@ public class ProjectsService : IProjectsService
         await _httpClient.DeleteAsync($"projects/{id}", cancellationToken);
     }
 
-    public async Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken, string? currency = null)
+    public async Task<ProjectDetails> GetDetailsAsync(Guid projectId, CancellationToken cancellationToken)
     {
-        var requestUri = $"projects/{projectId}";
-
-        if (!string.IsNullOrWhiteSpace(currency))
-        {
-            var normalizedCurrency = Uri.EscapeDataString(currency.Trim().ToUpperInvariant());
-            requestUri = $"{requestUri}?currency={normalizedCurrency}";
-        }
-
-        var response = await _httpClient.GetAsync(requestUri, cancellationToken);
+        var response = await _httpClient.GetAsync($"projects/{projectId}", cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -154,6 +149,39 @@ public class ProjectsService : IProjectsService
         if (result == null)
         {
             throw new Exception($"Project details for project ID {projectId} not found in the response.");
+        }
+
+        return result;
+    }
+
+    public async Task<ProjectCostDetails> GetCostsAsync(Guid projectId, CancellationToken cancellationToken, string? currency = null)
+    {
+        var requestUri = $"projects/{projectId}/costs";
+
+        if (!string.IsNullOrWhiteSpace(currency))
+        {
+            var normalizedCurrency = Uri.EscapeDataString(currency.Trim().ToUpperInvariant());
+            requestUri = $"{requestUri}?currency={normalizedCurrency}";
+        }
+
+        var response = await _httpClient.GetAsync(requestUri, cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(cancellationToken: cancellationToken);
+            var detail = problem?.Detail ?? problem?.Title;
+            var suffix = string.IsNullOrWhiteSpace(detail)
+                ? $"Status code: {response.StatusCode}"
+                : detail;
+
+            throw new Exception($"Failed to get project costs for project ID {projectId}. {suffix}");
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<ProjectCostDetails>();
+
+        if (result == null)
+        {
+            throw new Exception($"Project costs for project ID {projectId} not found in the response.");
         }
 
         return result;

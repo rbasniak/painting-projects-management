@@ -1,11 +1,11 @@
-﻿namespace PaintingProjectsManagement.Features.Projects;
+namespace PaintingProjectsManagement.Features.Projects;
 
 public class ProjectCostDetails
 {
     public required Guid Id { get; init; }
     public required ElectricityCostDetails Electricity { get; init; }
-    public Dictionary<string, LaborCostDetails> Labor { get; init; }
-    public Dictionary<string, IReadOnlyCollection<MaterialsCostDetails>> Materials { get; init; }
+    public Dictionary<string, LaborCostDetails> Labor { get; init; } = new();
+    public Dictionary<string, IReadOnlyCollection<MaterialsCostDetails>> Materials { get; init; } = new();
 
     public static ProjectCostDetails FromModel(ProjectCostBreakdown costBreakdown)
     {
@@ -13,7 +13,7 @@ public class ProjectCostDetails
         
         return new ProjectCostDetails
         {
-            Id = costBreakdown.Id,
+            Id = costBreakdown.ProjectId,
             Electricity = ElectricityCostDetails.FromModel(costBreakdown.Electricity),
             Labor = costBreakdown.Labor?.ToDictionary(
                 kvp => kvp.Key,

@@ -6,6 +6,7 @@ internal static class ProjectsEndpointsMap
     {
         ListProjects.MapEndpoint(app);
         GetProjectDetails.MapEndpoint(app);
+        GetProjectCosts.MapEndpoint(app);
         
         CreateProject.MapEndpoint(app);
         UpdateProject.MapEndpoint(app);
