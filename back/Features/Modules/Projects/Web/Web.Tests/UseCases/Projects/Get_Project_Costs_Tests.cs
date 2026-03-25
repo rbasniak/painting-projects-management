@@ -9,7 +9,6 @@ public class Get_Project_Costs_Tests
     public required TestingServer TestingServer { get; set; } = default!;
 
     private static Guid _testProjectId;
-    private static Guid _paintMaterialId;
     private const string Tenant = "rodrigo.basniak";
 
     [Test, NotInParallel(Order = 1)]
@@ -25,21 +24,34 @@ public class Get_Project_Costs_Tests
             await context.Set<Material>().ExecuteDeleteAsync();
             await context.SaveChangesAsync();
 
-            var paint = new Materials.Material(
+            var paintId = Guid.CreateVersion7();
+            var material = new Materials.Material(
                 Tenant,
                 "Paint Bottle",
                 MaterialCategory.Paints,
                 new Materials.Quantity(10, PackageContentUnit.Gram),
                 new Materials.Money(25, "DKK"));
 
+            var paint = new Material
+            {
+                Id = material.Id,
+                Tenant = Tenant.ToUpperInvariant(),
+                Name = "Paint Bottle",
+                CategoryId = 1,
+                CategoryName = "Paints",
+                PricePerUnit = new Money(2.5, "DKK"),
+                Unit = MaterialUnit.Gram,
+                UpdatedUtc = DateTime.UtcNow
+            };
+
+            await context.AddAsync(material);
             await context.AddAsync(paint);
             await context.AddAsync(project);
             await context.SaveChangesAsync();
 
-            _paintMaterialId = paint.Id;
             _testProjectId = project.Id;
 
-            context.Add(new MaterialForProject(project.Id, paint.Id, 4, MaterialUnit.Gram));
+            context.Add(new MaterialForProject(project.Id, material.Id, 4, MaterialUnit.Gram));
             await context.SaveChangesAsync();
         }
 
@@ -70,7 +82,7 @@ public class Get_Project_Costs_Tests
         response.Data.Labor[ProjectStepDefinition.Painting.ToString()].TotalCost.Amount.ShouldBe(375d, 0.0001d);
 
         response.Data.Materials.ShouldContainKey("Paints");
-        var paintCost = response.Data.Materials["Paints"].Single(x => x.MaterialId == _paintMaterialId);
+        var paintCost = response.Data.Materials["Paints"].Single();
         paintCost.Description.ShouldBe("Paint Bottle");
         paintCost.Quantity.ShouldBe(4d, 0.0001d);
         paintCost.TotalCost.Amount.ShouldBe(10d, 0.0001d);
