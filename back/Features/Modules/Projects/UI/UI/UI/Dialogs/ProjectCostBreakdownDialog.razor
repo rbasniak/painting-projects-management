@@ -28,7 +28,7 @@
                                 <MudSelectItem T="string" Value="@currency.Code">@currency.Label</MudSelectItem>
                             }
                         </MudSelect>
-                        @if (IsReloadingBreakdown)
+                        @if (IsLoadingCosts)
                         {
                             <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Small" />
                         }
@@ -45,8 +45,8 @@
                                 <MudAvatar Icon="@Icons.Material.Filled.ElectricBolt" Color="Color.Warning" Size="Size.Medium" />
                                 <div>
                                     <MudText Typo="Typo.caption" Color="Color.Secondary">Electricity</MudText>
-                                    <MudText Typo="Typo.h6">@Model?.CostBreakdown.Electricity.TotalCost</MudText>
-                                    <MudText Typo="Typo.caption" Color="Color.Secondary">@Model?.CostBreakdown.Electricity.PrintingTimeInHours.ToString("N1") hours</MudText>
+                                    <MudText Typo="Typo.h6">@CostBreakdown.Electricity.TotalCost</MudText>
+                                    <MudText Typo="Typo.caption" Color="Color.Secondary">@CostBreakdown.Electricity.PrintingTimeInHours.ToString("N1") hours</MudText>
                                 </div>
                             </MudStack>
                         </MudPaper>
@@ -89,18 +89,18 @@
                                     <MudListItem T="string">
                                         <MudText Typo="Typo.body2">Printing Time</MudText>
                                         <MudSpacer />
-                                        <MudText Typo="Typo.body2">@Model?.CostBreakdown.Electricity.PrintingTimeInHours.ToString("N1") h</MudText>
+                                        <MudText Typo="Typo.body2">@CostBreakdown.Electricity.PrintingTimeInHours.ToString("N1") h</MudText>
                                     </MudListItem>
                                     <MudListItem T="string">
                                         <MudText Typo="Typo.body2">Cost per kWh</MudText>
                                         <MudSpacer />
-                                        <MudText Typo="Typo.body2">@Model?.CostBreakdown.Electricity.CostPerKWh</MudText>
+                                        <MudText Typo="Typo.body2">@CostBreakdown.Electricity.CostPerKWh</MudText>
                                     </MudListItem>
                                     <MudDivider Class="my-2" />
                                     <MudListItem T="string">
                                         <MudText Typo="Typo.subtitle2" Class="font-weight-bold">Total Electricity Cost</MudText>
                                         <MudSpacer />
-                                        <MudText Typo="Typo.subtitle2" Color="Color.Success" Class="font-weight-bold">@Model?.CostBreakdown.Electricity.TotalCost</MudText>
+                                        <MudText Typo="Typo.subtitle2" Color="Color.Success" Class="font-weight-bold">@CostBreakdown.Electricity.TotalCost</MudText>
                                     </MudListItem>
                                 </MudList>
                             </MudStack>
@@ -114,9 +114,9 @@
                                     <MudIcon Icon="@Icons.Material.Filled.Engineering" Color="Color.Info" Size="Size.Medium" />
                                     <MudText Typo="Typo.h6">Duration</MudText>
                                 </MudStack>
-                                @if (Model?.CostBreakdown.Labor?.Any() == true)
+                                @if (CostBreakdown.Labor.Any())
                                 {
-                                    <MudTable Dense="true" Hover="true" Elevation="0" Items="@Model!.CostBreakdown.Labor">
+                                    <MudTable Dense="true" Hover="true" Elevation="0" Items="@CostBreakdown.Labor">
                                         <HeaderContent>
                                             <MudTh>Step</MudTh>
                                             <MudTh Align="Right">Duration</MudTh>
@@ -144,10 +144,10 @@
                                     <MudIcon Icon="@Icons.Material.Filled.Inventory2" Color="Color.Secondary" Size="Size.Medium" />
                                     <MudText Typo="Typo.h6">Materials</MudText>
                                 </MudStack>
-                                @if (Model?.CostBreakdown.Materials?.Any() == true)
+                                @if (CostBreakdown.Materials.Any())
                                 {
                                     <MudExpansionPanels Elevation="0" Dense="true">
-                                        @foreach (var category in Model!.CostBreakdown.Materials)
+                                        @foreach (var category in CostBreakdown.Materials)
                                         {
                                             <MudExpansionPanel DisableRipple="true">
                                                 <TitleContent>
@@ -201,37 +201,50 @@
     private IReadOnlyCollection<CurrencyOption> Currencies { get; set; } = [];
     private string SelectedCurrency { get; set; } = string.Empty;
     private bool IsLoadingCurrencies { get; set; }
-    private bool IsReloadingBreakdown { get; set; }
-    private bool IsCurrencySelectionDisabled => IsLoadingCurrencies || IsReloadingBreakdown || Model is null || Model.Id == Guid.Empty;
+    private ProjectCostDetails CostBreakdown { get; set; } = EmptyCostBreakdown;
+    private bool IsLoadingCosts { get; set; }
+    private bool IsCurrencySelectionDisabled => IsLoadingCurrencies || IsLoadingCosts || Model is null || Model.Id == Guid.Empty;
+    private static ProjectCostDetails EmptyCostBreakdown => new()
+    {
+        Id = Guid.Empty,
+        Electricity = new ElectricityCostDetails
+        {
+            CostPerKWh = new MoneyDetails { Amount = 0, Currency = "DKK" },
+            PrintingTimeInHours = 0,
+            TotalCost = new MoneyDetails { Amount = 0, Currency = "DKK" }
+        },
+        Labor = new Dictionary<string, LaborCostDetails>(),
+        Materials = new Dictionary<string, IReadOnlyCollection<MaterialsCostDetails>>()
+    };
 
     private MoneyDetails LaborTotal => new()
     {
-        Amount = Model?.CostBreakdown.Labor?.Values.Sum(x => x.TotalCost.Amount) ?? 0,
-        Currency = Model?.CostBreakdown.Labor?.Values.FirstOrDefault()?.TotalCost.Currency ?? DefaultCurrency
+        Amount = CostBreakdown.Labor.Values.Sum(x => x.TotalCost.Amount),
+        Currency = CostBreakdown.Labor.Values.FirstOrDefault()?.TotalCost.Currency ?? DefaultCurrency
     };
 
     private MoneyDetails MaterialsTotal => new()
     {
-        Amount = Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).Sum(x => x.TotalCost.Amount) ?? 0,
-        Currency = Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).FirstOrDefault()?.TotalCost.Currency ?? DefaultCurrency
+        Amount = CostBreakdown.Materials.SelectMany(x => x.Value).Sum(x => x.TotalCost.Amount),
+        Currency = CostBreakdown.Materials.SelectMany(x => x.Value).FirstOrDefault()?.TotalCost.Currency ?? DefaultCurrency
     };
 
     private MoneyDetails OverallTotal => new()
     {
-        Amount = (Model?.CostBreakdown.Electricity.TotalCost.Amount ?? 0)
-                 + (Model?.CostBreakdown.Labor?.Values.Sum(x => x.TotalCost.Amount) ?? 0)
-                 + (Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).Sum(x => x.TotalCost.Amount) ?? 0),
+        Amount = CostBreakdown.Electricity.TotalCost.Amount
+                 + CostBreakdown.Labor.Values.Sum(x => x.TotalCost.Amount)
+                 + CostBreakdown.Materials.SelectMany(x => x.Value).Sum(x => x.TotalCost.Amount),
         Currency = DefaultCurrency
     };
 
-    private string DefaultCurrency => Model?.CostBreakdown.Electricity.TotalCost.Currency
-                                      ?? Model?.CostBreakdown.Labor?.Values.FirstOrDefault()?.TotalCost.Currency
-                                      ?? Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).FirstOrDefault()?.TotalCost.Currency
+    private string DefaultCurrency => CostBreakdown.Electricity.TotalCost.Currency
+                                      ?? CostBreakdown.Labor.Values.FirstOrDefault()?.TotalCost.Currency
+                                      ?? CostBreakdown.Materials.SelectMany(x => x.Value).FirstOrDefault()?.TotalCost.Currency
                                       ?? "DKK";
 
-    private double TotalLaborHours => Model?.CostBreakdown.Labor?.Values.Sum(x => x.SpentHours) ?? 0;
+    private double TotalLaborHours => CostBreakdown.Labor.Values.Sum(x => x.SpentHours);
 
-    private int TotalMaterialLines => Model?.CostBreakdown.Materials?.SelectMany(x => x.Value).Count() ?? 0;
+    private int TotalMaterialLines => CostBreakdown.Materials.SelectMany(x => x.Value).Count();
 
     private string GetCategoryTotal(IReadOnlyCollection<MaterialsCostDetails> materials)
     {
@@ -250,6 +263,7 @@
         IsLoadingCurrencies = false;
 
         EnsureSelectedCurrency();
+        await LoadCostsAsync(SelectedCurrency);
     }
 
     private async Task OnCurrencyChangedAsync(string currency)
@@ -269,18 +283,12 @@
 
         try
         {
-            IsReloadingBreakdown = true;
-            Model = await ProjectsService.GetDetailsAsync(Model.Id, CancellationToken.None, normalizedCurrency);
-            EnsureSelectedCurrency();
+            await LoadCostsAsync(normalizedCurrency);
         }
         catch (Exception ex)
         {
             SelectedCurrency = previousCurrency;
             Snackbar.Add($"Could not recalculate costs in {normalizedCurrency}: {ex.Message}", Severity.Error);
-        }
-        finally
-        {
-            IsReloadingBreakdown = false;
         }
     }
 
@@ -317,6 +325,26 @@
         return string.IsNullOrWhiteSpace(currency)
             ? string.Empty
             : currency.Trim().ToUpperInvariant();
+    }
+
+    private async Task LoadCostsAsync(string? currency)
+    {
+        if (Model is null || Model.Id == Guid.Empty)
+        {
+            CostBreakdown = EmptyCostBreakdown;
+            return;
+        }
+
+        IsLoadingCosts = true;
+
+        try
+        {
+            CostBreakdown = await ProjectsService.GetCostsAsync(Model.Id, CancellationToken.None, currency);
+        }
+        finally
+        {
+            IsLoadingCosts = false;
+        }
     }
 
     private void Close() => MudDialog.Close(DialogResult.Ok(true));
