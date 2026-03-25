@@ -21,15 +21,16 @@ namespace PaintingProjectsManagement.UI
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
+            var apiBaseAddress = ResolveApiBaseAddress(builder);
 
             builder.Services.AddMudServices();
 
-            builder.Services.AddMaterialsModule();
-            builder.Services.AddModelsModule();
-            builder.Services.AddProjectsModule();
-            builder.Services.AddInventoryModule();
-            builder.Services.AddAuthenticationModule();
-            builder.Services.AddSubscriptionsModule();
+            builder.Services.AddMaterialsModule(apiBaseAddress);
+            builder.Services.AddModelsModule(apiBaseAddress);
+            builder.Services.AddProjectsModule(apiBaseAddress);
+            builder.Services.AddInventoryModule(apiBaseAddress);
+            builder.Services.AddAuthenticationModule(apiBaseAddress);
+            builder.Services.AddSubscriptionsModule(apiBaseAddress);
 
             // Register storage service
             builder.Services.AddScoped<IStorageService, StorageService>();
@@ -37,7 +38,7 @@ namespace PaintingProjectsManagement.UI
             builder.Services.AddScoped<ProblemDetailsState>();
             builder.Services.AddTransient<HttpErrorHandler>();
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped(x => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             var host = builder.Build();
 
@@ -48,6 +49,36 @@ namespace PaintingProjectsManagement.UI
             await tokenService.InitializeTokensFromStorageAsync(CancellationToken.None);
 
             await host.RunAsync();
+        }
+
+        private static Uri ResolveApiBaseAddress(WebAssemblyHostBuilder builder)
+        {
+            var configuredApiBaseUrl = builder.Configuration["Api:BaseUrl"];
+
+            if (string.IsNullOrWhiteSpace(configuredApiBaseUrl))
+            {
+                return new Uri(builder.HostEnvironment.BaseAddress);
+            }
+
+            if (Uri.TryCreate(configuredApiBaseUrl, UriKind.Absolute, out var absoluteUri))
+            {
+                return EnsureTrailingSlash(absoluteUri);
+            }
+
+            var relativeUri = new Uri(new Uri(builder.HostEnvironment.BaseAddress), configuredApiBaseUrl);
+            return EnsureTrailingSlash(relativeUri);
+        }
+
+        private static Uri EnsureTrailingSlash(Uri uri)
+        {
+            var uriBuilder = new UriBuilder(uri);
+
+            if (!uriBuilder.Path.EndsWith('/'))
+            {
+                uriBuilder.Path = $"{uriBuilder.Path}/";
+            }
+
+            return uriBuilder.Uri;
         }
     }
 }

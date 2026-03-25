@@ -6,34 +6,34 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class Builder
 {
-    public static IServiceCollection AddAuthenticationModule(this IServiceCollection services)
+    public static IServiceCollection AddAuthenticationModule(this IServiceCollection services, Uri apiBaseAddress)
     {
         services.AddScoped<ITokenService, TokenService>();
         services.AddTransient<BearerDelegatingHandler>();
 
-        services.AddScoped<IAuthenticationService>(sp =>
+        services.AddScoped<IAuthenticationService>(x =>
         {
-            var errorHandler = sp.GetRequiredService<HttpErrorHandler>();
+            var errorHandler = x.GetRequiredService<HttpErrorHandler>();
             errorHandler.InnerHandler = new HttpClientHandler();
 
             var httpClient = new HttpClient(errorHandler)
             {
-                BaseAddress = new Uri("https://localhost:7236/")
+                BaseAddress = apiBaseAddress
             };
             return new AuthenticationService(httpClient);
         });
 
-        services.AddScoped<IUserProfileService>(sp =>
+        services.AddScoped<IUserProfileService>(x =>
         {
-            var bearer = sp.GetRequiredService<BearerDelegatingHandler>();
-            var errorHandler = sp.GetRequiredService<HttpErrorHandler>();
+            var bearer = x.GetRequiredService<BearerDelegatingHandler>();
+            var errorHandler = x.GetRequiredService<HttpErrorHandler>();
 
             bearer.InnerHandler = new HttpClientHandler();
             errorHandler.InnerHandler = bearer;
 
             var httpClient = new HttpClient(errorHandler)
             {
-                BaseAddress = new Uri("https://localhost:7236/")
+                BaseAddress = apiBaseAddress
             };
             return new UserProfileService(httpClient);
         });
