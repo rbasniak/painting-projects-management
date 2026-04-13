@@ -34,8 +34,9 @@ public class ListProjects : IEndpoint
         {
             var projects = await _context.Set<Project>()
                 .Where(x => x.TenantId == request.Identity.Tenant)
-                .OrderByDescending(x => x.EndDate == null) // Unfinished projects first
-                .ThenByDescending(x => x.EndDate) // Most recently finished next
+                //.OrderByDescending(x => x.EndDate == null) // Unfinished projects first
+                //.ThenByDescending(x => x.EndDate) // Most recently finished next
+                .OrderByDescending(x => x.StartDate) // Most recently started  
                 .ThenBy(x => x.Name) // Then alphabetically by name
                 .ToListAsync(cancellationToken);
 
