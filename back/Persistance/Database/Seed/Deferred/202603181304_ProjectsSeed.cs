@@ -40,6 +40,11 @@ public class ProjectsSeed : IDeferredSeedStep
                 throw new InvalidOperationException($"Material '{materialName}' not found in the database.");
             }
 
+            if (string.IsNullOrWhiteSpace(material.Tenant))
+            {
+                context.Database.ExecuteSqlRaw("update public.\"projects.projections.materials\" set \"Tenant\" = 'RODRIGO.BASNIAK' WHERE \"Tenant\" IS NULL OR \"Tenant\" = ''");
+            }
+
             project.ConsumeMaterial(material.Id, quantity, unit);
         }
 
@@ -1052,20 +1057,20 @@ public class ProjectsSeed : IDeferredSeedStep
 
         var lastOfUsProject = new Project("rodrigo.basniak", "Last Of Us Diorama", referenceDate, modelId: null);
 
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (175+95+130+175+135+205+145) / 15.0);
-        await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialJayoAbsResin, (220+60+90+45+85+55+170+35+155+70+210+75+115+75)*1.55, MaterialUnit.Gram);
+        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (175 + 95 + 130 + 175 + 135 + 205 + 145) / 15.0);
+        await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialJayoAbsResin, (220 + 60 + 90 + 45 + 85 + 55 + 170 + 35 + 155 + 70 + 210 + 75 + 115 + 75), MaterialUnit.Gram);
 
         lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 3);
         lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 9);
         lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, referenceDate, 3);
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, referenceDate, 2.5+1+1+1);
+        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, referenceDate, 2.5 + 1 + 1 + 1);
 
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialPaintMixingCupCorrugated, 4, MaterialUnit.Unit);
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialDisposableBrush, 2, MaterialUnit.Unit);
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialDspiaeSandingDisk, 2, MaterialUnit.Unit);
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialNailWoodSwab, 35, MaterialUnit.Unit);
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialGlooves, 6, MaterialUnit.Unit);
-        
+
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet10x5, 14, MaterialUnit.Unit);
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet8x4, 8, MaterialUnit.Unit);
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialMagnet6x4, 6, MaterialUnit.Unit);
@@ -1073,17 +1078,17 @@ public class ProjectsSeed : IDeferredSeedStep
 
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoPrimer, 275, MaterialUnit.Drop);
 
-        await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialArmyPainterAcrylic, 25+5+10+25+20+25+120+35+5+25+15+15+25+5+30+5+15, MaterialUnit.Drop);
+        await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialArmyPainterAcrylic, 25 + 5 + 10 + 25 + 20 + 25 + 120 + 35 + 5 + 25 + 15 + 15 + 25 + 5 + 30 + 5 + 15, MaterialUnit.Drop);
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoAcrylic, 70, MaterialUnit.Drop);
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialAtomAcrylic, 10, MaterialUnit.Drop);
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialAmmoAcrylic, 25, MaterialUnit.Drop);
 
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialGswVarnish, 15, MaterialUnit.Drop);
-        await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialAmmoTransparator, 20+10+10+15+20+30+10+20+10+20, MaterialUnit.Drop);
+        await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialAmmoTransparator, 20 + 10 + 10 + 15 + 20 + 30 + 10 + 20 + 10 + 20, MaterialUnit.Drop);
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialVallejoLiquidMask, 20, MaterialUnit.Drop);
         await ConsumeMaterial(lastOfUsProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 115, MaterialUnit.Spray);
 
-        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 1+2+5+3+0.5+2+0.5+2.5+7+6+5+1);
+        lastOfUsProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 1 + 2 + 5 + 3 + 0.5 + 2 + 0.5 + 2.5 + 7 + 6 + 5 + 1);
 
         context.Add(lastOfUsProject);
 
@@ -1111,8 +1116,8 @@ public class ProjectsSeed : IDeferredSeedStep
 
         var witchKingDiorama = new Project("rodrigo.basniak", "Witch King Diorama", referenceDate, modelId: null);
 
-        witchKingDiorama.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (150+175+140+195+190+215+220+200+165+180+180+120) / 15.0);
-        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialJayoAbsResin, (225+145+205+150+145+100+215+100+190+140+180+140+100+125+160+85+90+115+90+90+50+100+70+35) * 1.55, MaterialUnit.Gram);
+        witchKingDiorama.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (150 + 175 + 140 + 195 + 190 + 215 + 220 + 200 + 165 + 180 + 180 + 120) / 15.0);
+        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialJayoAbsResin, (225 + 145 + 205 + 150 + 145 + 100 + 215 + 100 + 190 + 140 + 180 + 140 + 100 + 125 + 160 + 85 + 90 + 115 + 90 + 90 + 50 + 100 + 70 + 35), MaterialUnit.Gram);
 
         witchKingDiorama.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 2);
         witchKingDiorama.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 13.5);
@@ -1127,20 +1132,20 @@ public class ProjectsSeed : IDeferredSeedStep
         await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialMagnet10x5, 32, MaterialUnit.Unit);
         await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialMagnet8x4, 14, MaterialUnit.Unit);
 
-        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialVallejoPrimer, 25+75+100+20+50+100+15+150, MaterialUnit.Drop);
-        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialGswPrimer, 120+100+30, MaterialUnit.Drop);
+        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialVallejoPrimer, 25 + 75 + 100 + 20 + 50 + 100 + 15 + 150, MaterialUnit.Drop);
+        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialGswPrimer, 120 + 100 + 30, MaterialUnit.Drop);
 
-        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialArmyPainterAcrylic, 20+20+15+15+20+200+75+10+30+35+40+30+15, MaterialUnit.Drop);
-        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialVallejoAcrylic, 30+5+10+5, MaterialUnit.Drop);
+        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialArmyPainterAcrylic, 20 + 20 + 15 + 15 + 20 + 200 + 75 + 10 + 30 + 35 + 40 + 30 + 15, MaterialUnit.Drop);
+        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialVallejoAcrylic, 30 + 5 + 10 + 5, MaterialUnit.Drop);
         await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialAmmoDrybrush, 25, MaterialUnit.Drop);
         await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialAmmoAcrylic, 5, MaterialUnit.Drop);
-        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialGswAcrylic, 20+10+25+15, MaterialUnit.Drop);
+        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialGswAcrylic, 20 + 10 + 25 + 15, MaterialUnit.Drop);
 
-        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialVallejoVarnish, 100+25, MaterialUnit.Drop);
+        await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialVallejoVarnish, 100 + 25, MaterialUnit.Drop);
         await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialAmmoTransparator, 200, MaterialUnit.Drop);
         await ConsumeMaterial(witchKingDiorama, DatabaseSeed.MaterialBiltemaMatteVarnish, 110, MaterialUnit.Spray);
 
-        witchKingDiorama.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 4+5.5+5+1.5+4.5+3+3+3.5+6+2);
+        witchKingDiorama.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 4 + 5.5 + 5 + 1.5 + 4.5 + 3 + 3 + 3.5 + 6 + 2);
 
         context.Add(witchKingDiorama);
 
@@ -1153,7 +1158,7 @@ public class ProjectsSeed : IDeferredSeedStep
         var jubileeProject = new Project("rodrigo.basniak", "Jubileu", referenceDate, modelId: null);
 
         jubileeProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (250) / 15.0);
-        await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialJayoAbsResin, (120+70+55+30) * 1.55, MaterialUnit.Gram);
+        await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialJayoAbsResin, (120 + 70 + 55 + 30), MaterialUnit.Gram);
 
         jubileeProject.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 1);
         jubileeProject.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 3);
@@ -1174,17 +1179,17 @@ public class ProjectsSeed : IDeferredSeedStep
 
         await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialVallejoPrimer, 40, MaterialUnit.Drop);
 
-        await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialArmyPainterAcrylic, 25+50+90+40, MaterialUnit.Drop);
+        await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialArmyPainterAcrylic, 25 + 50 + 90 + 40, MaterialUnit.Drop);
         await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialVallejoAcrylic, 30, MaterialUnit.Drop);
-        await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialAmmoAcrylic, 25+35+15, MaterialUnit.Drop);
+        await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialAmmoAcrylic, 25 + 35 + 15, MaterialUnit.Drop);
         await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialGswAcrylic, 5, MaterialUnit.Drop);
 
         await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialGswVarnish, 25, MaterialUnit.Drop);
         await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialVallejoVarnish, 35, MaterialUnit.Drop);
         await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialAmmoTransparator, 50, MaterialUnit.Drop);
-        await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 20+30+25+10, MaterialUnit.Spray);
+        await ConsumeMaterial(jubileeProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 20 + 30 + 25 + 10, MaterialUnit.Spray);
 
-        jubileeProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 1.5+0.5+6+2.5+5+1+.5);
+        jubileeProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 1.5 + 0.5 + 6 + 2.5 + 5 + 1 + .5);
 
         context.Add(jubileeProject);
 
@@ -1196,8 +1201,9 @@ public class ProjectsSeed : IDeferredSeedStep
 
         var makimaCaStudiosProject = new Project("rodrigo.basniak", "Makima", referenceDate, modelId: null);
 
-        makimaCaStudiosProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (155+120+190) / 15.0);
-        await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialJayoAbsResin, (120+60+135+70+210+65) * 1.55, MaterialUnit.Gram);
+        makimaCaStudiosProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (155 + 120 + 190) / 15.0);
+        await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialJayoAbsResin, 120 + 60, MaterialUnit.Gram);
+        await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialAnycubricClearResin, 135 + 70 + 210 + 65, MaterialUnit.Gram);
 
         makimaCaStudiosProject.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 2);
         makimaCaStudiosProject.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 3);
@@ -1217,16 +1223,16 @@ public class ProjectsSeed : IDeferredSeedStep
 
         await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialVallejoPrimer, 110, MaterialUnit.Drop);
 
-        await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialArmyPainterAcrylic, 15+15+30+50+10+10+85+30, MaterialUnit.Drop);
+        await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialArmyPainterAcrylic, 15 + 15 + 30 + 50 + 10 + 10 + 85 + 30, MaterialUnit.Drop);
         await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialAtomAcrylic, 10, MaterialUnit.Drop);
         await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialAmmoCandy, 5, MaterialUnit.Mililiter);
-        await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialTamiyaClear, 9*50, MaterialUnit.Drop);
+        await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialTamiyaClear, 9 * 50, MaterialUnit.Drop);
 
         await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialVallejoVarnish, 5, MaterialUnit.Drop);
         await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialGswVarnish, 50, MaterialUnit.Drop);
         await ConsumeMaterial(makimaCaStudiosProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 60, MaterialUnit.Spray);
 
-        makimaCaStudiosProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 1+3.5+0.5+0.5+2+1.5+1+1.5);
+        makimaCaStudiosProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 1 + 3.5 + 0.5 + 0.5 + 2 + 1.5 + 1 + 1.5);
 
         context.Add(makimaCaStudiosProject);
 
@@ -1238,8 +1244,8 @@ public class ProjectsSeed : IDeferredSeedStep
 
         var supergirlProject = new Project("rodrigo.basniak", "Supergirl", referenceDate, modelId: null);
 
-        supergirlProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (145+100) / 15.0);
-        await ConsumeMaterial(supergirlProject, DatabaseSeed.MaterialJayoAbsResin, (90+50+55+30) * 1.55, MaterialUnit.Gram);
+        supergirlProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (145 + 100) / 15.0);
+        await ConsumeMaterial(supergirlProject, DatabaseSeed.MaterialJayoAbsResin, (90 + 50 + 55 + 30), MaterialUnit.Gram);
 
         supergirlProject.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 1);
         supergirlProject.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 2.5);
@@ -1256,14 +1262,14 @@ public class ProjectsSeed : IDeferredSeedStep
 
         await ConsumeMaterial(supergirlProject, DatabaseSeed.MaterialVallejoPrimer, 250, MaterialUnit.Drop);
 
-        await ConsumeMaterial(supergirlProject, DatabaseSeed.MaterialArmyPainterAcrylic, 30+45+30+15+10, MaterialUnit.Drop);
+        await ConsumeMaterial(supergirlProject, DatabaseSeed.MaterialArmyPainterAcrylic, 30 + 45 + 30 + 15 + 10, MaterialUnit.Drop);
         await ConsumeMaterial(supergirlProject, DatabaseSeed.MaterialVallejoAcrylic, 20, MaterialUnit.Drop);
         await ConsumeMaterial(supergirlProject, DatabaseSeed.MaterialAmmoAcrylic, 15, MaterialUnit.Drop);
 
         await ConsumeMaterial(supergirlProject, DatabaseSeed.MaterialVallejoVarnish, 20, MaterialUnit.Drop);
         await ConsumeMaterial(supergirlProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 80, MaterialUnit.Spray);
 
-        supergirlProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 0.5+0.5+0.5+2+7+1.5);
+        supergirlProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 0.5 + 0.5 + 0.5 + 2 + 7 + 1.5);
 
         context.Add(supergirlProject);
 
@@ -1276,7 +1282,7 @@ public class ProjectsSeed : IDeferredSeedStep
         var harleyQuinnProject = new Project("rodrigo.basniak", "Harley Quinn", referenceDate, modelId: null);
 
         harleyQuinnProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (105 + 180) / 15.0);
-        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialJayoAbsResin, (225+105) * 1.55, MaterialUnit.Gram);
+        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialJayoAbsResin, (225 + 105), MaterialUnit.Gram);
 
         harleyQuinnProject.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 0.5);
         harleyQuinnProject.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 2);
@@ -1295,18 +1301,18 @@ public class ProjectsSeed : IDeferredSeedStep
 
         await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialVallejoPrimer, 30, MaterialUnit.Drop);
 
-        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialArmyPainterAcrylic, 20+10+20+50+5+10+5+5+10+5+5+5, MaterialUnit.Drop);
-        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialVallejoAcrylic, 5+5+25+5+5+30, MaterialUnit.Drop);
-        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialAtomAcrylic, 15+5+25+5+25, MaterialUnit.Drop);
-        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialGswAcrylic, 10+10+15, MaterialUnit.Drop);
+        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialArmyPainterAcrylic, 20 + 10 + 20 + 50 + 5 + 10 + 5 + 5 + 10 + 5 + 5 + 5, MaterialUnit.Drop);
+        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialVallejoAcrylic, 5 + 5 + 25 + 5 + 5 + 30, MaterialUnit.Drop);
+        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialAtomAcrylic, 15 + 5 + 25 + 5 + 25, MaterialUnit.Drop);
+        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialGswAcrylic, 10 + 10 + 15, MaterialUnit.Drop);
         await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialAmmoTransparator, 20, MaterialUnit.Drop);
 
         await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialGswVarnish, 30, MaterialUnit.Drop);
         await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialVallejoLiquidMask, 45, MaterialUnit.Drop);
-        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 10+20+15+16, MaterialUnit.Spray);
+        await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 10 + 20 + 15 + 16, MaterialUnit.Spray);
         await ConsumeMaterial(harleyQuinnProject, DatabaseSeed.MaterialTamiyaTS80, 50, MaterialUnit.Spray);
 
-        harleyQuinnProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 2+1+3+6+0.5+4+2+1.5+2+1.5+.5+5+1+3);
+        harleyQuinnProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 2 + 1 + 3 + 6 + 0.5 + 4 + 2 + 1.5 + 2 + 1.5 + .5 + 5 + 1 + 3);
 
         context.Add(harleyQuinnProject);
 
@@ -1318,13 +1324,13 @@ public class ProjectsSeed : IDeferredSeedStep
 
         var supernaturalProject = new Project("rodrigo.basniak", "Supernatural Diorama", referenceDate, modelId: null);
 
-        supernaturalProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (135+195+200+190+205+220+220+200+135+215+195+105+210) / 15.0);
-        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialJayoAbsResin, (75+70+145+115+150+95+135+115+135+110+180+120+225+135+75+70+85+65+170+55+160+60+40+15+205+65) * 1.55, MaterialUnit.Gram);
+        supernaturalProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (135 + 195 + 200 + 190 + 205 + 220 + 220 + 200 + 135 + 215 + 195 + 105 + 210) / 15.0);
+        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialJayoAbsResin, (75 + 70 + 145 + 115 + 150 + 95 + 135 + 115 + 135 + 110 + 180 + 120 + 225 + 135 + 75 + 70 + 85 + 65 + 170 + 55 + 160 + 60 + 40 + 15 + 205 + 65), MaterialUnit.Gram);
 
-        supernaturalProject.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 5+10+10);
+        supernaturalProject.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 5 + 10 + 10);
         supernaturalProject.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 12);
         supernaturalProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, referenceDate, 5);
-        supernaturalProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, referenceDate, 8+6+4+1.5+1+0.5+1.5);
+        supernaturalProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, referenceDate, 8 + 6 + 4 + 1.5 + 1 + 0.5 + 1.5);
 
         await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialPaintMixingCupNonCorrugated, 16, MaterialUnit.Unit);
         await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialDisposableBrush, 4, MaterialUnit.Unit);
@@ -1337,24 +1343,24 @@ public class ProjectsSeed : IDeferredSeedStep
         await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialMagnet6x4, 4, MaterialUnit.Unit);
         await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialMagnet5x3, 2, MaterialUnit.Unit);
 
-        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialVallejoPrimer, 75+50+5+60+150+75+25, MaterialUnit.Drop);
-        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialGswPrimer, 20+300+25+125+200+25+15, MaterialUnit.Drop);
+        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialVallejoPrimer, 75 + 50 + 5 + 60 + 150 + 75 + 25, MaterialUnit.Drop);
+        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialGswPrimer, 20 + 300 + 25 + 125 + 200 + 25 + 15, MaterialUnit.Drop);
 
-        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialArmyPainterAcrylic, 25+25+10+10+30+25+10+150+10+75+25+75+50+20+10+5+50+40+15+20+15+30+30+25, MaterialUnit.Drop);
+        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialArmyPainterAcrylic, 25 + 25 + 10 + 10 + 30 + 25 + 10 + 150 + 10 + 75 + 25 + 75 + 50 + 20 + 10 + 5 + 50 + 40 + 15 + 20 + 15 + 30 + 30 + 25, MaterialUnit.Drop);
         await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialAmmoDrybrush, 20, MaterialUnit.Drop);
-        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialVallejoAcrylic, 40+15+5+10+35+15+15+15+10+15+40, MaterialUnit.Drop);
+        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialVallejoAcrylic, 40 + 15 + 5 + 10 + 35 + 15 + 15 + 15 + 10 + 15 + 40, MaterialUnit.Drop);
         await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialAtomAcrylic, 15, MaterialUnit.Drop);
-        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialAmmoTransparator, 50+50+25+35+75+25+20+40+20+50+20+150+25, MaterialUnit.Drop);
+        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialAmmoTransparator, 50 + 50 + 25 + 35 + 75 + 25 + 20 + 40 + 20 + 50 + 20 + 150 + 25, MaterialUnit.Drop);
         await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialAmmoAcrylic, 10, MaterialUnit.Drop);
         await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialGswAcrylic, 15, MaterialUnit.Drop);
         await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialAkChrome, 75, MaterialUnit.Drop);
         await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialGswChrome, 225, MaterialUnit.Drop);
 
-        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialVallejoVarnish, 150+30+20+25+50, MaterialUnit.Drop);
+        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialVallejoVarnish, 150 + 30 + 20 + 25 + 50, MaterialUnit.Drop);
         await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialTamiyaTS80, 90, MaterialUnit.Spray);
-        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 15+60+21+25+16+40+42+30+45+12+27, MaterialUnit.Spray);
+        await ConsumeMaterial(supernaturalProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 15 + 60 + 21 + 25 + 16 + 40 + 42 + 30 + 45 + 12 + 27, MaterialUnit.Spray);
 
-        supernaturalProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 3.5+4+0.5+2+6+4+1+1+1.5+0.5+0.5+5+2+4+4+1+1+2.5+3+3.5+3.5+2.5+8+1+5+2+4+2);
+        supernaturalProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 3.5 + 4 + 0.5 + 2 + 6 + 4 + 1 + 1 + 1.5 + 0.5 + 0.5 + 5 + 2 + 4 + 4 + 1 + 1 + 2.5 + 3 + 3.5 + 3.5 + 2.5 + 8 + 1 + 5 + 2 + 4 + 2);
 
         context.Add(supernaturalProject);
 
@@ -1366,13 +1372,13 @@ public class ProjectsSeed : IDeferredSeedStep
 
         var danSamProject = new Project("rodrigo.basniak", "Dean and Sam Winchester", referenceDate, modelId: null);
 
-        danSamProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (190+210+120+190) / 15.0);
-        await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialJayoAbsResin, (155+55+145+60+50+20+315+100) * 1.55, MaterialUnit.Gram);
+        danSamProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (190 + 210 + 120 + 190) / 15.0);
+        await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialJayoAbsResin, (155 + 55 + 145 + 60 + 50 + 20 + 315 + 100), MaterialUnit.Gram);
 
         danSamProject.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 4);
         danSamProject.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 3);
         danSamProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, referenceDate, 1);
-        danSamProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, referenceDate, 2+2+1+0.5+1);
+        danSamProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, referenceDate, 2 + 2 + 1 + 0.5 + 1);
 
         await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialDisposableBrush, 2, MaterialUnit.Unit);
         await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialDspiaeSandingDisk, 2, MaterialUnit.Unit);
@@ -1383,15 +1389,15 @@ public class ProjectsSeed : IDeferredSeedStep
         await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialMagnet8x4, 16, MaterialUnit.Unit);
         await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialMagnet6x4, 4, MaterialUnit.Unit);
 
-        await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialVallejoPrimer, 50+50+50+50+25+15+50, MaterialUnit.Drop);
+        await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialVallejoPrimer, 50 + 50 + 50 + 50 + 25 + 15 + 50, MaterialUnit.Drop);
 
         await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialArmyPainterAcrylic, 200, MaterialUnit.Drop);
-        await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialVallejoAcrylic, 45+20+50, MaterialUnit.Drop);
+        await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialVallejoAcrylic, 45 + 20 + 50, MaterialUnit.Drop);
 
         await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialAmmoTransparator, 50, MaterialUnit.Drop);
         await ConsumeMaterial(danSamProject, DatabaseSeed.MaterialBiltemaMatteVarnish, 100, MaterialUnit.Spray);
 
-        danSamProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 1+1+0.5+2+1.5+1+2+2+16);
+        danSamProject.AddExecutionWindow(ProjectStepDefinition.Painting, referenceDate, 1 + 1 + 0.5 + 2 + 1.5 + 1 + 2 + 2 + 16);
 
         context.Add(danSamProject);
 
@@ -1403,12 +1409,12 @@ public class ProjectsSeed : IDeferredSeedStep
 
         var saintSeyiaDiorama = new Project("rodrigo.basniak", "Saint Seiya Diorama", referenceDate, modelId: null);
 
-        saintSeyiaDiorama.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, 7.25+4+3.5+3.5+3+3.5+12+203);
-        await ConsumeMaterial(saintSeyiaDiorama, DatabaseSeed.MaterialJayoAbsResin, (80+215+565) * 1.55, MaterialUnit.Gram);
-        await ConsumeMaterial(saintSeyiaDiorama, DatabaseSeed.MaterialSunluWaterWashableStandardResin, (4760+185+55) * 1.55, MaterialUnit.Gram);
+        saintSeyiaDiorama.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, 7.25 + 4 + 3.5 + 3.5 + 3 + 3.5 + 12 + 203);
+        await ConsumeMaterial(saintSeyiaDiorama, DatabaseSeed.MaterialJayoAbsResin, (80 + 215 + 565), MaterialUnit.Gram);
+        await ConsumeMaterial(saintSeyiaDiorama, DatabaseSeed.MaterialSunluWaterWashableStandardResin, (4760 + 185 + 55), MaterialUnit.Gram);
 
         saintSeyiaDiorama.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 3);
-        saintSeyiaDiorama.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 4+3+4+2+4+9);
+        saintSeyiaDiorama.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 4 + 3 + 4 + 2 + 4 + 9);
         saintSeyiaDiorama.AddExecutionWindow(ProjectStepDefinition.Cleaning, referenceDate, 5);
         //saintSeyiaDiorama.AddExecutionWindow(ProjectStepDefinition.PostProcessing, referenceDate, 000000000000000);
 
@@ -1447,8 +1453,8 @@ public class ProjectsSeed : IDeferredSeedStep
 
         var gandalfProject = new Project("rodrigo.basniak", "Gandalf", referenceDate, modelId: null);
 
-        gandalfProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (160+215+170) / 15.0);
-        await ConsumeMaterial(gandalfProject, DatabaseSeed.MaterialJayoAbsResin, (210+85+210+55+110+85) * 1.55, MaterialUnit.Gram);
+        gandalfProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (160 + 215 + 170) / 15.0);
+        await ConsumeMaterial(gandalfProject, DatabaseSeed.MaterialJayoAbsResin, (210 + 85 + 210 + 55 + 110 + 85), MaterialUnit.Gram);
 
         gandalfProject.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 1);
         gandalfProject.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 3);
@@ -1491,10 +1497,10 @@ public class ProjectsSeed : IDeferredSeedStep
         var legolasDioramaProject = new Project("rodrigo.basniak", "Legolas vs Cave Troll ", referenceDate, modelId: null);
 
         legolasDioramaProject.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (5305) / 15.0);
-        await ConsumeMaterial(legolasDioramaProject, DatabaseSeed.MaterialJayoAbsResin, (6410) * 1.55, MaterialUnit.Gram);
+        await ConsumeMaterial(legolasDioramaProject, DatabaseSeed.MaterialJayoAbsResin, (6410), MaterialUnit.Gram);
 
         legolasDioramaProject.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 6);
-        legolasDioramaProject.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 21.5-6);
+        legolasDioramaProject.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 21.5 - 6);
         legolasDioramaProject.AddExecutionWindow(ProjectStepDefinition.Cleaning, referenceDate, 10);
         //legolasDioramaProject.AddExecutionWindow(ProjectStepDefinition.PostProcessing, referenceDate, 000000000000000);
 
@@ -1536,7 +1542,7 @@ public class ProjectsSeed : IDeferredSeedStep
         //var sampleCode = new Project("rodrigo.basniak", "xxxxxxxxxxxxxxxxxxxxxx", referenceDate, modelId: null);
 
         //sampleCode.AddExecutionWindow(ProjectStepDefinition.Printing, referenceDate, (000000000000000) / 15.0);
-        //await ConsumeMaterial(sampleCode, DatabaseSeed.MaterialJayoAbsResin, (000000000000000) * 1.55, MaterialUnit.Gram);
+        //await ConsumeMaterial(sampleCode, DatabaseSeed.MaterialJayoAbsResin, (000000000000000) , MaterialUnit.Gram); // As calculated in the slicer
 
         //sampleCode.AddExecutionWindow(ProjectStepDefinition.Planning, referenceDate, 000000000000000);
         //sampleCode.AddExecutionWindow(ProjectStepDefinition.Supporting, referenceDate, 000000000000000);

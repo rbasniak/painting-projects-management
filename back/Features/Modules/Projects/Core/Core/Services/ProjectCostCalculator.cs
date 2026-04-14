@@ -30,6 +30,11 @@ public class ProjectCostCalculator(
             .Where(x => x.Tenant == project.TenantId && projectMaterialIds.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
+        if (projectMaterialDefinitions.Count != projectMaterialIds.Length)
+        {
+            throw new UnexpectedInternalException("Database is not synchronized, try again later.");
+        }
+
         var projectMaterials = projectMaterialDefinitions
             .GroupBy(x => x.Id)
             .Select(group => group.OrderByDescending(x => x.UpdatedUtc).First())

@@ -4,12 +4,6 @@ Add a toast on every successfull write API call.
 Feature 2: 
 Add a favorite currency feature, in which the user can select which currencies the uses and then all currency dropdwons will show just those currencies.
 
-Bug 1:
-When a new material is created, add it as the first item of the list, not the last
-
-Bug 2: 
-Materials now have a category, add this category to the create/update dialogs
-
 Bug 3: 
 Dialog ui components do not have consistency (some have oulined controls, some not)
 
@@ -25,3 +19,9 @@ Add a classify button to the models list, that takes the user to the classificat
 
 Bug 6: 
 When there's no image for a model, the dialog is awckaward
+
+Feature:
+Add a column for category in the materials table
+
+Feature:
+Login should be a page without layout

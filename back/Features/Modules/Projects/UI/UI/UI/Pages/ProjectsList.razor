@@ -81,6 +81,10 @@
                                         <MudIcon Icon="@Icons.Material.Filled.PhotoLibrary" Class="mr-3" />
                                         Final Pictures
                                     </MudMenuItem>
+                                    <MudMenuItem OnClick="() => GetProjectCost(project)">
+                                        <MudIcon Icon="@Icons.Material.Filled.AttachMoney" Class="mr-3" />
+                                        Project Cost
+                                    </MudMenuItem>
 
                                     <MudDivider />
 
@@ -117,7 +121,7 @@
         {
             var filtered = projects.Where(x => string.IsNullOrWhiteSpace(searchString) ||
                 x.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase));
-            return filtered.OrderBy(x => x.Name);
+            return filtered;
         }
     }
 
@@ -361,6 +365,15 @@
     private static string GetPictureAddress(string url)
     {
         return $"https://localhost:7236/{url.Trim('/')}";
+    }
+
+    private async Task GetProjectCost(ProjectDetails project)
+    {
+        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+
+        var parameters = new DialogParameters { ["Model"] = projectDetails };
+        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+        var dialog = DialogService.Show<ProjectCostBreakdownDialog>(title: null, parameters, options);
     }
 
     private static void WriteDebugLog(string hypothesisId, string location, string message, object? data = null)
