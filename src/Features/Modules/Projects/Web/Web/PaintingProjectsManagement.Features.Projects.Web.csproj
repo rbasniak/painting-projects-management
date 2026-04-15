@@ -11,8 +11,8 @@
     <ProjectReference Include="..\..\..\..\..\Features\Shared\Currency\PaintingProjectsManagement.Features.Currency.csproj" />
     <ProjectReference Include="..\..\..\Inventory\Integrations\Integrations\PaintingProjectsManagement.Features.Inventory.Integrations.csproj" />
     <ProjectReference Include="..\..\..\Materials\Integrations\Integrations.Contracts\PaintingProjectsManagement.Features.Materials.Integrations.Contracts.csproj" />
-    <ProjectReference Include="..\..\..\Subscriptions\Core\Core\PaintingProjectsManagement.Features.Subscriptions.Core.csproj" />
     <ProjectReference Include="..\..\..\Subscriptions\Integrations\Integrations.Contracts\PaintingProjectsManagement.Features.Subscriptions.Integrations.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Subscriptions\Core\Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
     <ProjectReference Include="..\..\..\..\..\Infrastructure\Common\PaintingProjectsManagement.Infrastructure.Common.csproj" />
   </ItemGroup>
   <ItemGroup>

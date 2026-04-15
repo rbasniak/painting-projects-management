@@ -6,12 +6,6 @@
     <DisableImplicitAspNetCoreFrameworkReference>true</DisableImplicitAspNetCoreFrameworkReference>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="UI\Dialogs\ProjectCostBreakdownDialog.razor.codex2" />
-    <Content Include="UI\Dialogs\ProjectCostBreakdownDialog.razor.AntiGravity" />
-    <Content Include="UI\Dialogs\ProjectCostBreakdownDialog.razor.codex1" />
-    <Content Include="UI\Dialogs\ProjectCostBreakdownDialog.razor.cursor" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
     <PackageReference Include="MudBlazor" />

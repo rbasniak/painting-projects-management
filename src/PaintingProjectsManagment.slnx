@@ -15,7 +15,9 @@
   <Folder Name="/Database/">
     <Project Path="Persistance/Database/PaintingProjectsManagment.Database.csproj" />
   </Folder>
-  <Folder Name="/Features/" />
+  <Folder Name="/Features/">
+    <Project Path="Features/Architecture.Tests/Architecture.Tests.csproj" />
+  </Folder>
   <Folder Name="/Features/Modules/" />
   <Folder Name="/Features/Modules/Inventory/" />
   <Folder Name="/Features/Modules/Inventory/Core/">

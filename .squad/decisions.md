@@ -2,6 +2,94 @@
 
 ## Active Decisions
 
+### Architectural Enforcement: Module Boundary Tests with ArchUnitNET
+
+**Date:** 2026-04-15  
+**Status:** ✅ Decided & Implemented  
+**Owner:** Hulk (Tester) — corrected by Rodrigo Basniak  
+**Amended:** 2026-04-15 — initial implementation used NetArchTest.Rules in error; replaced with ArchUnitNET per user directive.
+
+**Context**
+
+Architecture review found module boundary violations (Projects.Web → Subscriptions.Core, Inventory.Web → Inventory.UI) and recommended automated tests to prevent future violations. Manual code review is insufficient for catching layer violations.
+
+**Decision**
+
+Created `src/Features/Architecture.Tests/` project using **TngTech.ArchUnitNET v0.13.3** enforcing:
+1. UI projects reference only Core.Contracts and Web.Contracts
+2. UI projects don't reference Web.UseCases
+3. Web projects don't reference other modules' Core
+4. Core projects don't reference Web or UI
+5. All modules follow naming convention
+6. UI only references Contracts projects
+
+Tests run as part of `dotnet test` in CI, failing the build on violations.
+
+**Implementation pattern:**
+- Assemblies loaded once at class level via `new ArchLoader().LoadAssemblies(...).Build()`
+- Rules expressed with ArchUnitNET fluent API: `Classes().That().ResideInNamespace("A").Should().NotDependOnAnyTypesThat().ResideInNamespace("B")`
+- Rules stored as `IArchRule` and checked via `rule.HasNoViolations(Arch)` + Shouldly (no xUnit/NUnit adapter needed for TUnit)
+
+**Consequences**
+
+**Positive:**
+- Violations caught at build time, not runtime
+- Tests serve as executable documentation of boundary rules
+- No manual code review needed for layer violations
+- ArchUnitNET is more expressive and type-safe than NetArchTest for complex cross-project rules
+
+**Risks:**
+- ArchUnitNET uses reflection — requires loading all module assemblies in one test project
+- If modules become too large, test project becomes a coupling point
+
+**Alternatives Considered**
+
+1. **Manual code review checklist** — Rejected. Human review is slower and error-prone for structural rules.
+2. **Separate test project per module** — Rejected. Boundary rules span multiple modules; single test project with complete assembly set is cleaner.
+3. **NetArchTest.Rules** — Rejected by user directive. ArchUnitNET is the mandated library.
+
+---
+
+### Layer Violation Fixes: Projects.Web, Inventory.Web, Projects.UI
+
+**Date:** 2026-04-15  
+**Status:** ✅ Fixed & Verified  
+**Owner:** Jarvis (Backend Developer)
+
+**Context**
+
+Architecture review identified 3 layer violations:
+1. Projects.Web directly references Subscriptions.Core (should use integration layer)
+2. Inventory.Web references Inventory.UI (dead reference, inverted layer direction)
+3. Projects.UI.csproj contains AI/editor artifact entries
+
+**Decision**
+
+1. **Projects.Web → Subscriptions.Core:** Removed Core reference, changed `UploadProjectReferencePicture.Validator` to fail open (return `true`) when subscription entitlement query fails. Respects module boundaries; availability over strict enforcement during degradation.
+
+2. **Inventory.Web → Inventory.UI:** Removed dead reference from .csproj.
+
+3. **Projects.UI artifacts:** Removed `.codex1`, `.codex2`, `.cursor`, `.AntiGravity` from .csproj and deleted files from filesystem.
+
+**Consequences**
+
+**Positive:**
+- Module boundaries properly enforced
+- No dead references or artifact clutter
+- Fail-open pattern improves availability (Subscriptions outage doesn't break Projects)
+
+**Risks:**
+- `UploadProjectReferencePicture` now allows operations when subscription service is degraded
+- Acceptable trade-off: availability > strict tier enforcement during degradation
+
+**Alternatives Considered**
+
+1. **Circuit breaker pattern** — Rejected (over-engineered for this use case).
+2. **Event-based fallback** — Rejected (subscription tier changes are rare; synchronous query is sufficient).
+3. **Fail closed (reject operation)** — Rejected (poor user experience when Subscriptions is temporarily unavailable).
+
+---
+
 ### Documentation Decision: Architecture Section in src/README.md
 
 **Date:** 2026-04-15  

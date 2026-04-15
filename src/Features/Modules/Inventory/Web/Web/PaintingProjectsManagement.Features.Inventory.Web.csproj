@@ -4,7 +4,6 @@
     <PackageReference Include="rbkApiModules.Identity.Core" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\UI\UI\PaintingProjectsManagement.Features.Inventory.UI.csproj" />
     <ProjectReference Include="..\Web.Contracts\PaintingProjectsManagement.Features.Inventory.Web.Contracts.csproj" />
     <ProjectReference Include="..\..\Core\Core\PaintingProjectsManagement.Features.Inventory.Core.csproj" />
     <ProjectReference Include="..\..\..\Subscriptions\Integrations\Integrations.Contracts\PaintingProjectsManagement.Features.Subscriptions.Integrations.Contracts.csproj" />
