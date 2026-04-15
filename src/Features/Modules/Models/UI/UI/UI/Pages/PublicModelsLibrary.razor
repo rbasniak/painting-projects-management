@@ -1,4 +1,5 @@
 @page "/models/library/public/{OwnerKey}"
+@inject ApiSettings ApiSettings
 
 <MudPaper Class="pa-4">
     <MudStack Spacing="3">
@@ -229,7 +230,7 @@
         NavigationManager.NavigateTo($"/models/library/public/{encodedOwner}/model/{modelId}");
     }
 
-    private static string? GetCoverImageUrl(ModelDetails model)
+    private string? GetCoverImageUrl(ModelDetails model)
     {
         var picture = !string.IsNullOrWhiteSpace(model.CoverPicture)
             ? model.CoverPicture
@@ -240,7 +241,7 @@
             return null;
         }
 
-        return $"https://localhost:7236/{picture.TrimStart('/')}";
+        return ApiSettings.GetUrl(picture);
     }
 
     private static bool MatchesGlobalSearch(ModelDetails model, string searchValue)

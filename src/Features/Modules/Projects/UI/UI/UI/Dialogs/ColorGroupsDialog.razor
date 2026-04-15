@@ -3,6 +3,7 @@
 @using PaintingProjectsManagement.Features.Projects
 @using PaintingProjectsManagement.UI.Modules.Projects
 @using System.Text.Json
+@inject ApiSettings ApiSettings
 
 @namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 @implements IAsyncDisposable
@@ -231,7 +232,7 @@
 
     private string GetPictureAddress(string url)
     {
-        return $"https://localhost:7236/{url.Trim('/')}";
+        return ApiSettings.GetUrl(url);
     }
 
     private void LoadColorGroups()

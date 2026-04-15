@@ -5,6 +5,7 @@
 @using System.Threading
 @using System
 @using PaintingProjectsManagement.UI.Modules.Projects
+@inject ApiSettings ApiSettings
 
 @namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 
@@ -87,7 +88,7 @@
 
     private string GetPictureAddress(string url)
     {
-        return $"https://localhost:7236/{url.Trim('/')}";
+        return ApiSettings.GetUrl(url);
     }
 
     private bool IsCover(UrlReference reference)

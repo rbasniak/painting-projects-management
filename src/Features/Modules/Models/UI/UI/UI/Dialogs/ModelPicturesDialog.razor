@@ -5,6 +5,7 @@
 @using System.Threading
 @using System
 @using PaintingProjectsManagement.UI.Modules.Models
+@inject ApiSettings ApiSettings
 
 @namespace PaintingProjectsManagement.UI.Modules.Models.UI.Dialogs
 
@@ -82,7 +83,7 @@
 
     private string GetPictureAddress(string url)
     {
-        return $"https://localhost:7236{url}";
+        return ApiSettings.GetUrl(url);
     }
 
     private string GetCardClass(string picture)

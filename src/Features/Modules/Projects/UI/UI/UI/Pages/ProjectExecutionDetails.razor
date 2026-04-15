@@ -5,6 +5,7 @@
 @using PaintingProjectsManagement.UI.Modules.Shared
 @using PaintingProjectsManagement.Features.Projects
 @implements IAsyncDisposable
+@inject ApiSettings ApiSettings
 
 <MudPaper Class="pa-4">
     <MudStack Spacing="4">
@@ -437,7 +438,7 @@
         {
             return trimmedUrl;
         }
-        return $"https://localhost:7236/{trimmedUrl}";
+        return ApiSettings.GetUrl(trimmedUrl);
     }
 
     private string GetPictureAddressWithCors(string url)

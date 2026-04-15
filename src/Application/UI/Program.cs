@@ -25,6 +25,8 @@ namespace PaintingProjectsManagement.UI
 
             builder.Services.AddMudServices();
 
+            builder.Services.AddSingleton(new ApiSettings(apiBaseAddress));
+
             builder.Services.AddMaterialsModule(apiBaseAddress);
             builder.Services.AddModelsModule(apiBaseAddress);
             builder.Services.AddProjectsModule(apiBaseAddress);

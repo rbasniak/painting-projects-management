@@ -3,6 +3,7 @@
 @using PaintingProjectsManagement.UI.Modules.Projects 
 @using PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 @using PaintingProjectsManagement.UI.Modules.Shared
+@inject ApiSettings ApiSettings
 
 <MudPaper Class="pa-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Class="mb-2">
@@ -362,9 +363,9 @@
         NavigationManager.NavigateTo($"/projects/{project.Id}/execution");
     }
 
-    private static string GetPictureAddress(string url)
+    private string GetPictureAddress(string url)
     {
-        return $"https://localhost:7236/{url.Trim('/')}";
+        return ApiSettings.GetUrl(url);
     }
 
     private async Task GetProjectCost(ProjectDetails project)
