@@ -19,6 +19,9 @@ public class MaterialUpdatedConsumer : IIntegrationEventHandler<MaterialUpdatedV
 
         if (entity == null)
         {
+            var currency = string.IsNullOrWhiteSpace(@event.PackagePriceCurrency)
+                ? "USD"
+                : @event.PackagePriceCurrency.Trim().ToUpperInvariant();
             entity = new Material
             {
                 Tenant = envelope.TenantId,
@@ -26,7 +29,7 @@ public class MaterialUpdatedConsumer : IIntegrationEventHandler<MaterialUpdatedV
                 Name = @event.Name,
                 CategoryId = @event.CategoryId,
                 CategoryName = @event.CategoryName,
-                PricePerUnit = new Money(@event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount, "USD"),
+                PricePerUnit = new Money(@event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount, currency),
                 Unit = UnitsHelper.Convert(@event.PackageContentUnit),
                 UpdatedUtc = DateTime.UtcNow
             };
@@ -35,12 +38,15 @@ public class MaterialUpdatedConsumer : IIntegrationEventHandler<MaterialUpdatedV
         }
         else
         {
+            var currency = string.IsNullOrWhiteSpace(@event.PackagePriceCurrency)
+                ? "USD"
+                : @event.PackagePriceCurrency.Trim().ToUpperInvariant();
             entity = entity with
             {
                 Name = @event.Name,
                 Unit = UnitsHelper.Convert(@event.PackageContentUnit),
                 UpdatedUtc = DateTime.UtcNow,
-                PricePerUnit = new Money(@event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount, "USD")
+                PricePerUnit = new Money(@event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount, currency)
             };
 
             _context.Update(entity);

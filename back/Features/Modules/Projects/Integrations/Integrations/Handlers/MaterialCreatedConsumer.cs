@@ -36,12 +36,15 @@ public class MaterialCreatedConsumer : IIntegrationEventHandler<MaterialCreatedV
         }
         else
         {
+            var currency = string.IsNullOrWhiteSpace(@event.PackagePriceCurrency)
+                ? "USD"
+                : @event.PackagePriceCurrency.Trim().ToUpperInvariant();
             entity = entity with
             {
                 Name = @event.Name,
                 Unit = UnitsHelper.Convert(@event.PackageContentUnit),
                 UpdatedUtc = DateTime.UtcNow,
-                PricePerUnit = new Money(@event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount, "USD")
+                PricePerUnit = new Money(@event.PackageContentAmount == 0 ? 0 : @event.PackagePriceAmount / @event.PackageContentAmount, currency)
             };
 
             _context.Update(entity);
