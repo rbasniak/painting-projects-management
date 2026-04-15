@@ -14,6 +14,7 @@ How to decide who handles what.
 | Documentation, changelogs, ADR write-ups | Wong | README updates, module docs, onboarding guides |
 | Session logging, decisions merging, history | Uatu | Automatic — never needs routing |
 | Work queue monitoring, issue backlog | Xavier | Automatic when activated |
+| Infrastructure, Aspire, Docker, CI/CD, migrations | Rocket | AppHost config, container issues, build pipelines |
 | Code review | Fury | Review PRs, check quality, enforce vertical slice rules |
 | Architecture review | Stark | Review cross-module contracts, module boundary violations |
 
@@ -28,6 +29,7 @@ How to decide who handles what.
 | `squad:loki` | Pick up issue and complete the work | Loki |
 | `squad:hulk` | Pick up issue and complete the work | Hulk |
 | `squad:wong` | Pick up issue and complete the work | Wong |
+| `squad:rocket` | Pick up issue and complete the work | Rocket |
 
 ### How Issue Assignment Works
 

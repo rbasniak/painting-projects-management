@@ -20,6 +20,7 @@
 | Wong | Documentation Writer | .squad/agents/wong/charter.md | ✅ active |
 | Uatu | Session Logger | .squad/agents/uatu/charter.md | ✅ active |
 | Xavier | Work Monitor | .squad/agents/xavier/charter.md | ✅ active |
+| Rocket | DevOps Engineer | .squad/agents/rocket/charter.md | ✅ active |
 
 ## Project Context
 

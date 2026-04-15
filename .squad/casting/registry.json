@@ -8,6 +8,7 @@
     {"persistent_name": "Hulk",   "role": "Tester",               "universe": "Marvel Cinematic Universe", "created_at": "2026-04-15", "legacy_named": false, "status": "active"},
     {"persistent_name": "Wong",   "role": "Documentation Writer", "universe": "Marvel Cinematic Universe", "created_at": "2026-04-15", "legacy_named": false, "status": "active"},
     {"persistent_name": "Uatu",   "role": "Session Logger",       "universe": "Marvel Cinematic Universe", "created_at": "2026-04-15", "legacy_named": false, "status": "active"},
-    {"persistent_name": "Xavier", "role": "Work Monitor",         "universe": "Marvel Cinematic Universe", "created_at": "2026-04-15", "legacy_named": false, "status": "active"}
+    {"persistent_name": "Xavier", "role": "Work Monitor",         "universe": "Marvel Cinematic Universe", "created_at": "2026-04-15", "legacy_named": false, "status": "active"},
+    {"persistent_name": "Rocket", "role": "DevOps Engineer",       "universe": "Marvel Cinematic Universe", "created_at": "2026-04-15", "legacy_named": false, "status": "active"}
   ]
 }
