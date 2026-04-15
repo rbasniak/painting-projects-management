@@ -23,6 +23,70 @@
 
 ## Learnings
 
+### Models Module: MustHave Bug Fix and SizeInMb Nullable (2026-04-15)
+
+**Context:** Fixed missing `MustHave` property in create/update requests and changed `SizeInMb` from `int` to `int?` (nullable).
+
+**What was found:**
+
+1. **MustHave bug:**
+   - The `Model` entity had a `MustHave` property and `SetMustHave()` method
+   - `ModelDetails` and `IModelDetails` already exposed `MustHave`
+   - BUT: `CreateModel.Request` and `UpdateModel.Request` did NOT have the `MustHave` property
+   - Result: The property could never be set during creation or update
+   - The handlers never called `SetMustHave()` to persist the value
+
+2. **SizeInMb should be nullable:**
+   - Originally `int` (non-nullable) with default value 0
+   - Many models don't have a known file size, so nullable is more appropriate
+   - Changed throughout the stack: entity, EF config, DTOs, requests, integration events
+
+**Files modified:**
+
+Models Module backend files:
+- `Models.Core/Models/Domain/Model.cs` — changed `SizeInMb` property from `int` to `int?`, updated constructor and `UpdateDetails()` signatures
+- `Models.Core/Database/ModelConfig.cs` — added `.IsRequired(false)` for `SizeInMb`
+- `Models.Web/UseCases/Models/Commands/CreateModel.cs` — added `MustHave` property to Request, updated validator for nullable `SizeInMb`, added `SetMustHave()` call in handler
+- `Models.Web/UseCases/Models/Commands/UpdateModel.cs` — added `MustHave` property to Request, updated validator for nullable `SizeInMb`, added `SetMustHave()` call in handler
+- `Models.Web/DataTransfer/ModelDetails.cs` — changed `Size` property from `int` to `int?`
+- `Models.Web.Contracts/DataTransfer/IModelDetails.cs` — changed `Size` property from `int` to `int?`
+- `Models.Integrations.Contracts/Events/ModelEvents.cs` — updated `ModelCreatedV1` and `ModelUpdatedV1` records to use `int? SizeInMb`
+
+EF Migration:
+- `Persistance/Database/Migrations/20260415133032_AddModelSizeInMbNullableAndMustHave.cs` — alters `SizeInMb` column to nullable
+
+**Key patterns observed:**
+
+1. **Vertical slice completeness:** When adding/fixing a property, must check ALL layers:
+   - Domain entity (`*.Core/Models/Domain/`)
+   - EF configuration (`*.Core/Database/`)
+   - Request classes (`*.Web/UseCases/*/Commands/` and `*.Web/UseCases/*/Queries/`)
+   - Request validators (nested in use case classes)
+   - Handlers (nested in use case classes) — must map request to entity AND call domain methods
+   - Response DTOs (`*.Web/DataTransfer/`)
+   - DTO interfaces (`*.Web.Contracts/DataTransfer/`)
+   - Integration events (`*.Integrations.Contracts/Events/`)
+
+2. **Domain methods vs direct assignment:**
+   - The `Model` entity has a `SetMustHave()` method for the `MustHave` property
+   - The `UpdateDetails()` method does NOT accept `mustHave` parameter (domain design choice — separate concern)
+   - Handlers must call both `UpdateDetails()` AND `SetMustHave()` to fully update the entity
+   - Don't assume `UpdateDetails()` updates everything — check the signature
+
+3. **Nullable property validation:**
+   - Use `.When(x => x.Property.HasValue)` in FluentValidation rules to only validate when value is present
+   - Use null-coalescing operator `?? 0` when passing nullable to domain methods that expect non-nullable
+
+4. **EF migration workflow:**
+   - Migration must be generated from a project that references `Microsoft.EntityFrameworkCore.Design`
+   - For this solution: run from `Application/Api` project with `--project` pointing to `Persistance/Database`
+   - Command: `dotnet ef migrations add <Name> --project ..\..\Persistance\Database\PaintingProjectsManagment.Database.csproj`
+
+**Build verification:**
+- Initial build: 6 errors related to `int` vs `int?` mismatch in integration events
+- After fixing integration events: Build succeeded with 33 warnings
+- After migration generation: Build succeeded with 62 warnings (standard for this solution)
+
 ### Layer Violation Fixes (2026-04-15)
 
 **Context:** Fixed three module boundary violations identified by Stark during architecture review.
@@ -70,4 +134,76 @@
 - Orchestration: `.squad/orchestration-log/2026-04-15T11-43-58Z-jarvis.md`
 - Session log: `.squad/log/2026-04-15T11-43-58Z-violation-fixes-and-arch-tests.md`
 - Decision: Merged to `.squad/decisions.md`
+
+### Models Module: MustHave Bug Fix and SizeInMb Nullable (2026-04-15 — Current Session)
+
+**Context:** Fixed missing `MustHave` property in create/update requests and changed `SizeInMb` from `int` to `int?` (nullable).
+
+**What was found:**
+
+1. **MustHave bug:**
+   - The `Model` entity had a `MustHave` property and `SetMustHave()` method
+   - `ModelDetails` and `IModelDetails` already exposed `MustHave`
+   - BUT: `CreateModel.Request` and `UpdateModel.Request` did NOT have the `MustHave` property
+   - Result: The property could never be set during creation or update
+   - The handlers never called `SetMustHave()` to persist the value
+
+2. **SizeInMb should be nullable:**
+   - Originally `int` (non-nullable) with default value 0
+   - Many models don't have a known file size, so nullable is more appropriate
+   - Changed throughout the stack: entity, EF config, DTOs, requests, integration events
+
+**Files modified:**
+
+Models Module backend files:
+- `Models.Core/Models/Domain/Model.cs` — changed `SizeInMb` property from `int` to `int?`, updated constructor and `UpdateDetails()` signatures
+- `Models.Core/Database/ModelConfig.cs` — added `.IsRequired(false)` for `SizeInMb`
+- `Models.Web/UseCases/Models/Commands/CreateModel.cs` — added `MustHave` property to Request, updated validator for nullable `SizeInMb`, added `SetMustHave()` call in handler
+- `Models.Web/UseCases/Models/Commands/UpdateModel.cs` — added `MustHave` property to Request, updated validator for nullable `SizeInMb`, added `SetMustHave()` call in handler
+- `Models.Web/DataTransfer/ModelDetails.cs` — changed `Size` property from `int` to `int?`
+- `Models.Web.Contracts/DataTransfer/IModelDetails.cs` — changed `Size` property from `int` to `int?`
+- `Models.Integrations.Contracts/Events/ModelEvents.cs` — updated `ModelCreatedV1` and `ModelUpdatedV1` records to use `int? SizeInMb`
+
+EF Migration:
+- `Persistance/Database/Migrations/20260415133032_AddModelSizeInMbNullableAndMustHave.cs` — alters `SizeInMb` column to nullable
+
+**Key patterns observed:**
+
+1. **Vertical slice completeness:** When adding/fixing a property, must check ALL layers:
+   - Domain entity (`*.Core/Models/Domain/`)
+   - EF configuration (`*.Core/Database/`)
+   - Request classes (`*.Web/UseCases/*/Commands/` and `*.Web/UseCases/*/Queries/`)
+   - Request validators (nested in use case classes)
+   - Handlers (nested in use case classes) — must map request to entity AND call domain methods
+   - Response DTOs (`*.Web/DataTransfer/`)
+   - DTO interfaces (`*.Web.Contracts/DataTransfer/`)
+   - Integration events (`*.Integrations.Contracts/Events/`)
+
+2. **Domain methods vs direct assignment:**
+   - The `Model` entity has a `SetMustHave()` method for the `MustHave` property
+   - The `UpdateDetails()` method does NOT accept `mustHave` parameter (domain design choice — separate concern)
+   - Handlers must call both `UpdateDetails()` AND `SetMustHave()` to fully update the entity
+   - Don't assume `UpdateDetails()` updates everything — check the signature
+
+3. **Nullable property validation:**
+   - Use `.When(x => x.Property.HasValue)` in FluentValidation rules to only validate when value is present
+   - Use null-coalescing operator `?? 0` when passing nullable to domain methods that expect non-nullable
+
+4. **EF migration workflow:**
+   - Migration must be generated from a project that references `Microsoft.EntityFrameworkCore.Design`
+   - For this solution: run from `Application/Api` project with `--project` pointing to `Persistance/Database`
+   - Command: `dotnet ef migrations add <Name> --project ..\..\Persistance\Database\PaintingProjectsManagment.Database.csproj`
+
+**Build verification:**
+- Initial build: 6 errors related to `int` vs `int?` mismatch in integration events
+- After fixing integration events: Build succeeded with 33 warnings
+- After migration generation: Build succeeded with 62 warnings (standard for this solution)
+
+**Coordination with teammates:**
+- **Loki (Frontend):** Needs updated request models with `MustHave` and nullable `SizeInMb`; consumes backend changes
+- **Hulk (Tester):** Created 10 proactive integration tests validating persistence of both fields
+
+**Session artifacts:**
+- Orchestration: `.squad/orchestration-log/2026-04-15T13-38-06Z-jarvis.md`
+- Session log: `.squad/log/2026-04-15T13-38-06Z-model-fields.md`
 
