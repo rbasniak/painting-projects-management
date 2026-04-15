@@ -32,7 +32,8 @@ public class CreateModel : IEndpoint
         public int NumberOfFigures { get; set; }
         public string Franchise { get; set; } = string.Empty;
         public ModelType Type { get; set; } = ModelType.Unknown;
-        public int SizeInMb { get; set; } = 0;
+        public int? SizeInMb { get; set; }
+        public bool MustHave { get; set; }
     }
 
     public class Validator : SmartValidator<Request, Model>
@@ -65,6 +66,7 @@ public class CreateModel : IEndpoint
 
             RuleFor(x => x.SizeInMb)
                 .GreaterThanOrEqualTo(0)
+                .When(x => x.SizeInMb.HasValue)
                 .WithMessage("SizeInMb must be greater than or equal to zero");
 
             RuleFor(x => x.InternalId)
@@ -94,9 +96,14 @@ public class CreateModel : IEndpoint
                 request.BaseSize,
                 request.FigureSize,
                 request.NumberOfFigures,
-                request.SizeInMb,
+                request.SizeInMb ?? 0,
                 request.InternalId
             );
+
+            if (request.MustHave)
+            {
+                model.SetMustHave(true);
+            }
 
             await _context.AddAsync(model, cancellationToken);
 

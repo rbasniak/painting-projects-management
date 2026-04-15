@@ -88,6 +88,13 @@
                         </MudStack>
                     }
                 </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudNumericField @bind-Value="Model.SizeInMb"
+                                     Label="Size (MB)"
+                                     Variant="Variant.Outlined"
+                                     Min="0"
+                                     HideSpinButtons="true" />
+                </MudItem>
                 <MudItem xs="12" md="6" Class="d-flex align-center">
                     <MudCheckBox T="bool" @bind-Checked="Model.MustHave" Label="Must Have" Color="Color.Primary" />
                 </MudItem>

@@ -33,7 +33,8 @@ public class UpdateModel : IEndpoint
         public int NumberOfFigures { get; set; }
         public string Franchise { get; set; } = string.Empty;
         public ModelType Type { get; set; } = ModelType.Unknown;
-        public int SizeInMb { get; set; } = 0;
+        public int? SizeInMb { get; set; }
+        public bool MustHave { get; set; }
     }
 
     public class Validator : SmartValidator<Request, Model>
@@ -67,6 +68,7 @@ public class UpdateModel : IEndpoint
 
             RuleFor(x => x.SizeInMb)
                 .GreaterThanOrEqualTo(0)
+                .When(x => x.SizeInMb.HasValue)
                 .WithMessage("SizeInMb must be greater than or equal to zero");
 
             RuleFor(x => x.InternalId)
@@ -107,9 +109,11 @@ public class UpdateModel : IEndpoint
                 request.NumberOfFigures,
                 request.Franchise,
                 request.Type,
-                request.SizeInMb,
+                request.SizeInMb ?? 0,
                 request.InternalId
             );
+
+            model.SetMustHave(request.MustHave);
 
             await _context.SaveChangesAsync(cancellationToken);
 

@@ -21,4 +21,5 @@ public record ModelDetails
     public int NumberOfFigures { get; set; }
     public bool MustHave { get; set; }
     public string? Identity { get; set; }
+    public int? SizeInMb { get; set; }
 }

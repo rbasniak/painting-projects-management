@@ -27,6 +27,9 @@ public class ModelConfig : IEntityTypeConfiguration<Model>
         builder.Property(x => x.Identity)
             .HasMaxLength(512);
 
+        builder.Property(x => x.SizeInMb)
+            .IsRequired(false);
+
         builder.Property(x => x.MustHave)
             .IsRequired()
             .HasDefaultValue(false);

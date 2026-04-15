@@ -8,7 +8,7 @@ public class ModelDetails
     public string Name { get; set; } = string.Empty;
     public string Franchise { get; set; } = string.Empty;
     public string[] Characters { get; set; } = [];
-    public int Size { get; set; } 
+    public int? Size { get; set; }
     public EntityReference Category { get; set; }
     public EnumReference Type { get; set; }
     public string? Artist { get; set; }

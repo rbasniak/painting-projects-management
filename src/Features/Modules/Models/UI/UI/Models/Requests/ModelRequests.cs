@@ -14,7 +14,8 @@ public class CreateModelRequest
     public BaseSize BaseSize { get; init; }
     public FigureSize FigureSize { get; init; }
     public int NumberOfFigures { get; init; }
-    public int SizeInMb { get; init; }
+    public int? SizeInMb { get; init; }
+    public bool MustHave { get; init; }
 }
 
 public class UpdateModelRequest : CreateModelRequest

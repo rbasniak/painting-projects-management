@@ -6,7 +6,7 @@ public interface IModelDetails
     string Name { get; }
     string Franchise { get; }
     string[] Characters { get; }
-    int Size { get; }
+    int? Size { get; }
     object Category { get; }
     object Type { get; }
     string? Artist { get; }

@@ -226,16 +226,10 @@
                 BaseSize = BaseSize.Unknown,
                 FigureSize = FigureSize.Unknown,
                 NumberOfFigures = 1,
-                SizeInMb = 0
+                SizeInMb = input.SizeInMb,
+                MustHave = input.MustHave
             };
             var created = await ModelsService.CreateAsync(request, CancellationToken.None);
-
-            // Set MustHave separately if needed
-            if (input.MustHave)
-            {
-                await ModelsService.SetMustHaveAsync(created.Id, true, CancellationToken.None);
-                created.MustHave = true;
-            }
 
             models.Add(created);
         }
@@ -260,7 +254,8 @@
             NumberOfFigures = model.NumberOfFigures,
             Size = model.Size,
             MustHave = model.MustHave,
-            Identity = model.Identity
+            Identity = model.Identity,
+            SizeInMb = model.SizeInMb
         };
         var parameters = new DialogParameters 
         { 
@@ -291,16 +286,10 @@
                 BaseSize = (BaseSize)updatedInput.BaseSize.Id,
                 FigureSize = (FigureSize)updatedInput.FigureSize.Id,
                 NumberOfFigures = updatedInput.NumberOfFigures,
-                SizeInMb = updatedInput.Size
+                SizeInMb = updatedInput.SizeInMb,
+                MustHave = updatedInput.MustHave
             };
             var updated = await ModelsService.UpdateAsync(request, CancellationToken.None);
-
-            // Update MustHave separately if it changed
-            if (updatedInput.MustHave != model.MustHave)
-            {
-                await ModelsService.SetMustHaveAsync(updatedInput.Id, updatedInput.MustHave, CancellationToken.None);
-                updated.MustHave = updatedInput.MustHave;
-            }
 
             var index = models.FindIndex(x => x.Id == updated.Id);
             if (index >= 0)
