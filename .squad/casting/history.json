@@ -1,0 +1,10 @@
+{
+  "assignments": [
+    {
+      "assignment_id": "ppm-2026-04-15",
+      "universe": "Marvel Cinematic Universe",
+      "date": "2026-04-15",
+      "agents": ["Fury", "Stark", "Jarvis", "Loki", "Hulk", "Wong", "Uatu", "Xavier"]
+    }
+  ]
+}
