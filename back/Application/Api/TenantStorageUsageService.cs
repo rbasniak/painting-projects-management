@@ -39,11 +39,13 @@ public sealed class TenantStorageUsageService(
             return QuotaInBytes;
         }
 
+        tenant = tenant.ToUpper();
+
         using var scope = scopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<DbContext>();
         var subscription = await context.Set<TenantSubscription>()
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.TenantId == tenant, cancellationToken);
+            .FirstOrDefaultAsync(x => x.TenantId.ToUpper() == tenant, cancellationToken);
 
         var tier = subscription?.Tier ?? SubscriptionTier.Free;
         var isExpired = subscription is not null

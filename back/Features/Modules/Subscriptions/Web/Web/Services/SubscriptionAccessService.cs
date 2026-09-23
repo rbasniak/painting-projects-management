@@ -11,8 +11,9 @@ public sealed class SubscriptionAccessService(DbContext context, ISubscriptionTi
 {
     public async Task<TenantSubscription> GetOrCreateAsync(string tenantId, CancellationToken cancellationToken)
     {
+        tenantId = tenantId.ToUpper();
         var subscription = await context.Set<TenantSubscription>()
-            .FirstOrDefaultAsync(x => x.TenantId == tenantId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.TenantId.ToUpper() == tenantId, cancellationToken);
 
         if (subscription is not null)
         {
@@ -27,9 +28,10 @@ public sealed class SubscriptionAccessService(DbContext context, ISubscriptionTi
 
     public async Task<SubscriptionEntitlementResult> ResolveEntitlementAsync(string tenantId, CancellationToken cancellationToken)
     {
+        tenantId = tenantId.ToUpper();
         var subscription = await context.Set<TenantSubscription>()
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.TenantId == tenantId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.TenantId.ToUpper() == tenantId, cancellationToken);
 
         var tier = subscription?.Tier ?? SubscriptionTier.Free;
         var status = subscription?.Status ?? SubscriptionStatus.Active;

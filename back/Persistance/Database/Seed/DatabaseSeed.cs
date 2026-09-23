@@ -1,5 +1,6 @@
 using PaintingProjectsManagement.Features;
 using PaintingProjectsManagement.Features.Inventory;
+using PaintingProjectsManagement.Features.Subscriptions;
 using rbkApiModules.Commons.Relational;
 using rbkApiModules.Identity.Core;
 
@@ -10,6 +11,7 @@ public partial class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatab
     public DatabaseSeed()
     {
         AddSeed("2025-07-19 16:00: Users seed", new SeedInfo<DatabaseContext>(UsersSeed, EnvironmentUsage.All));
+        AddSeed("2026-09-23 20:45: Rodrigo Premium subscription", new SeedInfo<DatabaseContext>(RodrigoPremiumSubscriptionSeed, EnvironmentUsage.All));
         AddSeed("2025-07-20 08:15: Development models seed", new SeedInfo<DatabaseContext>(DevelopmentModelsSeed, EnvironmentUsage.Development));
         AddSeed("2025-07-22 23:15: Admin claims seed", new SeedInfo<DatabaseContext>(AdminClaimsSeed, EnvironmentUsage.All));
         AddSeed("2025-08-11 23:15: Example materials", new SeedInfo<DatabaseContext>(MaterialsSeed, EnvironmentUsage.Development | EnvironmentUsage.Production));
@@ -29,6 +31,28 @@ public partial class DatabaseSeed : DatabaseSeedManager<DatabaseContext>, IDatab
 
         user1.Confirm();
         user2.Confirm();
+
+        context.SaveChanges();
+    }
+
+    private void RodrigoPremiumSubscriptionSeed(DatabaseContext context, IServiceProvider provider)
+    {
+        const string tenantId = "RODRIGO.BASNIAK";
+        var subscription = context.Set<TenantSubscription>()
+            .SingleOrDefault(x => x.TenantId.ToUpper() == tenantId);
+
+        if (subscription is null)
+        {
+            subscription = TenantSubscription.CreateFree(tenantId);
+            context.Add(subscription);
+        }
+
+        var periodStart = DateTime.UtcNow;
+        subscription.ActivatePaidTier(
+            SubscriptionTier.Premium,
+            periodStart,
+            periodStart.AddYears(100),
+            "seed-premium-rodrigo-basniak");
 
         context.SaveChanges();
     }
