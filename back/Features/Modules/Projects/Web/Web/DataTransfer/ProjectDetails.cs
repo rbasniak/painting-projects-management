@@ -15,10 +15,9 @@ public class ProjectDetails
     public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();
     public ProjectCostDetails CostBreakdown { get; set; } = ProjectCostDetails.Empty;
 
-    public static ProjectDetails FromModel(Project project, ProjectCostBreakdown projectCostBreakdown)
+    public static ProjectDetails FromModel(Project project)
     {
         ArgumentNullException.ThrowIfNull(project);
-        ArgumentNullException.ThrowIfNull(projectCostBreakdown);
 
         return new ProjectDetails
         {
@@ -30,7 +29,6 @@ public class ProjectDetails
             IsArchived = project.IsArchived,
             Steps = project.Steps.Select(x => ProjectStepDataDetails.FromModel(x)).ToArray(),
             // Materials = materialDetails ?? Array.Empty<MaterialDetails>(),
-            CostBreakdown = ProjectCostDetails.FromModel(projectCostBreakdown),
             References = project.References.Select(x => new UrlReference
             {
                 Id = x.Id,
