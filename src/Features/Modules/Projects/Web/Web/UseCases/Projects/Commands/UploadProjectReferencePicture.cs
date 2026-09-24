@@ -1,5 +1,5 @@
 using rbkApiModules.Core.Utilities;
-using PaintingProjectsManagement.Features.Subscriptions.Integration;
+using PaintingProjectsManagement.Features.Subscriptions;
 using PaintingProjectsManagement.Infrastructure.Common;
 
 namespace PaintingProjectsManagement.Features.Projects;
@@ -29,16 +29,16 @@ public class UploadProjectReferencePicture : IEndpoint
     public class Validator : SmartValidator<Request, Project>
     {
         private readonly ITenantStorageUsageService _storageUsageService;
-        private readonly IDispatcher _dispatcher;
+        private readonly ISubscriptionTierPolicyCatalog _subscriptionTierPolicyCatalog;
 
         public Validator(
             DbContext context,
             ILocalizationService localization,
             ITenantStorageUsageService storageUsageService,
-            IDispatcher dispatcher) : base(context, localization)
+            ISubscriptionTierPolicyCatalog subscriptionTierPolicyCatalog) : base(context, localization)
         {
             _storageUsageService = storageUsageService;
-            _dispatcher = dispatcher;
+            _subscriptionTierPolicyCatalog = subscriptionTierPolicyCatalog;
         }
 
         protected override void ValidateBusinessRules()
@@ -89,17 +89,20 @@ public class UploadProjectReferencePicture : IEndpoint
 
         private async Task<bool> HaveAvailableReferencePicturesLimit(Request request, CancellationToken cancellationToken)
         {
-            var entitlementResponse = await _dispatcher.SendAsync(
-                new GetSubscriptionEntitlementQuery { TenantId = request.Identity.Tenant },
-                cancellationToken);
-            
-            // If we can't get entitlement data, allow the operation (fail open for availability)
-            if (!entitlementResponse.IsValid || entitlementResponse.Data is null)
+            var tenant = (request.Identity.Tenant ?? string.Empty).ToUpper();
+            var subscription = await Context.Set<TenantSubscription>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.TenantId.ToUpper() == tenant, cancellationToken);
+            var tier = subscription?.Tier ?? SubscriptionTier.Free;
+
+            if (subscription?.Tier != SubscriptionTier.Free
+                && subscription.CurrentPeriodEndUtc.HasValue
+                && subscription.CurrentPeriodEndUtc.Value <= DateTime.UtcNow)
             {
-                return true;
+                tier = SubscriptionTier.Free;
             }
 
-            var maxReferences = entitlementResponse.Data.MaxProjectReferencePicturesPerProject;
+            var maxReferences = _subscriptionTierPolicyCatalog.Get(tier).MaxProjectReferencePicturesPerProject;
 
             if (maxReferences == int.MaxValue)
             {

@@ -25,3 +25,46 @@ Add a column for category in the materials table
 
 Feature:
 Login should be a page without layout
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Quando adiciona imagem e seleciona capa, sai do dialogo, nao atualiza a capa na lista
+
+Quando abre o Create Color Group, vem com erro de validacao e tem que clicar no dialogo pra ele reprocessar a validacao
+
+O  dialogo Create Color Group tem dois titulus
+
+Na hora de selecionar as zonas de cores, tem que aparecer na ordem highlight/midtones/shadows
+
+salvar dialogo aberto e estado na rota
+
+No dialogo de color zone management, fazer scroll separado do lado esquerdo e direito
+
+Ao criar uma zona, ja criar ela expandida
+
+No dialogo de color matching, qdo expandir um accordeon, fechar os outros
+
+No dialogo de color matching, se todas as cores das zonas ja estiverem selecioada, colocar um checkmark do lado do nome da secao
+
+No dialogo de color matching, quando selecionar uuma cor, mostrar um preview dela do lado da cor original
+
+No dialogo de color matching, mostrar cada section em uma aba, com lazy loading se possivel
+
+No dialogo de sumario de cores, mostrar o preview e a cor escolhida
+
+Ao criar um projeto, colocar ele como 1o na lista em memoria
+
+No dialogo Create Color Group abrir com foco ja no input do nome
+
+No dialogo Create Color Zone, o delete nao aparece os botoes 

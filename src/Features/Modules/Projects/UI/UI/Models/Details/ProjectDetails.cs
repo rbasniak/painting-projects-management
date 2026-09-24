@@ -25,15 +25,28 @@ public class ProjectDetails
     public UrlReference[] References { get; set; } = [];
     public UrlReference[] Pictures { get; set; } = [];
     public ColorGroupDetails[] Groups { get; set; } = Array.Empty<ColorGroupDetails>();
-    public ProjectCostDetails CostBreakdown { get; set; }  
+    public ProjectCostDetails CostBreakdown { get; set; } = ProjectCostDetails.Empty;
 }
 
 public class ProjectCostDetails
 {
     public required Guid Id { get; init; }
     public required ElectricityCostDetails Electricity { get; init; }
-    public Dictionary<string, LaborCostDetails> Labor { get; init; }
-    public Dictionary<string, IReadOnlyCollection<MaterialsCostDetails>> Materials { get; init; }
+    public Dictionary<string, LaborCostDetails> Labor { get; init; } = new();
+    public Dictionary<string, IReadOnlyCollection<MaterialsCostDetails>> Materials { get; init; } = new();
+
+    public static ProjectCostDetails Empty => new()
+    {
+        Id = Guid.Empty,
+        Electricity = new ElectricityCostDetails
+        {
+            CostPerKWh = MoneyDetails.Empty,
+            PrintingTimeInHours = 0,
+            TotalCost = MoneyDetails.Empty
+        },
+        Labor = new Dictionary<string, LaborCostDetails>(),
+        Materials = new Dictionary<string, IReadOnlyCollection<MaterialsCostDetails>>()
+    };
 }
 
 public class MaterialsCostDetails
@@ -62,6 +75,12 @@ public record MoneyDetails
 {
     public double Amount { get; set; }
     public string Currency { get; set; } = string.Empty;
+
+    public static MoneyDetails Empty => new()
+    {
+        Amount = 0,
+        Currency = "DKK"
+    };
 
     public override string ToString()
     {

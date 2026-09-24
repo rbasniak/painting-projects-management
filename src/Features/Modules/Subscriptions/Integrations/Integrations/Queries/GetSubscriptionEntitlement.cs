@@ -17,10 +17,10 @@ public sealed class GetSubscriptionEntitlement
     {
         public async Task<QueryResponse<SubscriptionEntitlementResult>> HandleAsync(Request request, CancellationToken cancellationToken)
         {
-            var tenant = request.TenantId ?? string.Empty;
+            var tenant = (request.TenantId ?? string.Empty).ToUpper();
             var subscription = await context.Set<TenantSubscription>()
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.TenantId == tenant, cancellationToken);
+                .FirstOrDefaultAsync(x => x.TenantId.ToUpper() == tenant, cancellationToken);
 
             var effectiveTier = SubscriptionTier.Free;
             var effectiveStatus = SubscriptionStatus.Active;

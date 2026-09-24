@@ -46,12 +46,19 @@ export function resetImageViewer() {
         initialPinchDistance: 0,
         initialScale: 1
     };
+
+    if (canvas) {
+        canvas.width = 0;
+        canvas.height = 0;
+    }
+
     updateTransform();
 }
 
 function setupEventListeners() {
     // Wheel Zoom
     container.addEventListener('wheel', handleWheel, { passive: false });
+    imageElement.addEventListener('load', handleImageLoad);
 
     // Pointer Events (Mouse, Touch, Pen)
     container.addEventListener('pointerdown', handlePointerDown);
@@ -64,6 +71,10 @@ function setupEventListeners() {
     container.addEventListener('touchstart', handleTouchStart, { passive: false });
     container.addEventListener('touchmove', handleTouchMove, { passive: false });
     container.addEventListener('touchend', handleTouchEnd);
+}
+
+function handleImageLoad() {
+    resetImageViewer();
 }
 
 function updateTransform() {
@@ -213,30 +224,37 @@ function getPinchCenter(e) {
 function updateMagnifier(clientX, clientY) {
     if (!imageElement || !magnifierElement) return;
 
-    const rect = imageElement.getBoundingClientRect();
-    
-    // Calculate image coordinates
-    // Note: rect includes transform, so we reverse it to get local coords
-    // Actually, simpler: (clientX - rect.left) / scale is wrong if we use rect of transformed element?
-    // No, getBoundingClientRect returns the visual rect.
-    // But we need coordinates relative to the unscaled image (0..naturalWidth)
-    
-    // Correct math:
-    // The image is at (state.x, state.y) relative to container top-left.
-    // Container top-left is at containerRect.left, containerRect.top.
-    const containerRect = container.getBoundingClientRect();
-    const relativeX = clientX - containerRect.left - state.x;
-    const relativeY = clientY - containerRect.top - state.y;
-    
-    const localX = relativeX / state.scale;
-    const localY = relativeY / state.scale;
-
-    // Check bounds
-    if (localX >= 0 && localX < imageElement.naturalWidth && localY >= 0 && localY < imageElement.naturalHeight) {
-        showPixelMagnifier(imageElement, magnifierElement, clientX, clientY, localX, localY);
-    } else {
+    const coordinates = getImageCoordinates(clientX, clientY);
+    if (!coordinates) {
         magnifierElement.style.display = 'none';
+        return;
     }
+
+    showPixelMagnifier(
+        imageElement,
+        magnifierElement,
+        clientX,
+        clientY,
+        coordinates.x,
+        coordinates.y);
+}
+
+function getImageCoordinates(clientX, clientY) {
+    if (!imageElement || imageElement.naturalWidth <= 0 || imageElement.naturalHeight <= 0) {
+        return null;
+    }
+
+    const rect = imageElement.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0
+        || clientX < rect.left || clientX >= rect.right
+        || clientY < rect.top || clientY >= rect.bottom) {
+        return null;
+    }
+
+    return {
+        x: (clientX - rect.left) * imageElement.naturalWidth / rect.width,
+        y: (clientY - rect.top) * imageElement.naturalHeight / rect.height
+    };
 }
 
 function showPixelMagnifier(img, magnifier, clientX, clientY, localX, localY) {
@@ -331,18 +349,15 @@ function showPixelMagnifier(img, magnifier, clientX, clientY, localX, localY) {
 
 function selectColor(clientX, clientY) {
     if (!imageElement || !canvas || !ctx) return;
-    
-    const containerRect = container.getBoundingClientRect();
-    const relativeX = clientX - containerRect.left - state.x;
-    const relativeY = clientY - containerRect.top - state.y;
-    
-    const localX = Math.floor(relativeX / state.scale);
-    const localY = Math.floor(relativeY / state.scale);
-    
-    if (localX < 0 || localX >= imageElement.naturalWidth || localY < 0 || localY >= imageElement.naturalHeight) {
+
+    const coordinates = getImageCoordinates(clientX, clientY);
+    if (!coordinates) {
         return;
     }
-    
+
+    const localX = Math.floor(coordinates.x);
+    const localY = Math.floor(coordinates.y);
+
     try {
         // Ensure canvas is up to date
         if (canvas.width !== imageElement.naturalWidth || canvas.height !== imageElement.naturalHeight) {
@@ -361,4 +376,3 @@ function selectColor(clientX, clientY) {
         console.error("Failed to get pixel color", e);
     }
 }
-
