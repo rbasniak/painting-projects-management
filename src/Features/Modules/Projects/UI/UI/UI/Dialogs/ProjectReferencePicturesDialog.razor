@@ -83,7 +83,7 @@
 
     private void Close()
     {
-        MudDialog?.Close();
+        MudDialog?.Close(DialogResult.Ok(_vm.CoverPicture));
     }
 
     private string GetPictureAddress(string url)

@@ -307,12 +307,9 @@ public class ProjectsService : IProjectsService
 
     public async Task DeleteColorGroupAsync(DeleteColorGroupRequest request, CancellationToken cancellationToken)
     {
-        // For DELETE with body, we need to use a custom request
-        var httpRequest = new HttpRequestMessage(HttpMethod.Delete, "projects/color-groups")
-        {
-            Content = JsonContent.Create(request)
-        };
-        var response = await _httpClient.SendAsync(httpRequest, cancellationToken);
+        var response = await _httpClient.DeleteAsync(
+            $"projects/color-groups?colorGroupId={request.ColorGroupId}",
+            cancellationToken);
         response.EnsureSuccessStatusCode();
     }
 

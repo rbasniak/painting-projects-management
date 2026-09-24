@@ -233,6 +233,7 @@ public class Program
         {
             options.AddDeferredSeed<DatabaseContext>(new MaterialsFixSeed());
             options.AddDeferredSeed<DatabaseContext>(new ProjectsSeed());
+            options.AddDeferredSeed<DatabaseContext>(new MaelleShadowheartSeed());
         });
 
         var app = builder.Build();

@@ -16,9 +16,6 @@
                          HelperText="Enter a name for this color group" />
             
             <MudText Typo="Typo.subtitle2">Select Zones</MudText>
-            <MudText Typo="Typo.caption" Color="Color.Secondary">
-                Select at least one zone (Highlights, Midtones, Shadows) for this color group.
-            </MudText>
             
             <MudStack Spacing="2">
                 <MudCheckBox T="bool" @bind-Value="selectedZones[ColorZone.Highlight]" 
@@ -103,9 +100,9 @@
                 Zones = zones
             };
 
-            await ProjectsService.UpdateColorGroupAsync(request, default);
+            var updatedGroup = await ProjectsService.UpdateColorGroupAsync(request, default);
             Snackbar.Add("Color group updated successfully", Severity.Success);
-            MudDialog?.Close(DialogResult.Ok(true));
+            MudDialog?.Close(DialogResult.Ok(updatedGroup));
         }
         catch (Exception ex)
         {

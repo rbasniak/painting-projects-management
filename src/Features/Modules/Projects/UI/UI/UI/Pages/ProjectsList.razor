@@ -117,6 +117,12 @@
     [Inject] public NavigationManager NavigationManager { get; set; } = default!;
     [Inject] public ISnackbar Snackbar { get; set; } = default!;
 
+    [SupplyParameterFromQuery(Name = "dialog")]
+    private string? DialogToRestore { get; set; }
+
+    [SupplyParameterFromQuery(Name = "projectId")]
+    private Guid? ProjectIdToRestore { get; set; }
+
     private List<ProjectDetails> projects = new();
     private string searchString = string.Empty;
 
@@ -130,7 +136,11 @@
         }
     }
 
-    protected override async Task OnInitializedAsync() => await LoadAsync();
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+        await RestoreDialogAsync();
+    }
 
     private async Task LoadAsync()
     {
@@ -149,7 +159,7 @@
                 Name = input.Name,
             };
             var created = await ProjectsService.CreateAsync(request, default);
-            projects.Add(created);
+            projects.Insert(0, created);
         }
     }
 
@@ -161,11 +171,14 @@
             return;
         }
 
-        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
-
-        var parameters = new DialogParameters { ["Model"] = projectDetails };
-        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
-        var dialog = DialogService.Show<ColorGroupsDialog>(title: null, parameters, options);
+        await RunWithDialogStateAsync("color-zones", project.Id, async () =>
+        {
+            var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+            var parameters = new DialogParameters { ["Model"] = projectDetails };
+            var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+            var dialog = await DialogService.ShowAsync<ColorGroupsDialog>(title: null, parameters, options);
+            await dialog.Result;
+        });
     }
 
     private async Task OpenMatchPaints(ProjectDetails project)
@@ -186,33 +199,37 @@
 
         try
         {
-            var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+            await RunWithDialogStateAsync("match-paints", project.Id, async () =>
+            {
+                var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
 
-            // #region agent log
-            WriteDebugLog(
-                hypothesisId: "B",
-                location: "ProjectsList.razor:OpenMatchPaints:details-loaded",
-                message: "Project details loaded for Match Paints",
-                data: new
-                {
-                    projectId = projectDetails.Id,
-                    groupsCount = projectDetails.Groups?.Length,
-                    hasNullGroup = projectDetails.Groups?.Any(g => g is null),
-                    hasNullSections = projectDetails.Groups?.Any(g => g?.Sections is null)
-                });
-            // #endregion
+                // #region agent log
+                WriteDebugLog(
+                    hypothesisId: "B",
+                    location: "ProjectsList.razor:OpenMatchPaints:details-loaded",
+                    message: "Project details loaded for Match Paints",
+                    data: new
+                    {
+                        projectId = projectDetails.Id,
+                        groupsCount = projectDetails.Groups?.Length,
+                        hasNullGroup = projectDetails.Groups?.Any(g => g is null),
+                        hasNullSections = projectDetails.Groups?.Any(g => g?.Sections is null)
+                    });
+                // #endregion
 
-            var parameters = new DialogParameters { ["Model"] = projectDetails };
-            var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
-            var dialog = DialogService.Show<MatchPaintsDialog>(title: null, parameters, options);
+                var parameters = new DialogParameters { ["Model"] = projectDetails };
+                var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+                var dialog = await DialogService.ShowAsync<MatchPaintsDialog>(title: null, parameters, options);
+                await dialog.Result;
 
-            // #region agent log
-            WriteDebugLog(
-                hypothesisId: "C",
-                location: "ProjectsList.razor:OpenMatchPaints:dialog-show",
-                message: "MatchPaintsDialog show invoked",
-                data: new { projectId = projectDetails.Id });
-            // #endregion
+                // #region agent log
+                WriteDebugLog(
+                    hypothesisId: "C",
+                    location: "ProjectsList.razor:OpenMatchPaints:dialog-show",
+                    message: "MatchPaintsDialog show invoked",
+                    data: new { projectId = projectDetails.Id });
+                // #endregion
+            });
         }
         catch (Exception ex)
         {
@@ -235,19 +252,28 @@
             return;
         }
 
-        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
-
-        var parameters = new DialogParameters { ["Model"] = projectDetails };
-        var options = new DialogOptions
+        await RunWithDialogStateAsync("reference-pictures", project.Id, async () =>
         {
-            MaxWidth = MaxWidth.ExtraLarge,
-            FullWidth = true,
-            CloseButton = true,
-            CloseOnEscapeKey = true
-        };
+            var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
 
-        var dialogTitle = projectDetails.Name;
-        await DialogService.ShowAsync<ProjectReferencePicturesDialog>(dialogTitle, parameters, options);
+            var parameters = new DialogParameters { ["Model"] = projectDetails };
+            var options = new DialogOptions
+            {
+                MaxWidth = MaxWidth.ExtraLarge,
+                FullWidth = true,
+                CloseButton = true,
+                CloseOnEscapeKey = true
+            };
+
+            var dialogTitle = projectDetails.Name;
+            var dialog = await DialogService.ShowAsync<ProjectReferencePicturesDialog>(dialogTitle, parameters, options);
+            var result = await dialog.Result;
+
+            if (!result.Canceled && result.Data is string coverPicture)
+            {
+                project.PictureUrl = coverPicture;
+            }
+        });
     }
 
     private async Task OpenFinalPictures(ProjectDetails project)
@@ -258,34 +284,46 @@
             return;
         }
 
-        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
-
-        var parameters = new DialogParameters { ["Model"] = projectDetails };
-        var options = new DialogOptions
+        await RunWithDialogStateAsync("final-pictures", project.Id, async () =>
         {
-            MaxWidth = MaxWidth.ExtraLarge,
-            FullWidth = true,
-            CloseButton = true,
-            CloseOnEscapeKey = true
-        };
+            var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
 
-        await DialogService.ShowAsync<ProjectFinalPicturesDialog>(projectDetails.Name, parameters, options);
+            var parameters = new DialogParameters { ["Model"] = projectDetails };
+            var options = new DialogOptions
+            {
+                MaxWidth = MaxWidth.ExtraLarge,
+                FullWidth = true,
+                CloseButton = true,
+                CloseOnEscapeKey = true
+            };
+
+            var dialog = await DialogService.ShowAsync<ProjectFinalPicturesDialog>(projectDetails.Name, parameters, options);
+            await dialog.Result;
+        });
     }
 
     private async Task OpenUsedColors(ProjectDetails project)
     {
-        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
-        var parameters = new DialogParameters { ["Model"] = projectDetails };
-        var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = true };
-        DialogService.Show<UsedColorsByZoneDialog>(title: null, parameters, options);
+        await RunWithDialogStateAsync("used-colors", project.Id, async () =>
+        {
+            var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+            var parameters = new DialogParameters { ["Model"] = projectDetails };
+            var options = new DialogOptions { MaxWidth = MaxWidth.Large, FullWidth = true };
+            var dialog = await DialogService.ShowAsync<UsedColorsByZoneDialog>(title: null, parameters, options);
+            await dialog.Result;
+        });
     }
 
     private async Task OpenCosts(ProjectDetails project)
     {
-        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
-        var parameters = new DialogParameters { ["Model"] = projectDetails };
-        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
-        DialogService.Show<ProjectCostBreakdownDialog>(title: null, parameters, options);
+        await RunWithDialogStateAsync("project-cost", project.Id, async () =>
+        {
+            var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+            var parameters = new DialogParameters { ["Model"] = projectDetails };
+            var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
+            var dialog = await DialogService.ShowAsync<ProjectCostBreakdownDialog>(title: null, parameters, options);
+            await dialog.Result;
+        });
     }
 
     private async Task Edit(ProjectDetails project)
@@ -382,11 +420,95 @@
 
     private async Task GetProjectCost(ProjectDetails project)
     {
-        var projectDetails = await ProjectsService.GetDetailsAsync(project.Id, default);
+        await OpenCosts(project);
+    }
 
-        var parameters = new DialogParameters { ["Model"] = projectDetails };
-        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true };
-        var dialog = DialogService.Show<ProjectCostBreakdownDialog>(title: null, parameters, options);
+    private async Task RestoreDialogAsync()
+    {
+        if (string.IsNullOrWhiteSpace(DialogToRestore))
+        {
+            return;
+        }
+
+        var project = ProjectIdToRestore.HasValue
+            ? projects.FirstOrDefault(x => x.Id == ProjectIdToRestore.Value)
+            : null;
+
+        if (project is null)
+        {
+            ClearDialogState();
+            return;
+        }
+
+        if (project.IsArchived && DialogToRestore is
+            ("color-zones" or "match-paints" or "reference-pictures" or "final-pictures"))
+        {
+            ClearDialogState();
+            return;
+        }
+
+        switch (DialogToRestore)
+        {
+            case "color-zones":
+                await OpenColorZones(project);
+                break;
+            case "match-paints":
+                await OpenMatchPaints(project);
+                break;
+            case "reference-pictures":
+                await OpenReferencePictures(project);
+                break;
+            case "final-pictures":
+                await OpenFinalPictures(project);
+                break;
+            case "used-colors":
+                await OpenUsedColors(project);
+                break;
+            case "project-cost":
+                await OpenCosts(project);
+                break;
+            default:
+                ClearDialogState();
+                break;
+        }
+    }
+
+    private async Task RunWithDialogStateAsync(string dialog, Guid? projectId, Func<Task> showDialog)
+    {
+        var dialogTask = showDialog();
+        SetDialogState(dialog, projectId);
+        try
+        {
+            await dialogTask;
+        }
+        finally
+        {
+            ClearDialogState();
+        }
+    }
+
+    private void SetDialogState(string dialog, Guid? projectId)
+    {
+        var uri = NavigationManager.GetUriWithQueryParameters(new Dictionary<string, object?>
+        {
+            ["dialog"] = dialog,
+            ["projectId"] = projectId?.ToString(),
+            ["nestedDialog"] = null,
+            ["colorGroupId"] = null
+        });
+        NavigationManager.NavigateTo(uri, replace: true);
+    }
+
+    private void ClearDialogState()
+    {
+        var uri = NavigationManager.GetUriWithQueryParameters(new Dictionary<string, object?>
+        {
+            ["dialog"] = null,
+            ["projectId"] = null,
+            ["nestedDialog"] = null,
+            ["colorGroupId"] = null
+        });
+        NavigationManager.NavigateTo(uri, replace: true);
     }
 
     private static void WriteDebugLog(string hypothesisId, string location, string message, object? data = null)

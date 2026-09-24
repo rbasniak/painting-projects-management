@@ -10,12 +10,12 @@
 
 <MudDialog Class="color-groups-dialog">
     <DialogContent>
-        <MudPaper Class="pa-4" Style="height: calc(100vh - 120px); display: flex; flex-direction: column;">
-            <MudStack Spacing="2">
+        <MudPaper Class="pa-4 color-zones-layout">
+            <MudStack Spacing="2" Class="color-zones-page">
                 <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween">
                     <div>
-                        <MudText Typo="Typo.h4">@Model?.Name</MudText>
-                        <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Color Zones Management</MudText>
+                        <MudText Typo="Typo.h6">@Model?.Name</MudText>
+                        <MudText Typo="Typo.caption" Color="Color.Secondary">Color Zones Management</MudText>
                     </div>
                 </MudStack>
 
@@ -26,9 +26,9 @@
                 else
                 {
                     <!-- Image Carousel -->
-                    <MudPaper Elevation="1" Class="pa-2">
+                    <MudPaper Elevation="1" Class="pa-2 image-carousel">
                         <MudText Typo="Typo.caption" Color="Color.Secondary" Class="mb-2">Select Reference Image</MudText>
-                        <div style="display: flex; gap: 8px; overflow-x: auto; padding: 8px 0;">
+                        <div class="image-carousel-items">
                             @for (int i = 0; i < Model.References.Length; i++)
                             {
                                 var reference = Model.References[i];
@@ -43,18 +43,18 @@
                     </MudPaper>
 
                     <!-- Main Content: Two Columns -->
-                    <MudGrid Spacing="3" Style="flex: 1; min-height: 0;">
+                    <MudGrid Spacing="3" Class="color-zones-workspace">
                         <!-- Left Column: Image Viewer -->
-                        <MudItem xs="12" md="8">
-                            <MudPaper Elevation="1" Class="image-viewer-container" Style="height: 100%; position: relative; overflow: hidden;">
-                                <div style="width: 100%; height: 100%; position: relative; overflow: hidden; cursor: crosshair; touch-action: none;" 
+                        <MudItem xs="12" md="8" Class="image-column">
+                            <MudPaper Elevation="1" Class="image-viewer-container">
+                                <div class="image-canvas"
                                      id="image-container">
                                     <img id="zoomable-image"
                                          @ref="zoomableImageRef"
                                          src="@GetPictureAddress(CurrentImageUrl)"
                                          crossorigin="anonymous"
                                          alt="Reference Image"
-                                         style="display: block; max-width: none; user-select: none; transform-origin: 0 0;"
+                                         style="display: block; user-select: none; transform-origin: 0 0;"
                                          @oncontextmenu:preventDefault="true" />
                                     <div id="pixel-magnifier"
                                          @ref="magnifierRef" 
@@ -64,9 +64,9 @@
                         </MudItem>
 
                         <!-- Right Column: Color Groups Management -->
-                        <MudItem xs="12" md="4">
-                            <MudPaper Elevation="1" Class="pa-4" Style="height: 100%; display: flex; flex-direction: column; overflow: hidden;">
-                                <MudStack Spacing="2" Style="flex: 1; min-height: 0; overflow-y: auto;">
+                        <MudItem xs="12" md="4" Class="zones-column">
+                            <MudPaper Elevation="1" Class="pa-4 zones-panel">
+                                <MudStack Spacing="2" Class="zones-panel-content">
                                     <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween">
                                         <MudText Typo="Typo.h6">Color Groups</MudText>
                                         <MudButton OnClick="CreateNewGroup" 
@@ -99,16 +99,18 @@
                                         </MudPaper>
                                     }
 
-                                    @if (colorGroups.Count == 0)
-                                    {
-                                        <MudAlert Severity="Severity.Info">No color groups yet. Create one to get started.</MudAlert>
-                                    }
-                                    else
-                                    {
-                                        <MudExpansionPanels MultiExpansion="true">
-                                            @foreach (var group in colorGroups)
-                                            {
-                                                <MudExpansionPanel>
+                                    <div class="zones-list-scroll">
+                                        @if (colorGroups.Count == 0)
+                                        {
+                                            <MudAlert Severity="Severity.Info">No color groups yet. Create one to get started.</MudAlert>
+                                        }
+                                        else
+                                        {
+                                            <MudExpansionPanels MultiExpansion="false">
+                                                @foreach (var group in colorGroups)
+                                                {
+                                                    <MudExpansionPanel Expanded="@expandedColorGroupIds.Contains(group.Id)"
+                                                                       ExpandedChanged="@(expanded => SetGroupExpanded(group.Id, expanded))">
                                                     <TitleContent>
                                                         <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween" Style="width: 100%;">
                                                             <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2" Style="flex: 1;">
@@ -120,17 +122,17 @@
                                                                         var shadowSection = group.Sections.FirstOrDefault(x => x.Zone == ColorZone.Shadow);
                                                                     }
                                                                     
-                                                                    @if (shadowSection != null)
+                                                                    @if (highlightSection != null)
                                                                     {
-                                                                        <div style="@($"width: 20px; height: 20px; background-color: {shadowSection.ReferenceColor}; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2);")" title="Shadow"></div>
+                                                                        <div style="@($"width: 20px; height: 20px; background-color: {highlightSection.ReferenceColor}; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2);")" title="Highlight"></div>
                                                                     }
                                                                     @if (midtoneSection != null)
                                                                     {
                                                                         <div style="@($"width: 20px; height: 20px; background-color: {midtoneSection.ReferenceColor}; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2);")" title="Midtone"></div>
                                                                     }
-                                                                    @if (highlightSection != null)
+                                                                    @if (shadowSection != null)
                                                                     {
-                                                                        <div style="@($"width: 20px; height: 20px; background-color: {highlightSection.ReferenceColor}; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2);")" title="Highlight"></div>
+                                                                        <div style="@($"width: 20px; height: 20px; background-color: {shadowSection.ReferenceColor}; border-radius: 3px; border: 1px solid rgba(0,0,0,0.2);")" title="Shadow"></div>
                                                                     }
                                                                 </MudStack>
                                                             </MudStack>
@@ -150,7 +152,7 @@
                                                     </TitleContent>
                                                     <ChildContent>
                                                         <MudStack Spacing="2" Class="mt-2">
-                                                            @foreach (var section1 in group.Sections)
+                                                            @foreach (var section1 in group.Sections.OrderBy(x => GetZoneOrder(x.Zone)))
                                                             {
                                                                 var isSelected = selectedSectionId == section1.Id;
                                                                 var borderStyle = isSelected ? "2px solid var(--mud-palette-primary)" : "1px solid var(--mud-palette-divider)";
@@ -173,10 +175,11 @@
                                                             }
                                                         </MudStack>
                                                     </ChildContent>
-                                                </MudExpansionPanel>
-                                            }
-                                        </MudExpansionPanels>
-                                    }
+                                                    </MudExpansionPanel>
+                                                }
+                                            </MudExpansionPanels>
+                                        }
+                                    </div>
                                 </MudStack>
                             </MudPaper>
                         </MudItem>
@@ -191,6 +194,8 @@
 </MudDialog>
 
 @code {
+    private const string UnassignedReferenceColor = "#808080";
+
     [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = default!;
     [Inject] public IJSRuntime JSRuntime { get; set; } = default!;
     [Inject] public IProjectsService ProjectsService { get; set; } = default!;
@@ -211,6 +216,7 @@
     private SelectedColor? selectedColor;
     private List<ColorGroupDetails> colorGroups = new();
     private Guid? selectedSectionId;
+    private readonly HashSet<Guid> expandedColorGroupIds = [];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -220,13 +226,13 @@
             {
                 jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/PaintingProjectsManagement.Features.Projects.UI/js/imageViewer.js");
                 await jsModule.InvokeVoidAsync("initializeImageViewer", "image-container", "zoomable-image", "pixel-magnifier", DotNetObjectReference.Create(this));
-                
-                LoadColorGroups();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to load image viewer JS module: {ex.Message}");
             }
+            LoadColorGroups();
+            LoadColorGroups();
         }
     }
 
@@ -275,11 +281,17 @@
 
     private async Task UpdateSelectedSectionColor(string hexColor)
     {
+        var currentSectionId = selectedSectionId;
+        if (!currentSectionId.HasValue)
+        {
+            return;
+        }
+
         try
         {
             var request = new UpdateColorSectionRequest
             {
-                SectionId = selectedSectionId.Value,
+                SectionId = currentSectionId.Value,
                 ReferenceColor = hexColor
             };
 
@@ -288,14 +300,22 @@
             // Update local state
             var section = colorGroups
                 .SelectMany(x => x.Sections)
-                .FirstOrDefault(x => x.Id == selectedSectionId.Value);
+                .FirstOrDefault(x => x.Id == currentSectionId.Value);
             
             if (section != null)
             {
                 section.ReferenceColor = hexColor;
+                var group = colorGroups.FirstOrDefault(x => x.Sections.Any(s => s.Id == currentSectionId.Value));
+                var orderedSections = group?.Sections.OrderBy(x => GetZoneOrder(x.Zone)).ToArray() ?? [];
+                var currentIndex = Array.FindIndex(orderedSections, x => x.Id == currentSectionId.Value);
+                selectedSectionId = currentIndex < 0
+                    ? null
+                    : orderedSections
+                        .Skip(currentIndex + 1)
+                        .FirstOrDefault(x => IsUnassignedReferenceColor(x.ReferenceColor))
+                        ?.Id;
             }
             
-            selectedSectionId = null; // Clear selection after update
             Snackbar.Add("Color updated successfully", Severity.Success);
             StateHasChanged();
         }
@@ -303,6 +323,11 @@
         {
             Snackbar.Add($"Error updating color: {ex.Message}", Severity.Error);
         }
+    }
+
+    private static bool IsUnassignedReferenceColor(string referenceColor)
+    {
+        return string.Equals(referenceColor, UnassignedReferenceColor, StringComparison.OrdinalIgnoreCase);
     }
 
     private void SelectSectionForUpdate(Guid sectionId)
@@ -317,43 +342,76 @@
         var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = false };
         var dialog = DialogService.Show<CreateColorGroupDialog>("Create Color Group", parameters, options);
         var result = await dialog.Result;
-        
-        if (!result.Canceled)
+
+        if (!result.Canceled && result.Data is ColorGroupDetails createdGroup)
         {
             await RefreshGroups();
+            FocusSectionForPicking(createdGroup);
         }
     }
 
     private async Task EditGroup(ColorGroupDetails group)
     {
-        var parameters = new DialogParameters 
-        { 
+        var parameters = new DialogParameters
+        {
             ["ProjectId"] = Model.Id,
             ["Group"] = group
         };
         var options = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = false };
         var dialog = DialogService.Show<EditColorGroupDialog>("Edit Color Group", parameters, options);
         var result = await dialog.Result;
-        
-        if (!result.Canceled)
+
+        if (!result.Canceled && result.Data is ColorGroupDetails updatedGroup)
         {
+            var previousSectionIds = group.Sections.Select(x => x.Id).ToHashSet();
+            var addedSection = updatedGroup.Sections
+                .Where(x => !previousSectionIds.Contains(x.Id))
+                .OrderBy(x => GetZoneOrder(x.Zone))
+                .FirstOrDefault();
+
             await RefreshGroups();
+            if (addedSection is not null)
+            {
+                FocusSectionForPicking(updatedGroup, addedSection.Id);
+            }
+        }
+    }
+
+    private void FocusSectionForPicking(ColorGroupDetails group, Guid? sectionId = null)
+    {
+        expandedColorGroupIds.Clear();
+        expandedColorGroupIds.Add(group.Id);
+        selectedSectionId = sectionId
+            ?? group.Sections
+                .OrderBy(x => GetZoneOrder(x.Zone))
+                .Select(x => (Guid?)x.Id)
+                .FirstOrDefault();
+        StateHasChanged();
+    }
+
+    private void SetGroupExpanded(Guid groupId, bool expanded)
+    {
+        if (expanded)
+        {
+            expandedColorGroupIds.Clear();
+            expandedColorGroupIds.Add(groupId);
+        }
+        else
+        {
+            expandedColorGroupIds.Remove(groupId);
         }
     }
 
     private async Task DeleteGroup(ColorGroupDetails group)
     {
-        var parameters = new DialogParameters
-        {
-            { "ContentText", $"Are you sure you want to delete the color group '{group.Name}'? This action cannot be undone." },
-            { "ButtonText", "Delete" },
-            { "Color", Color.Error }
-        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        var confirmDialog = DialogService.Show<MudDialog>("Confirm Delete", parameters, options);
-        var confirmResult = await confirmDialog.Result;
-        
-        if (!confirmResult.Canceled)
+        var confirmResult = await DialogService.ShowMessageBox(
+            "Confirm Delete",
+            $"Are you sure you want to delete the color group '{group.Name}'? This action cannot be undone.",
+            yesText: "Delete",
+            cancelText: "Cancel",
+            options: new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall });
+
+        if (confirmResult == true)
         {
             try
             {
@@ -400,6 +458,17 @@
         };
     }
 
+    private static int GetZoneOrder(ColorZone zone)
+    {
+        return zone switch
+        {
+            ColorZone.Highlight => 0,
+            ColorZone.Midtone => 1,
+            ColorZone.Shadow => 2,
+            _ => int.MaxValue
+        };
+    }
+
     private void OnContextMenu(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)
     {
         // Context menu is prevented via @oncontextmenu:preventDefault="true"
@@ -441,16 +510,107 @@
 }
 
 <style>
+    .color-groups-dialog .mud-dialog-content {
+        box-sizing: border-box;
+        height: calc(90vh - 100px);
+        height: calc(90dvh - 100px);
+        max-height: none;
+        min-height: 0;
+        overflow: hidden;
+        padding: 8px;
+    }
+
+    .color-zones-layout {
+        box-sizing: border-box;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .color-zones-page {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 0;
+    }
+
+    .image-carousel {
+        flex: 0 0 120px;
+        height: 120px;
+        min-height: 120px;
+        overflow: hidden;
+    }
+
+    .image-carousel-items {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        height: 88px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 4px 0;
+    }
+
+    .color-zones-workspace {
+        flex: 1 1 0%;
+        min-height: 0;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .color-zones-workspace .image-column,
+    .color-zones-workspace .zones-column {
+        height: 100%;
+        min-height: 0;
+    }
+
     .color-groups-dialog .image-viewer-container {
         background: #f5f5f5;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
     }
 
-    .color-groups-dialog .image-carousel {
-        height: 120px;
+    .color-groups-dialog .image-canvas {
+        cursor: crosshair;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        touch-action: none;
+        width: 100%;
     }
 
-    #zoomable-image {
+    .zones-panel {
+        display: flex;
+        height: 100%;
+        min-height: 0;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .zones-panel-content {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        height: 100%;
+        min-height: 0;
+    }
+
+    .zones-list-scroll {
+        flex: 1 1 0%;
+        min-height: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .color-groups-dialog #zoomable-image {
+        left: 0;
+        max-height: 100%;
+        max-width: 100%;
+        position: absolute;
+        top: 0;
         transform-origin: 0 0;
     }
 </style>
-

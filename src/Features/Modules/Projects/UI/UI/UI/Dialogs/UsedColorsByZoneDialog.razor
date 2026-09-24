@@ -1,14 +1,29 @@
 @using MudBlazor
 @using PaintingProjectsManagement.UI.Modules.Projects
 @using System.Linq
+@using System.Net
+@using System.Text
+@using System.Text.RegularExpressions
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
 
 @namespace PaintingProjectsManagement.UI.Modules.Projects.UI.Dialogs
 
 <MudDialog Class="used-colors-dialog">
     <DialogContent>
         <MudStack Spacing="3">
-            <MudText Typo="Typo.h5">@Model.Name</MudText>
-            <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Used colors by zone (chosen colors only)</MudText>
+            <MudStack Row="true" AlignItems="AlignItems.Center" JustifyContent="Justify.SpaceBetween" Class="used-colors-header">
+                <div>
+                    <MudText Typo="Typo.h5">@Model.Name</MudText>
+                    <MudText Typo="Typo.subtitle2" Color="Color.Secondary">Used colors by zone (chosen colors only)</MudText>
+                </div>
+                <MudButton OnClick="ExportHtml"
+                           Color="Color.Primary"
+                           Variant="Variant.Outlined"
+                           StartIcon="@Icons.Material.Filled.Download">
+                    Export HTML
+                </MudButton>
+            </MudStack>
 
             @if (Model.Groups == null || !Model.Groups.Any())
             {
@@ -16,52 +31,61 @@
             }
             else
             {
-                @foreach (var group in Model.Groups)
-                {
-                    <MudPaper Class="pa-4" Elevation="1">
-                        <MudText Typo="Typo.h6" Class="mb-2">@group.Name</MudText>
+                <MudGrid Spacing="2" Class="used-colors-grid">
+                    @foreach (var group in Model.Groups)
+                    {
+                        <MudItem xs="12" Class="used-colors-group-column">
+                            <MudPaper Class="pa-4" Elevation="1">
+                                <MudText Typo="Typo.h6" Class="mb-2">@group.Name</MudText>
 
-                        @if (!group.Sections.Any())
-                        {
-                            <MudText Typo="Typo.body2" Color="Color.Secondary">No zones in this group.</MudText>
-                        }
-                        else
-                        {
-                            <MudTable Items="group.Sections.OrderBy(x => x.Zone)" Dense="true" Hover="true">
-                                <HeaderContent>
-                                    <MudTh>Zone</MudTh>
-                                    <MudTh>Used Color</MudTh>
-                                    <MudTh style="width: 80px;">Preview</MudTh>
-                                </HeaderContent>
-                                <RowTemplate>
-                                    @{
-                                        var pickedColor = context.PickedColorId.HasValue
-                                            ? context.SuggestedColors.FirstOrDefault(x => x.PaintColorId == context.PickedColorId.Value)
-                                            : null;
-                                    }
-                                    <MudTd>@GetZoneLabel(context.Zone)</MudTd>
-                                    <MudTd>
-                                        @if (pickedColor is null)
-                                        {
-                                            <MudText Typo="Typo.body2" Color="Color.Secondary">No chosen color</MudText>
-                                        }
-                                        else
-                                        {
-                                            <MudText Typo="Typo.body2">@pickedColor.Name</MudText>
-                                            <MudText Typo="Typo.caption" Color="Color.Secondary">@pickedColor.BrandName · @pickedColor.LineName · @pickedColor.HexColor</MudText>
-                                        }
-                                    </MudTd>
-                                    <MudTd>
-                                        @if (pickedColor is not null)
-                                        {
-                                            <div style="@($"width: 44px; height: 24px; border-radius: 4px; border: 1px solid #ccc; background-color: {pickedColor.HexColor};")"></div>
-                                        }
-                                    </MudTd>
-                                </RowTemplate>
-                            </MudTable>
-                        }
-                    </MudPaper>
-                }
+                                @if (!group.Sections.Any())
+                                {
+                                    <MudText Typo="Typo.body2" Color="Color.Secondary">No zones in this group.</MudText>
+                                }
+                                else
+                                {
+                                    <MudTable Items="group.Sections.OrderBy(x => x.Zone)" Dense="true" Hover="true">
+                                        <HeaderContent>
+                                            <MudTh>Zone</MudTh>
+                                            <MudTh>Used Color</MudTh>
+                                            <MudTh style="width: 112px;">Reference / Paint</MudTh>
+                                        </HeaderContent>
+                                        <RowTemplate>
+                                            @{
+                                                var pickedColor = context.PickedColorId.HasValue
+                                                    ? context.SuggestedColors.FirstOrDefault(x => x.PaintColorId == context.PickedColorId.Value)
+                                                    : null;
+                                            }
+                                            <MudTd>@GetZoneLabel(context.Zone)</MudTd>
+                                            <MudTd>
+                                                @if (pickedColor is null)
+                                                {
+                                                    <MudText Typo="Typo.body2" Color="Color.Secondary">No chosen color</MudText>
+                                                }
+                                                else
+                                                {
+                                                    <MudText Typo="Typo.body2">@pickedColor.Name</MudText>
+                                                    <MudText Typo="Typo.caption" Color="Color.Secondary">@pickedColor.BrandName · @pickedColor.LineName</MudText>
+                                                }
+                                            </MudTd>
+                                            <MudTd>
+                                                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="1">
+                                                    <div style="@($"width: 44px; height: 24px; border-radius: 4px; border: 1px solid #ccc; background-color: {context.ReferenceColor};")"
+                                                         title="Reference color"></div>
+                                                    @if (pickedColor is not null)
+                                                    {
+                                                        <div style="@($"width: 44px; height: 24px; border-radius: 4px; border: 1px solid #ccc; background-color: {pickedColor.HexColor};")"
+                                                             title="@($"Selected paint: {pickedColor.Name}")"></div>
+                                                    }
+                                                </MudStack>
+                                            </MudTd>
+                                        </RowTemplate>
+                                    </MudTable>
+                                }
+                            </MudPaper>
+                        </MudItem>
+                    }
+                </MudGrid>
             }
         </MudStack>
     </DialogContent>
@@ -74,6 +98,115 @@
     [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = default!;
     [Parameter] public ProjectDetails Model { get; set; } = new();
 
+    private IJSObjectReference? exportModule;
+
+    private async Task ExportHtml()
+    {
+        exportModule ??= await JSRuntime.InvokeAsync<IJSObjectReference>(
+            "import",
+            "./_content/PaintingProjectsManagement.Features.Projects.UI/js/colorSummaryExport.js");
+
+        var filename = $"{CreateFileName(Model.Name)}-color-summary.html";
+        await exportModule.InvokeVoidAsync("downloadStaticHtml", BuildExportHtml(), filename);
+    }
+
+    private string BuildExportHtml()
+    {
+        var html = new StringBuilder();
+        html.AppendLine("<!doctype html>");
+        html.AppendLine("<html lang=\"en\"><head><meta charset=\"utf-8\">");
+        html.AppendLine("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+        html.Append("<title>Color summary - ");
+        AppendEncoded(html, Model.Name);
+        html.AppendLine("</title>");
+        html.AppendLine("""
+            <style>
+                * { box-sizing: border-box; }
+                body { margin: 0; padding: 16px; background: #f3f5f8; color: #202124; font: 16px/1.45 system-ui, sans-serif; }
+                main { width: min(100%, 760px); margin: 0 auto; }
+                h1 { margin: 0 0 4px; font-size: 1.5rem; }
+                .subtitle { margin: 0 0 20px; color: #626a73; }
+                .group { margin: 0 0 16px; padding: 16px; border-radius: 12px; background: #fff; box-shadow: 0 2px 8px #00000012; }
+                .group h2 { margin: 0 0 12px; font-size: 1.15rem; }
+                .section { padding: 12px 0; border-top: 1px solid #e5e7eb; }
+                .section:first-of-type { border-top: 0; }
+                .section h3 { margin: 0 0 10px; font-size: 1rem; }
+                .comparison { display: flex; gap: 12px; }
+                figure { flex: 1; margin: 0; min-width: 0; }
+                .swatch { width: 100%; height: 72px; border: 1px solid #00000024; border-radius: 8px; }
+                figcaption { margin-top: 4px; color: #626a73; font-size: .8rem; }
+                .paint-name { margin: 10px 0 0; font-weight: 650; }
+                .paint-details, .empty { margin: 2px 0 0; color: #626a73; font-size: .9rem; }
+            </style></head><body><main>
+            """);
+        html.Append("<h1>");
+        AppendEncoded(html, Model.Name);
+        html.AppendLine("</h1><p class=\"subtitle\">Color summary</p>");
+
+        foreach (var group in Model.Groups ?? [])
+        {
+            html.AppendLine("<section class=\"group\"><h2>");
+            AppendEncoded(html, group.Name);
+            html.AppendLine("</h2>");
+
+            foreach (var section in group.Sections.OrderBy(x => GetZoneOrder(x.Zone)))
+            {
+                var pickedColor = section.PickedColorId.HasValue
+                    ? section.SuggestedColors.FirstOrDefault(x => x.PaintColorId == section.PickedColorId.Value)
+                    : null;
+
+                html.AppendLine("<article class=\"section\"><h3>");
+                AppendEncoded(html, GetZoneLabel(section.Zone));
+                html.AppendLine("</h3><div class=\"comparison\"><figure>");
+                html.Append("<div class=\"swatch\" style=\"background-color:");
+                html.Append(GetSafeColor(section.ReferenceColor));
+                html.AppendLine(";\"></div><figcaption>Reference color</figcaption></figure><figure>");
+
+                if (pickedColor is null)
+                {
+                    html.AppendLine("<div class=\"swatch\" style=\"background-color:#e5e7eb\"></div><figcaption>Selected paint</figcaption></figure></div><p class=\"empty\">No chosen color</p></article>");
+                }
+                else
+                {
+                    html.Append("<div class=\"swatch\" style=\"background-color:");
+                    html.Append(GetSafeColor(pickedColor.HexColor));
+                    html.AppendLine(";\"></div><figcaption>Selected paint</figcaption></figure></div><p class=\"paint-name\">");
+                    AppendEncoded(html, pickedColor.Name);
+                    html.Append("</p><p class=\"paint-details\">");
+                    AppendEncoded(html, $"{pickedColor.BrandName} · {pickedColor.LineName}");
+                    html.AppendLine("</p></article>");
+                }
+            }
+
+            html.AppendLine("</section>");
+        }
+
+        html.AppendLine("</main></body></html>");
+        return html.ToString();
+    }
+
+    private static void AppendEncoded(StringBuilder html, string? value)
+    {
+        html.Append(WebUtility.HtmlEncode(value ?? string.Empty));
+    }
+
+    private static string GetSafeColor(string? color)
+    {
+        return !string.IsNullOrWhiteSpace(color)
+            && Regex.IsMatch(color, @"\A#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})\z")
+                ? color
+                : "#808080";
+    }
+
+    private static string CreateFileName(string? projectName)
+    {
+        var safeName = string.Concat((projectName ?? string.Empty)
+            .Select(character => char.IsLetterOrDigit(character) ? character : '-'))
+            .Trim('-')
+            .ToLowerInvariant();
+        return string.IsNullOrWhiteSpace(safeName) ? "project" : safeName;
+    }
+
     private static string GetZoneLabel(ColorZone zone)
     {
         return zone switch
@@ -85,5 +218,33 @@
         };
     }
 
+    private static int GetZoneOrder(ColorZone zone)
+    {
+        return zone switch
+        {
+            ColorZone.Highlight => 0,
+            ColorZone.Midtone => 1,
+            ColorZone.Shadow => 2,
+            _ => int.MaxValue
+        };
+    }
+
     private void Close() => MudDialog.Close(DialogResult.Ok(true));
+
+    public async ValueTask DisposeAsync()
+    {
+        if (exportModule is not null)
+        {
+            await exportModule.DisposeAsync();
+        }
+    }
 }
+
+<style>
+    @@media (orientation: landscape) {
+        .used-colors-dialog .used-colors-group-column {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+</style>
