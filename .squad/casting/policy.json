@@ -1,0 +1,7 @@
+{
+  "universe": "Marvel Cinematic Universe",
+  "allowedUniverses": ["Marvel Cinematic Universe"],
+  "maxAgents": 25,
+  "overflowPolicy": "diegetic-expansion",
+  "castingDate": "2026-04-15"
+}

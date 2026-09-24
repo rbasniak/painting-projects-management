@@ -1,0 +1,2 @@
+- Always commit before big agent changes
+- Start with tests, but successes only until the contracts are very mature

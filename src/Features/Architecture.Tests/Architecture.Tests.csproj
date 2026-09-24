@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Common properties are now in Directory.Build.props -->
+  <ItemGroup>
+    <PackageReference Include="TngTech.ArchUnitNET" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+    <PackageReference Include="TUnit" />
+    <PackageReference Include="Shouldly" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Reference representative modules to test their architecture -->
+    <ProjectReference Include="..\Modules\Materials\Core\Core\PaintingProjectsManagement.Features.Materials.Core.csproj" />
+    <ProjectReference Include="..\Modules\Materials\Core\Core.Contracts\PaintingProjectsManagement.Features.Materials.Core.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Materials\Web\Web\PaintingProjectsManagement.Features.Materials.Web.csproj" />
+    <ProjectReference Include="..\Modules\Materials\Web\Web.Contracts\PaintingProjectsManagement.Features.Materials.Web.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Materials\UI\UI\PaintingProjectsManagement.Features.Materials.UI.csproj" />
+    <ProjectReference Include="..\Modules\Materials\Integrations\Integration\PaintingProjectsManagement.Features.Materials.Integrations.csproj" />
+    <ProjectReference Include="..\Modules\Materials\Integrations\Integrations.Contracts\PaintingProjectsManagement.Features.Materials.Integrations.Contracts.csproj" />
+    
+    <ProjectReference Include="..\Modules\Projects\Core\Core\PaintingProjectsManagement.Features.Projects.Core.csproj" />
+    <ProjectReference Include="..\Modules\Projects\Core\Core.Contracts\PaintingProjectsManagement.Features.Projects.Core.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Projects\Web\Web\PaintingProjectsManagement.Features.Projects.Web.csproj" />
+    <ProjectReference Include="..\Modules\Projects\Web\Web.Contracts\PaintingProjectsManagement.Features.Projects.Web.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Projects\UI\UI\PaintingProjectsManagement.Features.Projects.UI.csproj" />
+    <ProjectReference Include="..\Modules\Projects\Integrations\Integrations\PaintingProjectsManagement.Features.Projects.Integrations.csproj" />
+    <ProjectReference Include="..\Modules\Projects\Integrations\Integrations.Contracts\PaintingProjectsManagement.Features.Projects.Integrations.Contracts.csproj" />
+    
+    <ProjectReference Include="..\Modules\Inventory\Core\Core\PaintingProjectsManagement.Features.Inventory.Core.csproj" />
+    <ProjectReference Include="..\Modules\Inventory\Core\Core.Contracts\PaintingProjectsManagement.Features.Inventory.Core.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Inventory\Web\Web\PaintingProjectsManagement.Features.Inventory.Web.csproj" />
+    <ProjectReference Include="..\Modules\Inventory\Web\Web.Contracts\PaintingProjectsManagement.Features.Inventory.Web.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Inventory\UI\UI\PaintingProjectsManagement.Features.Inventory.UI.csproj" />
+    <ProjectReference Include="..\Modules\Inventory\Integrations\Integrations\PaintingProjectsManagement.Features.Inventory.Integrations.csproj" />
+    <ProjectReference Include="..\Modules\Inventory\Integrations\Integrations.Contracts\PaintingProjectsManagement.Features.Inventory.Integrations.Contracts.csproj" />
+    
+    <ProjectReference Include="..\Modules\Subscriptions\Core\Core\PaintingProjectsManagement.Features.Subscriptions.Core.csproj" />
+    <ProjectReference Include="..\Modules\Subscriptions\Core\Core.Contracts\PaintingProjectsManagement.Features.Subscriptions.Core.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Subscriptions\Web\Web\PaintingProjectsManagement.Features.Subscriptions.Web.csproj" />
+    <ProjectReference Include="..\Modules\Subscriptions\Web\Web.Contracts\PaintingProjectsManagement.Features.Subscriptions.Web.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Subscriptions\UI\UI\PaintingProjectsManagement.Features.Subscriptions.UI.csproj" />
+    <ProjectReference Include="..\Modules\Subscriptions\Integrations\Integrations\PaintingProjectsManagement.Features.Subscriptions.Integrations.csproj" />
+    <ProjectReference Include="..\Modules\Subscriptions\Integrations\Integrations.Contracts\PaintingProjectsManagement.Features.Subscriptions.Integrations.Contracts.csproj" />
+    
+    <ProjectReference Include="..\Modules\Models\Core\Core\PaintingProjectsManagement.Features.Models.Core.csproj" />
+    <ProjectReference Include="..\Modules\Models\Core\Core.Contracts\PaintingProjectsManagement.Features.Models.Core.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Models\Web\Web\PaintingProjectsManagement.Features.Models.Web.csproj" />
+    <ProjectReference Include="..\Modules\Models\Web\Web.Contracts\PaintingProjectsManagement.Features.Models.Web.Contracts.csproj" />
+    <ProjectReference Include="..\Modules\Models\UI\UI\PaintingProjectsManagement.Features.Models.UI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="rbkApiModules.Analysers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>
